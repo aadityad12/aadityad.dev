@@ -1,8 +1,23 @@
-# vinext-starter
+# Aaditya Desai Portfolio
 
-A clean full-stack starter running on
-[vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
-Drizzle support.
+A responsive personal portfolio for Aaditya Desai, focused on AI systems,
+software, infrastructure, and current work on Accordion.
+
+## GitHub Pages
+
+Pushes to `main` are exported as a static site and deployed automatically by
+`.github/workflows/pages.yml`.
+
+```bash
+npm ci
+npm run build:pages
+```
+
+The static output is written to `out/`.
+
+## Local development
+
+The local development environment runs on vinext.
 
 ## Prerequisites
 
