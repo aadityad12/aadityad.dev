@@ -228,9 +228,12 @@ button { font: inherit; }
 .signal-link:hover i, .signal-link:focus-visible i { width: 100%; }
 .footer-line { display: flex; justify-content: space-between; gap: 25px; padding-top: 32px; color: var(--muted); font-size: 8px; }
 
-.reveal { opacity: 0; clip-path: inset(0 100% 0 0); transform: translateY(8px); transition: clip-path 620ms linear, opacity 120ms linear, transform 620ms linear; }
-.reveal.is-visible { opacity: 1; clip-path: inset(0 0 0 0); transform: translateY(0); }
-.section-rail.reveal:not(.is-visible) i { transform: scaleX(0); }
+/* Content is visible by default; hiding requires .js-ready so a JS failure can
+   never blank the page. Never hide observer targets with clip-path — a fully
+   clipped element has zero intersection area and ratio thresholds never fire. */
+.js-ready .reveal { opacity: 0; transform: translateY(12px); transition: opacity 400ms ease, transform 620ms ease; }
+.js-ready .reveal.is-visible { opacity: 1; transform: translateY(0); }
+.js-ready .section-rail.reveal:not(.is-visible) i { transform: scaleX(0); }
 
 @media (max-width: 1050px) {
   .desktop-nav { gap: 18px; }
@@ -321,5 +324,5 @@ button { font: inherit; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
-  .reveal { opacity: 1; clip-path: none; transform: none; }
+  .js-ready .reveal { opacity: 1; transform: none; }
 }

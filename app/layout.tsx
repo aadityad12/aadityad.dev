@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   title: "Aaditya Desai — AI Systems, Software, Infrastructure",
   description: "Aaditya Desai builds AI systems, developer tools, and software close to the machine. Currently building Accordion.",
   metadataBase: new URL("https://aadityad.dev"),
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+  },
   openGraph: {
     title: "Aaditya Desai — Building the machinery behind intelligence.",
     description: "AI systems, software, and infrastructure. Currently building Accordion.",

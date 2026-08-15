@@ -39,13 +39,17 @@ export default function Home() {
   const [active, setActive] = useState(sections[0]);
 
   useEffect(() => {
+    document.documentElement.classList.add("js-ready");
+
     const onScroll = () => setCompressed(window.scrollY > 70);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
 
+    // threshold must stay 0: a clip-path-hidden target reports zero intersection
+    // area, so any ratio threshold above 0 never fires (see issue #1)
     const revealObserver = new IntersectionObserver(
       (entries) => entries.forEach((entry) => entry.isIntersecting && entry.target.classList.add("is-visible")),
-      { threshold: 0.12 },
+      { threshold: 0, rootMargin: "0px 0px -10% 0px" },
     );
     document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
 
@@ -107,7 +111,7 @@ export default function Home() {
       </header>
 
       <section id="home" className="hero content-shell">
-        <div className="hero-copy reveal is-visible">
+        <div className="hero-copy reveal">
           <p className="eyebrow">AADITYA DESAI / COMPUTER ENGINEERING @ SJSU</p>
           <h1>BUILDING THE<br />MACHINERY BEHIND<br />INTELLIGENCE.</h1>
           <div className="hero-meta">
@@ -116,7 +120,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="system-panel reveal is-visible" aria-label="System map connecting model, context, tools, runtime, memory, hardware, and compute">
+        <div className="system-panel reveal" aria-label="System map connecting model, context, tools, runtime, memory, hardware, and compute">
           <div className="panel-top"><span>// SYSTEM MAP</span><span>STATE / ACTIVE</span></div>
           <div className="system-map">
             <i className="wire wire-a" /><i className="wire wire-b" /><i className="wire wire-c" /><i className="wire wire-d" /><i className="wire wire-e" /><i className="wire wire-f" />
