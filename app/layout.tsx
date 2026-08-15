@@ -25,6 +25,9 @@ export const metadata: Metadata = {
     description: "AI systems, software, and infrastructure. Currently building Accordion.",
     images: ["/og.png"],
   },
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
