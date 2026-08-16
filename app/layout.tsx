@@ -52,6 +52,9 @@ export const metadata: Metadata = {
       "AI infrastructure, on-device ML, and the occasional robot. Computer engineering @ SJSU, seeking Summer 2027 internships.",
     images: ["/og.png"],
   },
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
