@@ -91,20 +91,22 @@ export default function Home() {
       </header>
 
       <section className="hero shell" id="top">
-        <div className="hero-grid">
-          <div>
-            <h1 className="hero-name">Aaditya Desai</h1>
-            <p className="hero-headline">I build strange, useful machines.</p>
-            <p className="hero-sub">Computer engineering @ SJSU · Santa Clara, CA · seeking Summer 2027 internships</p>
-            <ul className="proof-strip">
-              <li><b className="win" data-scramble>WINNER</b><span>UC Berkeley AI Hackathon 2026</span></li>
-              <li><b data-scramble>★ 225</b><span>open-source Accordion</span></li>
-              <li><b data-scramble>8 MS</b><span>eye-tracking inference on a phone NPU</span></li>
-              <li><b data-scramble>5</b><span>machines below ↓</span></li>
-            </ul>
-          </div>
-          <div className="mascot-slot" id="mascot-slot">
+        <h1 className="hero-name">Aaditya Desai</h1>
+        <p className="hero-headline">I build strange, useful machines.</p>
+        <p className="hero-sub">Computer engineering @ SJSU · Santa Clara, CA · seeking Summer 2027 internships</p>
+        <div className="proof-block">
+          <div className="hero-critter-slot">
             <HeroMascot />
+          </div>
+          <ul className="proof-strip proof-full">
+            <li><b className="win" data-scramble>WINNER</b><span>UC Berkeley AI Hackathon 2026</span></li>
+            <li><b data-scramble>★ 225</b><span>open-source Accordion · team of 3, my conductor inside</span></li>
+            <li><b data-scramble>8 MS</b><span>eye-tracking inference on a phone NPU</span></li>
+            <li><b data-scramble>5</b><span>machines below ↓</span></li>
+          </ul>
+          <div className="proof-compact">
+            <p><b className="win">WINNER</b> — UC BERKELEY AI HACKATHON</p>
+            <p><b>★ 225</b> OSS · <b>8 MS</b> ON-NPU · <b>5</b> MACHINES ↓</p>
           </div>
         </div>
       </section>

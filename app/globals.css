@@ -39,9 +39,8 @@ a { color: inherit; }
 .site-nav a { font-size: 15px; color: var(--muted); text-decoration: none; transition: color 140ms ease; }
 .site-nav a:hover, .site-nav a:focus-visible { color: var(--accent); }
 
-/* ---------- hero ---------- */
-.hero { padding-block: clamp(48px, 9vh, 110px) clamp(56px, 8vh, 96px); }
-.hero-grid { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(220px, 0.9fr); gap: clamp(28px, 5vw, 72px); align-items: center; }
+/* ---------- hero: single column; the critter stands ON the proof rule ---------- */
+.hero { padding-block: clamp(44px, 8vh, 100px) clamp(56px, 8vh, 96px); }
 .hero-name {
   margin: 0;
   font-family: var(--font-display), Georgia, serif;
@@ -60,7 +59,18 @@ a { color: inherit; }
   color: var(--accent);
 }
 .hero-sub { margin: 22px 0 0; color: var(--muted); font-size: 15px; }
-.proof-strip { margin-top: clamp(30px, 5vh, 48px); border-top: 1px solid var(--line); }
+
+/* the proof block's top rule is the critter's floor */
+.proof-block { position: relative; margin-top: clamp(72px, 12vh, 130px); border-top: 1px solid var(--line); }
+.hero-critter-slot {
+  position: absolute;
+  right: 4%;
+  bottom: 100%;
+  width: clamp(150px, 17vw, 215px);
+  transform: translateY(11.3%); /* drops the drawn feet onto the rule */
+}
+.proof-compact { display: none; }
+.proof-strip { margin: 0; }
 .proof-strip li {
   display: flex; gap: 14px; align-items: baseline;
   padding-block: 11px; border-bottom: 1px solid var(--line);
@@ -71,7 +81,6 @@ a { color: inherit; }
 .proof-strip b { font-weight: 700; color: var(--ink); white-space: nowrap; }
 .proof-strip b.win { color: var(--good); }
 .proof-strip span { color: var(--muted); }
-.mascot-slot { aspect-ratio: 1; max-width: 340px; margin-inline: auto; width: 100%; }
 
 /* ---------- mascot (flipbook system) ---------- */
 .mascot { width: 100%; height: auto; display: block; }
@@ -107,7 +116,7 @@ a { color: inherit; }
   .card:hover .mascot-static.has-hover .hover-alt { opacity: 1; }
 }
 
-.mascot-slot, .about-mascot, .section-peek { position: relative; }
+.about-mascot, .section-peek { position: relative; }
 
 /* self-draw entrance: only when JS is confirmed running; fully drawn otherwise */
 .js-ready .mascot.draw path {
@@ -191,7 +200,7 @@ a { color: inherit; }
 
 /* ---------- contact ---------- */
 .contact { padding-bottom: 28px; }
-.contact-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(160px, 0.6fr); gap: clamp(28px, 5vw, 64px); align-items: center; padding-top: clamp(32px, 5vh, 56px); }
+.contact-grid { padding-top: clamp(32px, 5vh, 56px); }
 .contact h2 { margin: 0; font-family: var(--font-display), Georgia, serif; font-weight: 300; font-size: clamp(44px, 7vw, 88px); line-height: 1; }
 .contact-sub { margin: 18px 0 0; color: var(--muted); max-width: 50ch; }
 .contact-links { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
@@ -201,7 +210,6 @@ a { color: inherit; }
   text-decoration: none; transition: background 140ms ease, color 140ms ease, transform 140ms ease;
 }
 .contact-links a:hover, .contact-links a:focus-visible { background: var(--accent); border-color: var(--accent); color: var(--paper); transform: translateY(-2px); }
-.contact-mascot { max-width: 200px; margin-inline: auto; width: 100%; }
 .footer-line { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; margin-top: clamp(48px, 8vh, 88px); padding-block: 20px; border-top: 1px solid var(--line); font-family: var(--font-mono), monospace; font-size: 10.5px; color: var(--muted); letter-spacing: 0.05em; }
 
 /* ---------- motion (progressive enhancement only) ----------
@@ -214,12 +222,28 @@ a { color: inherit; }
 
 /* ---------- responsive ---------- */
 @media (max-width: 860px) {
-  .hero-grid { grid-template-columns: 1fr; }
-  .mascot-slot { max-width: 220px; }
+  .hero { padding-block: 30px 44px; }
+  .hero-sub { margin-top: 14px; }
+  .proof-block { margin-top: 118px; }
+  .hero-critter-slot { width: 128px; right: 8px; }
+  .proof-full { display: none; }
+  .proof-compact {
+    display: block;
+    padding-block: 12px 14px;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-mono), monospace;
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    color: var(--muted);
+  }
+  .proof-compact p { margin: 0 0 6px; }
+  .proof-compact p:last-child { margin: 0; }
+  .proof-compact b { color: var(--ink); font-weight: 700; }
+  .proof-compact b.win { color: var(--good); }
   .card, .card.flip { grid-template-columns: 1fr; gap: 30px; }
   .card.flip .card-media { order: 0; }
-  .about-grid, .contact-grid { grid-template-columns: 1fr; }
-  .about-mascot, .contact-mascot { max-width: 160px; margin-inline: 0; }
+  .about-grid { grid-template-columns: 1fr; }
+  .about-mascot { max-width: 160px; margin-inline: 0; }
   .card-mascot.at-left { left: -6px; }
   .card-mascot.at-right { right: -6px; }
   .section-peek { width: 64px; }
