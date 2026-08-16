@@ -1,19 +1,10 @@
 "use client";
 
 import { useEffect } from "react";
+import Companion from "./components/mascot/Companion";
 import { MascotHero, MascotHolding, MascotPeeking, MascotWave, MascotWorking } from "./components/mascot/poses";
 
 const SCRAMBLE_GLYPHS = "/\\-_=+*·<>";
-
-const POKE_LINES = [
-  "beep.",
-  "i'm powered by your scrolling.",
-  "he really does open that tracker app every day.",
-  "fold the bloat. keep the tail.",
-  "8 ms. i counted.",
-  "zero network permissions. your secrets are safe.",
-  "hire my human.",
-];
 
 function GazePlaceholder() {
   return (
@@ -80,73 +71,15 @@ export default function Home() {
       document.querySelectorAll("[data-scramble]").forEach((el) => scrambleObserver.observe(el));
     }
 
-    // hero pupil follows the cursor a little
-    const pupil = document.querySelector<SVGCircleElement>(".mascot-hero .mascot-pupil");
-    const onMove = (event: MouseEvent) => {
-      if (!pupil) return;
-      const rect = pupil.closest("svg")!.getBoundingClientRect();
-      const dx = event.clientX - (rect.left + rect.width / 2);
-      const dy = event.clientY - (rect.top + rect.height / 2);
-      const len = Math.hypot(dx, dy) || 1;
-      const reach = 6;
-      pupil.style.transform = `translate(${(dx / len) * reach}px, ${(dy / len) * reach}px)`;
-    };
-    const canHover = window.matchMedia("(hover: hover)").matches;
-    if (!reduceMotion && canHover) window.addEventListener("mousemove", onMove, { passive: true });
-
-    // chest battery charges with scroll progress; full charge = every mascot hops once
-    let chargeRaf = 0;
-    let fullyCharged = false;
-    const setCharge = () => {
-      chargeRaf = 0;
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = max > 0 ? Math.min(1, window.scrollY / max) : 1;
-      document.documentElement.style.setProperty("--charge", String(Math.max(0.08, progress)));
-      if (progress > 0.97 && !fullyCharged && !reduceMotion) {
-        fullyCharged = true;
-        document.querySelectorAll(".mascot").forEach((m) => m.classList.add("poked"));
-      }
-    };
-    const onScrollCharge = () => {
-      if (!chargeRaf) chargeRaf = requestAnimationFrame(setCharge);
-    };
-    window.addEventListener("scroll", onScrollCharge, { passive: true });
-    setCharge();
-
-    // poke: hop (spin every 7th), plus a hand-written speech bubble
-    let pokeCount = 0;
-    const onPoke = (event: MouseEvent) => {
-      const mascot = (event.target as Element).closest?.(".mascot");
-      if (!mascot) return;
-      pokeCount += 1;
-      const easterEgg = pokeCount % 7 === 0;
-      mascot.classList.remove("poked", "spin");
-      void (mascot as unknown as HTMLElement).getBoundingClientRect();
-      mascot.classList.add(easterEgg ? "spin" : "poked");
-      const host = mascot.parentElement;
-      if (!host) return;
-      host.querySelector(".speech-bubble")?.remove();
-      const bubble = document.createElement("div");
-      bubble.className = "speech-bubble";
-      bubble.setAttribute("aria-hidden", "true");
-      bubble.textContent = easterEgg ? "ok, that's enough. back to the machines." : POKE_LINES[(pokeCount - 1) % POKE_LINES.length];
-      host.appendChild(bubble);
-      setTimeout(() => bubble.remove(), 2600);
-    };
-    document.addEventListener("click", onPoke);
-
     return () => {
       revealObserver.disconnect();
       scrambleObserver.disconnect();
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("scroll", onScrollCharge);
-      document.removeEventListener("click", onPoke);
-      if (chargeRaf) cancelAnimationFrame(chargeRaf);
     };
   }, []);
 
   return (
     <main>
+      <Companion />
       <header className="site-header">
         <div className="shell">
           <a className="wordmark" href="#top">Aaditya Desai</a>
@@ -210,7 +143,7 @@ export default function Home() {
           </div>
           <div className="card-media tilt reveal">
             <figure>
-              <img
+              <img loading="lazy"
                 src="/projects/accordion-hero.gif"
                 alt="Accordion rendering a long coding-agent session as a grid of colored, foldable context blocks"
               />
@@ -241,7 +174,7 @@ export default function Home() {
           </div>
           <div className="card-media tilt reveal" style={{ "--tilt": "1.1deg" } as React.CSSProperties}>
             <figure className="phone">
-              <img
+              <img loading="lazy"
                 src="/projects/apextracker-dashboard.png"
                 alt="ApexTracker's graphite dashboard: daily goal score and a consistency bar chart in monochrome"
               />
@@ -299,7 +232,7 @@ export default function Home() {
           </div>
           <div className="card-media tilt reveal" style={{ "--tilt": "-1deg" } as React.CSSProperties}>
             <figure className="phone">
-              <img
+              <img loading="lazy"
                 src="/projects/echo-alert.png"
                 alt="Echo showing a severe weather alert received over Bluetooth mesh, with translation controls"
               />
@@ -328,7 +261,7 @@ export default function Home() {
           </div>
           <div className="card-media tilt reveal" style={{ "--tilt": "1.3deg" } as React.CSSProperties}>
             <figure>
-              <img src="/projects/temper-logo.webp" alt="Temper's logo: a tempering flame over an evaluation grid" />
+              <img loading="lazy" src="/projects/temper-logo.webp" alt="Temper's logo: a tempering flame over an evaluation grid" />
             </figure>
           </div>
         </article>
@@ -359,9 +292,9 @@ export default function Home() {
               co-founded my college&apos;s applied-ML club and grew it to 44 members.
             </p>
             <p>
-              I&apos;ve spent over a year teaching C++ and x86 assembly as a TA and tutor, and now run two weekly lab
-              sections for SJSU&apos;s intro engineering course. Teaching debugging rewired how I build: work
-              backward from the symptom — and if I wouldn&apos;t use it every day, it doesn&apos;t ship.
+              I&apos;ve spent over a year teaching C++ and x86 assembly as a TA and tutor, and I&apos;m currently a
+              TA for an Intro to Engineering course at SJSU. Teaching debugging rewired how I build: work backward
+              from the symptom — and if I wouldn&apos;t use it every day, it doesn&apos;t ship.
             </p>
             <ul className="about-meta">
               <li>BASED / SANTA CLARA, CA</li>

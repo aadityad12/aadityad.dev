@@ -79,20 +79,31 @@ a { color: inherit; }
 .mascot path.m-accent { stroke: var(--accent); }
 .mascot .m-pupil { fill: var(--accent); }
 
-/* chest battery: fill width tracks scroll via --charge (1 without JS) */
-.mascot .m-charge { fill: var(--accent); transform-box: fill-box; transform-origin: left center; transform: scaleX(var(--charge, 1)); transition: transform 220ms linear; }
+/* standby power LED: soft breathing pulse; steady-on without motion */
+.mascot .m-led { fill: var(--accent); animation: led-pulse 2.4s ease-in-out infinite; }
+@keyframes led-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
 
-/* alive details: periodic blink (whole eye group squashes), antenna wobble on hover/poke */
-.mascot .m-eye { transform-box: fill-box; transform-origin: center; animation: mascot-blink 5.6s ease-in-out 2.8s infinite; }
-.card-mascot .mascot .m-eye { animation-duration: 6.9s; }
-.about-mascot .mascot .m-eye { animation-duration: 7.7s; }
-.contact-mascot .mascot .m-eye { animation-duration: 6.3s; }
+/* alive details: blink + darting saccades with coprime durations so their
+   phase alignment never repeats — the CSS substitute for randomness */
+.mascot .m-eye { transform-box: fill-box; transform-origin: center; animation: mascot-blink 4.7s ease-in-out 2.8s infinite; }
+.card-mascot .mascot .m-eye { animation-duration: 6.1s; }
+.about-mascot .mascot .m-eye { animation-duration: 7.9s; }
+.contact-mascot .mascot .m-eye { animation-duration: 5.3s; }
 @keyframes mascot-blink {
-  0%, 94%, 100% { transform: scaleY(1); }
-  96.5% { transform: scaleY(0.12); }
+  0%, 90%, 100% { transform: scaleY(1); }
+  92%, 94% { transform: scaleY(0.08); }
+  93% { transform: scaleY(1); }
+}
+/* eyes dart, they don't glide: steps(1) saccades on every static pupil */
+.mascot .m-pupil:not(.c-pupil) { animation: saccade 7.3s steps(1, end) infinite; }
+@keyframes saccade {
+  0%, 85%, 100% { translate: 0 0; }
+  22% { translate: 3px -1px; }
+  46% { translate: -2px 2px; }
+  70% { translate: 1px 1px; }
 }
 .mascot .m-antenna { transform-box: fill-box; transform-origin: 50% 100%; }
-.mascot:hover .m-antenna, .mascot.poked .m-antenna { animation: mascot-wobble 650ms ease; }
+.mascot:hover .m-antenna { animation: mascot-wobble 650ms ease; }
 @keyframes mascot-wobble {
   0%, 100% { transform: rotate(0deg); }
   25% { transform: rotate(9deg); }
@@ -100,29 +111,82 @@ a { color: inherit; }
   80% { transform: rotate(3deg); }
 }
 
-/* poke: hop (or a full spin on the easter-egg poke) */
-.mascot.poked { animation: mascot-hop 520ms cubic-bezier(0.36, 0.07, 0.19, 0.97); }
-@keyframes mascot-hop {
-  0%, 60%, 100% { transform: translateY(0); }
-  35% { transform: translateY(-14px); }
-  78% { transform: translateY(-5px); }
+/* the boop: pointerdown → squash-and-stretch with overshoot; antenna
+   follow-through lands 80ms late; every 7th boop pops the eye instead */
+.mascot, .c-boop { transform-origin: center bottom; }
+.is-booped { animation: boop 450ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes boop {
+  0% { transform: scale(1, 1); }
+  30% { transform: scale(1.12, 0.84); }
+  60% { transform: scale(0.94, 1.1) rotate(3deg); }
+  100% { transform: scale(1, 1) rotate(0deg); }
 }
-.mascot.spin { animation: mascot-spin 900ms ease; }
-@keyframes mascot-spin { to { transform: rotate(360deg); } }
+.is-booped .m-antenna { animation: mascot-wobble 650ms ease 80ms; }
+.is-booped-rare { animation: boop-rare 700ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes boop-rare {
+  0% { transform: scale(1); }
+  25% { transform: scale(1.15, 0.8); }
+  55% { transform: scale(0.9, 1.15) rotate(-5deg); }
+  100% { transform: scale(1); }
+}
+.is-booped-rare .m-eye { animation: eye-pop 700ms ease !important; }
+@keyframes eye-pop { 30%, 60% { transform: scale(1.3); } }
 
-/* speech bubble (injected on poke) */
-.speech-bubble {
-  position: absolute; bottom: calc(100% + 4px); left: 50%; transform: translateX(-50%);
-  background: #fff; border: 1.5px solid var(--ink); border-radius: 12px; padding: 5px 13px;
-  font-family: var(--font-hand), cursive; font-size: 17px; color: var(--ink);
-  white-space: nowrap; z-index: 6; pointer-events: none; animation: bubble-in 180ms ease;
-}
-.speech-bubble::after {
-  content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
-  border: 5px solid transparent; border-top-color: var(--ink);
-}
-@keyframes bubble-in { from { opacity: 0; transform: translateX(-50%) translateY(4px); } }
 .mascot-slot, .about-mascot, .contact-mascot, .section-peek { position: relative; }
+
+/* ---------- companion (desktop, fine pointer, motion allowed) ---------- */
+.companion { display: none; position: fixed; top: 0; left: 0; width: 120px; z-index: 40; pointer-events: none; will-change: transform; }
+html.companion-on .companion { display: block; }
+html.companion-on .mascot-slot .mascot { visibility: hidden; }
+html.companion-on .contact-mascot { display: none; }
+.companion svg { pointer-events: auto; }
+
+/* lean into scroll velocity; antenna trails behind with a floppier ease */
+.c-lean { transform: rotate(var(--lean, 0deg)); transition: transform 120ms linear; transform-origin: 50% 85%; }
+.companion .c-antenna { transform: rotate(calc(var(--lean, 0deg) * -1.6)); transition: transform 260ms ease-out; }
+
+/* walk cycle: hips half a phase apart, body bob at double leg frequency */
+.companion .c-leg { transform-box: fill-box; transform-origin: top center; }
+.companion.is-walking .c-leg-l { animation: c-step 0.55s ease-in-out infinite alternate; }
+.companion.is-walking .c-leg-r { animation: c-step 0.55s ease-in-out infinite alternate; animation-delay: -0.275s; }
+@keyframes c-step { from { transform: rotate(-15deg); } to { transform: rotate(15deg); } }
+.companion.is-walking .c-bob { animation: c-bob 0.275s ease-in-out infinite alternate; }
+@keyframes c-bob { from { transform: translateY(0); } to { transform: translateY(-3px); } }
+.companion.is-walking .m-led { animation-duration: 0.7s; }
+
+/* arm variants per section */
+.companion .c-arm { transition: opacity 220ms ease; }
+.companion .c-arm-wrench, .companion .c-arm-rest { opacity: 0; }
+.companion[data-state="machines"] .c-arm-wave { opacity: 0; }
+.companion[data-state="machines"] .c-arm-wrench { opacity: 1; }
+.companion[data-state="about"] .c-arm-wave { opacity: 0; }
+.companion[data-state="about"] .c-arm-rest { opacity: 1; }
+.companion[data-state="contact"] .c-arm-wave { opacity: 1; transform-box: fill-box; transform-origin: 15% 95%; animation: c-wave 1.7s ease-in-out infinite; }
+@keyframes c-wave { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-14deg); } }
+
+/* idle one-shots (probabilistic, from the state machine) */
+.idle-tilt { animation: c-tilt 1.1s ease; }
+@keyframes c-tilt { 0%, 100% { transform: rotate(0deg); } 35% { transform: rotate(-4deg); } 70% { transform: rotate(2deg); } }
+.idle-foot .c-leg-r { animation: c-foot 0.9s ease; }
+@keyframes c-foot { 0%, 100% { transform: rotate(0deg); } 25%, 65% { transform: rotate(12deg); } 45%, 85% { transform: rotate(0deg); } }
+.idle-antenna .m-antenna { animation: mascot-wobble 800ms ease; }
+
+/* power-down sleep: eye dims to a line, antenna droops, LED goes standby */
+.companion .m-eye { transition: transform 500ms ease; }
+.companion[data-sleep] .m-eye { transform: scaleY(0.1); animation: none; }
+.companion[data-sleep] .c-antenna { transform: rotate(26deg); transition: transform 900ms ease; }
+.companion[data-sleep] .m-led { animation: led-standby 1.6s steps(2, jump-none) infinite; }
+@keyframes led-standby { 0%, 100% { opacity: 1; } 50% { opacity: 0.15; } }
+.companion[data-sleep] .c-bob { animation: c-hum 2.6s ease-in-out infinite alternate; }
+@keyframes c-hum { from { transform: scaleY(1); } to { transform: scaleY(1.015); } }
+
+/* startled wake: a beat of noticing before resuming */
+.is-startled .c-boop { animation: c-startle 350ms ease; }
+@keyframes c-startle {
+  0%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-9px) scale(1.04, 0.98); }
+}
+.is-startled .c-antenna { transform: rotate(0deg); transition: transform 150ms ease; }
 
 /* self-draw: only when JS is confirmed running; fully drawn otherwise */
 .js-ready .mascot.draw path {
@@ -137,14 +201,18 @@ a { color: inherit; }
   transform-origin: center;
   transform-box: fill-box;
 }
-.js-ready .mascot.draw .m-charge { opacity: 0; animation: charge-in 300ms ease 1850ms forwards; }
-@keyframes charge-in { to { opacity: 1; } }
+.js-ready .mascot.draw .m-pupil:not(.c-pupil) {
+  animation:
+    pupil-pop 260ms ease var(--pop-delay, 1400ms) forwards,
+    saccade 7.3s steps(1, end) calc(var(--pop-delay, 1400ms) + 900ms) infinite;
+}
+.js-ready .mascot.draw .m-led { opacity: 0; animation: led-in 260ms ease var(--pop-delay, 1500ms) forwards, led-pulse 2.4s ease-in-out calc(var(--pop-delay, 1500ms) + 400ms) infinite; }
+@keyframes led-in { to { opacity: 1; } }
 @keyframes pupil-pop {
   0% { opacity: 0; transform: scale(0.2); }
   70% { opacity: 1; transform: scale(1.25); }
   100% { opacity: 1; transform: scale(1); }
 }
-.mascot-hero .mascot-pupil { transition: transform 120ms ease-out; }
 
 /* ---------- sections ---------- */
 .section { padding-block: clamp(48px, 8vh, 96px) 0; }
@@ -242,7 +310,7 @@ a { color: inherit; }
   .js-ready .reveal { opacity: 1; transform: none; }
   .js-ready .mascot.draw path { stroke-dasharray: none; stroke-dashoffset: 0; animation: none; }
   .js-ready .mascot.draw .m-pupil { opacity: 1; animation: none; }
-  .js-ready .mascot.draw .m-charge { opacity: 1; animation: none; }
-  .mascot .m-eye, .mascot .m-antenna, .mascot.poked, .mascot.spin, .speech-bubble { animation: none !important; }
-  .mascot .m-charge { transition: none; }
+  .js-ready .mascot.draw .m-led { opacity: 1; animation: none; }
+  .mascot .m-led, .mascot .m-eye, .mascot .m-antenna, .mascot .m-pupil, .is-booped, .is-booped-rare { animation: none !important; }
+  .companion { display: none !important; }
 }

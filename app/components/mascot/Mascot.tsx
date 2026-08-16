@@ -58,8 +58,7 @@ export function EyeGroup({ delay = 900, pupilX = 122, pupilY = 130, pupilClass =
 }
 
 /* Base body shared by standing poses: wobbly toaster box, slot, antenna,
-   legs, and the chest battery. The battery's fill width tracks the page
-   scroll via the --charge custom property (1 = full when JS is absent). */
+   legs, and a softly pulsing standby LED on the chest. */
 export function BaseBody({ delay = 0 }: { delay?: number }) {
   return (
     <>
@@ -79,14 +78,8 @@ export function BaseBody({ delay = 0 }: { delay?: number }) {
       {/* legs + feet */}
       <P d="M 97 177 C 96 190 97 202 95 212 M 95 212 C 90 214 85 214 80 213" delay={delay + 500} speed={450} />
       <P d="M 143 177 C 144 190 143 202 145 212 M 145 212 C 150 214 155 214 160 213" delay={delay + 600} speed={450} />
-      {/* chest battery: hand-drawn outline + nub, charge fill driven by scroll */}
-      <rect className="m-charge" x={103} y={161} width={30} height={7} rx={1.5} />
-      <P
-        d="M 101 160 C 100 158 102 157 104 157 C 113 156 125 156 132 157 C 134 157 136 158 135 160 C 136 163 136 166 135 168 C 136 170 134 171 132 171 C 124 172 112 172 104 171 C 102 171 100 170 101 168 C 100 165 100 163 101 160 Z"
-        delay={delay + 1250}
-        speed={450}
-      />
-      <P d="M 137 161 C 139 161 140 162 140 164 C 140 166 139 167 137 167" delay={delay + 1550} speed={200} accent />
+      {/* standby power LED on the chest */}
+      <circle className="m-led" cx={120} cy={165} r={4} style={{ "--pop-delay": `${delay + 1500}ms` } as CSSProperties} />
     </>
   );
 }
