@@ -1,29 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
+import AccordionVideo from "./components/AccordionVideo";
+import GazeDemo from "./components/GazeDemo";
+import TemperBench from "./components/TemperBench";
 import HeroMascot from "./components/mascot/HeroMascot";
 import { StaticMascot } from "./components/mascot/StaticMascot";
 
 const SCRAMBLE_GLYPHS = "/\\-_=+*·<>";
-
-function GazePlaceholder() {
-  return (
-    <div className="gaze-diagram">
-      <svg viewBox="0 0 240 200" role="img" aria-label="Diagram of an eye with four gaze directions: up, down, left, right">
-        <g fill="none" stroke="var(--ink)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M 40 100 C 62 66 96 48 120 48 C 144 48 178 66 200 100 C 178 134 144 152 120 152 C 96 152 62 134 40 100 Z" />
-          <path d="M 120 72 C 137 72 148 84 148 100 C 148 116 136 128 119 128 C 103 128 92 115 92 99 C 92 84 104 72 120 72" />
-          <path d="M 120 30 C 119 22 121 16 120 10 M 112 18 L 120 9 L 128 18" stroke="var(--accent)" />
-          <path d="M 120 170 C 121 178 119 184 120 190 M 112 182 L 120 191 L 128 182" stroke="var(--accent)" />
-          <path d="M 22 100 C 16 99 12 101 6 100 M 14 92 L 5 100 L 14 108" stroke="var(--accent)" />
-          <path d="M 218 100 C 224 99 228 101 234 100 M 226 92 L 235 100 L 226 108" stroke="var(--accent)" />
-        </g>
-        <circle cx="122" cy="101" r="9" fill="var(--accent)" />
-      </svg>
-      <p>4 GAZE DIRECTIONS · ~8 MS PER FRAME · DEMO RECORDING COMING SOON</p>
-    </div>
-  );
-}
 
 export default function Home() {
   useEffect(() => {
@@ -85,6 +69,7 @@ export default function Home() {
           <nav className="site-nav" aria-label="Primary navigation">
             <a href="#machines">machines</a>
             <a href="#about">about</a>
+            <a className="nav-resume" href="/Aaditya_Desai_Portfolio_Resume.pdf" target="_blank" rel="noreferrer">resume ↗</a>
             <a href="#contact">contact</a>
           </nav>
         </div>
@@ -123,18 +108,23 @@ export default function Home() {
             <h3>Accordion</h3>
             <p className="card-hook">See what your agent remembers.</p>
             <p className="card-body">
+              <span className="body-kicker">THE MACHINE /</span>
               Coding agents quietly throw away their own context. Accordion makes that visible — the whole context
               window rendered as a foldable map, where cold blocks get compressed reversibly and a
-              &ldquo;conductor&rdquo; decides what stays live. My pieces: the conductor&apos;s relevance pipeline —
-              keyword scoring, then bi-encoder similarity, then a cross-encoder rerank, with self-calibrating fold
-              targets — and the live dashboard that attributes every fold to user, agent, or conductor. It scores
-              83.3% on SlopCodeBench at a 100k-token budget, against 33.3% for naive compaction.
+              &ldquo;conductor&rdquo; decides what stays live. It scores 83.3% on SlopCodeBench at a 100k-token
+              budget, against 33.3% for naive compaction.
+            </p>
+            <p className="card-body">
+              <span className="body-kicker">MY PART /</span>
+              The conductor&apos;s relevance pipeline — keyword scoring, then bi-encoder similarity, then a
+              cross-encoder rerank, with self-calibrating fold targets — and the live dashboard that attributes
+              every fold to user, agent, or conductor.
             </p>
             <p className="tech-line">MY PART: PYTHON · HUGGINGFACE TRANSFORMERS · SVELTEKIT</p>
             <ul className="chips">
               <li className="win">🏆 WINNER — UC BERKELEY AI HACKATHON 2026</li>
-              <li>★ 225</li>
-              <li>18 FORKS</li>
+              <li>TEAM OF 3</li>
+              <li className="chip-link"><a href="https://github.com/a-Fig/accordion" target="_blank" rel="noreferrer">★ 225 — TEAM REPO ↗</a></li>
               <li>MIT</li>
             </ul>
             <div className="card-links">
@@ -142,13 +132,11 @@ export default function Home() {
               <a href="https://github.com/a-Fig/accordion" target="_blank" rel="noreferrer">GitHub ↗</a>
             </div>
           </div>
-          <div className="card-media tilt reveal">
-            <figure>
-              <img loading="lazy"
-                src="/projects/accordion-hero.gif"
-                alt="Accordion rendering a long coding-agent session as a grid of colored, foldable context blocks"
-              />
-            </figure>
+          <div className="card-media reveal">
+            <AccordionVideo />
+            <div className="card-cameo cameo-perch">
+              <StaticMascot pose="perch" hoverFrame="point" label="The machine critter perched on the demo, pointing at the star count when you hover" />
+            </div>
             <p className="media-caption">the context map, live</p>
           </div>
         </article>
@@ -179,6 +167,7 @@ export default function Home() {
                 alt="ApexTracker's graphite dashboard: daily goal score and a consistency bar chart in monochrome"
               />
             </figure>
+            <p className="media-caption">the day, scored</p>
           </div>
         </article>
 
@@ -206,7 +195,7 @@ export default function Home() {
             </div>
           </div>
           <div className="card-media reveal">
-            <GazePlaceholder />
+            <GazeDemo />
           </div>
         </article>
 
@@ -236,6 +225,7 @@ export default function Home() {
                 alt="Echo showing a severe weather alert received over Bluetooth mesh, with translation controls"
               />
             </figure>
+            <p className="media-caption">an alert that arrived with no internet</p>
           </div>
         </article>
 
@@ -258,10 +248,12 @@ export default function Home() {
               <a href="https://github.com/aadityad12/Temper" target="_blank" rel="noreferrer">GitHub ↗</a>
             </div>
           </div>
-          <div className="card-media tilt reveal" style={{ "--tilt": "1.3deg" } as React.CSSProperties}>
-            <figure>
-              <img loading="lazy" src="/projects/temper-logo.webp" alt="Temper's logo: a tempering flame over an evaluation grid" />
-            </figure>
+          <div className="card-media reveal">
+            <TemperBench />
+            <div className="card-cameo cameo-work">
+              <StaticMascot pose="work" hoverFrame="work-turn" label="The machine critter tightening a bolt on the test bench" />
+            </div>
+            <p className="media-caption">the test bench, drawn</p>
           </div>
         </article>
 
@@ -297,7 +289,7 @@ export default function Home() {
             </p>
             <ul className="about-meta">
               <li>BASED / SANTA CLARA, CA</li>
-              <li>STUDY / COMPUTER ENGINEERING @ SJSU · B.S. EXPECTED 2028</li>
+              <li>STUDY / COMPUTER ENGINEERING @ SJSU · B.S. EXPECTED SPRING 2028</li>
               <li>AWARDS / BERKELEY AI HACKATHON WIN · DA HACKS 2ND · HACKSTORM MVP</li>
               <li>LOOKING FOR / SUMMER 2027 INTERNSHIPS</li>
             </ul>
