@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import Companion from "./components/mascot/Companion";
-import { MascotHero, MascotHolding, MascotPeeking, MascotWave, MascotWorking } from "./components/mascot/poses";
+import HeroMascot from "./components/mascot/HeroMascot";
+import { StaticMascot } from "./components/mascot/StaticMascot";
 
 const SCRAMBLE_GLYPHS = "/\\-_=+*·<>";
 
@@ -79,7 +79,6 @@ export default function Home() {
 
   return (
     <main>
-      <Companion />
       <header className="site-header">
         <div className="shell">
           <a className="wordmark" href="#top">Aaditya Desai</a>
@@ -105,7 +104,7 @@ export default function Home() {
             </ul>
           </div>
           <div className="mascot-slot" id="mascot-slot">
-            <MascotHero />
+            <HeroMascot />
           </div>
         </div>
       </section>
@@ -113,7 +112,7 @@ export default function Home() {
       <section className="section shell" id="machines">
         <div className="section-head">
           <h2>Machines</h2>
-          <div className="section-peek reveal"><MascotPeeking /></div>
+          <div className="section-peek reveal"><StaticMascot pose="peek" label="The machine critter peeking over a line" /></div>
         </div>
 
         <article className="card flagship">
@@ -148,7 +147,6 @@ export default function Home() {
                 alt="Accordion rendering a long coding-agent session as a grid of colored, foldable context blocks"
               />
             </figure>
-            <div className="card-mascot at-right"><MascotHolding /></div>
             <p className="media-caption">the context map, live</p>
           </div>
         </article>
@@ -207,7 +205,6 @@ export default function Home() {
           </div>
           <div className="card-media reveal">
             <GazePlaceholder />
-            <div className="card-mascot at-left"><MascotWorking /></div>
           </div>
         </article>
 
@@ -304,7 +301,7 @@ export default function Home() {
             </ul>
           </div>
           <div className="about-mascot reveal">
-            <MascotWorking />
+            <StaticMascot pose="work" label="The machine critter tinkering with a wrench" />
           </div>
         </div>
       </section>
@@ -322,9 +319,6 @@ export default function Home() {
               <a href="https://github.com/aadityad12" target="_blank" rel="noreferrer">GITHUB ↗</a>
               <a href="https://www.linkedin.com/in/aaditya-desai-12d" target="_blank" rel="noreferrer">LINKEDIN ↗</a>
             </div>
-          </div>
-          <div className="contact-mascot reveal">
-            <MascotWave />
           </div>
         </div>
         <div className="footer-line">
