@@ -323,6 +323,7 @@ export default function Home() {
               way to my attention.
             </p>
             <div className="contact-links">
+              <a href="/Aaditya_Desai_Portfolio_Resume.pdf" target="_blank" rel="noreferrer">RESUME ↗</a>
               <a href="https://github.com/aadityad12" target="_blank" rel="noreferrer">GITHUB ↗</a>
               <a href="https://www.linkedin.com/in/aaditya-desai-12d" target="_blank" rel="noreferrer">LINKEDIN ↗</a>
             </div>
