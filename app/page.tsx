@@ -5,6 +5,16 @@ import { MascotHero, MascotHolding, MascotPeeking, MascotWave, MascotWorking } f
 
 const SCRAMBLE_GLYPHS = "/\\-_=+*·<>";
 
+const POKE_LINES = [
+  "beep.",
+  "i'm powered by your scrolling.",
+  "he really does open that tracker app every day.",
+  "fold the bloat. keep the tail.",
+  "8 ms. i counted.",
+  "zero network permissions. your secrets are safe.",
+  "hire my human.",
+];
+
 function GazePlaceholder() {
   return (
     <div className="gaze-diagram">
@@ -84,10 +94,54 @@ export default function Home() {
     const canHover = window.matchMedia("(hover: hover)").matches;
     if (!reduceMotion && canHover) window.addEventListener("mousemove", onMove, { passive: true });
 
+    // chest battery charges with scroll progress; full charge = every mascot hops once
+    let chargeRaf = 0;
+    let fullyCharged = false;
+    const setCharge = () => {
+      chargeRaf = 0;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = max > 0 ? Math.min(1, window.scrollY / max) : 1;
+      document.documentElement.style.setProperty("--charge", String(Math.max(0.08, progress)));
+      if (progress > 0.97 && !fullyCharged && !reduceMotion) {
+        fullyCharged = true;
+        document.querySelectorAll(".mascot").forEach((m) => m.classList.add("poked"));
+      }
+    };
+    const onScrollCharge = () => {
+      if (!chargeRaf) chargeRaf = requestAnimationFrame(setCharge);
+    };
+    window.addEventListener("scroll", onScrollCharge, { passive: true });
+    setCharge();
+
+    // poke: hop (spin every 7th), plus a hand-written speech bubble
+    let pokeCount = 0;
+    const onPoke = (event: MouseEvent) => {
+      const mascot = (event.target as Element).closest?.(".mascot");
+      if (!mascot) return;
+      pokeCount += 1;
+      const easterEgg = pokeCount % 7 === 0;
+      mascot.classList.remove("poked", "spin");
+      void (mascot as unknown as HTMLElement).getBoundingClientRect();
+      mascot.classList.add(easterEgg ? "spin" : "poked");
+      const host = mascot.parentElement;
+      if (!host) return;
+      host.querySelector(".speech-bubble")?.remove();
+      const bubble = document.createElement("div");
+      bubble.className = "speech-bubble";
+      bubble.setAttribute("aria-hidden", "true");
+      bubble.textContent = easterEgg ? "ok, that's enough. back to the machines." : POKE_LINES[(pokeCount - 1) % POKE_LINES.length];
+      host.appendChild(bubble);
+      setTimeout(() => bubble.remove(), 2600);
+    };
+    document.addEventListener("click", onPoke);
+
     return () => {
       revealObserver.disconnect();
       scrambleObserver.disconnect();
       window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("scroll", onScrollCharge);
+      document.removeEventListener("click", onPoke);
+      if (chargeRaf) cancelAnimationFrame(chargeRaf);
     };
   }, []);
 
@@ -137,10 +191,12 @@ export default function Home() {
             <p className="card-body">
               Coding agents quietly throw away their own context. Accordion makes that visible — the whole context
               window rendered as a foldable map, where cold blocks get compressed reversibly and a
-              &ldquo;conductor&rdquo; decides what stays live. Its Thermocline conductor scores 83.3% on SlopCodeBench
-              at a 100k-token budget, against 33.3% for naive compaction.
+              &ldquo;conductor&rdquo; decides what stays live. My pieces: the conductor&apos;s relevance pipeline —
+              keyword scoring, then bi-encoder similarity, then a cross-encoder rerank, with self-calibrating fold
+              targets — and the live dashboard that attributes every fold to user, agent, or conductor. It scores
+              83.3% on SlopCodeBench at a 100k-token budget, against 33.3% for naive compaction.
             </p>
-            <p className="tech-line">TAURI · SVELTE 5 · RUST · TYPESCRIPT</p>
+            <p className="tech-line">MY PART: PYTHON · HUGGINGFACE TRANSFORMERS · SVELTEKIT</p>
             <ul className="chips">
               <li className="win">🏆 WINNER — UC BERKELEY AI HACKATHON 2026</li>
               <li>★ 225</li>
@@ -199,14 +255,17 @@ export default function Home() {
             <h3>GazeBoard</h3>
             <p className="card-hook">Typing with your eyes, 8 ms at a time.</p>
             <p className="card-body">
-              An Android keyboard for people with ALS: four gaze directions drive quick phrases and grouped-letter
-              typing, spoken aloud. Every frame is processed on the phone&apos;s NPU — Qualcomm Hexagon via LiteRT,
-              ~8 ms per inference — so nothing ever leaves the device.
+              An Android keyboard for people who can&apos;t speak or use their hands, built with a team at the
+              Qualcomm × Google LiteRT Edge AI Hackathon: four gaze directions drive quick phrases and grouped-letter
+              typing, spoken aloud — 15+ FPS across a 478-landmark face mesh, ~8 ms per inference on the phone&apos;s
+              Hexagon NPU, zero network permissions declared. My pieces: the NPU deployment and the 4-point
+              calibration engine that maps raw gaze into screen space.
             </p>
             <p className="tech-line">KOTLIN · COMPOSE · CAMERAX · ML KIT · LITERT / HEXAGON NPU</p>
             <ul className="chips">
               <li>ON-DEVICE</li>
               <li>~8 MS INFERENCE</li>
+              <li>ZERO NETWORK PERMISSIONS</li>
               <li>APACHE-2.0</li>
             </ul>
             <div className="card-links">
@@ -289,22 +348,25 @@ export default function Home() {
         <div className="about-grid">
           <div className="about-copy reveal">
             <p>
-              I&apos;m a computer-engineering student at SJSU. I keep getting pulled toward the parts of computing
-              people don&apos;t look at: context an agent throws away, compute sitting idle, an abstraction hiding
-              something interesting underneath.
+              Almost everything I build follows one of two threads: machines that keep working when the network
+              doesn&apos;t — an assistive-vision headset, an eye-typing keyboard, a Bluetooth alert mesh — and
+              machines that make AI systems inspectable, like context maps and harness evals.
             </p>
             <p>
-              So I build machines for those places. Some of them win hackathons. Some of them just make my own day
-              run better. The rule I stole from my own tracker app: if I wouldn&apos;t use it every day, it
-              doesn&apos;t ship.
+              The headset was the long one: a semester as technical lead of VisionAssist, a five-person on-device
+              navigation aid built with Infineon, where I wrote the perception pipeline, proved their radar
+              couldn&apos;t tell a wall from a chair, and delivered the findings report that cut it. I also
+              co-founded my college&apos;s applied-ML club and grew it to 44 members.
             </p>
             <p>
-              Right now that means AI infrastructure — context systems, agent evals — and ML that runs on the device
-              in your hand.
+              I&apos;ve spent over a year teaching C++ and x86 assembly as a TA and tutor, and now run two weekly lab
+              sections for SJSU&apos;s intro engineering course. Teaching debugging rewired how I build: work
+              backward from the symptom — and if I wouldn&apos;t use it every day, it doesn&apos;t ship.
             </p>
             <ul className="about-meta">
               <li>BASED / SANTA CLARA, CA</li>
-              <li>STUDY / COMPUTER ENGINEERING @ SJSU</li>
+              <li>STUDY / COMPUTER ENGINEERING @ SJSU · B.S. EXPECTED 2028</li>
+              <li>AWARDS / BERKELEY AI HACKATHON WIN · DA HACKS 2ND · HACKSTORM MVP</li>
               <li>LOOKING FOR / SUMMER 2027 INTERNSHIPS</li>
             </ul>
           </div>

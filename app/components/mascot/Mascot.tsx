@@ -43,7 +43,23 @@ export function Pupil({ cx, cy, r = 7, delay = 1400, className = "" }: { cx: num
   );
 }
 
-/* Base body shared by standing poses: wobbly toaster box, slot, antenna, legs. */
+/* Eye outline + pupil in one group so the blink animation can squash both. */
+export function EyeGroup({ delay = 900, pupilX = 122, pupilY = 130, pupilClass = "" }: { delay?: number; pupilX?: number; pupilY?: number; pupilClass?: string }) {
+  return (
+    <g className="m-eye">
+      <P
+        d="M 120 103 C 136 103 147 114 147 129 C 147 144 135 155 119 155 C 104 155 93 143 93 128 C 93 113 105 103 120 103"
+        delay={delay}
+        speed={550}
+      />
+      <Pupil cx={pupilX} cy={pupilY} delay={delay + 500} className={pupilClass} />
+    </g>
+  );
+}
+
+/* Base body shared by standing poses: wobbly toaster box, slot, antenna,
+   legs, and the chest battery. The battery's fill width tracks the page
+   scroll via the --charge custom property (1 = full when JS is absent). */
 export function BaseBody({ delay = 0 }: { delay?: number }) {
   return (
     <>
@@ -55,23 +71,22 @@ export function BaseBody({ delay = 0 }: { delay?: number }) {
       />
       {/* toaster slot */}
       <P d="M 96 84 C 111 80 130 81 144 84" delay={delay + 350} speed={350} />
-      {/* antenna stem + loop */}
-      <P d="M 120 80 C 118 71 121 62 120 55" delay={delay + 450} speed={300} />
-      <P d="M 120 55 C 111 53 111 40 121 40 C 131 41 129 54 120 55" delay={delay + 650} speed={400} />
+      {/* antenna stem + loop (grouped for the hover wobble) */}
+      <g className="m-antenna">
+        <P d="M 120 80 C 118 71 121 62 120 55" delay={delay + 450} speed={300} />
+        <P d="M 120 55 C 111 53 111 40 121 40 C 131 41 129 54 120 55" delay={delay + 650} speed={400} />
+      </g>
       {/* legs + feet */}
       <P d="M 97 177 C 96 190 97 202 95 212 M 95 212 C 90 214 85 214 80 213" delay={delay + 500} speed={450} />
       <P d="M 143 177 C 144 190 143 202 145 212 M 145 212 C 150 214 155 214 160 213" delay={delay + 600} speed={450} />
+      {/* chest battery: hand-drawn outline + nub, charge fill driven by scroll */}
+      <rect className="m-charge" x={103} y={161} width={30} height={7} rx={1.5} />
+      <P
+        d="M 101 160 C 100 158 102 157 104 157 C 113 156 125 156 132 157 C 134 157 136 158 135 160 C 136 163 136 166 135 168 C 136 170 134 171 132 171 C 124 172 112 172 104 171 C 102 171 100 170 101 168 C 100 165 100 163 101 160 Z"
+        delay={delay + 1250}
+        speed={450}
+      />
+      <P d="M 137 161 C 139 161 140 162 140 164 C 140 166 139 167 137 167" delay={delay + 1550} speed={200} accent />
     </>
-  );
-}
-
-/* Open round eye (outline). Pair with <Pupil/>. */
-export function OpenEye({ delay = 900 }: { delay?: number }) {
-  return (
-    <P
-      d="M 120 103 C 136 103 147 114 147 129 C 147 144 135 155 119 155 C 104 155 93 143 93 128 C 93 113 105 103 120 103"
-      delay={delay}
-      speed={550}
-    />
   );
 }
