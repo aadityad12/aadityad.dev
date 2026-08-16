@@ -25,7 +25,7 @@ export default function TemperBench() {
         <InkArrow x={92} />
         <InkBox x={162} label="MODEL" sub="+ harness" />
         <InkArrow x={202} />
-        <InkBox x={286} label="JUDGE" sub="6 dimensions" />
+        <InkBox x={286} label="JUDGE" sub="6 dims" />
       </svg>
       <div className="bench-readout mono">
         <div><span>INSTRUCTION ADHERENCE</span><b>-27</b><i className="fail">PATCH</i></div>
