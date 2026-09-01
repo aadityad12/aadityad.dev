@@ -12,18 +12,18 @@ page either builds credibility with that person or gets cut.
 
 ## The takeaway
 
-After closing the tab they should remember: **"the student who builds strange, useful
-machines — and ships them."** Personality first, proof immediately behind it. Not a slogan
-site, not a resume site: a person with taste, backed by verifiable numbers.
+After closing the tab they should remember: **"the computer engineering student who builds
+software for real constraints."** Clarity first, personality in the details, and proof close
+to the claim. Not a slogan site and not a resume duplicate: a concise path from positioning to
+selected work to contact.
 
 ## Identity: playful crafted
 
 - **Canvas:** warm light. Cream/paper background, ink text. A sketchbook, not a terminal.
   This is a deliberate full break from the current dark phosphor-green look.
-- **Signature element:** a small hand-drawn **mascot — a machine critter** (robot-ish,
-  friendly, slightly odd) that draws itself in on load (SVG stroke-dash), reacts to
-  scroll/hover, and appears in a different pose beside each project. It is the thread
-  that ties "strange, useful machines" together.
+- **Signature element:** a small hand-drawn **robot mascot** that draws itself in on load
+  (SVG stroke-dash), reacts to scroll/hover, and appears in a different pose beside each
+  project. It provides personality without replacing conventional recruiter-facing labels.
 - **Voice:** first person, honest, specific. The reference register is the ApexTracker
   README ("I started this to build a habit — the habit of building"). Numbers over
   adjectives. Never "passionate", never "innovative".
@@ -49,10 +49,10 @@ site, not a resume site: a person with taste, backed by verifiable numbers.
 
 ## Page structure (single page, in order)
 
-1. **Hero** — name as the biggest thing on the page, headline "I build strange, useful
-   machines.", school/location/"seeking Summer 2027 internships" line, proof strip
-   (hackathon win · ★225 OSS · 8 ms on-NPU ML), mascot drawing itself in.
-2. **Machines** — five project cards: Accordion (flagship, biggest), ApexTracker,
+1. **Hero** — name as the biggest thing on the page, headline "Software for real
+   constraints.", a concise scope and internship-availability statement, immediate project
+   and resume actions, professional links, three contextual highlight cards, and the mascot.
+2. **Selected Projects** — five project cards: Accordion (flagship, biggest), ApexTracker,
    GazeBoard, Echo, Temper.
 3. **Also built** — a single compact line for ClearDispatch (no card).
 4. **About** — 3–4 sentences, ApexTracker-README voice.

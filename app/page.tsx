@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Image from "next/image";
 import AccordionVideo from "./components/AccordionVideo";
 import GazeDemo from "./components/GazeDemo";
 import TemperBench from "./components/TemperBench";
@@ -63,68 +64,88 @@ export default function Home() {
 
   return (
     <main>
+      <a className="skip-link" href="#top">Skip to content</a>
       <header className="site-header">
         <div className="shell">
-          <a className="wordmark" href="#top">Aaditya Desai</a>
           <nav className="site-nav" aria-label="Primary navigation">
-            <a href="#machines">machines</a>
-            <a href="#about">about</a>
-            <a className="nav-resume" href="/Aaditya_Desai_Portfolio_Resume.pdf" target="_blank" rel="noreferrer">resume ↗</a>
-            <a href="#contact">contact</a>
+            <a href="#projects">Projects</a>
+            <a href="#about">About</a>
+            <a className="nav-resume" href="/Aaditya_Desai_Portfolio_Resume.pdf" target="_blank" rel="noreferrer">Résumé</a>
+            <a className="nav-contact" href="#contact">Contact</a>
           </nav>
         </div>
       </header>
 
       <section className="hero shell" id="top">
-        <h1 className="hero-name">Aaditya Desai</h1>
-        <p className="hero-headline">I build strange, useful machines.</p>
-        <p className="hero-sub">Computer engineering @ SJSU · Santa Clara, CA · seeking Summer 2027 internships</p>
-        <div className="proof-block">
+        <div className="hero-grid">
+          <div className="hero-copy">
+            <p className="hero-eyebrow" data-scramble>COMPUTER ENGINEERING @ SJSU · EXPECTED MAY 2028</p>
+            <h1 className="hero-name">Aaditya Desai</h1>
+            <p className="hero-headline">Software for real constraints.</p>
+            <p className="hero-intro">
+              I work across on-device ML, offline-first applications, and AI infrastructure, following each
+              project from the model or protocol to the interface people use.
+            </p>
+            <p className="hero-availability">Seeking Summer 2027 software engineering, ML, and systems internships.</p>
+            <div className="hero-actions">
+              <a className="button button-primary" href="#projects">View projects ↓</a>
+              <a className="button" href="/Aaditya_Desai_Portfolio_Resume.pdf" target="_blank" rel="noreferrer">View résumé ↗</a>
+            </div>
+            <div className="hero-socials" aria-label="Professional profiles and contact">
+              <a href="https://github.com/aadityad12" target="_blank" rel="noreferrer">GitHub ↗</a>
+              <a href="https://www.linkedin.com/in/aaditya-desai-12d" target="_blank" rel="noreferrer">LinkedIn ↗</a>
+              <a href="mailto:aaditya.d.desai@gmail.com">Email ↗</a>
+            </div>
+          </div>
           <div className="hero-critter-slot">
             <HeroMascot />
           </div>
-          <ul className="proof-strip proof-full">
-            <li><b className="win" data-scramble>WINNER</b><span>UC Berkeley AI Hackathon 2026</span></li>
-            <li><b data-scramble>★ 225</b><span>open-source Accordion · team of 3, my conductor inside</span></li>
-            <li><b data-scramble>8 MS</b><span>eye-tracking inference on a phone NPU</span></li>
-            <li><b data-scramble>5</b><span>machines below ↓</span></li>
-          </ul>
-          <div className="proof-compact">
-            <p><b className="win">WINNER</b> — UC BERKELEY AI HACKATHON</p>
-            <p><b>★ 225</b> OSS · <b>8 MS</b> ON-NPU · <b>5</b> MACHINES ↓</p>
-          </div>
         </div>
+        <dl className="hero-highlights" aria-label="Selected highlights">
+          <div>
+            <dt>UC Berkeley AI Hackathon</dt>
+            <dd><strong>Winner</strong><span>The Token Company sponsor track</span></dd>
+          </div>
+          <div>
+            <dt>Accordion</dt>
+            <dd><strong>200+</strong><span>GitHub stars on the team repository</span></dd>
+          </div>
+          <div>
+            <dt>GazeBoard</dt>
+            <dd><strong>~8 ms</strong><span>inference on a phone NPU</span></dd>
+          </div>
+        </dl>
       </section>
 
-      <section className="section shell" id="machines">
+      <section className="section shell" id="projects">
         <div className="section-head">
-          <h2>Machines</h2>
-          <div className="section-peek reveal"><StaticMascot pose="peek" label="The machine critter peeking over a line" /></div>
+          <h2>Selected Projects</h2>
+          <div className="section-peek reveal"><StaticMascot pose="peek" label="The portfolio mascot peeking over a line" /></div>
         </div>
 
         <article className="card flagship">
           <div className="reveal">
-            <p className="card-kicker" data-scramble>MACHINE 01 · CURRENT</p>
+            <p className="card-kicker" data-scramble>PROJECT 01 · OPEN-SOURCE AI TOOLING</p>
             <h3>Accordion</h3>
             <p className="card-hook">See what your agent remembers.</p>
             <p className="card-body">
-              <span className="body-kicker">THE MACHINE /</span>
-              Coding agents quietly throw away their own context. Accordion makes that visible — the whole context
-              window rendered as a foldable map, where cold blocks get compressed reversibly and a
-              &ldquo;conductor&rdquo; decides what stays live. It scores 83.3% on SlopCodeBench at a 100k-token
-              budget, against 33.3% for naive compaction.
+              <span className="body-kicker">THE PROJECT /</span>
+              Most coding agents handle a full context window by flattening the session into one lossy summary.
+              Accordion makes the window visible and reversible: individual blocks can be folded, unfolded, pinned,
+              or recalled while a protected recent window stays intact.
             </p>
             <p className="card-body">
               <span className="body-kicker">MY PART /</span>
-              The conductor&apos;s relevance pipeline — keyword scoring, then bi-encoder similarity, then a
-              cross-encoder rerank, with self-calibrating fold targets — and the live dashboard that attributes
-              every fold to user, agent, or conductor.
+              On a team of three, I built the hackathon relevance pipeline with keyword scoring, bi-encoder retrieval,
+              and cross-encoder reranking. I also built the live attribution view that shows whether a fold came from the
+              user, agent, or conductor. In an early hackathon-scale SlopCodeBench run at a 100k-token budget,
+              Accordion completed 5 of 6 checkpoints versus 2 of 6 for naive compaction. We won The Token Company
+              sponsor track at UC Berkeley AI Hackathon 2026.
             </p>
             <p className="tech-line">MY PART: PYTHON · HUGGINGFACE TRANSFORMERS · SVELTEKIT</p>
             <ul className="chips">
-              <li className="win">🏆 WINNER — UC BERKELEY AI HACKATHON 2026</li>
-              <li>TEAM OF 3</li>
-              <li className="chip-link"><a href="https://github.com/a-Fig/accordion" target="_blank" rel="noreferrer">★ 225 — TEAM REPO ↗</a></li>
+              <li className="win">🏆 WINNER · UC BERKELEY AI HACKATHON 2026</li>
+              <li className="chip-link"><a href="https://github.com/a-Fig/accordion" target="_blank" rel="noreferrer">★ 200+ · TEAM REPO ↗</a></li>
               <li>MIT</li>
             </ul>
             <div className="card-links">
@@ -135,7 +156,7 @@ export default function Home() {
           <div className="card-media reveal">
             <AccordionVideo />
             <div className="card-cameo cameo-perch">
-              <StaticMascot pose="perch" hoverFrame="point" label="The machine critter perched on the demo, pointing at the star count when you hover" />
+              <StaticMascot pose="perch" hoverFrame="point" label="The portfolio mascot perched on the demo, pointing at the star count when you hover" />
             </div>
             <p className="media-caption">the context map, live</p>
           </div>
@@ -143,13 +164,22 @@ export default function Home() {
 
         <article className="card flip">
           <div className="reveal">
-            <p className="card-kicker" data-scramble>MACHINE 02 · DAILY DRIVER</p>
+            <p className="card-kicker" data-scramble>PROJECT 02 · ANDROID · DAILY DRIVER</p>
             <h3>ApexTracker</h3>
             <p className="card-hook">One app instead of a pile of post-its.</p>
             <p className="card-body">
-              Budget, study timer, screen time, reminders, notes, a reading log for papers — and a home screen that
-              scores each day by how many of my own goals I hit. I started it to build the habit of building; it
-              became the app I actually open every day. Local-first, encrypted, no account.
+              <span className="body-kicker">WHY IT EXISTS /</span>
+              ApexTracker is the one app I use instead of a pile of post-its, three reminder apps, a calendar, and a
+              couple of spreadsheets. It tracks budget, study time, screen time, reminders, notes, and papers, then
+              scores each day by the goals I actually hit. Everything works offline; an account is optional and only
+              adds Firestore sync.
+            </p>
+            <p className="card-body">
+              <span className="body-kicker">WHAT I BUILT /</span>
+              Room is the source of truth, encrypted with SQLCipher and gated by biometrics where needed. Reboot-safe
+              alarms, five Glance widgets, on-device receipt parsing, handwritten schema migrations, JUnit tests,
+              lint, and Compose screenshot tests make it a codebase I can keep using, not a demo I am afraid to
+              update.
             </p>
             <p className="tech-line">KOTLIN · JETPACK COMPOSE · ROOM · SQLCIPHER</p>
             <ul className="chips">
@@ -157,14 +187,16 @@ export default function Home() {
               <li>LOCAL-FIRST</li>
             </ul>
             <div className="card-links">
-              <a href="https://github.com/aadityad12/Trackers" target="_blank" rel="noreferrer">GitHub ↗</a>
+              <a href="https://github.com/aadityad12/Apex-Tracker" target="_blank" rel="noreferrer">GitHub ↗</a>
             </div>
           </div>
           <div className="card-media tilt reveal" style={{ "--tilt": "1.1deg" } as React.CSSProperties}>
             <figure className="phone">
-              <img loading="lazy"
+              <Image
                 src="/projects/apextracker-dashboard.png"
                 alt="ApexTracker's graphite dashboard: daily goal score and a consistency bar chart in monochrome"
+                width={1080}
+                height={2340}
               />
             </figure>
             <p className="media-caption">the day, scored</p>
@@ -173,15 +205,21 @@ export default function Home() {
 
         <article className="card">
           <div className="reveal">
-            <p className="card-kicker" data-scramble>MACHINE 03 · ON-DEVICE ML</p>
+            <p className="card-kicker" data-scramble>PROJECT 03 · ON-DEVICE ML</p>
             <h3>GazeBoard</h3>
-            <p className="card-hook">Typing with your eyes, 8 ms at a time.</p>
+            <p className="card-hook">Typing with your eyes, entirely on-device.</p>
             <p className="card-body">
-              An Android keyboard for people who can&apos;t speak or use their hands, built with a team at the
-              Qualcomm × Google LiteRT Edge AI Hackathon: four gaze directions drive quick phrases and grouped-letter
-              typing, spoken aloud — 15+ FPS across a 478-landmark face mesh, ~8 ms per inference on the phone&apos;s
-              Hexagon NPU, zero network permissions declared. My pieces: the NPU deployment and the 4-point
-              calibration engine that maps raw gaze into screen space.
+              <span className="body-kicker">THE PROJECT /</span>
+              A gaze-driven communication board for people who cannot reliably speak or use their hands. Because the
+              camera stays pointed at the user&apos;s face, privacy was a requirement rather than a feature: frames stay
+              on the phone and the app declares no network permission.
+            </p>
+            <p className="card-body">
+              <span className="body-kicker">MY PART /</span>
+              I built the Kotlin pipeline from CameraX capture and ML Kit face detection through LiteRT inference on
+              the Hexagon NPU, four-point affine calibration, dwell-based tile selection, and speech output. On the
+              Galaxy S25 Ultra used during the hackathon, the pipeline measured roughly 8 ms per inference at 15+
+              FPS. Built with a team at the Qualcomm × Google LiteRT On-Device &amp; Edge AI Hackathon.
             </p>
             <p className="tech-line">KOTLIN · COMPOSE · CAMERAX · ML KIT · LITERT / HEXAGON NPU</p>
             <ul className="chips">
@@ -201,13 +239,21 @@ export default function Home() {
 
         <article className="card flip">
           <div className="reveal">
-            <p className="card-kicker" data-scramble>MACHINE 04 · OFFLINE SYSTEMS</p>
+            <p className="card-kicker" data-scramble>PROJECT 04 · OFFLINE SYSTEMS</p>
             <h3>Echo</h3>
             <p className="card-hook">Emergency alerts that survive the internet dying.</p>
             <p className="card-body">
-              When cell and wifi are down, phones running Echo relay National Weather Service alerts to each other
-              over Bluetooth LE — a custom chunked GATT protocol implemented natively twice, in Kotlin and in Swift.
-              Alerts translate into 22 languages on-device and are read aloud.
+              <span className="body-kicker">THE PROJECT /</span>
+              Echo is a prototype for carrying National Weather Service alerts between nearby devices when cellular
+              and internet infrastructure are unavailable. It implements BLE discovery and a custom chunked GATT
+              transfer path on Android and iOS, with optional Raspberry Pi relay utilities and compact alert IDs for
+              deduplication.
+            </p>
+            <p className="card-body">
+              <span className="body-kicker">MY PART /</span>
+              I built the native Kotlin and Swift protocol layers. Once received, an alert can be translated
+              on-device into 22 target languages and read aloud. Built for Hack for Humanity at Santa Clara
+              University.
             </p>
             <p className="tech-line">FLUTTER · KOTLIN · SWIFT · BLE / GATT · SQLITE</p>
             <ul className="chips">
@@ -220,9 +266,11 @@ export default function Home() {
           </div>
           <div className="card-media tilt reveal" style={{ "--tilt": "-1deg" } as React.CSSProperties}>
             <figure className="phone">
-              <img loading="lazy"
+              <Image
                 src="/projects/echo-alert.png"
                 alt="Echo showing a severe weather alert received over Bluetooth mesh, with translation controls"
+                width={1206}
+                height={2461}
               />
             </figure>
             <p className="media-caption">an alert that arrived with no internet</p>
@@ -231,13 +279,22 @@ export default function Home() {
 
         <article className="card">
           <div className="reveal">
-            <p className="card-kicker" data-scramble>MACHINE 05 · AI EVALS</p>
+            <p className="card-kicker" data-scramble>PROJECT 05 · AI EVALUATION</p>
             <h3>Temper</h3>
             <p className="card-hook">Test the system around the model.</p>
             <p className="card-body">
-              Same model, judged with and without its prompts, tools, and skills, across six dimensions. When the
-              harness causes a regression, Temper generates replacement artifacts and re-runs the affected checks.
-              Built at the AI Engineer World&apos;s Fair Hackathon 2026.
+              <span className="body-kicker">THE PROJECT /</span>
+              AI agents are more than their base model. Prompts, tools, skills, and orchestration can help, or they
+              can quietly make the same model worse. Temper compares an agent harness with a bare-model baseline across
+              six dimensions, identifies harness-caused regressions, produces replacement artifacts, and reruns only
+              the affected checks.
+            </p>
+            <p className="card-body">
+              <span className="body-kicker">MY PART /</span>
+              I built the local evaluator, FastAPI service, schemas and contracts, patch loop, deterministic
+              integration path, and streaming dashboard. Its strongest current evidence is a reproducible offline
+              fixture that verifies the complete evaluate → patch → re-evaluate protocol; live-model evaluation
+              remains prototype work. Built at the AI Engineer World&apos;s Fair Hackathon 2026.
             </p>
             <p className="tech-line">PYTHON · FASTAPI · REACT · SSE · JSON SCHEMA</p>
             <ul className="chips">
@@ -251,7 +308,7 @@ export default function Home() {
           <div className="card-media reveal">
             <TemperBench />
             <div className="card-cameo cameo-work">
-              <StaticMascot pose="work" hoverFrame="work-turn" label="The machine critter tightening a bolt on the test bench" />
+              <StaticMascot pose="work" hoverFrame="work-turn" label="The portfolio mascot tightening a bolt on the test bench" />
             </div>
             <p className="media-caption">the test bench, drawn</p>
           </div>
@@ -259,8 +316,10 @@ export default function Home() {
 
         <div className="also-built reveal">
           <p>
-            ALSO BUILT / <a href="https://github.com/aadityad12/Clear-Dispatch" target="_blank" rel="noreferrer">CLEAR DISPATCH</a> — multi-agent 911
-            dispatch sim with human-in-the-loop approvals · HackDavis 2026
+            ALSO BUILT / <a href="https://github.com/aadityad12/Clear-Dispatch" target="_blank" rel="noreferrer">CLEAR DISPATCH</a>: a local
+            emergency-dispatch simulation with a four-stage FastAPI pipeline, live WebSocket dashboard, Haversine
+            unit assignment, and explicit dispatcher approval before heavy assets move · team project at HackDavis
+            2026
           </p>
         </div>
       </section>
@@ -272,30 +331,26 @@ export default function Home() {
         <div className="about-grid">
           <div className="about-copy reveal">
             <p>
-              Almost everything I build follows one of two threads: machines that keep working when the network
-              doesn&apos;t — an assistive-vision headset, an eye-typing keyboard, a Bluetooth alert mesh — and
-              machines that make AI systems inspectable, like context maps and harness evals.
+              I keep gravitating toward software with an awkward constraint: no network, a fixed compute budget, a
+              latency target, or an agent that has run out of context. Those projects force me to understand the
+              whole path, from the model or protocol through the interface someone actually touches. They make
+              hand-waving difficult.
             </p>
             <p>
-              The headset was the long one: a semester as technical lead of VisionAssist, a five-person on-device
-              navigation aid built with Infineon, where I wrote the perception pipeline, proved their radar
-              couldn&apos;t tell a wall from a chair, and delivered the findings report that cut it. I also
-              co-founded my college&apos;s applied-ML club and grew it to 44 members.
-            </p>
-            <p>
-              I&apos;ve spent over a year teaching C++ and x86 assembly as a TA and tutor, and I&apos;m currently a
-              TA for an Intro to Engineering course at SJSU. Teaching debugging rewired how I build: work backward
-              from the symptom — and if I wouldn&apos;t use it every day, it doesn&apos;t ship.
+              ApexTracker is probably the clearest picture of how I build. It began as an intentionally ordinary
+              tracker so I would write code every day; somewhere along the way, it replaced the post-its, reminder
+              apps, and spreadsheets I was actually using. Teaching C++ and debugging to first-time programmers
+              shaped the same habit: trace the symptom backward, explain the mechanism clearly, and stay with the
+              problem until the abstraction stops hiding it.
             </p>
             <ul className="about-meta">
               <li>BASED / SANTA CLARA, CA</li>
-              <li>STUDY / COMPUTER ENGINEERING @ SJSU · B.S. EXPECTED SPRING 2028</li>
-              <li>AWARDS / BERKELEY AI HACKATHON WIN · DA HACKS 2ND · HACKSTORM MVP</li>
-              <li>LOOKING FOR / SUMMER 2027 INTERNSHIPS</li>
+              <li>STUDY / COMPUTER ENGINEERING @ SJSU · EXPECTED MAY 2028</li>
+              <li>LOOKING FOR / SUMMER 2027 SOFTWARE, ML, OR SYSTEMS INTERNSHIPS</li>
             </ul>
           </div>
           <div className="about-mascot reveal">
-            <StaticMascot pose="work" label="The machine critter tinkering with a wrench" />
+            <StaticMascot pose="work" label="The portfolio mascot tinkering with a wrench" />
           </div>
         </div>
       </section>
@@ -303,13 +358,14 @@ export default function Home() {
       <footer className="section shell contact" id="contact">
         <div className="contact-grid">
           <div className="reveal">
-            <h2>Say hi.</h2>
+            <p className="contact-kicker">SUMMER 2027 INTERNSHIPS</p>
+            <h2>Get in touch.</h2>
             <p className="contact-sub">
-              Find me on GitHub or LinkedIn — or open an issue on anything I&apos;ve built. That&apos;s the fastest
-              way to my attention.
+              I&apos;m looking for software engineering, ML, and systems roles. Email is the fastest way to reach me.
             </p>
             <div className="contact-links">
-              <a href="/Aaditya_Desai_Portfolio_Resume.pdf" target="_blank" rel="noreferrer">RESUME ↗</a>
+              <a className="contact-primary" href="mailto:aaditya.d.desai@gmail.com">EMAIL ME ↗</a>
+              <a href="/Aaditya_Desai_Portfolio_Resume.pdf" target="_blank" rel="noreferrer">RÉSUMÉ ↗</a>
               <a href="https://github.com/aadityad12" target="_blank" rel="noreferrer">GITHUB ↗</a>
               <a href="https://www.linkedin.com/in/aaditya-desai-12d" target="_blank" rel="noreferrer">LINKEDIN ↗</a>
             </div>

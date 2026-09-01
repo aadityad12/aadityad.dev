@@ -6,7 +6,7 @@ import { MascotSvg } from "./MascotSvg";
 import { FramePlayer } from "./player";
 
 /* The one performer. Draws itself in, waves hello, then lives: watches the
-   cursor, blinks irregularly, glances around, peers down at the proof rows,
+   cursor, blinks irregularly, glances around, peers down at the highlights,
    powers down when ignored, startles awake, squashes when booped. */
 
 const ENTRANCE_MS = 2600; // after the stroke draw-in completes
@@ -55,7 +55,7 @@ export default function HeroMascot() {
 
   return (
     <div className="hero-critter" ref={wrapRef}>
-      <MascotSvg frame={BASE_FRAME} withDraw label="A small hand-drawn machine critter standing on the line below, watching you" />
+      <MascotSvg frame={BASE_FRAME} withDraw label="A small hand-drawn portfolio mascot watching you" />
     </div>
   );
 }

@@ -118,7 +118,7 @@ export default function GazeDemo() {
         <span className="gaze-cursor">▮</span> {typed || (live ? "look around…" : "4 gaze directions · dwell to type")}
       </p>
       <p className="media-caption" style={{ marginTop: "4px" } as CSSProperties}>
-        {live ? "try it — hold your gaze on a tile" : "dwell-based eye typing, drawn to scale"}
+        {live ? "try it: hold your gaze on a tile" : "dwell-based eye typing, drawn to scale"}
       </p>
     </div>
   );
