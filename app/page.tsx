@@ -56,24 +56,53 @@ export default function Home() {
       document.querySelectorAll("[data-scramble]").forEach((el) => scrambleObserver.observe(el));
     }
 
+    // one passive listener drives both the header pin and the progress bar
+    const header = document.getElementById("site-header");
+    const bar = document.getElementById("header-progress-bar");
+    const hero = document.getElementById("top");
+    let frame = 0;
+    const sync = () => {
+      frame = 0;
+      const y = window.scrollY;
+      // pin once the hero is most of the way gone, so the two button sets never coexist
+      const trigger = Math.max(160, (hero?.offsetHeight ?? 600) * 0.62);
+      header?.classList.toggle("is-pinned", y > trigger);
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      if (bar) bar.style.transform = `scaleX(${max > 0 ? Math.min(1, y / max) : 0})`;
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(sync);
+    };
+    sync();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+
     return () => {
       revealObserver.disconnect();
       scrambleObserver.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (frame) cancelAnimationFrame(frame);
     };
   }, []);
 
   return (
     <main>
       <a className="skip-link" href="#top">Skip to content</a>
-      <header className="site-header">
-        <div className="shell">
+      <header className="site-header" id="site-header">
+        <div className="shell header-inner">
+          <a className="header-mark" href="#top" aria-label="Back to top">
+            <span className="header-mark-initials" aria-hidden="true">AD</span>
+            <span className="header-mark-name">Aaditya Desai</span>
+          </a>
           <nav className="site-nav" aria-label="Primary navigation">
-            <a href="#projects">Projects</a>
-            <a href="#about">About</a>
-            <a className="nav-resume" href="/Aaditya_Desai_Portfolio_Resume.pdf" target="_blank" rel="noreferrer">Résumé</a>
-            <a className="nav-contact" href="#contact">Contact</a>
+            <a className="nav-projects" href="#projects">Projects</a>
+            <a href="https://github.com/aadityad12" target="_blank" rel="noreferrer">GitHub</a>
+            <a href="https://www.linkedin.com/in/aaditya-desai-12d" target="_blank" rel="noreferrer">LinkedIn</a>
+            <a className="nav-resume" href="/Aaditya_Desai_Portfolio_Resume.pdf" target="_blank" rel="noreferrer">Résumé ↗</a>
           </nav>
         </div>
+        <div className="header-progress" aria-hidden="true"><span id="header-progress-bar" /></div>
       </header>
 
       <section className="hero shell" id="top">
@@ -87,15 +116,16 @@ export default function Home() {
               project from the model or protocol to the interface people use.
             </p>
             <p className="hero-availability">Seeking Summer 2027 software engineering, ML, and systems internships.</p>
-            <div className="hero-actions">
-              <a className="button button-primary" href="#projects">View projects ↓</a>
-              <a className="button" href="/Aaditya_Desai_Portfolio_Resume.pdf" target="_blank" rel="noreferrer">View résumé ↗</a>
+            <div className="hero-actions" id="hero-actions" aria-label="Résumé and professional profiles">
+              <a className="button button-primary" href="/Aaditya_Desai_Portfolio_Resume.pdf" target="_blank" rel="noreferrer">Résumé ↗</a>
+              <a className="button" href="https://github.com/aadityad12" target="_blank" rel="noreferrer">GitHub ↗</a>
+              <a className="button" href="https://www.linkedin.com/in/aaditya-desai-12d" target="_blank" rel="noreferrer">LinkedIn ↗</a>
             </div>
-            <div className="hero-socials" aria-label="Professional profiles and contact">
-              <a href="https://github.com/aadityad12" target="_blank" rel="noreferrer">GitHub ↗</a>
-              <a href="https://www.linkedin.com/in/aaditya-desai-12d" target="_blank" rel="noreferrer">LinkedIn ↗</a>
-              <a href="mailto:aaditya.d.desai@gmail.com">Email ↗</a>
-            </div>
+            <p className="hero-secondary">
+              <a href="mailto:aaditya.d.desai@gmail.com">aaditya.d.desai@gmail.com</a>
+              <span aria-hidden="true">·</span>
+              <a className="hero-jump" href="#projects">Jump to projects <span aria-hidden="true">↓</span></a>
+            </p>
           </div>
           <div className="hero-critter-slot">
             <HeroMascot />

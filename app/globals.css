@@ -42,14 +42,43 @@ section, footer { scroll-margin-top: 84px; }
 .hand { font-family: var(--font-hand), cursive; }
 
 /* ---------- header ---------- */
+/* Fixed, not sticky: it is hidden over the hero (which carries its own action row)
+   and slides in only once the hero has scrolled away, so the same buttons never
+   appear twice at once. visibility keeps it out of the tab order while hidden. */
 .site-header {
-  position: sticky; top: 0; z-index: 40;
-  padding-block: 12px;
-  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  position: fixed; inset-inline: 0; top: 0; z-index: 40;
+  padding-block: 9px;
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
   border-bottom: 1px solid color-mix(in srgb, var(--line) 76%, transparent);
   backdrop-filter: blur(14px);
+  transform: translateY(-104%);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    transform 400ms cubic-bezier(0.22, 0.86, 0.28, 1),
+    opacity 240ms ease,
+    visibility 0s linear 400ms;
 }
-.site-header .shell { display: flex; justify-content: center; }
+.site-header.is-pinned {
+  transform: none; opacity: 1; visibility: visible;
+  transition-delay: 0s, 0s, 0s;
+}
+.header-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+
+.header-mark {
+  display: inline-flex; align-items: baseline; gap: 9px;
+  text-decoration: none; color: var(--ink); white-space: nowrap;
+}
+.header-mark-initials {
+  font-family: var(--font-mono), monospace; font-size: 11px; font-weight: 700;
+  letter-spacing: 0.08em; color: var(--accent);
+}
+.header-mark-name {
+  font-family: var(--font-display), Georgia, serif; font-size: 17px; font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.header-mark:hover .header-mark-name, .header-mark:focus-visible .header-mark-name { color: var(--accent); }
+
 .site-nav {
   display: inline-flex; align-items: center; justify-content: center; gap: 2px;
   padding: 5px; border: 1px solid var(--line); border-radius: 999px;
@@ -57,17 +86,37 @@ section, footer { scroll-margin-top: 84px; }
   box-shadow: 0 8px 30px rgba(34, 31, 26, 0.06);
 }
 .site-nav a {
-  display: inline-flex; align-items: center; min-height: 38px;
-  padding: 7px 15px; border-radius: 999px;
+  display: inline-flex; align-items: center; min-height: 36px;
+  padding: 6px 14px; border-radius: 999px;
   font-size: 14px; font-weight: 550; color: var(--muted); text-decoration: none;
   white-space: nowrap;
   transition: color 140ms ease, background 140ms ease;
 }
 .site-nav a:hover, .site-nav a:focus-visible { color: var(--accent); }
-.site-nav .nav-resume { color: var(--accent); }
-.site-nav .nav-resume:hover, .site-nav .nav-resume:focus-visible { color: var(--ink); }
-.site-nav .nav-contact { background: var(--ink); color: var(--paper); }
-.site-nav .nav-contact:hover, .site-nav .nav-contact:focus-visible { background: var(--accent); color: var(--paper); }
+.site-nav .nav-resume { background: var(--ink); color: var(--paper); font-weight: 650; }
+.site-nav .nav-resume:hover, .site-nav .nav-resume:focus-visible { background: var(--accent); color: var(--paper); }
+
+/* reading-progress hairline: signals there is more page below */
+.header-progress { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; overflow: hidden; }
+.header-progress span {
+  display: block; height: 100%; background: var(--accent);
+  transform: scaleX(0); transform-origin: left center;
+}
+
+/* the fixed bar must not sit on top of an anchored section heading */
+#projects, #about, #contact { scroll-margin-top: 84px; }
+
+@media (max-width: 640px) {
+  .header-mark-name { display: none; }
+  .header-mark-initials { font-size: 13px; }
+  .site-nav a { padding: 6px 11px; font-size: 13px; }
+  .site-nav .nav-projects { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-header { transition: opacity 120ms ease, visibility 0s linear 120ms; transform: none; }
+  .site-header.is-pinned { transition-delay: 0s, 0s; }
+}
 
 /* ---------- hero ---------- */
 .hero { padding-block: clamp(56px, 9vh, 104px) clamp(64px, 10vh, 112px); }
@@ -106,9 +155,10 @@ section, footer { scroll-margin-top: 84px; }
 .button:hover, .button:focus-visible { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
 .button-primary { background: var(--ink); color: var(--paper); }
 .button-primary:hover, .button-primary:focus-visible { background: var(--accent); border-color: var(--accent); color: var(--paper); }
-.hero-socials { display: flex; flex-wrap: wrap; gap: 10px 24px; margin-top: 21px; }
-.hero-socials a { color: var(--muted); font-size: 14px; text-decoration-color: var(--line); text-underline-offset: 4px; }
-.hero-socials a:hover, .hero-socials a:focus-visible { color: var(--accent); text-decoration-color: var(--accent); }
+.hero-secondary { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 20px 0 0; color: var(--muted); font-size: 14px; }
+.hero-secondary a { color: var(--muted); text-decoration-color: var(--line); text-underline-offset: 4px; }
+.hero-secondary a:hover, .hero-secondary a:focus-visible { color: var(--accent); text-decoration-color: var(--accent); }
+.hero-jump { white-space: nowrap; }
 .hero-critter-slot {
   width: min(100%, 245px); justify-self: end;
 }
