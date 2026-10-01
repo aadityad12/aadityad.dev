@@ -393,16 +393,14 @@ section, footer { scroll-margin-top: 84px; }
 }
 
 /* ---------- open source card ---------- */
-.oss-card { margin-top: 8px; padding: 22px 24px 24px; border: 1px solid var(--line); border-radius: 12px; background: rgba(255, 255, 255, 0.38); }
+.oss-card { margin-top: 8px; padding: 22px 24px 24px; border: 1px solid var(--line); border-radius: 12px; background: rgba(255, 255, 255, 0.38); animation: oss-in 420ms ease both; }
+@keyframes oss-in { from { opacity: 0; } }
 .oss-card h3 { font-size: clamp(22px, 2.6vw, 28px); }
 .oss-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; max-width: 520px; margin: 18px 0 0; padding: 0; }
 .oss-stats > div { min-width: 0; }
 .oss-stats dt { font-family: var(--font-mono), monospace; font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em; color: var(--muted); }
 .oss-stats dd { margin: 4px 0 0; font-family: var(--font-display), Georgia, serif; font-size: 27px; line-height: 1.1; color: var(--ink); }
 .oss-stats dd.oss-merged { color: var(--good); }
-.oss-skel { height: 48px; border-radius: 8px; background: var(--line); opacity: 0.6; animation: oss-pulse 1.4s ease-in-out infinite; }
-@keyframes oss-pulse { 50% { opacity: 0.3; } }
-.oss-empty { margin: 16px 0 0; color: var(--muted); }
 .oss-top a { color: var(--ink); text-decoration-color: var(--accent); text-underline-offset: 4px; }
 .oss-top a:hover, .oss-top a:focus-visible { color: var(--accent); }
 @media (max-width: 640px) {
