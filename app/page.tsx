@@ -6,6 +6,7 @@ import AccordionVideo from "./components/AccordionVideo";
 import GazeDemo from "./components/GazeDemo";
 import TemperBench from "./components/TemperBench";
 import OpenSourceCard from "./components/OpenSourceCard";
+import OpenSourceNavLink from "./components/OpenSourceNavLink";
 import HeroMascot from "./components/mascot/HeroMascot";
 import { StaticMascot } from "./components/mascot/StaticMascot";
 
@@ -98,7 +99,7 @@ export default function Home() {
           </a>
           <nav className="site-nav" aria-label="Primary navigation">
             <a className="nav-projects" href="#projects">Projects</a>
-            <a className="nav-oss" href="https://oss.aadityad.dev" target="_blank" rel="noreferrer">Open Source</a>
+            <OpenSourceNavLink />
             <a href="https://github.com/aadityad12" target="_blank" rel="noreferrer">GitHub</a>
             <a href="https://www.linkedin.com/in/aaditya-desai-12d" target="_blank" rel="noreferrer">LinkedIn</a>
             <a className="nav-resume" href="/Aaditya_Desai_Portfolio_Resume.pdf" target="_blank" rel="noreferrer">Résumé ↗</a>
