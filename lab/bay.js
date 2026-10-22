@@ -10,6 +10,7 @@ import { LineSegmentsGeometry } from "three/addons/lines/LineSegmentsGeometry.js
 import { LineMaterial } from "three/addons/lines/LineMaterial.js";
 import { goldenGate, ferryBuilding, campanile, towerHall, salesforce, sanJose, bayBridge, haywardBridge, sfo, sjc, stanford, alcatraz, hangarOne, oaklandPort, humpback } from "./landmarks3d.js";
 import { PATHFINDER, heightmap } from "./shared.js";
+import { whaleHabitat, whaleEncounters, WHALE_SCALE } from "./whale-habitat.js";
 
 const CSS = `
 .bay{overflow:hidden}
@@ -38,6 +39,7 @@ const pinSVG = `<svg width="16" height="21" viewBox="0 0 15 20" aria-hidden="tru
 
 export async function createBay(el, opts = {}) {
   const { pins: PIN_DEFS = [], onPin = null, wheel = "always", touch = "map", labels = true, debug = false, insetLeft = 0, offsetY = 0, fit = 0.53, pinCta = "" } = opts;
+  let wheelMode = wheel, motionEnabled = true, animationTime = 0;
   if (!document.getElementById("bay-css")) { const s = document.createElement("style"); s.id = "bay-css"; s.textContent = CSS; document.head.appendChild(s); }
   el.classList.add("bay"); if (getComputedStyle(el).position === "static") el.style.position = "relative";
   const hm = await heightmap();
@@ -186,16 +188,21 @@ export async function createBay(el, opts = {}) {
   // the Outer Harbor wharf faces west; the booms reach out over the water
   along2("port", "Port of Oakland", oaklandPort, [-122.3215, 37.8125], [-122.3085, 37.7985], 0.26, { water: true, boost: 1.9 });
   // a humpback in the open Bay, surfacing somewhere new each cycle
-  const whale = place("whale", "Humpback whale", humpback, -122.32, 37.735, { scale: 2, water: true, boost: 2.2 });
+  const whale = place("whale", "Humpback whale", humpback, -122.32, 37.735, { scale: WHALE_SCALE, water: true });
   whale.noLabel = true;
-  const whaleSpot = () => {
-    for (let k = 0; k < 40; k++) {
-      const lon = -122.355 + Math.random() * 0.08, lat = 37.715 + Math.random() * 0.045;
-      if ([[0, 0], [0.012, 0], [-0.012, 0], [0, 0.008], [0, -0.008]].every(([a, b]) => isWater(lon + a, lat + b))) { const p = at(lon, lat); whale.root.position.set(p.x, 0, p.z); whale.root.rotation.y = 0.4 + Math.random() * 0.9; return; }
-    }
+  whale.root.visible = false;
+  const encounters = whaleEncounters(whaleHabitat(at, (x, z) => {
+    const [column, row] = toCellW(x, z);
+    return column >= 0 && row >= 0 && column < hm.w - 1 && row < hm.h - 1 && waterCell(column, row);
+  }));
+  whale.update = (time) => {
+    const encounter = encounters(time);
+    whale.root.visible = !!encounter;
+    if (!encounter) return;
+    whale.root.position.set(encounter.x, 0, encounter.z);
+    whale.root.rotation.y = encounter.yaw;
+    whale.act(encounter.elapsed);
   };
-  whaleSpot();
-  whale.update = (T) => { if (whale.act(T)) whaleSpot(); };
   setInkWidth(1.05);
   scene.updateMatrixWorld(true);
   for (const l of LMS) { l.box = new THREE.Box3().setFromObject(l.root, true); l.box0 = l.box.clone(); l.base = l.root.scale.clone(); l.home = l.root.position.clone(); l.k = 1; }
@@ -246,7 +253,7 @@ export async function createBay(el, opts = {}) {
   let fly = null;
   const view = (p, d) => ({ tgt: new THREE.Vector3(p.x, 0, p.z), pos: new THREE.Vector3(p.x, d * 0.55, p.z + d * 0.84) });
   const flyTo = (v, dur = 1500) => { fly = { t0: performance.now(), dur, fromP: cam.position.clone(), fromT: controls.target.clone(), pos: v.pos, tgt: v.tgt }; };
-  const goHome = () => flyTo({ pos: HOME.pos.clone(), tgt: HOME.tgt.clone() });
+  const goHome = (duration = 1500) => flyTo({ pos: HOME.pos.clone(), tgt: HOME.tgt.clone() }, duration);
 
   // ---------- pins, landmark labels ----------
   const topOf = (lm) => { const b = new THREE.Box3().setFromObject(lm.root, true), c = b.getCenter(new THREE.Vector3()); return new THREE.Vector3(c.x, b.max.y + 4, c.z); };
@@ -395,7 +402,7 @@ export async function createBay(el, opts = {}) {
   cv.addEventListener("pointerdown", () => { fly = null; PF.follow = false; });
   // on a page, a plain scroll wheel scrolls the page; ⌘/Ctrl + wheel (and trackpad pinch) zooms the map
   el.addEventListener("wheel", (e) => {
-    const zoom = wheel === "always" || e.ctrlKey || e.metaKey;
+    const zoom = wheelMode === "always" || e.ctrlKey || e.metaKey;
     controls.enableZoom = zoom;
     if (zoom) { fly = null; PF.follow = false; }
     else { hint.classList.add("on"); clearTimeout(hintTimer); hintTimer = setTimeout(() => hint.classList.remove("on"), 1100); }
@@ -431,6 +438,8 @@ export async function createBay(el, opts = {}) {
   const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
   function frame(T) {
     raf = 0; if (!running()) return;
+    const dt = Math.min(64, T - (lastT || T)); lastT = T;
+    if (motionEnabled) animationTime += dt;
     // ease the framing (room for page copy) toward its target
     if (Math.abs(F.inset - F.tInset) > 0.5 || Math.abs(F.drop - F.tDrop) > 0.5) { F.inset += (F.tInset - F.inset) * 0.08; F.drop += (F.tDrop - F.drop) * 0.08; applyOffset(); }
     const now = new Date();
@@ -441,17 +450,16 @@ export async function createBay(el, opts = {}) {
     controls.target.x = Math.max(-WX * 0.5, Math.min(WX * 0.5, controls.target.x)); controls.target.z = Math.max(-WZ * 0.5, Math.min(WZ * 0.5, controls.target.z)); controls.target.y = 0;
     controls.update();
     boostAll();
-    for (const l of LMS) l.update(T, now, cam);
-    const dt = Math.min(64, T - (lastT || T)); lastT = T;
-    trainStep(dt); pfStep(T, dt);
+    for (const l of LMS) l.update(animationTime, now, cam);
+    trainStep(motionEnabled ? dt : 0); pfStep(animationTime, motionEnabled ? dt : 0);
     train.forEach((g, i) => { const p = along(TR.head - TR.dir * i * 10.4), q = along(TR.head - TR.dir * i * 10.4 + TR.dir * 2); g.position.copy(p); g.lookAt(q); });
     // while Pathfinder rides, the camera rides along
     if (PF.follow) { const v = view(PF.p, 210); cam.position.lerp(v.pos, 0.12); controls.target.lerp(v.tgt, 0.12); }
-    gulls.forEach((b, i) => { const q = ((T / 70000) + i * 0.025) % 1; b(T, i).position.set(-380 + q * 520, 60 + Math.sin(T / 1800 + i) * 6 + (i % 3) * 6, -170 + q * 160 + (i % 2) * 12); });
-    boil(T, size.w, size.h);
+    gulls.forEach((b, i) => { const q = ((animationTime / 70000) + i * 0.025) % 1; b(animationTime, i).position.set(-380 + q * 520, 60 + Math.sin(animationTime / 1800 + i) * 6 + (i % 3) * 6, -170 + q * 160 + (i % 2) * 12); });
+    boil(animationTime, size.w, size.h);
     renderer.render(scene, cam);
     for (const p of PINS) { if (p.lm) { const r = p.lm.root.position, k = p.lm.k; p.pos.set(r.x + p.ox * k, r.y + p.h0 * k + 4, r.z + p.oz * k); } const [x, y, z] = project(p.pos); p.el.style.left = `${x}px`; p.el.style.top = `${y}px`; p.el.style.display = z < 1 ? "" : "none"; }
-    pfDraw(T);
+    pfDraw(animationTime);
     if (labels) {
       let best = null;
       for (const l of LMS) {
@@ -472,8 +480,18 @@ export async function createBay(el, opts = {}) {
     jumpTo: (lon, lat, d) => { const v = view(at(lon, lat), d); cam.position.copy(v.pos); controls.target.copy(v.tgt); },
     clearPins: () => PINS.forEach((q) => q.el.classList.remove("on")),
     highlight: (id) => PINS.forEach((q) => q.el.classList.toggle("on", q.id === id)),
+    setMotionEnabled: (on) => { motionEnabled = on; },
+    setInputMode: (mode) => {
+      wheelMode = mode === "map" ? "always" : "modifier";
+      controls.touches = { ONE: mode === "map" ? THREE.TOUCH.PAN : null, TWO: THREE.TOUCH.DOLLY_PAN };
+      renderer.domElement.style.touchAction = mode === "map" ? "none" : "pan-y";
+    },
     // the page can move the room it keeps clear for copy, and the whole-Bay fit
-    setFrame: ({ insetLeft: il = insetFn, offsetY: oy = dropFn, fit: f = F.tFit } = {}) => { insetFn = il; dropFn = oy; F.tFit = f; F.tInset = inset(); F.tDrop = drop(); fitHome(); },
+    setFrame: ({ insetLeft: il = insetFn, offsetY: oy = dropFn, fit: f = F.tFit } = {}) => {
+      insetFn = il; dropFn = oy; F.tFit = f;
+      resize();
+      if (!motionEnabled) { F.inset = F.tInset; F.drop = F.tDrop; applyOffset(); }
+    },
     setActive: (on) => { active = on; wake(); },
   };
 }
