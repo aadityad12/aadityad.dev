@@ -36,3 +36,6 @@ yarn-error.log*
 /dist/
 /outputs/
 /work/
+figures/*/.cache/
+figures/directions/shots/
+lab/shots/

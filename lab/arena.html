@@ -1,0 +1,53 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>Arena · the Bay in 3D</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;700&family=DM+Mono:wght@400;500&display=block" rel="stylesheet">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
+<style>
+:root{--bg:#EEECF7;--ink:#211946;--muted:#5A5280;--accent:#FF5A47}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 Manrope,sans-serif;overflow:hidden}
+#stage{position:fixed;inset:0}
+.card{position:fixed;left:28px;top:24px;max-width:420px;background:rgba(238,236,247,.86);backdrop-filter:blur(6px);border-radius:16px;padding:16px 20px;z-index:5}
+.card h1{font:400 46px/0.95 "Instrument Serif";margin:2px 0 8px}
+.card h1 em{color:var(--accent)}
+.mono{font:500 11.5px "DM Mono";letter-spacing:.07em;text-transform:uppercase}
+.card p{margin:0 0 6px;font-size:14.5px}
+.card .hint{color:var(--muted)}
+.btn{position:fixed;right:28px;top:24px;z-index:5;border:1.5px solid var(--ink);background:var(--bg);border-radius:999px;padding:7px 16px;font:500 14px Manrope;cursor:pointer;color:var(--ink)}
+#places{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:5;display:flex;gap:6px;background:rgba(238,236,247,.88);backdrop-filter:blur(6px);padding:6px;border-radius:999px}
+#places button{border:0;background:transparent;color:var(--ink);padding:7px 14px;border-radius:999px;cursor:pointer;font:500 14px Manrope}
+#places button:hover{background:#fff}
+#err{position:fixed;bottom:8px;left:8px;color:#B00;font:12px monospace;z-index:9;white-space:pre-wrap}
+#load{position:fixed;inset:0;display:grid;place-items:center;z-index:8;background:var(--bg);transition:opacity .5s}
+</style></head><body>
+<div id="stage"></div>
+<div class="card">
+  <p class="mono" style="color:var(--muted)">Arena · the test area</p>
+  <h1>The Bay<em>.</em></h1>
+  <p class="hint">Drag to move · right-drag (or two fingers) to tilt and turn · scroll or pinch to zoom · double-click to zoom in · click a pin to send Pathfinder there.</p>
+</div>
+<button class="btn" id="home">Whole Bay</button>
+<nav id="places"></nav>
+<div id="load"><p class="mono">Drawing the Bay…</p></div>
+<div id="err"></div>
+<script>addEventListener("error", (e) => (document.getElementById("err").textContent += e.message + "\n"));</script>
+<script type="module">
+// Test harness for lab/bay.js. URL switches:
+//   #sf #sj #eb #pen #sc #gg #oak #whale   open on a close-up (for screenshots)
+//   ?go=<pin id>               click that pin after 1.2 s (e.g. ?go=temper rides the Caltrain)
+//   ?debug                     mark where the bridges land
+import { createBay } from "./bay.js";
+import { PINS } from "./shared.js";
+
+const q = new URLSearchParams(location.search);
+const bay = await createBay(document.getElementById("stage"), { pins: PINS, debug: q.has("debug") });
+document.getElementById("home").onclick = () => { bay.goHome(); bay.clearPins(); };
+const STOPS = [["San José", -121.90, 37.338, 260], ["Santa Clara · Sunnyvale", -121.99, 37.355, 380], ["Peninsula", -122.2, 37.6, 520], ["San Francisco", -122.41, 37.795, 300], ["Berkeley", -122.262, 37.872, 230]];
+const bar = document.getElementById("places");
+for (const [name, lon, lat, d] of STOPS) { const b = document.createElement("button"); b.textContent = name; b.onclick = () => bay.flyToLonLat(lon, lat, d); bar.appendChild(b); }
+const PRESET = { oak: ["", -122.33, 37.775, 300], whale: ["", -122.32, 37.735, 300], gg: ["", -122.47, 37.81, 200], sf: STOPS[3], sj: STOPS[0], eb: STOPS[4], pen: STOPS[2], sc: STOPS[1] }[location.hash.slice(1)];
+if (PRESET) bay.jumpTo(PRESET[1], PRESET[2], PRESET[3]);
+if (q.get("go")) setTimeout(() => bay.PINS.find((p) => p.id === q.get("go"))?.el.click(), 1200);
+setTimeout(() => { const l = document.getElementById("load"); l.style.opacity = 0; setTimeout(() => l.remove(), 500); }, 300);
+</script></body></html>

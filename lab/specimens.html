@@ -1,0 +1,73 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>Landmarks in 3D: style test</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Manrope:wght@400;500;700&family=DM+Mono:wght@400;500&display=block" rel="stylesheet">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
+<style>
+body{margin:0;background:#EEECF7;color:#211946;font:400 16px/1.55 Manrope,sans-serif}
+main{max-width:1360px;margin:0 auto;padding:34px 40px 60px}
+h1{font:400 56px/1 "Instrument Serif";margin:0 0 6px}
+p.lede{margin:0 0 26px;color:#5A5280;max-width:780px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+figure.wide{grid-column:1/-1}
+figure{margin:0;background:#E6E3F3;border-radius:18px;overflow:hidden}
+.view{position:relative;height:460px;cursor:grab}
+.view canvas{display:block;width:100%;height:100%}
+figcaption{padding:12px 18px 16px;font-size:14.5px}
+figcaption b{font:500 11.5px "DM Mono";letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:2px}
+#err{white-space:pre-wrap;color:#B00;font:12px monospace}
+</style></head><body><main>
+<h1>Landmarks in 3D, round five</h1>
+<p class="lede">Real 3D models with light and cast shadows, drawn in ink: outlines that wobble like Pathfinder's, and pen hatching wherever a surface falls into shade. They turn slowly; move the mouse over one to look around it.</p>
+<div id="err"></div>
+<div class="grid" id="grid"></div>
+</main>
+<script>addEventListener("error", (e) => (document.getElementById("err").textContent += e.message + "\n"));</script>
+<script type="module">
+import { THREE, PAL, boil, mat, mesh } from "./ink3d.js";
+import { oaklandPort, humpback } from "./landmarks3d.js";
+const ITEMS = [
+  [oaklandPort, "Port of Oakland", "A row of the white container cranes on the Outer Harbor wharf, idle booms raised. Two cranes work the ship at the berth, carrying boxes ashore; container stacks fill the yard.", true],
+  [humpback, "Humpback whale", "Dark back, white belly, long white pectoral fins, a white-bellied fluke. Two rolls with a blow, a fluke-up dive, then a breach and splash, every 30 seconds.", true],
+];
+const grid = document.getElementById("grid"), views = [];
+for (const [build, name, what, wide] of ITEMS) {
+  const f = document.createElement("figure"); if (wide) f.className = "wide"; f.innerHTML = `<div class="view"></div><figcaption><b>${name}</b>${what}</figcaption>`; grid.appendChild(f);
+  const el = f.querySelector(".view"), lm = build();
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2)); renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  el.appendChild(renderer.domElement);
+  const scene = new THREE.Scene(); scene.add(lm.root);
+  const { y, w, h } = lm.look, cam = new THREE.PerspectiveCamera(26, 1, 1, 4000);
+  let dist = Math.max(w * 0.72, h * 1.12) / (2 * Math.tan((26 * Math.PI) / 360));
+  scene.fog = new THREE.Fog("#E6E3F3", dist * 1.15, dist * 2.6);
+  scene.add(new THREE.AmbientLight("#FFFFFF", 0.42 * Math.PI));
+  const sun = new THREE.DirectionalLight("#FFFFFF", 0.62 * Math.PI); sun.castShadow = true;
+  sun.position.set(-0.7 * dist, 0.75 * dist, 0.45 * dist); sun.target.position.set(0, y, 0); scene.add(sun.target);
+  const sc = sun.shadow.camera, ext = Math.max(w, h) * 0.75; Object.assign(sc, { left: -ext, right: ext, top: ext, bottom: -ext, near: 1, far: dist * 3 });
+  sun.shadow.mapSize.set(2048, 2048); sun.shadow.bias = -0.0006; scene.add(sun);
+  // ground, or water with a soft ripple of dots
+  const gm = mesh(scene, new THREE.PlaneGeometry(4000, 4000).rotateX(-Math.PI / 2), mat(lm.water ? PAL.water : PAL.ground), 0, -0.05, 0); gm.castShadow = false;
+  const v = { el, lm, renderer, scene, cam, dist, y, yaw: 0, tgt: 0 };
+  el.addEventListener("pointermove", (e) => { const b = el.getBoundingClientRect(); v.tgt = ((e.clientX - b.left) / b.width - 0.5) * 1.6; v.hover = true; });
+  el.addEventListener("pointerleave", () => (v.hover = false));
+  views.push(v);
+}
+function frame(T) {
+  const now = new Date();
+  for (const v of views) {
+    const r = v.el.getBoundingClientRect();
+    if (v.w !== r.width || v.h !== r.height) { v.w = r.width; v.h = r.height; v.renderer.setSize(r.width, r.height, false); v.cam.aspect = r.width / r.height; v.cam.updateProjectionMatrix(); v.dist = Math.max(v.lm.look.w / v.cam.aspect, v.lm.look.h) * 1.06 / (2 * Math.tan((26 * Math.PI) / 360)); }
+    const want = v.hover ? v.tgt : 0.55 * Math.sin(T / 7000 + views.indexOf(v));
+    v.yaw += (want - v.yaw) * 0.04;
+    const pitch = 0.2;
+    v.cam.position.set(Math.sin(v.yaw) * Math.cos(pitch) * v.dist, v.y + Math.sin(pitch) * v.dist, Math.cos(v.yaw) * Math.cos(pitch) * v.dist);
+    v.cam.lookAt(0, v.y, 0);
+    v.lm.update(T, now, v.cam);
+    boil(T, r.width, r.height);
+    v.renderer.render(v.scene, v.cam);
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script></body></html>
