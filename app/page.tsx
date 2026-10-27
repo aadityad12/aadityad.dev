@@ -78,11 +78,21 @@ export default function Home() {
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll, { passive: true });
 
+    // a deep link into the expandable list opens that row; without JS the
+    // rows still expand by hand, so this is enhancement only
+    const openHashTarget = () => {
+      const el = document.getElementById(window.location.hash.slice(1));
+      if (el instanceof HTMLDetailsElement) el.open = true;
+    };
+    openHashTarget();
+    window.addEventListener("hashchange", openHashTarget);
+
     return () => {
       revealObserver.disconnect();
       scrambleObserver.disconnect();
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
+      window.removeEventListener("hashchange", openHashTarget);
       if (frame) cancelAnimationFrame(frame);
     };
   }, []);
@@ -204,11 +214,12 @@ export default function Home() {
             <li><a href="#visionassist"><b>VisionAssist</b><span>On-device obstacle detection, with Infineon</span></a></li>
             <li><a href="#rung"><b>Rung</b><span>A language built five ways, every speed-up measured</span></a></li>
             <li><a href="#accordion"><b>Accordion</b><span>Context manager for AI coding agents</span></a></li>
-            <li><a href="#oss-scout"><b>OSS Scout</b><span>Nightly open-source scout with a human in charge</span></a></li>
             <li><a href="#apextracker"><b>ApexTracker</b><span>Offline-first Android app I use daily</span></a></li>
             <li><a href="#gazeboard"><b>GazeBoard</b><span>Eye-gaze communication on a phone NPU</span></a></li>
+            <li><a href="#oss-scout"><b>OSS Scout</b><span>Nightly open-source scout with a human in charge</span></a></li>
             <li><a href="#echo"><b>Echo</b><span>Emergency alerts over Bluetooth, no internet</span></a></li>
             <li><a href="#temper"><b>Temper</b><span>Finds where an agent&apos;s harness makes it worse</span></a></li>
+            <li><a href="#cleardispatch"><b>ClearDispatch</b><span>Dispatch sim where heavy assets need a human&apos;s yes</span></a></li>
           </ol>
         </nav>
 
@@ -352,51 +363,10 @@ export default function Home() {
           </div>
         </article>
 
-        <article className="card flip" id="oss-scout">
-          <div className="reveal">
-            <p className="card-kicker" data-scramble>PROJECT 04 · AUTOMATION · SECURITY DESIGN</p>
-            <h3>OSS Scout</h3>
-            <p className="card-hook">Finds open-source work every night. Posts nothing without me.</p>
-            <p className="card-body">
-              <span className="body-kicker">THE PROJECT /</span>
-              Maintainers are buried in low-effort, machine-generated pull requests. OSS Scout automates the
-              tedious parts of contributing (finding good issues, judging how welcoming a project is to outside
-              contributors, reading unfamiliar code) and leaves the decisions to me. Each night it scans GitHub,
-              prepares at most one tested draft fix, and emails me a summary in the morning. Nothing is posted until
-              I approve it.
-            </p>
-            <p className="card-body">
-              <span className="body-kicker">HOW IT STAYS SAFE /</span>
-              The AI routine that prepares fixes can&apos;t write to GitHub at all: a guard hook blocks every write
-              command, with 37 tests behind it. The only write token lives in a separate private repo the routine
-              never sees, and a single workflow does all the posting after re-checking each item. Text from
-              strangers&apos; issues is treated as data, not instructions.
-            </p>
-            <p className="tech-line">PYTHON · GITHUB ACTIONS · CLAUDE CODE HOOKS · CLOUDFLARE WORKERS AND ACCESS</p>
-            <ul className="chips">
-              <li>SOLO</li>
-              <li>IN DAILY USE</li>
-            </ul>
-            <div className="card-links">
-              <a href="https://github.com/aadityad12/oss-scout" target="_blank" rel="noreferrer">GitHub ↗</a>
-              <a href="https://oss.aadityad.dev" target="_blank" rel="noreferrer">My contributions ↗</a>
-            </div>
-          </div>
-          <div className="card-media reveal">
-            <ol className="flow-steps mono" aria-label="OSS Scout's nightly loop">
-              <li><b>SCAN</b><span>nightly, plain Python, no AI</span></li>
-              <li><b>PREPARE</b><span>at most one tested draft fix</span></li>
-              <li><b>REVIEW</b><span>private dashboard and a morning email</span></li>
-              <li><b>ACT</b><span>one tap; the only path that writes to GitHub</span></li>
-              <li><b>TRACK</b><span>status read from GitHub, never self-reported</span></li>
-            </ol>
-            <p className="media-caption">the nightly loop</p>
-          </div>
-        </article>
 
         <article className="card" id="apextracker">
           <div className="reveal">
-            <p className="card-kicker" data-scramble>PROJECT 05 · ANDROID · DAILY DRIVER</p>
+            <p className="card-kicker" data-scramble>PROJECT 04 · ANDROID · DAILY DRIVER</p>
             <h3>ApexTracker</h3>
             <p className="card-hook">One app instead of a pile of post-its.</p>
             <p className="card-body">
@@ -438,7 +408,7 @@ export default function Home() {
 
         <article className="card flip" id="gazeboard">
           <div className="reveal">
-            <p className="card-kicker" data-scramble>PROJECT 06 · ON-DEVICE ML · ANDROID</p>
+            <p className="card-kicker" data-scramble>PROJECT 05 · ON-DEVICE ML · ANDROID</p>
             <h3>GazeBoard</h3>
             <p className="card-hook">Talking by looking, with nothing leaving the phone.</p>
             <p className="card-body">
@@ -472,92 +442,195 @@ export default function Home() {
           </div>
         </article>
 
-        <article className="card" id="echo">
-          <div className="reveal">
-            <p className="card-kicker" data-scramble>PROJECT 07 · BLUETOOTH · OFFLINE</p>
-            <h3>Echo</h3>
-            <p className="card-hook">Emergency alerts that keep moving when the internet doesn&apos;t.</p>
-            <p className="card-body">
-              <span className="body-kicker">THE PROJECT /</span>
-              Weather alerts depend on networks that fail during the disasters they warn about. Echo passes
-              National Weather Service alerts between nearby phones over Bluetooth Low Energy. Every phone both
-              listens and broadcasts, so an alert can spread without a server.
-            </p>
-            <p className="card-body">
-              <span className="body-kicker">MY PART /</span>
-              Echo started as a native Android app. During the hackathon I ported it to Flutter, bringing along the
-              Kotlin and Swift Bluetooth servers and building the Dart scanner and client, the chunked transfer
-              protocol, SQLite storage, and the NWS feed. I also built a Raspberry Pi relay with its own tests, and
-              later rewrote the docs and protocol spec. Built at Hack for Humanity 2026 at Santa Clara University
-              with Sheel Shah and Oak Soe Khant.
-            </p>
-            <p className="tech-line">FLUTTER · DART · KOTLIN · SWIFT · BLE / GATT · SQLITE · RASPBERRY PI</p>
-            <ul className="chips">
-              <li>NO INTERNET NEEDED</li>
-              <li>ANDROID AND iOS</li>
-            </ul>
-            <div className="card-links">
+        <div className="more-projects reveal">
+          <p className="more-projects-head">MORE PROJECTS / TAP A ROW TO EXPAND</p>
+
+          <details className="more-project" id="oss-scout">
+            <summary>
+              <b>OSS Scout</b>
+              <span className="mp-hook">Nightly open-source scout with a human in charge</span>
+              <span className="mp-tech">PYTHON · GITHUB ACTIONS · CLAUDE CODE HOOKS</span>
+              <a href="https://github.com/aadityad12/oss-scout" target="_blank" rel="noreferrer">GitHub ↗</a>
+            </summary>
+            <article className="card flip">
+              <div className="reveal">
+                <p className="card-kicker" data-scramble>PROJECT 06 · AUTOMATION · SECURITY DESIGN</p>
+                <h3>OSS Scout</h3>
+                <p className="card-hook">Finds open-source work every night. Posts nothing without me.</p>
+                <p className="card-body">
+                  <span className="body-kicker">THE PROJECT /</span>
+                  Maintainers are buried in low-effort, machine-generated pull requests. OSS Scout automates the
+                  tedious parts of contributing (finding good issues, judging how welcoming a project is to outside
+                  contributors, reading unfamiliar code) and leaves the decisions to me. Each night it scans GitHub,
+                  prepares at most one tested draft fix, and emails me a summary in the morning. Nothing is posted
+                  until I approve it.
+                </p>
+                <p className="card-body">
+                  <span className="body-kicker">HOW IT STAYS SAFE /</span>
+                  The AI routine that prepares fixes can&apos;t write to GitHub at all: a guard hook blocks every
+                  write command, with 37 tests behind it. The only write token lives in a separate private repo the
+                  routine never sees, and a single workflow does all the posting after re-checking each item. Text
+                  from strangers&apos; issues is treated as data, not instructions.
+                </p>
+                <p className="tech-line">PYTHON · GITHUB ACTIONS · CLAUDE CODE HOOKS · CLOUDFLARE WORKERS AND ACCESS</p>
+                <ul className="chips">
+                  <li>SOLO</li>
+                  <li>IN DAILY USE</li>
+                </ul>
+                <div className="card-links">
+                  <a href="https://github.com/aadityad12/oss-scout" target="_blank" rel="noreferrer">GitHub ↗</a>
+                  <a href="https://oss.aadityad.dev" target="_blank" rel="noreferrer">My contributions ↗</a>
+                </div>
+              </div>
+              <div className="card-media reveal">
+                <ol className="flow-steps mono" aria-label="OSS Scout's nightly loop">
+                  <li><b>SCAN</b><span>nightly, plain Python, no AI</span></li>
+                  <li><b>PREPARE</b><span>at most one tested draft fix</span></li>
+                  <li><b>REVIEW</b><span>private dashboard and a morning email</span></li>
+                  <li><b>ACT</b><span>one tap; the only path that writes to GitHub</span></li>
+                  <li><b>TRACK</b><span>status read from GitHub, never self-reported</span></li>
+                </ol>
+                <p className="media-caption">the nightly loop</p>
+              </div>
+            </article>
+          </details>
+
+          <details className="more-project" id="echo">
+            <summary>
+              <b>Echo</b>
+              <span className="mp-hook">Emergency alerts over Bluetooth, no internet</span>
+              <span className="mp-tech">FLUTTER · BLE · KOTLIN · SWIFT</span>
               <a href="https://github.com/aadityad12/Echo" target="_blank" rel="noreferrer">GitHub ↗</a>
-            </div>
-          </div>
-          <div className="card-media tilt reveal" style={{ "--tilt": "-1deg" } as React.CSSProperties}>
-            <figure className="phone">
-              <Image
-                src="/projects/echo-alert.png"
-                alt="Echo showing a severe weather alert received over Bluetooth"
-                width={1206}
-                height={2461}
-              />
-            </figure>
-            <p className="media-caption">an alert that arrived with no internet</p>
-          </div>
-        </article>
+            </summary>
+            <article className="card">
+              <div className="reveal">
+                <p className="card-kicker" data-scramble>PROJECT 07 · BLUETOOTH · OFFLINE</p>
+                <h3>Echo</h3>
+                <p className="card-hook">Emergency alerts that keep moving when the internet doesn&apos;t.</p>
+                <p className="card-body">
+                  <span className="body-kicker">THE PROJECT /</span>
+                  Weather alerts depend on networks that fail during the disasters they warn about. Echo passes
+                  National Weather Service alerts between nearby phones over Bluetooth Low Energy. Every phone both
+                  listens and broadcasts, so an alert can spread without a server.
+                </p>
+                <p className="card-body">
+                  <span className="body-kicker">MY PART /</span>
+                  Echo started as a native Android app. During the hackathon I ported it to Flutter, bringing along
+                  the Kotlin and Swift Bluetooth servers and building the Dart scanner and client, the chunked
+                  transfer protocol, SQLite storage, and the NWS feed. I also built a Raspberry Pi relay with its
+                  own tests, and later rewrote the docs and protocol spec. Built at Hack for Humanity 2026 at Santa
+                  Clara University with Sheel Shah and Oak Soe Khant.
+                </p>
+                <p className="tech-line">FLUTTER · DART · KOTLIN · SWIFT · BLE / GATT · SQLITE · RASPBERRY PI</p>
+                <ul className="chips">
+                  <li>NO INTERNET NEEDED</li>
+                  <li>ANDROID AND iOS</li>
+                </ul>
+                <div className="card-links">
+                  <a href="https://github.com/aadityad12/Echo" target="_blank" rel="noreferrer">GitHub ↗</a>
+                </div>
+              </div>
+              <div className="card-media tilt reveal" style={{ "--tilt": "-1deg" } as React.CSSProperties}>
+                <figure className="phone">
+                  <Image
+                    src="/projects/echo-alert.png"
+                    alt="Echo showing a severe weather alert received over Bluetooth"
+                    width={1206}
+                    height={2461}
+                  />
+                </figure>
+                <p className="media-caption">an alert that arrived with no internet</p>
+              </div>
+            </article>
+          </details>
 
-        <article className="card flip" id="temper">
-          <div className="reveal">
-            <p className="card-kicker" data-scramble>PROJECT 08 · AI EVALUATION</p>
-            <h3>Temper</h3>
-            <p className="card-hook">Test the system around the model.</p>
-            <p className="card-body">
-              <span className="body-kicker">THE PROJECT /</span>
-              A model&apos;s system prompt, skills, and tools can quietly make it worse. Temper asks the same
-              questions with and without that harness; if the harness scores lower, the harness is the cause. It
-              then writes replacement files for the parts that failed and re-checks only those.
-            </p>
-            <p className="card-body">
-              <span className="body-kicker">MY PART /</span>
-              I wrote the spec, API contract, and JSON Schemas, and built the local client, the pi extension, and
-              the FastAPI service (Gemini as judge, DeepSeek as the bare baseline, and the patch generator). I also
-              wrote a deliberately flawed customer-support agent with an answer key, so the whole evaluate, patch,
-              re-evaluate loop runs offline with no API keys. That offline path is tested; the live-model path
-              isn&apos;t currently verified. Built at the AI Engineer World&apos;s Fair Hackathon 2026 with Sheel
-              Shah.
-            </p>
-            <p className="tech-line">PYTHON · FASTAPI · JSON SCHEMA · GEMINI · DEEPSEEK</p>
-            <ul className="chips">
-              <li>AI EVALS</li>
-              <li>HACKATHON BUILD</li>
-            </ul>
-            <div className="card-links">
+          <details className="more-project" id="temper">
+            <summary>
+              <b>Temper</b>
+              <span className="mp-hook">Finds where an agent&apos;s harness makes it worse</span>
+              <span className="mp-tech">PYTHON · FASTAPI · JSON SCHEMA</span>
               <a href="https://github.com/aadityad12/Temper" target="_blank" rel="noreferrer">GitHub ↗</a>
-            </div>
-          </div>
-          <div className="card-media reveal">
-            <TemperBench />
-            <div className="card-cameo cameo-work">
-              <StaticMascot pose="work" hoverFrame="work-turn" label="The portfolio mascot tightening a bolt on the test bench" />
-            </div>
-            <p className="media-caption">the test bench, drawn</p>
-          </div>
-        </article>
+            </summary>
+            <article className="card flip">
+              <div className="reveal">
+                <p className="card-kicker" data-scramble>PROJECT 08 · AI EVALUATION</p>
+                <h3>Temper</h3>
+                <p className="card-hook">Test the system around the model.</p>
+                <p className="card-body">
+                  <span className="body-kicker">THE PROJECT /</span>
+                  A model&apos;s system prompt, skills, and tools can quietly make it worse. Temper asks the same
+                  questions with and without that harness; if the harness scores lower, the harness is the cause.
+                  It then writes replacement files for the parts that failed and re-checks only those.
+                </p>
+                <p className="card-body">
+                  <span className="body-kicker">MY PART /</span>
+                  I wrote the spec, API contract, and JSON Schemas, and built the local client, the pi extension,
+                  and the FastAPI service (Gemini as judge, DeepSeek as the bare baseline, and the patch
+                  generator). I also wrote a deliberately flawed customer-support agent with an answer key, so the
+                  whole evaluate, patch, re-evaluate loop runs offline with no API keys. That offline path is
+                  tested; the live-model path isn&apos;t currently verified. Built at the AI Engineer World&apos;s
+                  Fair Hackathon 2026 with Sheel Shah.
+                </p>
+                <p className="tech-line">PYTHON · FASTAPI · JSON SCHEMA · GEMINI · DEEPSEEK</p>
+                <ul className="chips">
+                  <li>AI EVALS</li>
+                  <li>HACKATHON BUILD</li>
+                </ul>
+                <div className="card-links">
+                  <a href="https://github.com/aadityad12/Temper" target="_blank" rel="noreferrer">GitHub ↗</a>
+                </div>
+              </div>
+              <div className="card-media reveal">
+                <TemperBench />
+                <div className="card-cameo cameo-work">
+                  <StaticMascot pose="work" hoverFrame="work-turn" label="The portfolio mascot tightening a bolt on the test bench" />
+                </div>
+                <p className="media-caption">the test bench, drawn</p>
+              </div>
+            </article>
+          </details>
 
-        <div className="also-built reveal">
-          <p>
-            ALSO BUILT / <a href="https://github.com/aadityad12/Clear-Dispatch" target="_blank" rel="noreferrer">CLEAR DISPATCH</a>: a local
-            emergency-dispatch simulation with a four-stage FastAPI pipeline, live WebSocket dashboard, Haversine
-            unit assignment, and explicit dispatcher approval before heavy assets move · team project at HackDavis
-            2026
-          </p>
+          <details className="more-project" id="cleardispatch">
+            <summary>
+              <b>ClearDispatch</b>
+              <span className="mp-hook">Dispatch sim where heavy assets need a human&apos;s yes</span>
+              <span className="mp-tech">PYTHON · FASTAPI · REACT · WEBSOCKETS</span>
+              <a href="https://github.com/aadityad12/Clear-Dispatch" target="_blank" rel="noreferrer">GitHub ↗</a>
+            </summary>
+            <article className="card">
+              <div className="reveal">
+                <p className="card-kicker" data-scramble>PROJECT 09 · SIMULATION · REAL-TIME</p>
+                <h3>ClearDispatch</h3>
+                <p className="card-hook">Heavy assets don&apos;t move until a dispatcher says so.</p>
+                <p className="card-body">
+                  <span className="body-kicker">THE PROJECT /</span>
+                  A local emergency-dispatch simulation. Synthetic calls come in, a four-stage FastAPI pipeline
+                  (monitor, triage, resource, relay) classifies them and picks the nearest available unit by
+                  Haversine distance, and a React dashboard streams the state live over WebSockets. Air tankers,
+                  heavy rescue, and hazmat units sit on a blocking hold until a human dispatcher approves. A team
+                  project at HackDavis 2026.
+                </p>
+                <p className="tech-line">PYTHON · FASTAPI · REACT · TYPESCRIPT · WEBSOCKETS</p>
+                <ul className="chips">
+                  <li>HACKDAVIS 2026</li>
+                  <li>TEAM</li>
+                </ul>
+                <div className="card-links">
+                  <a href="https://github.com/aadityad12/Clear-Dispatch" target="_blank" rel="noreferrer">GitHub ↗</a>
+                </div>
+              </div>
+              <div className="card-media reveal">
+                <ol className="flow-steps mono" aria-label="ClearDispatch's call pipeline">
+                  <li><b>MONITOR</b><span>watches the call rate, flips to surge mode</span></li>
+                  <li><b>TRIAGE</b><span>severity, type, vulnerability</span></li>
+                  <li><b>RESOURCE</b><span>nearest unit by Haversine distance</span></li>
+                  <li><b>HOLD</b><span>heavy assets wait for a dispatcher&apos;s yes</span></li>
+                  <li><b>RELAY</b><span>briefing to the dashboard, under 25 words</span></li>
+                </ol>
+                <p className="media-caption">four stages and a hold</p>
+              </div>
+            </article>
+          </details>
         </div>
         <OpenSourceCard />
       </section>

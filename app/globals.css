@@ -340,12 +340,35 @@ section, footer { scroll-margin-top: 84px; }
 .cameo-perch { top: -51px; right: 26px; }
 .cameo-work { bottom: -22px; right: -20px; }
 
-/* ---------- also built ---------- */
-.also-built { margin-top: 8px; padding: 18px 0 0; border-top: 1px solid var(--line); }
-.also-built p { margin: 0; font-family: var(--font-mono), monospace; font-size: 12px; color: var(--muted); transition: padding-left 160ms ease; }
-.also-built p:hover { padding-left: 8px; }
-.also-built a { color: var(--ink); text-decoration-color: var(--accent); text-underline-offset: 4px; }
-.also-built a:hover, .also-built a:focus-visible { color: var(--accent); }
+/* ---------- more projects (native <details>, no JS needed) ---------- */
+.more-projects { margin-top: 8px; border-top: 1px solid var(--line); }
+.more-projects-head { margin: 18px 0 2px; font-family: var(--font-mono), monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; color: var(--muted); }
+.more-project { border-bottom: 1px solid var(--line); scroll-margin-top: 84px; }
+.more-project summary {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px;
+  padding-block: 14px; cursor: pointer; list-style: none;
+}
+.more-project summary::-webkit-details-marker { display: none; }
+.more-project summary b { font-family: var(--font-display), Georgia, serif; font-size: 19px; font-weight: 600; }
+.more-project .mp-hook { flex: 1 1 220px; min-width: 0; color: var(--muted); font-size: 14px; }
+.more-project .mp-tech { font-family: var(--font-mono), monospace; font-size: 10.5px; letter-spacing: 0.04em; color: var(--muted); }
+.more-project summary a { font-size: 14px; white-space: nowrap; text-decoration-color: var(--accent); text-underline-offset: 4px; transition: color 140ms ease; }
+.more-project summary a:hover, .more-project summary a:focus-visible { color: var(--accent); }
+.more-project summary::after {
+  content: "+"; margin-left: 4px;
+  font-family: var(--font-mono), monospace; font-size: 14px; font-weight: 700; color: var(--accent);
+  transition: transform 160ms ease;
+}
+.more-project[open] summary::after { transform: rotate(45deg); }
+.more-project summary:hover b, .more-project summary:focus-visible b { color: var(--accent); }
+.more-project .card { border-bottom: 0; padding-block: clamp(24px, 4vh, 44px); }
+@media (max-width: 640px) {
+  .more-project summary { gap: 4px 12px; }
+  .more-project .mp-hook { flex-basis: 100%; order: 3; }
+  .more-project .mp-tech { order: 4; flex: 1; }
+  .more-project summary a { order: 2; margin-left: auto; }
+  .more-project summary::after { order: 5; }
+}
 
 /* ---------- experience ---------- */
 .xp-list { margin: 0; padding: 0; list-style: none; }
