@@ -163,6 +163,21 @@ section, footer { scroll-margin-top: 84px; }
   width: min(100%, 245px); justify-self: end;
 }
 
+/* proof strip: three quiet facts for the 30-second scan, one restrained row */
+.hero-proof {
+  display: flex; flex-wrap: wrap; row-gap: 12px;
+  margin: clamp(40px, 6vh, 64px) 0 0; padding: 18px 0 0;
+  border-top: 1px solid var(--line); list-style: none;
+}
+.hero-proof li {
+  display: flex; align-items: baseline; gap: 10px;
+  padding-right: clamp(18px, 3vw, 36px); margin-right: clamp(18px, 3vw, 36px);
+  border-right: 1px solid var(--line);
+}
+.hero-proof li:last-child { padding-right: 0; margin-right: 0; border-right: 0; }
+.hero-proof b { font-family: var(--font-display), Georgia, serif; font-size: 19px; font-weight: 600; white-space: nowrap; }
+.hero-proof span { font-family: var(--font-mono), monospace; font-size: 10.5px; letter-spacing: 0.04em; color: var(--muted); }
+
 /* ---------- mascot (flipbook system) ---------- */
 .mascot { width: 100%; height: auto; display: block; }
 .mascot-flip { cursor: pointer; }
@@ -399,6 +414,8 @@ section, footer { scroll-margin-top: 84px; }
 }
 
 @media (max-width: 640px) {
+  .hero-proof { flex-direction: column; row-gap: 10px; }
+  .hero-proof li { padding-right: 0; margin-right: 0; border-right: 0; }
   .site-header { padding-block: 8px; }
   .site-header .shell { padding-inline: 10px; }
   .site-nav { width: 100%; }

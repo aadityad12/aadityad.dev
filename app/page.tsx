@@ -112,7 +112,7 @@ export default function Home() {
           <div className="hero-copy">
             <p className="hero-eyebrow" data-scramble>COMPUTER ENGINEERING @ SJSU · EXPECTED MAY 2028</p>
             <h1 className="hero-name">Aaditya Desai</h1>
-            <p className="hero-headline">Hi, I&apos;m Aadi.</p>
+            <p className="hero-headline">Software for real constraints.</p>
             <p className="hero-intro">
               I&apos;m a computer engineering student at San José State. I&apos;ve built a head-mounted obstacle
               detector with Infineon, a small programming language with a hand-written ARM64 JIT, an Android app I
@@ -139,6 +139,11 @@ export default function Home() {
             <HeroMascot />
           </div>
         </div>
+        <ul className="hero-proof" aria-label="Selected highlights">
+          <li><b>Winner</b><span>UC BERKELEY AI HACKATHON 2026</span></li>
+          <li><b>&#9733; 240+</b><span>ON ACCORDION, THE TEAM REPO</span></li>
+          <li><b>Infineon</b><span>RESEARCH INTERNSHIP, 2026</span></li>
+        </ul>
       </section>
 
       <section className="section shell" id="experience">
