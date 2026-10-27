@@ -30,27 +30,27 @@ const caveat = Caveat({
 });
 
 export const metadata: Metadata = {
-  title: "Aaditya Desai | Software, ML & Systems",
+  title: "Aaditya Desai | Computer Engineering @ SJSU",
   description:
-    "Computer engineering student at SJSU building on-device ML, offline-first applications, and AI infrastructure. Seeking Summer 2027 internships.",
+    "Computer engineering student at SJSU. Projects in embedded vision, language runtimes, Android, and AI tooling. Looking for 2027 internships and co-ops.",
   metadataBase: new URL("https://aadityad.dev"),
   icons: {
     icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
   },
   openGraph: {
-    title: "Aaditya Desai | Software, ML & Systems",
+    title: "Aaditya Desai | Computer Engineering @ SJSU",
     description:
-      "On-device ML, offline-first applications, and AI infrastructure. Computer engineering @ SJSU, seeking Summer 2027 internships.",
+      "Embedded vision, language runtimes, Android, and AI tooling. Computer engineering @ SJSU, looking for 2027 internships and co-ops.",
     type: "website",
     url: "/",
-    images: [{ url: "/og-v2.png", width: 1200, height: 630, alt: "Aaditya Desai | Software, ML & Systems" }],
+    images: [{ url: "/og-v3.png", width: 1200, height: 630, alt: "Aaditya Desai | Computer Engineering @ SJSU" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Aaditya Desai | Software, ML & Systems",
+    title: "Aaditya Desai | Computer Engineering @ SJSU",
     description:
-      "On-device ML, offline-first applications, and AI infrastructure. Computer engineering @ SJSU, seeking Summer 2027 internships.",
-    images: ["/og-v2.png"],
+      "Embedded vision, language runtimes, Android, and AI tooling. Computer engineering @ SJSU, looking for 2027 internships and co-ops.",
+    images: ["/og-v3.png"],
   },
 };
 

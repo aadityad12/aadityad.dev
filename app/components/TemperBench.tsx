@@ -27,12 +27,12 @@ export default function TemperBench() {
         <InkArrow x={202} />
         <InkBox x={286} label="JUDGE" sub="6 dims" />
       </svg>
-      <div className="bench-readout mono">
-        <div><span>INSTRUCTION ADHERENCE</span><b>-27</b><i className="fail">PATCH</i></div>
-        <div><span>TOOL ACCURACY</span><b>-41</b><i className="fail">PATCH</i></div>
-        <div><span>OUTPUT FORMAT</span><b>-03</b><i>PASS</i></div>
-        <div><span>SKILL TRIGGER</span><b>-08</b><i className="fail">PATCH</i></div>
-      </div>
+      <ol className="bench-readout bench-steps mono" aria-label="Temper's loop">
+        <li><b>ASK</b><span>the same questions, bare and with the harness</span></li>
+        <li><b>JUDGE</b><span>score both across six dimensions</span></li>
+        <li><b>PATCH</b><span>replacement files for what the harness made worse</span></li>
+        <li><b>RE-CHECK</b><span>rerun only the dimensions that failed</span></li>
+      </ol>
     </div>
   );
 }
