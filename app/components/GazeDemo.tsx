@@ -22,6 +22,7 @@ export default function GazeDemo() {
   const [active, setActive] = useState<string | null>(null);
   const [typed, setTyped] = useState("");
   const [live, setLive] = useState(false);
+  const [touched, setTouched] = useState(false);
 
   useEffect(() => {
     const svg = svgRef.current;
@@ -32,6 +33,10 @@ export default function GazeDemo() {
     const pupil = svg.querySelector<SVGCircleElement>(".gaze-pupil")!;
     let raf = 0;
     let px = 0, py = 0, tx = 0, ty = 0;
+    // attract mode: the eye wanders on its own until the pointer arrives, so
+    // visitors notice the demo is live; the path never dwells long enough to
+    // type by accident
+    let attracted = true;
     let dwellTile: string | null = null;
     let dwellStart = 0;
     let typing = 0;
@@ -54,13 +59,25 @@ export default function GazeDemo() {
     };
 
     const onMove = (e: PointerEvent) => {
+      if (attracted) {
+        attracted = false;
+        setTouched(true);
+      }
       const r = svg.getBoundingClientRect();
       tx = Math.max(-1, Math.min(1, ((e.clientX - r.left) / r.width) * 2 - 1));
       ty = Math.max(-1, Math.min(1, ((e.clientY - r.top) / r.height) * 2 - 1));
     };
+    const onLeave = () => {
+      attracted = true;
+    };
 
     const tick = () => {
       raf = requestAnimationFrame(tick);
+      if (attracted) {
+        const t = performance.now();
+        tx = Math.sin(t / 500) * 0.7;
+        ty = Math.sin(t / 700) * 0.7;
+      }
       px += (tx - px) * 0.12;
       py += (ty - py) * 0.12;
       pupil.setAttribute("cx", String(120 + px * 14));
@@ -80,10 +97,12 @@ export default function GazeDemo() {
 
     svg.addEventListener("pointermove", onMove);
     svg.addEventListener("pointerdown", onMove);
+    svg.addEventListener("pointerleave", onLeave);
     raf = requestAnimationFrame(tick);
     return () => {
       svg.removeEventListener("pointermove", onMove);
       svg.removeEventListener("pointerdown", onMove);
+      svg.removeEventListener("pointerleave", onLeave);
       cancelAnimationFrame(raf);
       window.clearInterval(typing);
       window.clearTimeout(liveTimer);
@@ -92,6 +111,9 @@ export default function GazeDemo() {
 
   return (
     <div className="gaze-demo">
+      {live && !touched && (
+        <p className="gaze-live-pill"><span className="gaze-live-dot" aria-hidden="true" />LIVE — MOVE YOUR POINTER</p>
+      )}
       <svg
         ref={svgRef}
         viewBox="0 0 240 200"
@@ -118,7 +140,7 @@ export default function GazeDemo() {
         <span className="gaze-cursor">▮</span> {typed || (live ? "look around…" : "4 gaze directions · dwell to type")}
       </p>
       <p className="media-caption" style={{ marginTop: "4px" } as CSSProperties}>
-        {live ? "try it: hold your gaze on a tile" : "dwell-based eye typing, drawn to scale"}
+        {live ? "it's live: the eye follows you, dwell on a tile" : "dwell-based eye typing, drawn to scale"}
       </p>
     </div>
   );

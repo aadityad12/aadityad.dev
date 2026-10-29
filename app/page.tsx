@@ -3,6 +3,10 @@
 import { useEffect } from "react";
 import Image from "next/image";
 import AccordionVideo from "./components/AccordionVideo";
+import AccordionMap from "./components/AccordionMap";
+import VisionPipeline from "./components/VisionPipeline";
+import RungBars from "./components/RungBars";
+import ApexDay from "./components/ApexDay";
 import GazeDemo from "./components/GazeDemo";
 import TemperBench from "./components/TemperBench";
 import OpenSourceCard from "./components/OpenSourceCard";
@@ -211,9 +215,9 @@ export default function Home() {
 
         <nav className="project-index" aria-label="Project list">
           <ol>
+            <li><a href="#accordion"><b>Accordion</b><span>Context manager for AI coding agents</span></a></li>
             <li><a href="#visionassist"><b>VisionAssist</b><span>On-device obstacle detection, with Infineon</span></a></li>
             <li><a href="#rung"><b>Rung</b><span>A language built five ways, every speed-up measured</span></a></li>
-            <li><a href="#accordion"><b>Accordion</b><span>Context manager for AI coding agents</span></a></li>
             <li><a href="#apextracker"><b>ApexTracker</b><span>Offline-first Android app I use daily</span></a></li>
             <li><a href="#gazeboard"><b>GazeBoard</b><span>Eye-gaze communication on a phone NPU</span></a></li>
             <li><a href="#oss-scout"><b>OSS Scout</b><span>Nightly open-source scout with a human in charge</span></a></li>
@@ -223,9 +227,54 @@ export default function Home() {
           </ol>
         </nav>
 
-        <article className="card" id="visionassist">
+        <article className="card" id="accordion">
           <div className="reveal">
-            <p className="card-kicker" data-scramble>PROJECT 01 · EMBEDDED VISION · INFINEON</p>
+            <p className="card-kicker" data-scramble>PROJECT 01 · AI DEVELOPER TOOLS</p>
+            <h3>Accordion</h3>
+            <p className="card-hook">See what your coding agent remembers.</p>
+            <p className="card-body">
+              <span className="body-kicker">THE PROJECT /</span>
+              When a coding agent&apos;s context fills up, most tools squash the session into one lossy summary.
+              Accordion shows the context as a map instead, and lets you or the agent fold, unfold, or pin
+              individual blocks. Folding only changes what the agent sees, so nothing is lost. Built by Tyler
+              Darisme, Sheel Shah, Thy Tang, and me, it won The Token Company sponsor track at the UC Berkeley AI
+              Hackathon 2026. In the team&apos;s hackathon-scale SlopCodeBench run, its Thermocline conductor
+              finished 5 of 6 checkpoints, against 2 of 6 for naive compaction.
+            </p>
+            <p className="card-body">
+              <span className="body-kicker">MY PART /</span>
+              Through June 2026 I worked on the conductor, the part that decides what to fold. I built a way to
+              tell whether folding was helping: health metrics, evaluators, and a harness that compares a session
+              against naive compaction. I added a cross-encoder rerank stage for choosing what to unfold, ported the
+              conductor onto Accordion&apos;s command contract (PRs #68 and #71), and built a dashboard showing the
+              conductor&apos;s health and each decision it made.
+            </p>
+            <p className="tech-line">MY PART: TYPESCRIPT · HUGGING FACE TRANSFORMERS · SVELTEKIT</p>
+            <ul className="chips">
+              <li className="win">🏆 WINNER · UC BERKELEY AI HACKATHON 2026</li>
+              <li className="chip-link"><a href="https://github.com/a-Fig/accordion" target="_blank" rel="noreferrer">★ 240+ · TEAM REPO ↗</a></li>
+              <li>MIT</li>
+            </ul>
+            <div className="card-links">
+              <a href="https://get-accordion.dev" target="_blank" rel="noreferrer">get-accordion.dev ↗</a>
+              <a href="https://github.com/a-Fig/accordion" target="_blank" rel="noreferrer">GitHub ↗</a>
+            </div>
+          </div>
+          <div className="card-media reveal">
+            <div className="media-stack">
+              <AccordionMap />
+              <AccordionVideo />
+            </div>
+            <div className="card-cameo cameo-perch">
+              <StaticMascot pose="perch" hoverFrame="point" label="The portfolio mascot perched on the demo, pointing at the star count when you hover" />
+            </div>
+            <p className="media-caption">the map, and the demo, live</p>
+          </div>
+        </article>
+
+        <article className="card flip" id="visionassist">
+          <div className="reveal">
+            <p className="card-kicker" data-scramble>PROJECT 02 · EMBEDDED VISION · INFINEON</p>
             <h3>VisionAssist</h3>
             <p className="card-hook">Obstacle warnings you can hear, with no phone or internet.</p>
             <p className="card-body">
@@ -259,21 +308,24 @@ export default function Home() {
             </div>
           </div>
           <div className="card-media tilt reveal" style={{ "--tilt": "1deg" } as React.CSSProperties}>
-            <figure className="device">
-              <Image
-                src="/projects/visionassist-device.jpg"
-                alt="VisionAssist's Raspberry Pi 5 in a red 3D-printed case with a cooling fan, and an Arducam camera module mounted on top"
-                width={711}
-                height={755}
-              />
-            </figure>
-            <p className="media-caption">the Pi 5 and camera</p>
+            <div className="media-stack">
+              <VisionPipeline />
+              <figure className="device">
+                <Image
+                  src="/projects/visionassist-device.jpg"
+                  alt="VisionAssist's Raspberry Pi 5 in a red 3D-printed case with a cooling fan, and an Arducam camera module mounted on top"
+                  width={711}
+                  height={755}
+                />
+              </figure>
+            </div>
+            <p className="media-caption">the pipeline, and the Pi 5 it runs on</p>
           </div>
         </article>
 
-        <article className="card flip" id="rung">
+        <article className="card" id="rung">
           <div className="reveal">
-            <p className="card-kicker" data-scramble>PROJECT 02 · LANGUAGES · C++ AND ARM64</p>
+            <p className="card-kicker" data-scramble>PROJECT 03 · LANGUAGES · C++ AND ARM64</p>
             <h3>Rung</h3>
             <p className="card-hook">One tiny language, five engines, every speed-up measured.</p>
             <p className="card-body">
@@ -308,63 +360,12 @@ export default function Home() {
             </div>
           </div>
           <div className="card-media reveal">
-            <div className="result-panel mono">
-              <p className="result-head">MEDIAN PER CALL · APPLE M1 PRO</p>
-              <dl>
-                <div><dt>Stack VM vs tree-walker</dt><dd>1.30x to 4.99x</dd></div>
-                <div><dt>JIT vs tree-walker, loop_sum</dt><dd>22.64x</dd></div>
-                <div><dt>NaN-boxing vs previous rung, sieve</dt><dd className="slower">0.63x</dd></div>
-                <div><dt>Background JIT, p99 on warmup</dt><dd>0.82 to 0.32 ms</dd></div>
-              </dl>
-            </div>
-            <p className="media-caption">including the one that got slower</p>
+            <RungBars />
+            <p className="media-caption">every speed-up, including the one that got slower</p>
           </div>
         </article>
 
-        <article className="card" id="accordion">
-          <div className="reveal">
-            <p className="card-kicker" data-scramble>PROJECT 03 · AI DEVELOPER TOOLS</p>
-            <h3>Accordion</h3>
-            <p className="card-hook">See what your coding agent remembers.</p>
-            <p className="card-body">
-              <span className="body-kicker">THE PROJECT /</span>
-              When a coding agent&apos;s context fills up, most tools squash the session into one lossy summary.
-              Accordion shows the context as a map instead, and lets you or the agent fold, unfold, or pin
-              individual blocks. Folding only changes what the agent sees, so nothing is lost. Built by Tyler
-              Darisme, Sheel Shah, Thy Tang, and me, it won The Token Company sponsor track at the UC Berkeley AI
-              Hackathon 2026. In the team&apos;s hackathon-scale SlopCodeBench run, its Thermocline conductor
-              finished 5 of 6 checkpoints, against 2 of 6 for naive compaction.
-            </p>
-            <p className="card-body">
-              <span className="body-kicker">MY PART /</span>
-              Through June 2026 I worked on the conductor, the part that decides what to fold. I built a way to
-              tell whether folding was helping: health metrics, evaluators, and a harness that compares a session
-              against naive compaction. I added a cross-encoder rerank stage for choosing what to unfold, ported the
-              conductor onto Accordion&apos;s command contract (PRs #68 and #71), and built a dashboard showing the
-              conductor&apos;s health and each decision it made.
-            </p>
-            <p className="tech-line">MY PART: TYPESCRIPT · HUGGING FACE TRANSFORMERS · SVELTEKIT</p>
-            <ul className="chips">
-              <li className="win">🏆 WINNER · UC BERKELEY AI HACKATHON 2026</li>
-              <li className="chip-link"><a href="https://github.com/a-Fig/accordion" target="_blank" rel="noreferrer">★ 240+ · TEAM REPO ↗</a></li>
-              <li>MIT</li>
-            </ul>
-            <div className="card-links">
-              <a href="https://get-accordion.dev" target="_blank" rel="noreferrer">get-accordion.dev ↗</a>
-              <a href="https://github.com/a-Fig/accordion" target="_blank" rel="noreferrer">GitHub ↗</a>
-            </div>
-          </div>
-          <div className="card-media reveal">
-            <AccordionVideo />
-            <div className="card-cameo cameo-perch">
-              <StaticMascot pose="perch" hoverFrame="point" label="The portfolio mascot perched on the demo, pointing at the star count when you hover" />
-            </div>
-            <p className="media-caption">the context map, live</p>
-          </div>
-        </article>
-
-
-        <article className="card" id="apextracker">
+        <article className="card flip" id="apextracker">
           <div className="reveal">
             <p className="card-kicker" data-scramble>PROJECT 04 · ANDROID · DAILY DRIVER</p>
             <h3>ApexTracker</h3>
@@ -394,19 +395,22 @@ export default function Home() {
             </div>
           </div>
           <div className="card-media tilt reveal" style={{ "--tilt": "1.1deg" } as React.CSSProperties}>
-            <figure className="phone">
-              <Image
-                src="/projects/apextracker-dashboard.png"
-                alt="ApexTracker's graphite dashboard: daily goal score and a consistency bar chart in monochrome"
-                width={1080}
-                height={2340}
-              />
-            </figure>
-            <p className="media-caption">the day, scored</p>
+            <div className="media-stack">
+              <ApexDay />
+              <figure className="phone">
+                <Image
+                  src="/projects/apextracker-dashboard.png"
+                  alt="ApexTracker's graphite dashboard: daily goal score and a consistency bar chart in monochrome"
+                  width={1080}
+                  height={2340}
+                />
+              </figure>
+            </div>
+            <p className="media-caption">the score, and the app that shows it</p>
           </div>
         </article>
 
-        <article className="card flip" id="gazeboard">
+        <article className="card" id="gazeboard">
           <div className="reveal">
             <p className="card-kicker" data-scramble>PROJECT 05 · ON-DEVICE ML · ANDROID</p>
             <h3>GazeBoard</h3>

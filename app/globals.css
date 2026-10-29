@@ -289,7 +289,17 @@ section, footer { scroll-margin-top: 84px; }
 .video-toggle:hover, .video-toggle:focus-visible { background: var(--accent); border-color: var(--accent); color: var(--paper); }
 
 /* GazeBoard interactive demo */
-.gaze-demo { border: 1px solid var(--line); border-radius: 10px; padding: 22px 22px 14px; background: #fff; touch-action: none; }
+.gaze-demo { position: relative; border: 1px solid var(--line); border-radius: 10px; padding: 22px 22px 14px; background: #fff; touch-action: none; }
+.gaze-live-pill {
+  position: absolute; top: 10px; left: 10px; margin: 0;
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 5px 10px; border: 1px solid var(--accent); border-radius: 999px;
+  background: var(--paper); color: var(--accent);
+  font-size: 10px; font-weight: 700; letter-spacing: 0.05em;
+  pointer-events: none;
+}
+.gaze-live-dot { width: 7px; height: 7px; border-radius: 999px; background: var(--accent); animation: gaze-pulse 1.2s ease-in-out infinite; }
+@keyframes gaze-pulse { 50% { opacity: 0.25; } }
 .gaze-demo svg { width: 100%; max-width: 320px; height: auto; display: block; margin-inline: auto; cursor: crosshair; }
 .gaze-demo svg path { stroke: var(--ink); fill: none; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
 .gaze-demo svg text { font-family: var(--font-mono), monospace; font-size: 11px; font-weight: 700; fill: var(--ink); }
@@ -334,6 +344,34 @@ section, footer { scroll-margin-top: 84px; }
 .flow-steps li::before { content: "0" counter(step); color: var(--accent); font-weight: 700; }
 .flow-steps li:last-child { border-bottom: 0; }
 .flow-steps b { color: var(--ink); font-weight: 700; }
+
+/* ---------- drawn project artifacts (static SVG, no JS) ---------- */
+.ink-panel { border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px 10px; background: #fff; }
+.ink-panel svg { width: 100%; height: auto; display: block; }
+.ink-panel svg path { stroke: var(--ink); fill: none; stroke-width: 2.75; stroke-linecap: round; stroke-linejoin: round; }
+.ink-panel svg path.ink-thin { stroke-width: 1.75; }
+.ink-panel svg path.ink-accent { stroke: var(--accent); }
+.ink-panel svg path.ink-good { stroke: var(--good); }
+.ink-panel svg path.ink-dash { stroke: var(--accent); stroke-width: 2; stroke-dasharray: 5 4; }
+.ink-panel svg circle.ink-dot { fill: var(--accent); stroke: none; }
+.ink-panel svg text { font-family: var(--font-mono), monospace; fill: var(--ink); }
+.ink-panel svg text.ink-label { font-size: 11px; font-weight: 700; }
+.ink-panel svg text.ink-sub { font-size: 8px; fill: var(--muted); }
+.ink-panel svg text.ink-note { font-size: 8.5px; fill: var(--muted); }
+.ink-panel svg text.ink-accent-t { fill: var(--accent); }
+.ink-panel svg text.ink-name { font-size: 8.5px; font-weight: 700; fill: var(--ink); }
+.ink-foot { margin: 12px 0 4px; padding-top: 9px; border-top: 1px solid var(--line); font-size: 10px; letter-spacing: 0.04em; color: var(--muted); }
+.ink-foot b { color: var(--ink); }
+
+/* media columns that pair a drawn artifact with the real photo/screenshot */
+.media-stack > * + * { margin-top: 16px; }
+
+/* ApexTracker day-score panel */
+.apex-day-top { display: flex; align-items: flex-end; gap: 20px; }
+.apex-score { display: flex; flex-direction: column; line-height: 1; }
+.apex-num { font-family: var(--font-display), Georgia, serif; font-weight: 300; font-size: 56px; color: var(--ink); }
+.apex-cap { margin-top: 6px; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; color: var(--muted); }
+.apex-day-top svg { flex: 1; min-width: 0; }
 
 /* card cameos: the critter interacting with the media */
 .card-cameo { position: absolute; width: 72px; pointer-events: none; }
