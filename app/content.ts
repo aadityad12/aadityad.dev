@@ -210,7 +210,7 @@ export const PROJECTS: Project[] = [
   {
     id: "echo",
     title: "Echo",
-    kicker: "Bluetooth · Offline-first · Hack for Humanity 2026",
+    kicker: "Bluetooth LE · Hack for Humanity 2026",
     hook: "Emergency alerts that travel phone to phone over Bluetooth when the network goes down.",
     summary:
       "Weather alerts depend on networks that fail during the very disasters they warn about. Echo passes National Weather Service alerts between nearby phones over Bluetooth Low Energy, with every phone both listening and broadcasting.",

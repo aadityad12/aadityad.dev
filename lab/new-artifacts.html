@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Temper and OSS Scout · project artifacts</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=block" rel="stylesheet">
+<link rel="stylesheet" href="./temper-artifact.css">
+<link rel="stylesheet" href="./oss-scout-artifact.css">
+<style>
+*{box-sizing:border-box}
+html{color:#211946;background:#EEECF7;font:400 14px/1.7 Manrope,system-ui,sans-serif}
+body{margin:0}
+main{max-width:1160px;margin:0 auto;padding:34px 28px 70px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:20px;font:400 10px/1.5 "DM Mono",monospace;letter-spacing:.04em;text-transform:uppercase}
+.top button{min-height:44px;border:0;border-bottom:1px solid #C9C3E6;background:transparent;color:inherit;padding:3px 0;font:inherit;cursor:pointer}
+h1{font:400 60px/.95 "Instrument Serif",Georgia,serif;letter-spacing:-.035em;margin:48px 0 10px}
+h1 em{color:#B5321F}
+.lede{max-width:520px;color:#5A5280;font-size:13px;margin:0 0 34px}
+section{padding:36px 0 44px;border-top:1px solid #C9C3E6}
+h2{font:400 34px/1 "Instrument Serif",Georgia,serif;letter-spacing:-.02em;margin:0 0 6px}
+.note{color:#5A5280;font-size:12px;max-width:560px;margin:0 0 24px}
+.sizes{display:flex;flex-wrap:wrap;align-items:flex-start;gap:36px}
+.size{min-width:0}
+.size>span{display:block;margin-bottom:10px;color:#5A5280;font:400 9px "DM Mono",monospace;letter-spacing:.08em;text-transform:uppercase}
+.w540{width:540px;max-width:100%}
+.w340{width:340px;max-width:100%}
+button:focus-visible{outline:2px solid #FF5A47;outline-offset:4px}
+@media(max-width:700px){main{padding:22px 16px 40px}h1{font-size:44px}.sizes{gap:26px}}
+</style>
+</head>
+<body>
+<main>
+<header class="top"><span>Lab / new project artifacts</span><button id="motion" type="button" aria-pressed="false">Pause motion</button></header>
+<h1>Temper and OSS Scout.<br><em>What each one does.</em></h1>
+<p class="lede">Two illustrated panels for the project cards. Each loops quietly while on screen and holds a complete, still picture when paused or under reduced motion.</p>
+<section aria-labelledby="temper-title"><h2 id="temper-title">Temper</h2><p class="note">Bare vs. harnessed, judged across six dimensions, then patched with replacement files and re-checked.</p><div class="sizes" id="temper"></div></section>
+<section aria-labelledby="scout-title"><h2 id="scout-title">OSS Scout</h2><p class="note">The night shift scans, ranks and drafts. The guard turns back every GitHub write. One morning tap opens the only gate.</p><div class="sizes" id="scout"></div></section>
+</main>
+<script type="module">
+import { createTemperArtifact, setTemperPaused } from "./temper-artifact.js";
+import { createScoutArtifact, setScoutPaused } from "./oss-scout-artifact.js";
+function place(target, create) {
+  for (const [label, size] of [["~540 px · desktop card", "w540"], ["~340 px · phone card", "w340"]]) {
+    const wrap = document.createElement("div");
+    wrap.className = `size ${size}`;
+    wrap.innerHTML = `<span>${label}</span>`;
+    wrap.append(create());
+    target.append(wrap);
+  }
+}
+place(document.getElementById("temper"), createTemperArtifact);
+place(document.getElementById("scout"), createScoutArtifact);
+const preference = matchMedia("(prefers-reduced-motion: reduce)");
+const motion = document.getElementById("motion");
+let paused = preference.matches || new URLSearchParams(location.search).has("paused");
+function update() {
+  setTemperPaused(paused);
+  setScoutPaused(paused);
+  motion.textContent = paused ? "Resume motion" : "Pause motion";
+  motion.setAttribute("aria-pressed", String(paused));
+}
+motion.addEventListener("click", () => { paused = !paused; update(); });
+preference.addEventListener("change", (event) => { paused = event.matches; update(); });
+update();
+</script>
+</body>
+</html>

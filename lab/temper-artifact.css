@@ -1,0 +1,115 @@
+.temper-art{--temper-ink:#211946;--temper-muted:#5A5280;--temper-coral:#FF5A47;--temper-coral-text:#B5321F;--temper-soft:#C9C3E6;--temper-paper:#FBFAFE;--temper-tint:#E6E3F3;position:relative;isolation:isolate;container-type:inline-size;box-sizing:border-box;width:100%;min-width:0;margin:0;overflow:hidden;border:1px solid #D3CDE8;border-radius:8px;background:radial-gradient(ellipse at 30% 0%,#FFFFFF,#F7F5FC 55%,#EEEBF7);color:var(--temper-ink);font:400 12px/1.5 Manrope,system-ui,sans-serif;text-align:left}
+.temper-art *{box-sizing:border-box}
+.temper-art::after{content:"";position:absolute;inset:6px;z-index:-1;border:1px solid #2119460F;border-radius:4px;pointer-events:none}
+.temper-art i{display:block;font-style:normal}
+
+.temper-masthead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:27px 30px 0;font:500 9px/1.4 "DM Mono",monospace;text-transform:uppercase;letter-spacing:.13em}
+.temper-masthead>span:last-child{color:var(--temper-muted);font-size:8px;letter-spacing:.04em}
+
+.temper-fork{display:block;width:calc(100% - 52px);height:auto;margin:20px 26px 0 30px;overflow:visible}
+.temper-question-card{fill:var(--temper-paper);stroke:var(--temper-soft);stroke-width:1}
+.temper-question-tick{stroke:var(--temper-coral);stroke-width:1.4}
+.temper-fork-kicker{font:400 9px "DM Mono",monospace;letter-spacing:.1em;fill:var(--temper-muted)}
+.temper-question{font:italic 400 22px "Instrument Serif",Georgia,serif;letter-spacing:-.01em;fill:var(--temper-ink)}
+.temper-fork-path{stroke:var(--temper-ink);stroke-width:1;opacity:.55}
+.temper-fork-signal{stroke:var(--temper-coral);stroke-width:2.2;stroke-linecap:round;opacity:0;stroke-dasharray:14 120}
+.temper-mark-bare{fill:var(--temper-paper);stroke:var(--temper-muted);stroke-width:1.4}
+.temper-mark-harness{fill:var(--temper-ink)}
+.temper-lane{font:400 19px "Instrument Serif",Georgia,serif;letter-spacing:-.01em;fill:var(--temper-ink)}
+.temper-lane-sub{font:400 8.5px "DM Mono",monospace;letter-spacing:.08em;fill:var(--temper-muted)}
+
+.temper-chart{margin:18px 30px 0}
+.temper-chart-head{display:grid;grid-template-columns:minmax(0,37%) 1fr 20px;align-items:end;padding-bottom:7px;border-bottom:1px solid #21194622;color:var(--temper-muted);font:400 8px/1.4 "DM Mono",monospace;letter-spacing:.05em;text-transform:uppercase}
+.temper-key{display:flex;white-space:nowrap;align-items:center;gap:6px;color:var(--temper-coral-text)}
+.temper-key>i{width:14px;height:2px;border-radius:2px;background:var(--temper-coral)}
+.temper-axis{display:flex;justify-content:space-between;margin:0 8px}
+.temper-axis>span:last-child::after{content:" →"}
+.temper-axis>span:first-child::before{content:"← "}
+
+.temper-row{position:relative;display:grid;grid-template-columns:minmax(0,37%) 1fr 20px;align-items:center;min-height:clamp(25px,6.4cqi,34px);border-bottom:1px dotted #21194626}
+.temper-row::before{content:"";position:absolute;inset:1px -10px;z-index:-1;border-radius:3px;background:linear-gradient(90deg,#FF5A4716,#FF5A470A);opacity:0}
+.temper-dimension{min-width:0;padding-right:8px;font:400 clamp(13.5px,3.55cqi,19px)/1.05 "Instrument Serif",Georgia,serif;letter-spacing:-.005em;white-space:nowrap}
+.temper-track{position:relative;height:clamp(25px,6.4cqi,34px);margin:0 8px}
+.temper-track>i,.temper-rail{position:absolute;top:50%}
+.temper-rule{left:-8px;right:-8px;height:1px;background:repeating-linear-gradient(90deg,#21194624 0 1px,transparent 1px 25%) left/calc(100% - 15px) 100% no-repeat,#21194614;transform:translateY(-.5px)}
+.temper-bare{left:calc(var(--b) * 100%);width:11px;height:11px;margin:-5.5px 0 0 -5.5px;border:1.4px solid var(--temper-muted);border-radius:50%;background:var(--temper-paper);z-index:2}
+.temper-span{left:calc(var(--lo) * 100%);width:calc((var(--hi) - var(--lo)) * 100%);height:1.4px;margin-top:-.7px;background:var(--temper-ink);opacity:.45}
+.temper-deficit{left:calc(var(--h) * 100%);width:calc((var(--b) - var(--h)) * 100%);height:3px;margin-top:-1.5px;border-radius:2px;background:var(--temper-coral);transform-origin:right;opacity:0}
+.temper-gain{left:calc(var(--b) * 100%);width:calc((var(--p) - var(--b)) * 100%);height:1.6px;margin-top:-.8px;background:var(--temper-ink);transform-origin:left}
+.temper-trace{left:calc(var(--h) * 100%);width:calc((var(--b) - var(--h)) * 100%);height:1.2px;margin-top:-.6px;background:repeating-linear-gradient(90deg,var(--temper-coral) 0 3px,transparent 3px 6px);opacity:.6}
+.temper-ghost{left:calc(var(--h) * 100%);width:9px;height:9px;margin:-4.5px 0 0 -4.5px;border:1.2px dashed var(--temper-coral);border-radius:50%;opacity:.85}
+.temper-rail{left:0;right:0;height:0;transform:translateX(calc(var(--p) * 100%));z-index:3}
+.temper-harness{position:absolute;left:0;top:0;width:11px;height:11px;margin:-5.5px 0 0 -5.5px;border-radius:50%;background:var(--temper-ink);box-shadow:0 0 0 2px var(--temper-paper)}
+.temper-verdicts{display:grid;justify-items:end;font:400 13px/1 "DM Mono",monospace}
+.temper-verdict{grid-area:1/1}
+.temper-verdict-fine{color:var(--temper-muted);opacity:.7}
+.temper-verdict-worse{color:var(--temper-coral);opacity:0}
+.temper-verdict-fixed{color:var(--temper-ink)}
+
+.temper-patch{margin:16px 30px 0}
+.temper-patch-head{display:flex;justify-content:space-between;gap:10px;margin-bottom:9px;color:var(--temper-muted);font:400 8px/1.4 "DM Mono",monospace;letter-spacing:.06em;text-transform:uppercase}
+.temper-patch-head>span:first-child{color:var(--temper-coral-text);letter-spacing:.12em}
+.temper-files{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(6px,2cqi,12px)}
+.temper-slot{position:relative;display:grid;min-width:0}
+.temper-slot::before{content:"";position:absolute;inset:0;border:1px dashed #B9B1DC;border-radius:2px 9px 2px 2px;opacity:.8}
+.temper-file{position:relative;display:flex;height:100%;flex-direction:column;gap:7px;min-width:0;padding:10px 11px 9px;border:1px solid #CFC8E8;border-radius:2px 9px 2px 2px;background:linear-gradient(225deg,var(--temper-tint) 0 8px,var(--temper-paper) 8px);box-shadow:0 1px 0 #2119460A,0 6px 14px -10px #21194640;transform:rotate(calc((var(--order) - 1) * -.8deg))}
+.temper-file::before{content:"";position:absolute;left:-1px;top:10px;bottom:10px;width:2px;background:var(--temper-coral);border-radius:0 2px 2px 0}
+.temper-file-path{overflow:hidden;font:500 clamp(7.5px,1.95cqi,10.5px)/1.2 "DM Mono",monospace;letter-spacing:-.01em;white-space:nowrap;text-overflow:clip}
+.temper-file-lines{display:grid;gap:4px}
+.temper-file-lines>i{width:calc(var(--w) * 100%);height:2px;border-radius:2px;background:var(--temper-soft)}
+.temper-file-fixes{font:italic 400 clamp(11px,2.7cqi,14.5px)/1.05 "Instrument Serif",Georgia,serif;color:var(--temper-muted)}
+
+.temper-caption{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;padding:20px 30px 30px}
+.temper-caption>p{margin:0;font:400 clamp(29px,7.4cqi,46px)/.95 "Instrument Serif",Georgia,serif;letter-spacing:-.025em}
+.temper-caption>p>em{color:var(--temper-coral-text)}
+.temper-caption>span{padding-bottom:2px;color:var(--temper-muted);font:400 10px/1.9 "DM Mono",monospace;text-align:right;text-transform:uppercase;letter-spacing:.04em}
+
+/* Motion: a 12 s loop. Ask, judge, show the harness falling behind, patch, re-check. */
+.temper-art.is-animating .temper-fork-signal{animation:temper-signal 12s linear infinite}
+.temper-art.is-animating .temper-fork-signal-late{animation-delay:.12s}
+.temper-art.is-animating .is-failing::before{animation:temper-scan 12s ease-in-out calc(var(--order) * .35s) infinite}
+.temper-art.is-animating .is-failing .temper-dimension{animation:temper-label 12s ease-in-out calc(var(--order) * .35s) infinite}
+.temper-art.is-animating .is-failing .temper-rail{animation:temper-recheck 12s cubic-bezier(.55,0,.25,1) calc(var(--order) * .35s) infinite}
+.temper-art.is-animating .is-failing .temper-harness{animation:temper-dot 12s ease-in-out calc(var(--order) * .35s) infinite}
+.temper-art.is-animating .temper-deficit{animation:temper-deficit 12s ease-in-out calc(var(--order) * .35s) infinite}
+.temper-art.is-animating .temper-gain{animation:temper-gain 12s ease-out calc(var(--order) * .35s) infinite}
+.temper-art.is-animating .temper-trace{animation:temper-ghost 12s ease-in-out calc(var(--order) * .35s) infinite}
+.temper-art.is-animating .temper-ghost{animation:temper-ghost 12s ease-in-out calc(var(--order) * .35s) infinite}
+.temper-art.is-animating .temper-verdict-worse{animation:temper-worse 12s ease-in-out calc(var(--order) * .35s) infinite}
+.temper-art.is-animating .temper-verdict-fixed{animation:temper-fixed 12s ease-out calc(var(--order) * .35s) infinite}
+.temper-art.is-animating .temper-file{animation:temper-file 12s cubic-bezier(.2,.7,.2,1) calc(var(--order) * .3s) infinite}
+@keyframes temper-signal{0%{opacity:0;stroke-dashoffset:14}2%{opacity:1}11%{opacity:1;stroke-dashoffset:-104}13%,100%{opacity:0;stroke-dashoffset:-104}}
+@keyframes temper-scan{0%,29%{opacity:0}33%,42%{opacity:1}48%,100%{opacity:0}}
+@keyframes temper-label{0%,33%,96%,100%{color:var(--temper-coral-text)}42%,92%{color:var(--temper-ink)}}
+@keyframes temper-recheck{0%,32%{transform:translateX(calc(var(--h) * 100%))}43%,93%{transform:translateX(calc(var(--p) * 100%))}93.6%,100%{transform:translateX(calc(var(--h) * 100%))}}
+@keyframes temper-dot{0%,34%{background:var(--temper-coral);opacity:1}41%,92%{background:var(--temper-ink);opacity:1}93%,96%{background:var(--temper-coral);opacity:0}100%{background:var(--temper-coral);opacity:1}}
+@keyframes temper-deficit{0%,31%{opacity:1;transform:scaleX(1)}37%,93%{opacity:1;transform:scaleX(0)}94%{opacity:0;transform:scaleX(1)}98%,100%{opacity:1;transform:scaleX(1)}}
+@keyframes temper-gain{0%,37%{opacity:1;transform:scaleX(0)}44%,92%{opacity:1;transform:scaleX(1)}94%,100%{opacity:0;transform:scaleX(1)}}
+@keyframes temper-ghost{0%,33%{opacity:0}38%,91%{opacity:.85}94%,100%{opacity:0}}
+@keyframes temper-worse{0%,35%{opacity:1;transform:none}39%,93%{opacity:0;transform:scale(.6)}97%,100%{opacity:1;transform:none}}
+@keyframes temper-fixed{0%,38%{opacity:0;transform:scale(.5)}43%,92%{opacity:1;transform:none}95%,100%{opacity:0;transform:scale(.5)}}
+@keyframes temper-file{0%,15%{opacity:0;translate:0 9px}23%,90%{opacity:1;translate:0 0}95%,100%{opacity:0;translate:0 9px}}
+
+@container(max-width:420px){
+  .temper-masthead{padding:23px 20px 0;font-size:8px;letter-spacing:.08em}
+  .temper-masthead>span:last-child{font-size:7px}
+  .temper-fork{width:calc(100% - 36px);margin:17px 16px 0 20px}
+  .temper-chart,.temper-patch{margin-left:20px;margin-right:20px}
+  .temper-chart-head,.temper-row{grid-template-columns:minmax(0,41%) 1fr 16px}
+  .temper-chart-head{font-size:7.5px;letter-spacing:.02em}
+  .temper-fork-kicker{font-size:10px;letter-spacing:.06em}
+  .temper-lane-sub{font-size:9.6px;letter-spacing:.01em}
+  .temper-lane{font-size:21px}
+  .temper-axis{margin:0 4px;justify-content:flex-end}
+  .temper-axis>span:first-child{display:none}
+  .temper-track{margin:0 4px}
+  .temper-dimension{font-size:13.5px;padding-right:4px}
+  .temper-verdicts{font-size:11px}
+  .temper-patch-head{font-size:7.5px}
+  .temper-patch-head>span:last-child{display:none}
+  .temper-file{padding:8px 7px 7px;gap:5px}
+  .temper-file-lines>i:nth-child(n+3){display:none}
+  .temper-caption{padding:18px 20px 24px}
+  .temper-caption>span{font-size:8.5px}
+}
+@media(prefers-reduced-motion:reduce){.temper-art *{animation:none!important;transition:none!important}}

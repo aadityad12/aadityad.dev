@@ -66,19 +66,16 @@ const REELS = {
 async function loadOptionalArtifacts() {
   const loaders = [
     ["alta", () => import("@/lab/alta-artifact.js"), "createAltaArtifact", "setAltaPaused"],
-  ];
-  /* PENDING
-  const _pending = [
     ["oss-scout", () => import("@/lab/oss-scout-artifact.js"), "createScoutArtifact", "setScoutPaused"],
     ["temper", () => import("@/lab/temper-artifact.js"), "createTemperArtifact", "setTemperPaused"],
-  ];  */
+  ];
 
   await Promise.all(loaders.map(async ([id, load, make, pause]) => {
     try {
       const mod = await load();
       extra[id] = () => mod[make]();
       pausers.push(mod[pause]);
-    } catch { /* not built yet: the reel skips this view */ }
+    } catch (error) { console.warn(`Artifact for ${id} unavailable:`, error); }
   }));
 }
 

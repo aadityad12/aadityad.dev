@@ -1,0 +1,144 @@
+.scout-art{--scout-ink:#211946;--scout-muted:#5A5280;--scout-coral:#FF5A47;--scout-coral-text:#B5321F;--scout-soft:#C9C3E6;--scout-paper:#FBFAFE;--scout-night-text:#ECE8FF;--scout-night-sub:#A79DD6;--scout-warn:#FF8A74;position:relative;isolation:isolate;container-type:inline-size;box-sizing:border-box;width:100%;min-width:0;margin:0;overflow:hidden;border:1px solid #D3CDE8;border-radius:8px;background:radial-gradient(ellipse at 70% 0%,#FFFFFF,#F7F5FC 55%,#EEEBF7);color:var(--scout-ink);font:400 12px/1.5 Manrope,system-ui,sans-serif;text-align:left}
+.scout-art *{box-sizing:border-box}
+.scout-art::after{content:"";position:absolute;inset:6px;z-index:-1;border:1px solid #2119460F;border-radius:4px;pointer-events:none}
+.scout-masthead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:27px 30px 0;font:500 9px/1.4 "DM Mono",monospace;text-transform:uppercase;letter-spacing:.13em}
+.scout-masthead>span:last-child{color:var(--scout-muted);font-size:8px;letter-spacing:.04em}
+.scout-plate{margin:20px 22px 0;overflow:hidden;border-radius:5px;box-shadow:0 0 0 1px #2119461A,0 14px 28px -22px #211946AA;background:#120E30}
+.scout-scene{display:block;width:100%;height:auto}
+
+.scout-label{font:500 10.5px "DM Mono",monospace;letter-spacing:.14em}
+.scout-label-night{fill:var(--scout-night-text)}
+.scout-label-dawn{fill:var(--scout-ink)}
+.scout-sub{font:400 7.6px "DM Mono",monospace;letter-spacing:.07em}
+.scout-sub-night{fill:var(--scout-night-sub)}
+.scout-sub-dawn{fill:#3A2F6A}
+.scout-sub-review{fill:#D6CEF7}
+.scout-sub-code{fill:#FFB5A5;font-size:8.6px;letter-spacing:.02em}
+
+.scout-star{fill:#EAE5FF;opacity:.65}
+.scout-moon{fill:#E9E4FA;opacity:.9}
+.scout-issue{stroke:#B6ABE6;stroke-width:.9;opacity:.55}
+.scout-issue circle:first-child{fill:#1B1544}
+.scout-issue-dot{fill:#B6ABE6;stroke:none}
+.scout-issue.is-picked{stroke:#FFB09F;opacity:.95}
+.scout-issue.is-picked .scout-issue-dot{fill:#FFB09F}
+.scout-fall{opacity:0}
+.scout-fall .scout-issue{stroke:#FFB09F;opacity:1}
+.scout-fall .scout-issue-dot{fill:#FFB09F}
+.scout-sieve{stroke:#8F84C8;stroke-width:1;stroke-linecap:round;stroke-linejoin:round}
+.scout-sieve-mesh{stroke:#8F84C8;stroke-width:.6;stroke-dasharray:1.5 3;opacity:.7}
+.scout-rank{fill:#7D71BC;transform-box:fill-box;transform-origin:left center}
+.scout-rank-top{fill:var(--scout-warn)}
+.scout-handoff{stroke:var(--scout-warn);stroke-width:.9;stroke-dasharray:2 3;stroke-linecap:round}
+
+.scout-paper{fill:var(--scout-paper);stroke:#C9C3E6;stroke-width:.8}
+.scout-paper-rule{stroke:#C9C3E6;stroke-width:.7}
+.scout-card-kicker{font:500 6.4px "DM Mono",monospace;letter-spacing:.09em;fill:var(--scout-muted)}
+.scout-diff path{stroke:#C9C3E6;stroke-width:2.6;stroke-linecap:round}
+.scout-diff .is-minus{stroke:#FFB7A9}
+.scout-diff .is-plus{stroke:#8F84C8}
+.scout-check{stroke:var(--scout-ink);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+
+.scout-attempt-path{stroke:var(--scout-warn);stroke-width:1.2;stroke-linecap:round}
+.scout-bounce{stroke:var(--scout-warn);stroke-width:1.1;stroke-dasharray:2 2.5;stroke-linecap:round}
+.scout-impact{stroke:#FFD9D0;stroke-width:1.3;stroke-linecap:round;transform-box:fill-box;transform-origin:center}
+.scout-chip rect{fill:#191340;stroke:var(--scout-warn);stroke-width:.9}
+.scout-chip text{font:500 10px "DM Mono",monospace;fill:#FFC2B6;text-anchor:middle}
+
+.scout-wall-body{fill:#140F36;stroke:#8F84C8;stroke-width:.8}
+.scout-wall-bricks{stroke:#FFFFFF;stroke-width:.5;opacity:.09}
+.scout-wall-cap{fill:#211946;stroke:#A79DD6;stroke-width:.8}
+.scout-wall-text{font:500 7.2px "DM Mono",monospace;letter-spacing:.24em;fill:#D8D1FF;text-anchor:middle}
+.scout-wall-base{fill:#140F36;stroke:#8F84C8;stroke-width:.8}
+
+.scout-route{stroke:#A79DD6;stroke-width:.9;stroke-dasharray:2 3.5;opacity:.75}
+.scout-route-open{stroke:var(--scout-coral);stroke-width:1.6;stroke-linecap:round}
+
+.scout-phone-body{fill:var(--scout-paper);stroke:var(--scout-ink);stroke-width:1.1}
+.scout-phone-notch{stroke:var(--scout-ink);stroke-width:1.6;stroke-linecap:round;opacity:.5}
+.scout-phone-kicker{font:500 6.2px "DM Mono",monospace;letter-spacing:.12em;fill:var(--scout-muted)}
+.scout-phone-lines{stroke:#C9C3E6;stroke-width:2.4;stroke-linecap:round}
+.scout-phone-card rect{fill:#EEECF7;stroke:#C9C3E6;stroke-width:.6}
+.scout-phone-card path{stroke:#8F84C8;stroke-width:1.8;stroke-linecap:round}
+.scout-approve{fill:var(--scout-coral)}
+.scout-approve-text{font:700 7.6px Manrope,system-ui,sans-serif;letter-spacing:.02em;fill:#FFFFFF}
+.scout-ripple{stroke:var(--scout-coral);stroke-width:1;opacity:.55;transform-box:fill-box;transform-origin:center}
+.scout-ripple-late{opacity:.25}
+.scout-signal{stroke:var(--scout-coral);stroke-width:1.1;stroke-dasharray:2 3;stroke-linecap:round}
+
+.scout-horizon{stroke:#8F84C8;stroke-width:.6;opacity:.6}
+.scout-gate-frame{fill:#211946;stroke:var(--scout-coral);stroke-width:1.2}
+.scout-gate-door{fill:#3A2F6E;stroke:#FFB7A9;stroke-width:.6;transform-box:fill-box;transform-origin:left center;transform:scaleX(.14)}
+
+.scout-pr{opacity:0}
+.scout-pr rect{fill:var(--scout-paper);stroke:var(--scout-ink);stroke-width:1}
+.scout-pr text{font:500 8px "DM Mono",monospace;letter-spacing:.08em;fill:var(--scout-ink);text-anchor:middle}
+.scout-node{fill:var(--scout-paper);stroke:var(--scout-ink);stroke-width:1.2}
+.scout-merge{stroke:var(--scout-ink);stroke-width:1.2;fill:var(--scout-paper);transform-box:fill-box;transform-origin:center}
+
+.scout-caption{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;padding:20px 30px 30px}
+.scout-caption>p{margin:0;font:400 clamp(28px,7.2cqi,45px)/.95 "Instrument Serif",Georgia,serif;letter-spacing:-.025em}
+.scout-caption>p>em{color:var(--scout-coral-text)}
+.scout-caption>span{padding-bottom:2px;color:var(--scout-muted);font:400 10px/1.9 "DM Mono",monospace;text-align:right;text-transform:uppercase;letter-spacing:.04em}
+
+/* Motion: one 12 s night. Sift, draft, write attempts turned back, sunrise, one tap, through the gate. */
+.scout-art.is-animating .scout-star{animation:scout-twinkle 4s ease-in-out infinite}
+.scout-art.is-animating .scout-fall{animation:scout-fall 12s cubic-bezier(.5,0,.6,1) infinite}
+.scout-art.is-animating .scout-rank{animation:scout-rank 12s cubic-bezier(.2,.7,.2,1) infinite}
+.scout-art.is-animating .scout-rank:nth-child(2){animation-delay:.2s}
+.scout-art.is-animating .scout-rank:nth-child(3){animation-delay:.4s}
+.scout-art.is-animating .scout-handoff{animation:scout-appear 12s ease-out infinite}
+.scout-art.is-animating .scout-draft,.scout-art.is-animating .scout-lamp{animation:scout-draft 12s cubic-bezier(.2,.7,.2,1) infinite}
+.scout-art.is-animating .scout-attempt-path{animation:scout-attempt 12s cubic-bezier(.4,0,.7,1) infinite}
+.scout-art.is-animating .scout-chip{animation:scout-chip 12s ease-out infinite}
+.scout-art.is-animating .scout-impact{animation:scout-impact 12s ease-out infinite}
+.scout-art.is-animating .scout-bounce{animation:scout-bounce 12s ease-out infinite}
+.scout-art.is-animating .scout-attempt-late .scout-attempt-path{animation-name:scout-attempt-late}
+.scout-art.is-animating .scout-attempt-late .scout-chip{animation-name:scout-chip-late}
+.scout-art.is-animating .scout-attempt-late .scout-impact{animation-name:scout-impact-late}
+.scout-art.is-animating .scout-attempt-late .scout-bounce{animation-name:scout-bounce-late}
+.scout-art.is-animating .scout-sunrise{animation:scout-sunrise 12s ease-in-out infinite}
+.scout-art.is-animating .scout-ripple{animation:scout-ripple 12s ease-out infinite}
+.scout-art.is-animating .scout-ripple-late{animation-delay:.25s}
+.scout-art.is-animating .scout-signal{animation:scout-signal 12s linear infinite}
+.scout-art.is-animating .scout-gate-door{animation:scout-gate 12s cubic-bezier(.5,0,.2,1) infinite}
+.scout-art.is-animating .scout-route-open{animation:scout-open 12s ease-out infinite}
+.scout-art.is-animating .scout-pr{animation:scout-pr-show 12s linear infinite}
+.scout-art.is-animating .scout-pr-move{animation:scout-pr-move 12s ease-in-out infinite}
+.scout-art.is-animating .scout-merge{animation:scout-merge 12s ease-out infinite}
+@keyframes scout-twinkle{0%,100%{opacity:.65}50%{opacity:.2}}
+@keyframes scout-fall{0%{opacity:0;translate:0 0}2%{opacity:1;translate:0 0}14%{opacity:1;translate:var(--dx) var(--dy)}17%,100%{opacity:0;translate:var(--dx) var(--dy)}}
+@keyframes scout-rank{0%,12%{transform:scaleX(0)}22%,93%{transform:scaleX(1)}97%,100%{transform:scaleX(0)}}
+@keyframes scout-appear{0%,21%{opacity:0}26%,93%{opacity:1}97%,100%{opacity:0}}
+@keyframes scout-draft{0%,22%{opacity:0;translate:0 8px}30%,93%{opacity:1;translate:0 0}97%,100%{opacity:0;translate:0 8px}}
+@keyframes scout-attempt{0%,31%{stroke-dasharray:0 100;opacity:0}31.4%{stroke-dasharray:1 99;opacity:1}38%,93%{stroke-dasharray:100 0;opacity:1}97%,100%{stroke-dasharray:100 0;opacity:0}}
+@keyframes scout-chip{0%,31%{opacity:0}34%,93%{opacity:1}97%,100%{opacity:0}}
+@keyframes scout-impact{0%,37.5%{opacity:0;transform:scale(.4)}39%{opacity:1;transform:scale(1.25)}43%,93%{opacity:.9;transform:scale(1)}97%,100%{opacity:0}}
+@keyframes scout-bounce{0%,38.5%{opacity:0}43%,93%{opacity:1}97%,100%{opacity:0}}
+@keyframes scout-attempt-late{0%,40%{stroke-dasharray:0 100;opacity:0}40.4%{stroke-dasharray:1 99;opacity:1}47%,93%{stroke-dasharray:100 0;opacity:1}97%,100%{stroke-dasharray:100 0;opacity:0}}
+@keyframes scout-chip-late{0%,40%{opacity:0}43%,93%{opacity:1}97%,100%{opacity:0}}
+@keyframes scout-impact-late{0%,46.5%{opacity:0;transform:scale(.4)}48%{opacity:1;transform:scale(1.25)}52%,93%{opacity:.9;transform:scale(1)}97%,100%{opacity:0}}
+@keyframes scout-bounce-late{0%,47.5%{opacity:0}52%,93%{opacity:1}97%,100%{opacity:0}}
+@keyframes scout-sunrise{0%,48%{opacity:.35;translate:0 26px}60%,92%{opacity:1;translate:0 0}99%,100%{opacity:.35;translate:0 26px}}
+@keyframes scout-ripple{0%,61%{opacity:0;transform:scale(.3)}62%{opacity:.8;transform:scale(.4)}69%{opacity:0;transform:scale(1.35)}70%,100%{opacity:0}}
+@keyframes scout-signal{0%,63%{opacity:0;stroke-dashoffset:0}64%{opacity:1}72%,92%{opacity:1;stroke-dashoffset:-20}96%,100%{opacity:0;stroke-dashoffset:-20}}
+@keyframes scout-gate{0%,66%{transform:scaleX(1)}71%,93%{transform:scaleX(.14)}98%,100%{transform:scaleX(1)}}
+@keyframes scout-open{0%,71%{opacity:0}76%,93%{opacity:1}97%,100%{opacity:0}}
+@keyframes scout-pr-show{0%,26%{opacity:0}29%,80%{opacity:1}83%,100%{opacity:0}}
+@keyframes scout-pr-move{0%,28%{translate:153px 199px}33%{translate:153px 240px}42%,70%{translate:366px 240px}80%,100%{translate:446px 240px}}
+@keyframes scout-merge{0%,79%{opacity:.22;transform:scale(1)}82%{opacity:1;transform:scale(1.25)}85%,93%{opacity:1;transform:scale(1)}97%,100%{opacity:.22;transform:scale(1)}}
+
+@container(max-width:420px){
+  .scout-masthead{padding:23px 20px 0;font-size:8px;letter-spacing:.08em}
+  .scout-masthead>span:last-child{font-size:7px}
+  .scout-plate{margin:16px 9px 0;border-radius:4px}
+  .scout-label{font-size:13px;letter-spacing:.08em}
+  .scout-sub{font-size:9.6px;letter-spacing:0}
+  .scout-sub-code{font-size:10.4px}
+  .scout-chip text{font-size:11.2px;letter-spacing:-.02em}
+  .scout-wall-text{font-size:8.4px;letter-spacing:.16em}
+  .scout-card-kicker{font-size:7.4px;letter-spacing:.03em}
+  .scout-caption{padding:18px 20px 24px}
+  .scout-caption>span{font-size:8.5px}
+}
+@media(prefers-reduced-motion:reduce){.scout-art *{animation:none!important;transition:none!important}}

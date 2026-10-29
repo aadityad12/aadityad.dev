@@ -23,7 +23,7 @@ const mats = new Map();
 export function mat(color, { hatch = true, flat = false, side = THREE.FrontSide } = {}) {
   const key = [color, hatch, flat, side].join();
   if (mats.has(key)) return mats.get(key);
-  const m = new THREE.MeshToonMaterial({ color, gradientMap: ramp, side, flatShading: flat, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 });
+  const m = new THREE.MeshToonMaterial({ color, gradientMap: ramp, side, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 });
   if (hatch) m.onBeforeCompile = (sh) => {
     sh.uniforms.inkCol = { value: new THREE.Color(PAL.ink) };
     sh.uniforms.dpr = { value: Math.min(devicePixelRatio || 1, 2) };

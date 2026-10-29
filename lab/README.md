@@ -1,8 +1,9 @@
 # lab: the test area
 
-Prototypes for the aadityad.dev redesign live here, outside the Next.js app. Nothing in `lab/` is built
-or deployed: GitHub Pages only publishes the app's `out/` folder. Changes are tried here first and moved
-into `app/` once they are agreed.
+Prototypes for aadityad.dev live here. The live site imports the shared modules from this folder
+(`bay.js`, `stamps.js`, `project-reels.js` and the `*-artifact.js` panels) through
+`app/components/site-interactions.js`, so the arena and the site run the same code. The HTML pages
+in `lab/` are not deployed. Try changes here first.
 
 ## Run it
 
@@ -142,6 +143,7 @@ have one shared pause control outside the artifacts, and stop their decorative m
 - `visionassist-artifact.js` / `visionassist-artifact.css`: the passive priority-warning portrait and its motion lifecycle.
 - `visionassist-directions.html` / `.js` / `.css`: independent alternative-art-direction studies; leave the main placeholder intact.
 - `visionassist.html`: focused review page for the quieter VisionAssist study.
+- `alta-artifact.js` / `.css`, `alta.html`: Alta's probe-to-voice story (breadboard, pod serial stream, spoken hint).
 - `artifacts.html`: focused review page for the portrait direction.
 - `shared.js`: Pathfinder's paths, the heightmap loader, and the project pins.
 - `heightmap.json`: elevation grid, written by `node lab/heightmap.mjs` from the cached terrain tiles.

@@ -43,10 +43,14 @@ try {
   ws.onmessage = (e) => {
     const msg = JSON.parse(e.data);
     if (msg.id && pending.has(msg.id)) { pending.get(msg.id)(msg); pending.delete(msg.id); }
+    // --console 1 prints page errors and console warnings/errors
+    if (opt.console && msg.method === "Runtime.exceptionThrown") console.log("page error:", msg.params.exceptionDetails?.exception?.description ?? msg.params.exceptionDetails?.text);
+    if (opt.console && msg.method === "Runtime.consoleAPICalled" && ["error", "warning"].includes(msg.params.type)) console.log(`console.${msg.params.type}:`, msg.params.args.map((a) => a.value ?? a.description).join(" "));
   };
   const send = (method, params = {}) => new Promise((r) => { const n = ++id; pending.set(n, r); ws.send(JSON.stringify({ id: n, method, params })); });
 
   await send("Page.enable");
+  if (opt.console) await send("Runtime.enable");
   await send("Emulation.setDeviceMetricsOverride", { width: W, height: H, deviceScaleFactor: 1, mobile: W < 700 });
   await send("Page.navigate", { url });
   await sleep(Number(opt.settle));
