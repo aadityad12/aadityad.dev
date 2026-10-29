@@ -1,415 +1,214 @@
-"use client";
-
-import { useEffect } from "react";
 import Image from "next/image";
-import AccordionVideo from "./components/AccordionVideo";
-import GazeDemo from "./components/GazeDemo";
-import TemperBench from "./components/TemperBench";
-import OpenSourceCard from "./components/OpenSourceCard";
-import OpenSourceNavLink from "./components/OpenSourceNavLink";
-import HeroMascot from "./components/mascot/HeroMascot";
-import { StaticMascot } from "./components/mascot/StaticMascot";
+import { SiteHeader } from "./components/SiteHeader";
+import { SectionCut } from "./components/SectionCut";
+import { Plate } from "./components/Plate";
+import { Fold } from "./components/Fold";
+import { Ladder } from "./components/Ladder";
+import { Dwell } from "./components/Dwell";
+import { Sight } from "./components/Sight";
+import { LocalFirst } from "./components/LocalFirst";
+import { Scout } from "./components/Scout";
+import { Protocol } from "./components/Protocol";
+import { EchoPath } from "./components/EchoPath";
+import { also, experience, person, projects, proofs, type Project } from "./lib/content";
 
-const SCRAMBLE_GLYPHS = "/\\-_=+*·<>";
+function Exhibit({ id }: { id: Project["exhibit"] }) {
+  switch (id) {
+    case "fold":
+      return (
+        <div className="exhibit-stack">
+          <Fold />
+          <video
+            className="demo-video"
+            controls
+            preload="none"
+            playsInline
+            poster="/projects/accordion-map.png"
+            aria-label="Recorded Accordion context map. Colored blocks stand for parts of an agent session."
+          >
+            <source src="/projects/accordion-demo.webm" type="video/webm" />
+            <source src="/projects/accordion-demo.mp4" type="video/mp4" />
+            <track kind="captions" srcLang="en" label="English" src="/projects/accordion-demo.vtt" default />
+          </video>
+        </div>
+      );
+    case "ladder":
+      return <Ladder />;
+    case "dwell":
+      return <Dwell />;
+    case "sight":
+      return <Sight />;
+    case "local":
+      return (
+        <div className="exhibit-stack">
+          <LocalFirst />
+          <div className="shot">
+            <Image
+              src="/projects/apextracker-dashboard.png"
+              alt="ApexTracker dashboard. Two of four goals are met: screen time under six hours, and reading a paper. An eight-week consistency grid sits below."
+              fill
+              sizes="(max-width: 900px) 100vw, 520px"
+            />
+          </div>
+        </div>
+      );
+    case "scout":
+      return <Scout />;
+    case "echo":
+      return (
+        <div className="exhibit-stack">
+          <EchoPath />
+          <div className="shot shot-phone">
+            <Image
+              src="/projects/echo-alert.png"
+              alt="Echo alert details for a severe thunderstorm warning. The echo path says the alert was received from a relay node, with zero further echoes."
+              fill
+              sizes="300px"
+            />
+          </div>
+        </div>
+      );
+    case "protocol":
+      return <Protocol />;
+  }
+}
 
 export default function Home() {
-  useEffect(() => {
-    document.documentElement.classList.add("js-ready");
-
-    // threshold must stay 0: a hidden/clipped target can report zero
-    // intersection area, so any ratio threshold above 0 may never fire
-    const revealObserver = new IntersectionObserver(
-      (entries) => entries.forEach((entry) => entry.isIntersecting && entry.target.classList.add("is-visible")),
-      { threshold: 0, rootMargin: "0px 0px -10% 0px" },
-    );
-    document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
-
-    // scramble-decode: mono labels resolve from glyph soup on first sight
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const scrambled = new WeakSet<Element>();
-    const scramble = (el: Element) => {
-      const final = el.textContent ?? "";
-      const start = performance.now();
-      const duration = 500;
-      const tick = (now: number) => {
-        const t = Math.min(1, (now - start) / duration);
-        const settled = Math.floor(final.length * t);
-        el.textContent =
-          final.slice(0, settled) +
-          Array.from(final.slice(settled), (ch) =>
-            ch === " " ? " " : SCRAMBLE_GLYPHS[Math.floor(Math.random() * SCRAMBLE_GLYPHS.length)],
-          ).join("");
-        if (t < 1) requestAnimationFrame(tick);
-        else el.textContent = final;
-      };
-      requestAnimationFrame(tick);
-    };
-    const scrambleObserver = new IntersectionObserver(
-      (entries) =>
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !scrambled.has(entry.target)) {
-            scrambled.add(entry.target);
-            scramble(entry.target);
-          }
-        }),
-      { threshold: 0 },
-    );
-    if (!reduceMotion) {
-      document.querySelectorAll("[data-scramble]").forEach((el) => scrambleObserver.observe(el));
-    }
-
-    // one passive listener drives both the header pin and the progress bar
-    const header = document.getElementById("site-header");
-    const bar = document.getElementById("header-progress-bar");
-    const hero = document.getElementById("top");
-    let frame = 0;
-    const sync = () => {
-      frame = 0;
-      const y = window.scrollY;
-      // pin once the hero is most of the way gone, so the two button sets never coexist
-      const trigger = Math.max(160, (hero?.offsetHeight ?? 600) * 0.62);
-      header?.classList.toggle("is-pinned", y > trigger);
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      if (bar) bar.style.transform = `scaleX(${max > 0 ? Math.min(1, y / max) : 0})`;
-    };
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(sync);
-    };
-    sync();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
-
-    return () => {
-      revealObserver.disconnect();
-      scrambleObserver.disconnect();
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (frame) cancelAnimationFrame(frame);
-    };
-  }, []);
-
   return (
-    <main>
-      <a className="skip-link" href="#top">Skip to content</a>
-      <header className="site-header" id="site-header">
-        <div className="shell header-inner">
-          <a className="header-mark" href="#top" aria-label="Back to top">
-            <span className="header-mark-initials" aria-hidden="true">AD</span>
-            <span className="header-mark-name">Aaditya Desai</span>
-          </a>
-          <nav className="site-nav" aria-label="Primary navigation">
-            <a className="nav-projects" href="#projects">Projects</a>
-            <OpenSourceNavLink />
-            <a href="https://github.com/aadityad12" target="_blank" rel="noreferrer">GitHub</a>
-            <a href="https://www.linkedin.com/in/aaditya-desai-12d" target="_blank" rel="noreferrer">LinkedIn</a>
-            <a className="nav-resume" href="/Aaditya_Desai_Portfolio_Resume.pdf" target="_blank" rel="noreferrer">Résumé ↗</a>
-          </nav>
-        </div>
-        <div className="header-progress" aria-hidden="true"><span id="header-progress-bar" /></div>
-      </header>
-
-      <section className="hero shell" id="top">
-        <div className="hero-grid">
-          <div className="hero-copy">
-            <p className="hero-eyebrow" data-scramble>COMPUTER ENGINEERING @ SJSU · EXPECTED MAY 2028</p>
-            <h1 className="hero-name">Aaditya Desai</h1>
-            <p className="hero-headline">Software for real constraints.</p>
-            <p className="hero-intro">
-              I work across on-device ML, offline-first applications, and AI infrastructure, following each
-              project from the model or protocol to the interface people use.
-            </p>
-            <p className="hero-availability">Seeking Summer 2027 software engineering, ML, and systems internships.</p>
-            <div className="hero-actions" id="hero-actions" aria-label="Résumé and professional profiles">
-              <a className="button button-primary" href="/Aaditya_Desai_Portfolio_Resume.pdf" target="_blank" rel="noreferrer">Résumé ↗</a>
-              <a className="button" href="https://github.com/aadityad12" target="_blank" rel="noreferrer">GitHub ↗</a>
-              <a className="button" href="https://www.linkedin.com/in/aaditya-desai-12d" target="_blank" rel="noreferrer">LinkedIn ↗</a>
+    <>
+      <SiteHeader />
+      <main id="main">
+        <section className="hero shell" id="top">
+          <div className="hero-meta">
+            <p className="kicker">Computer engineering · SJSU · 2028</p>
+            <p className="kicker">Santa Clara</p>
+          </div>
+          <div className="hero-grid">
+            <div>
+              <h1>Aaditya Desai</h1>
+              <p className="thesis">The interesting part<br />is the limit.</p>
+              <p className="intro">
+                I study computer engineering at San José State. The projects below had to fit inside something real: a context window, a phone with no network, a Raspberry Pi, or a day I actually live.
+              </p>
+              <p className="availability">Summer 2027 internships · software, ML, and systems</p>
+              <div className="hero-actions">
+                <a className="btn btn-primary" href="#work">See the work</a>
+                <a className="btn" href={person.resume} target="_blank" rel="noreferrer">Résumé</a>
+                <a className="text-link" href={`mailto:${person.email}`}>{person.email}</a>
+              </div>
             </div>
-            <p className="hero-secondary">
-              <a href="mailto:aaditya.d.desai@gmail.com">aaditya.d.desai@gmail.com</a>
-              <span aria-hidden="true">·</span>
-              <a className="hero-jump" href="#projects">Jump to projects <span aria-hidden="true">↓</span></a>
-            </p>
-          </div>
-          <div className="hero-critter-slot">
-            <HeroMascot />
-          </div>
-        </div>
-        <dl className="hero-highlights" aria-label="Selected highlights">
-          <div>
-            <dt>UC Berkeley AI Hackathon</dt>
-            <dd><strong>Winner</strong><span>The Token Company sponsor track</span></dd>
-          </div>
-          <div>
-            <dt>Accordion</dt>
-            <dd><strong>200+</strong><span>GitHub stars on the team repository</span></dd>
-          </div>
-          <div>
-            <dt>GazeBoard</dt>
-            <dd><strong>~8 ms</strong><span>inference on a phone NPU</span></dd>
-          </div>
-        </dl>
-      </section>
-
-      <section className="section shell" id="projects">
-        <div className="section-head">
-          <h2>Selected Projects</h2>
-          <div className="section-peek reveal"><StaticMascot pose="peek" label="The portfolio mascot peeking over a line" /></div>
-        </div>
-
-        <article className="card flagship">
-          <div className="reveal">
-            <p className="card-kicker" data-scramble>PROJECT 01 · OPEN-SOURCE AI TOOLING</p>
-            <h3>Accordion</h3>
-            <p className="card-hook">See what your agent remembers.</p>
-            <p className="card-body">
-              <span className="body-kicker">THE PROJECT /</span>
-              Most coding agents handle a full context window by flattening the session into one lossy summary.
-              Accordion makes the window visible and reversible: individual blocks can be folded, unfolded, pinned,
-              or recalled while a protected recent window stays intact.
-            </p>
-            <p className="card-body">
-              <span className="body-kicker">MY PART /</span>
-              Through June 2026 I worked on the conductor, the part that decides what to fold. I built a way to tell
-              whether folding was helping: health metrics, evaluators, and a harness that compares a session against
-              naive compaction. I added a cross-encoder rerank stage for choosing what to unfold, ported the conductor
-              onto Accordion&apos;s command contract, and built a dashboard showing the conductor&apos;s health and each
-              decision it made. Built with Tyler Darisme, Sheel Shah, and Thy Tang; we won The Token Company sponsor
-              track at UC Berkeley AI Hackathon 2026.
-            </p>
-            <p className="tech-line">MY PART: TYPESCRIPT · HUGGING FACE TRANSFORMERS · SVELTEKIT</p>
-            <ul className="chips">
-              <li className="win">🏆 WINNER · UC BERKELEY AI HACKATHON 2026</li>
-              <li className="chip-link"><a href="https://github.com/a-Fig/accordion" target="_blank" rel="noreferrer">★ 200+ · TEAM REPO ↗</a></li>
-              <li>MIT</li>
-            </ul>
-            <div className="card-links">
-              <a href="https://get-accordion.dev" target="_blank" rel="noreferrer">get-accordion.dev ↗</a>
-              <a href="https://github.com/a-Fig/accordion" target="_blank" rel="noreferrer">GitHub ↗</a>
+            <div className="hero-instrument">
+              <SectionCut />
             </div>
           </div>
-          <div className="card-media reveal">
-            <AccordionVideo />
-            <div className="card-cameo cameo-perch">
-              <StaticMascot pose="perch" hoverFrame="point" label="The portfolio mascot perched on the demo, pointing at the star count when you hover" />
-            </div>
-            <p className="media-caption">the context map, live</p>
-          </div>
-        </article>
+          <dl className="proofs">
+            {proofs.map((item) => (
+              <div key={item.kicker}>
+                <dt>{item.kicker}</dt>
+                <dd>
+                  <strong>{item.value}</strong>
+                  <span>{item.detail}</span>
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </section>
 
-        <article className="card flip">
-          <div className="reveal">
-            <p className="card-kicker" data-scramble>PROJECT 02 · ANDROID · DAILY DRIVER</p>
-            <h3>ApexTracker</h3>
-            <p className="card-hook">One app instead of a pile of post-its.</p>
-            <p className="card-body">
-              <span className="body-kicker">WHY IT EXISTS /</span>
-              ApexTracker is the one app I use instead of a pile of post-its, three reminder apps, a calendar, and a
-              couple of spreadsheets. It tracks budget, study time, screen time, reminders, notes, and papers, then
-              scores each day by the goals I actually hit. Everything works offline; an account is optional and only
-              adds Firestore sync.
-            </p>
-            <p className="card-body">
-              <span className="body-kicker">WHAT I BUILT /</span>
-              Room is the source of truth, encrypted with SQLCipher and gated by biometrics where needed. Reboot-safe
-              alarms, five Glance widgets, on-device receipt parsing, handwritten schema migrations, JUnit tests,
-              lint, and Compose screenshot tests make it a codebase I can keep using, not a demo I am afraid to
-              update.
-            </p>
-            <p className="tech-line">KOTLIN · JETPACK COMPOSE · ROOM · SQLCIPHER</p>
-            <ul className="chips">
-              <li>DAILY DRIVER</li>
-              <li>LOCAL-FIRST</li>
-            </ul>
-            <div className="card-links">
-              <a href="https://github.com/aadityad12/Apex-Tracker" target="_blank" rel="noreferrer">GitHub ↗</a>
+        <section className="work" id="work">
+          <div className="shell">
+            <div className="section-head">
+              <h2>Selected work</h2>
+              <p>Eight builds. Each one names the limit, the part I owned, and the claim I won’t make.</p>
             </div>
+            <nav className="work-index" aria-label="Projects">
+              {projects.map((project) => (
+                <a key={project.id} href={`#${project.id}`}><span>{project.index}</span>{project.title}</a>
+              ))}
+            </nav>
+            {projects.map((project) => {
+              const { exhibit, ...plate } = project;
+              return <Plate key={project.id} {...plate} exhibit={<Exhibit id={exhibit} />} />;
+            })}
+            <p className="also">
+              Also, <a href={also.href} target="_blank" rel="noreferrer">{also.name}</a>. {also.text}
+            </p>
           </div>
-          <div className="card-media tilt reveal" style={{ "--tilt": "1.1deg" } as React.CSSProperties}>
-            <figure className="phone">
-              <Image
-                src="/projects/apextracker-dashboard.png"
-                alt="ApexTracker's graphite dashboard: daily goal score and a consistency bar chart in monochrome"
-                width={1080}
-                height={2340}
-              />
-            </figure>
-            <p className="media-caption">the day, scored</p>
-          </div>
-        </article>
+        </section>
 
-        <article className="card">
-          <div className="reveal">
-            <p className="card-kicker" data-scramble>PROJECT 03 · ON-DEVICE ML</p>
-            <h3>GazeBoard</h3>
-            <p className="card-hook">Typing with your eyes, entirely on-device.</p>
-            <p className="card-body">
-              <span className="body-kicker">THE PROJECT /</span>
-              A gaze-driven communication board for people who cannot reliably speak or use their hands. Because the
-              camera stays pointed at the user&apos;s face, privacy was a requirement rather than a feature: frames stay
-              on the phone and the app declares no network permission.
-            </p>
-            <p className="card-body">
-              <span className="body-kicker">MY PART /</span>
-              I built the Kotlin pipeline from CameraX capture and ML Kit face detection through LiteRT inference on
-              the Hexagon NPU, four-point affine calibration, dwell-based tile selection, and speech output. On the
-              Galaxy S25 Ultra used during the hackathon, the pipeline measured roughly 8 ms per inference at 15+
-              FPS. Built with a team at the Qualcomm × Google LiteRT On-Device &amp; Edge AI Hackathon.
-            </p>
-            <p className="tech-line">KOTLIN · COMPOSE · CAMERAX · ML KIT · LITERT / HEXAGON NPU</p>
-            <ul className="chips">
-              <li>ON-DEVICE</li>
-              <li>~8 MS INFERENCE</li>
-              <li>ZERO NETWORK PERMISSIONS</li>
-              <li>APACHE-2.0</li>
-            </ul>
-            <div className="card-links">
-              <a href="https://github.com/aadityad12/GazeBoard" target="_blank" rel="noreferrer">GitHub ↗</a>
+        <section className="band" id="experience">
+          <div className="shell">
+            <div className="section-head">
+              <h2>Along the way</h2>
+              <p>Research, then teaching. The résumé has the full page.</p>
             </div>
-          </div>
-          <div className="card-media reveal">
-            <GazeDemo />
-          </div>
-        </article>
-
-        <article className="card flip">
-          <div className="reveal">
-            <p className="card-kicker" data-scramble>PROJECT 04 · OFFLINE SYSTEMS</p>
-            <h3>Echo</h3>
-            <p className="card-hook">Emergency alerts that survive the internet dying.</p>
-            <p className="card-body">
-              <span className="body-kicker">THE PROJECT /</span>
-              Echo is a prototype for carrying National Weather Service alerts between nearby devices when cellular
-              and internet infrastructure are unavailable. It implements BLE discovery and a custom chunked GATT
-              transfer path on Android and iOS, with optional Raspberry Pi relay utilities and compact alert IDs for
-              deduplication.
-            </p>
-            <p className="card-body">
-              <span className="body-kicker">MY PART /</span>
-              I built the native Kotlin and Swift protocol layers. Once received, an alert can be translated
-              on-device into 22 target languages and read aloud. Built for Hack for Humanity at Santa Clara
-              University.
-            </p>
-            <p className="tech-line">FLUTTER · KOTLIN · SWIFT · BLE / GATT · SQLITE</p>
-            <ul className="chips">
-              <li>OFFLINE MESH</li>
-              <li>22 LANGUAGES</li>
-            </ul>
-            <div className="card-links">
-              <a href="https://github.com/aadityad12/Echo" target="_blank" rel="noreferrer">GitHub ↗</a>
+            <div className="roles">
+              {experience.map((role) => (
+                <article key={role.place} className="role">
+                  <p className="kicker">{role.when}</p>
+                  <div>
+                    <h3>{role.place}</h3>
+                    <p className="role-title">{role.role}</p>
+                    <p>{role.text}</p>
+                    {role.href ? <a className="text-link" href={role.href}>{role.hrefLabel}</a> : null}
+                  </div>
+                </article>
+              ))}
             </div>
+            <p className="resume-row">
+              <a className="btn" href={person.resume} target="_blank" rel="noreferrer">Full résumé</a>
+            </p>
           </div>
-          <div className="card-media tilt reveal" style={{ "--tilt": "-1deg" } as React.CSSProperties}>
-            <figure className="phone">
-              <Image
-                src="/projects/echo-alert.png"
-                alt="Echo showing a severe weather alert received over Bluetooth mesh, with translation controls"
-                width={1206}
-                height={2461}
-              />
-            </figure>
-            <p className="media-caption">an alert that arrived with no internet</p>
-          </div>
-        </article>
+        </section>
 
-        <article className="card">
-          <div className="reveal">
-            <p className="card-kicker" data-scramble>PROJECT 05 · AI EVALUATION</p>
-            <h3>Temper</h3>
-            <p className="card-hook">Test the system around the model.</p>
-            <p className="card-body">
-              <span className="body-kicker">THE PROJECT /</span>
-              AI agents are more than their base model. Prompts, tools, skills, and orchestration can help, or they
-              can quietly make the same model worse. Temper compares an agent harness with a bare-model baseline across
-              six dimensions, identifies harness-caused regressions, produces replacement artifacts, and reruns only
-              the affected checks.
-            </p>
-            <p className="card-body">
-              <span className="body-kicker">MY PART /</span>
-              I built the local evaluator, FastAPI service, schemas and contracts, patch loop, deterministic
-              integration path, and streaming dashboard. Its strongest current evidence is a reproducible offline
-              fixture that verifies the complete evaluate → patch → re-evaluate protocol; live-model evaluation
-              remains prototype work. Built at the AI Engineer World&apos;s Fair Hackathon 2026.
-            </p>
-            <p className="tech-line">PYTHON · FASTAPI · REACT · SSE · JSON SCHEMA</p>
-            <ul className="chips">
-              <li>AI EVALS</li>
-              <li>HACKATHON BUILD</li>
-            </ul>
-            <div className="card-links">
-              <a href="https://github.com/aadityad12/Temper" target="_blank" rel="noreferrer">GitHub ↗</a>
+        <section className="band" id="about">
+          <div className="shell about-grid">
+            <div>
+              <p className="kicker">About</p>
+              <h2>Closer to the hardware.</h2>
+              <div className="about-copy">
+                <p>
+                  I’m from India, and I got into engineering through VEX robotics, programming robots in RobotC. That came full circle this year: I wrote the control code for my team’s robot in SJSU’s ENGR 10, then came back the next semester to TA the course. I planned on computer science and switched to computer engineering to get closer to the hardware.
+                </p>
+                <p>
+                  A lot of what I build starts with something I need or want to understand. ApexTracker began as a way to make myself code every day and ended up replacing my reminder apps and spreadsheets. Teaching shaped how I debug: trace the symptom back to its cause and explain the mechanism, rather than hand over a fix.
+                </p>
+                <p>
+                  The same habit is in the projects. If a rung gets slower, or a radar range doesn’t belong to the object, I would rather publish that than smooth it over.
+                </p>
+              </div>
             </div>
-          </div>
-          <div className="card-media reveal">
-            <TemperBench />
-            <div className="card-cameo cameo-work">
-              <StaticMascot pose="work" hoverFrame="work-turn" label="The portfolio mascot tightening a bolt on the test bench" />
-            </div>
-            <p className="media-caption">the test bench, drawn</p>
-          </div>
-        </article>
-
-        <div className="also-built reveal">
-          <p>
-            ALSO BUILT / <a href="https://github.com/aadityad12/Clear-Dispatch" target="_blank" rel="noreferrer">CLEAR DISPATCH</a>: a local
-            emergency-dispatch simulation with a four-stage FastAPI pipeline, live WebSocket dashboard, Haversine
-            unit assignment, and explicit dispatcher approval before heavy assets move · team project at HackDavis
-            2026
-          </p>
-        </div>
-        <OpenSourceCard />
-      </section>
-
-      <section className="section shell" id="about">
-        <div className="section-head">
-          <h2>About</h2>
-        </div>
-        <div className="about-grid">
-          <div className="about-copy reveal">
-            <p>
-              I&apos;m from India, and I got into engineering through VEX robotics, programming robots in RobotC. That
-              came full circle this year: I wrote the control code for my team&apos;s robot in SJSU&apos;s ENGR 10, then
-              came back the next semester to TA the course. I originally planned to study computer science and switched
-              to computer engineering to get closer to the hardware.
-            </p>
-            <p>
-              A lot of what I build starts with something I need or want to understand. ApexTracker began as a way to
-              make myself code every day and ended up replacing my reminder apps and spreadsheets. Teaching shaped how I
-              debug: trace the symptom back to its cause and explain the mechanism, rather than hand over a fix.
-            </p>
             <ul className="about-meta">
-              <li>BASED / SANTA CLARA, CA</li>
-              <li>STUDY / COMPUTER ENGINEERING @ SJSU · EXPECTED MAY 2028</li>
-              <li>LOOKING FOR / SUMMER 2027 SOFTWARE, ML, OR SYSTEMS INTERNSHIPS</li>
+              <li><span>Study</span>B.S. Computer Engineering, AI minor. San José State, expected May 2028. GPA 3.8, Dean’s Scholar.</li>
+              <li><span>Before that</span>De Anza College, certificate in C and C++, with honors. GPA 3.8.</li>
+              <li><span>Based</span>Santa Clara, California.</li>
+              <li><span>Looking for</span>Summer 2027 software, ML, or systems internships.</li>
+              <li><span>Also</span>ICPC 2025 Division 2, top 10 at site. DA Hacks 3.5, 2nd place. Co-founded the Applied Data Analytics Club at De Anza, 54 members.</li>
             </ul>
           </div>
-          <div className="about-mascot reveal">
-            <StaticMascot pose="work" label="The portfolio mascot tinkering with a wrench" />
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <footer className="section shell contact" id="contact">
-        <div className="contact-grid">
-          <div className="reveal">
-            <p className="contact-kicker">SUMMER 2027 INTERNSHIPS</p>
+        <section className="band contact" id="contact">
+          <div className="shell">
+            <p className="kicker">Summer 2027</p>
             <h2>Get in touch.</h2>
-            <p className="contact-sub">
-              I&apos;m looking for software engineering, ML, and systems roles. Email is the fastest way to reach me.
-            </p>
-            <div className="contact-links">
-              <a className="contact-primary" href="mailto:aaditya.d.desai@gmail.com">EMAIL ME ↗</a>
-              <a href="/Aaditya_Desai_Portfolio_Resume.pdf" target="_blank" rel="noreferrer">RÉSUMÉ ↗</a>
-              <a href="https://github.com/aadityad12" target="_blank" rel="noreferrer">GITHUB ↗</a>
-              <a href="https://www.linkedin.com/in/aaditya-desai-12d" target="_blank" rel="noreferrer">LINKEDIN ↗</a>
+            <p className="intro">Email is the fastest way. I’m looking for software engineering, ML, and systems roles.</p>
+            <a className="contact-email" href={`mailto:${person.email}`}>{person.email}</a>
+            <div className="hero-actions">
+              <a className="btn btn-primary" href={`mailto:${person.email}`}>Email me</a>
+              <a className="btn" href={person.resume} target="_blank" rel="noreferrer">Résumé</a>
+              <a className="btn" href={person.github} target="_blank" rel="noreferrer">GitHub</a>
+              <a className="btn" href={person.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
             </div>
           </div>
-        </div>
-        <div className="footer-line">
-          <span>AADITYA DESAI</span>
-          <span>AADITYAD.DEV</span>
-          <span>BUILT WITH NEXT.JS · 2026</span>
+        </section>
+      </main>
+      <footer className="site-footer">
+        <div className="shell">
+          <span>Aaditya Desai</span>
+          <span>Santa Clara</span>
+          <span>Summer 2027</span>
         </div>
       </footer>
-    </main>
+    </>
   );
 }
