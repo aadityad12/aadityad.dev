@@ -27,7 +27,7 @@ export function Plate({
   links: Link[];
 }) {
   return (
-    <article className="plate" id={id}>
+    <article className="plate" id={id} data-layout={id}>
       <header className="plate-head">
         <div>
           <p className="kicker"><span className="kicker-index">{index}</span>{kicker}</p>
