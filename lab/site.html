@@ -394,7 +394,7 @@ footer p{color:var(--muted);max-width:520px;margin:0 0 24px}
 
 
   <article class="pc" id="apextracker" style="--r:-.45deg" data-stamp="ridge:home" data-bg="#F3E7C9" data-pin="home" data-where="Home, Santa Clara" data-pm="SANTA CLARA, CA|SINCE JAN|2026">
-    <div class="pc-pic"><figure class="phone" style="margin:0"><img src="/public/projects/apextracker-dashboard.png" alt="ApexTracker's graphite dashboard: daily goal score and a consistency bar chart in monochrome"></figure><p class="cap mono">the day, scored</p></div>
+    <div class="pc-pic"><figure class="phone" style="margin:0"><img src="/public/projects/apextracker-dashboard.jpg" alt="ApexTracker's graphite dashboard: daily goal score and a consistency bar chart in monochrome"></figure><p class="cap mono">the day, scored</p></div>
     <div class="pc-msg"><span class="side mono">aadityad.dev · postcard 05</span>
       <div class="pc-head"><p class="kicker mono">Project 05 · Android · Daily driver</p><h3>ApexTracker</h3><p class="hook">One app instead of a pile of post-its.</p></div>
       <div class="body">
@@ -424,7 +424,7 @@ footer p{color:var(--muted);max-width:520px;margin:0 0 24px}
 
 
   <article class="pc" id="echo" style="--r:-.4deg" data-stamp="ridge:scu" data-bg="#F6DCD3" data-pin="echo" data-where="Santa Clara University" data-pm="SANTA CLARA UNIV.|FEB 28|2026">
-    <div class="pc-pic"><figure class="phone" style="margin:0"><img src="/public/projects/echo-alert.png" alt="Echo showing a severe weather alert received over Bluetooth"></figure><p class="cap mono">an alert that arrived with no internet</p></div>
+    <div class="pc-pic"><figure class="phone" style="margin:0"><img src="/public/projects/echo-alert.jpg" alt="Echo showing a severe weather alert received over Bluetooth"></figure><p class="cap mono">an alert that arrived with no internet</p></div>
     <div class="pc-msg"><span class="side mono">aadityad.dev · postcard 07</span>
       <div class="pc-head"><p class="kicker mono">Project 07 · Bluetooth · Offline</p><h3>Echo</h3><p class="hook">Emergency alerts that keep moving when the internet doesn't.</p></div>
       <div class="body">
@@ -572,12 +572,12 @@ const REELS = {
   ],
   apextracker: [
     { label: "The day, scored", make: original },
-    { label: "Study sessions", make: () => phone("/public/projects/apextracker-study.png", "ApexTracker's study session timer with a weekly study chart") },
-    { label: "Daily insights", make: () => phone("/public/projects/apextracker-insights.png", "ApexTracker's daily insights: money spent, study time and screen time for one day") },
+    { label: "Study sessions", make: () => phone("/public/projects/apextracker-study.jpg", "ApexTracker's study session timer with a weekly study chart") },
+    { label: "Daily insights", make: () => phone("/public/projects/apextracker-insights.jpg", "ApexTracker's daily insights: money spent, study time and screen time for one day") },
   ],
   echo: [
     { label: "An alert that arrived with no internet", make: original },
-    { label: "Every alert it has carried", make: () => phone("/public/projects/echo-home.png", "Echo's home screen listing severe weather alerts received from nearby phones") },
+    { label: "Every alert it has carried", make: () => phone("/public/projects/echo-home.jpg", "Echo's home screen listing severe weather alerts received from nearby phones") },
   ],
 };
 const buildSlide = (card, slide) => slide.make === original ? original(card)() : slide.make();

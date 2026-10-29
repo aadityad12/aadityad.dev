@@ -48,28 +48,27 @@ const REELS = {
   ],
   "oss-scout": [{ label: "The night shift", make: () => extra["oss-scout"]?.(), optional: true }],
   apextracker: [
-    { label: "The day, scored", make: () => phone("/projects/apextracker-dashboard.png", "ApexTracker's graphite dashboard: daily goal score and a consistency chart") },
-    { label: "Study sessions", make: () => phone("/projects/apextracker-study.png", "ApexTracker's study session timer with a weekly study chart") },
-    { label: "Daily insights", make: () => phone("/projects/apextracker-insights.png", "ApexTracker's daily insights: money spent, study time and screen time for one day") },
+    { label: "The day, scored", make: () => phone("/projects/apextracker-dashboard.jpg", "ApexTracker's graphite dashboard: daily goal score and a consistency chart") },
+    { label: "Study sessions", make: () => phone("/projects/apextracker-study.jpg", "ApexTracker's study session timer with a weekly study chart") },
+    { label: "Daily insights", make: () => phone("/projects/apextracker-insights.jpg", "ApexTracker's daily insights: money spent, study time and screen time for one day") },
   ],
   gazeboard: [{ label: "Letters to words to voice", make: () => createProjectArtifact("gazeboard") }],
   echo: [
-    { label: "An alert, no internet", make: () => phone("/projects/echo-alert.png", "Echo showing a severe weather alert received over Bluetooth") },
-    { label: "Every alert it carried", make: () => phone("/projects/echo-home.png", "Echo's home screen listing severe weather alerts received from nearby phones") },
+    { label: "An alert, no internet", make: () => phone("/projects/echo-alert.jpg", "Echo showing a severe weather alert received over Bluetooth") },
+    { label: "Every alert it carried", make: () => phone("/projects/echo-home.jpg", "Echo's home screen listing severe weather alerts received from nearby phones") },
   ],
   temper: [
     { label: "Bare vs. harnessed", make: () => extra.temper?.(), optional: true },
-    { label: "Temper", make: () => picture("/projects/temper-logo.webp", "The Temper logo", "v-plate logo") },
+    { label: "Temper", make: () => picture("/projects/temper-logo.jpg", "The Temper logo", "v-plate logo") },
   ],
 };
 
 async function loadOptionalArtifacts() {
   const loaders = [
-    // filled in as each artifact module lands in lab/
-  ].concat([]);
+    ["alta", () => import("@/lab/alta-artifact.js"), "createAltaArtifact", "setAltaPaused"],
+  ];
   /* PENDING
   const _pending = [
-    ["alta", () => import("@/lab/alta-artifact.js"), "createAltaArtifact", "setAltaPaused"],
     ["oss-scout", () => import("@/lab/oss-scout-artifact.js"), "createScoutArtifact", "setScoutPaused"],
     ["temper", () => import("@/lab/temper-artifact.js"), "createTemperArtifact", "setTemperPaused"],
   ];  */
@@ -92,6 +91,34 @@ export async function start() {
   const syncHeader = () => header.classList.toggle("solid", scrollY > 40);
   addEventListener("scroll", syncHeader, { passive: true });
   syncHeader();
+
+  // Pathfinder in the footer watches the cursor, blinks, and waves when poked
+  const pf = document.querySelector("[data-pathfinder]");
+  if (pf) {
+    const eye = pf.querySelector(".pf-eye");
+    let blinkTimer = 0;
+    const look = (x, y) => {
+      const box = pf.getBoundingClientRect();
+      const dx = x - (box.left + box.width * 0.51), dy = y - (box.top + box.height * 0.51);
+      const d = Math.hypot(dx, dy) || 1, k = Math.min(1, d / 300) * 5;
+      eye.setAttribute("cx", String(122 + (dx / d) * k));
+      eye.setAttribute("cy", String(130 + (dy / d) * k));
+    };
+    addEventListener("pointermove", (event) => look(event.clientX, event.clientY), { passive: true });
+    const blink = () => {
+      eye.setAttribute("ry", "1.2");
+      setTimeout(() => eye.setAttribute("ry", "7"), 130);
+      blinkTimer = setTimeout(blink, 2800 + Math.random() * 3500);
+    };
+    if (!motionPreference.matches) blinkTimer = setTimeout(blink, 2000);
+    pf.addEventListener("click", () => {
+      pf.classList.remove("hop", "wave");
+      void pf.offsetWidth;
+      pf.classList.add("hop", "wave");
+    });
+    pf.addEventListener("animationend", (event) => { if (event.animationName === "pf-hop") pf.classList.remove("hop"); if (event.animationName === "pf-wave") pf.classList.remove("wave"); });
+    void blinkTimer;
+  }
 
   await loadOptionalArtifacts();
 
@@ -123,6 +150,7 @@ export async function start() {
   let returnScroll = 0;
   let selectedTarget = null;
   let savedOverflow = "";
+  let lastTrip = null;
 
   const heroFrame = () => ({
     insetLeft: (width) => (innerWidth >= 1000 ? Math.min(560, width * 0.38) : 0),
@@ -202,6 +230,8 @@ export async function start() {
     preview.scrollTop = 0;
     explorer.classList.add("has-selection");
     bay?.highlight(pinId);
+    // Pathfinder heads for the place (riding the Caltrain on long trips) and the camera follows
+    if (bay && pinId && pinId !== lastTrip) { lastTrip = pinId; bay.travel(pinId); }
     explorerIndex.querySelectorAll("button").forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.target === target.id)));
   }
 
@@ -227,6 +257,7 @@ export async function start() {
     if (!explorer.open) return;
     dismissPreview();
     clearPreviewArtifact();
+    lastTrip = null;
     heroScene.prepend(map);
     bay.setInputMode("page");
     explorer.close();
@@ -252,7 +283,7 @@ export async function start() {
   explorer.addEventListener("cancel", (event) => { event.preventDefault(); closeExplorer(); });
   document.getElementById("preview-cta").addEventListener("click", () => closeExplorer(selectedTarget));
   document.getElementById("preview-dismiss").addEventListener("click", () => { dismissPreview(); document.getElementById("explorer-close").focus(); });
-  document.getElementById("explorer-reset").addEventListener("click", () => { dismissPreview(); frameMap(); });
+  document.getElementById("explorer-reset").addEventListener("click", () => { dismissPreview(); lastTrip = null; frameMap(); });
   motionButton.addEventListener("click", () => { paused = !paused; syncAnimation(); });
   explorerMotion.addEventListener("click", () => { paused = !paused; syncAnimation(); });
   motionPreference.addEventListener("change", (event) => { paused = event.matches; syncAnimation(); });

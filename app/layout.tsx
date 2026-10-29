@@ -3,6 +3,7 @@ import "@/lab/project-artifacts.css";
 import "@/lab/visionassist-artifact.css";
 import "@/lab/visionassist-directions.css";
 import "@/lab/project-reels.css";
+import "@/lab/alta-artifact.css";
 import "./globals.css";
 import { EMAIL, GITHUB, LINKEDIN } from "./content";
 

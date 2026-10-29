@@ -84,7 +84,8 @@ main{position:relative}
 .pc.flip .pc-pic,.pc.flip>.reel{order:2}
 .pc-msg{position:relative;padding:34px 40px 36px;border-left:1.5px dashed rgba(33,25,70,.22);align-self:stretch}
 .pc.flip .pc-msg{border-left:0;border-right:1.5px dashed rgba(33,25,70,.22)}
-.pc-head{position:relative;min-height:120px;padding-right:96px;margin-bottom:16px}
+.pc-head{position:relative;min-height:120px;margin-bottom:16px}
+.pc-head:has(.stamp),.js .pc[data-stamp] .pc-head{padding-right:96px}
 .pc-head .stamp{position:absolute;right:0;top:0;transform:rotate(3deg)}
 .kicker{color:var(--muted);margin:0 0 10px;display:flex;gap:10px;align-items:baseline}
 .kicker .num{color:var(--accent-ink)}
@@ -188,7 +189,15 @@ section.sec{padding-top:110px}
 .about li{padding:11px 0;border-bottom:1px solid var(--line)}
 .about li .mono{display:block;color:var(--muted);font-size:10.5px}
 
-footer{padding:130px 0 40px}
+footer{position:relative}
+#contact{padding-top:140px;padding-bottom:40px}
+.pathfinder{position:absolute;right:60px;top:150px;width:150px;padding:0;border:0;background:none;color:var(--ink);cursor:pointer}
+.pathfinder svg{display:block;width:100%;height:auto;overflow:visible}
+.pf-arm-r{transform-origin:168px 132px}
+.pathfinder:hover .pf-arm-r,.pathfinder.wave .pf-arm-r{animation:pf-wave .9s ease-in-out 2}
+.pathfinder.hop{animation:pf-hop .5s ease-out}
+@keyframes pf-wave{25%{transform:rotate(-38deg)}50%{transform:rotate(-10deg)}75%{transform:rotate(-38deg)}}
+@keyframes pf-hop{40%{transform:translateY(-14px)}}
 .kicker-accent{color:var(--accent-ink)}
 footer h2{font:400 clamp(60px,8vw,104px)/.9 "Instrument Serif",Georgia,serif;margin:0 0 16px;letter-spacing:-.015em}
 footer h2 span{color:var(--accent)}
@@ -272,6 +281,7 @@ footer>p{color:var(--muted);max-width:540px;margin:0 0 26px;font-size:16.5px}
   .about{grid-template-columns:1fr;gap:20px}
   .oss{grid-template-columns:1fr}
   .fline{flex-wrap:wrap;gap:12px;font-size:10px}
+  .pathfinder{position:relative;right:auto;top:auto;width:96px;margin:0 0 18px}
 }
 @media (max-width:700px){
   .explorer-bar{padding:16px;align-items:flex-start}

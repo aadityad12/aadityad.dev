@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import Enhance from "./components/Enhance";
+import { PATHFINDER } from "@/lab/shared.js";
 import {
   ABOUT, AWARDS, CERTS, EDUCATION, EMAIL, EXPERIENCE, GITHUB, HERO, LINKEDIN, MORE, OPEN_SOURCE, OSS, PROJECTS, PROOF, RESUME, SKILLS,
   type Project, type Visual,
@@ -244,6 +245,19 @@ export default function Home() {
           </section>
 
           <footer className="shell" id="contact">
+            <button className="pathfinder" type="button" aria-label="Pathfinder, the robot from the map, says hi" data-pathfinder>
+              <svg viewBox="40 30 160 195" aria-hidden="true">
+                <g fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+                  <path d={PATHFINDER[0]} fill="#FBFAFE" />
+                  {PATHFINDER.slice(1, 6).map((d: string) => <path key={d} d={d} />)}
+                  <g className="pf-arm-l"><path d={PATHFINDER[6]} /></g>
+                  <g className="pf-arm-r"><path d={PATHFINDER[7]} /></g>
+                  <path d={PATHFINDER[8]} />
+                </g>
+                <ellipse className="pf-eye" cx="122" cy="130" rx="7" ry="7" fill="#FF5A47" />
+                <circle cx="120" cy="165" r="4" fill="#FF5A47" />
+              </svg>
+            </button>
             <p className="mono kicker-accent">Summer 2027 internships · Winter 2027 co-ops</p>
             <h2>Let&apos;s build something<span>.</span></h2>
             <p>I&apos;m looking for roles in software, AI/ML, and embedded systems. Email is the fastest way to reach me.</p>

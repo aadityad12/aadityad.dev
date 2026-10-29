@@ -183,7 +183,7 @@ export const PROJECTS: Project[] = [
     pin: "home",
     stamp: "ridge:home",
     stampBg: "#F3E7C9",
-    visual: { kind: "phone", src: "/projects/apextracker-dashboard.png", alt: "ApexTracker's graphite dashboard: daily goal score and a consistency chart" },
+    visual: { kind: "phone", src: "/projects/apextracker-dashboard.jpg", alt: "ApexTracker's graphite dashboard: daily goal score and a consistency chart" },
   },
   {
     id: "gazeboard",
@@ -227,7 +227,7 @@ export const PROJECTS: Project[] = [
     pin: "echo",
     stamp: "ridge:scu",
     stampBg: "#F6DCD3",
-    visual: { kind: "phone", src: "/projects/echo-alert.png", alt: "Echo showing a severe weather alert received over Bluetooth" },
+    visual: { kind: "phone", src: "/projects/echo-alert.jpg", alt: "Echo showing a severe weather alert received over Bluetooth" },
   },
   {
     id: "temper",
@@ -249,7 +249,7 @@ export const PROJECTS: Project[] = [
     pin: "temper",
     stamp: "lm:ferryBuilding",
     stampBg: "#DCE6F2",
-    visual: { kind: "image", frame: "plate", src: "/projects/temper-logo.webp", alt: "The Temper logo" },
+    visual: { kind: "image", frame: "plate", src: "/projects/temper-logo.jpg", alt: "The Temper logo" },
   },
 ];
 
