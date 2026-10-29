@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { SiteHeader } from "./components/SiteHeader";
-import { SectionCut } from "./components/SectionCut";
+import { Scope } from "./components/Scope";
 import { Plate } from "./components/Plate";
 import { Fold } from "./components/Fold";
 import { Ladder } from "./components/Ladder";
@@ -9,27 +9,17 @@ import { Sight } from "./components/Sight";
 import { LocalFirst } from "./components/LocalFirst";
 import { Scout } from "./components/Scout";
 import { Protocol } from "./components/Protocol";
-import { EchoPath } from "./components/EchoPath";
+import { EchoStory } from "./components/EchoPath";
+import { DemoVideo } from "./components/DemoVideo";
 import { also, experience, person, projects, proofs, type Project } from "./lib/content";
 
 function Exhibit({ id }: { id: Project["exhibit"] }) {
   switch (id) {
     case "fold":
       return (
-        <div className="exhibit-stack">
+        <div className="stage-split">
           <Fold />
-          <video
-            className="demo-video"
-            controls
-            preload="none"
-            playsInline
-            poster="/projects/accordion-map.png"
-            aria-label="Recorded Accordion context map. Colored blocks stand for parts of an agent session."
-          >
-            <source src="/projects/accordion-demo.webm" type="video/webm" />
-            <source src="/projects/accordion-demo.mp4" type="video/mp4" />
-            <track kind="captions" srcLang="en" label="English" src="/projects/accordion-demo.vtt" default />
-          </video>
+          <DemoVideo />
         </div>
       );
     case "ladder":
@@ -40,15 +30,18 @@ function Exhibit({ id }: { id: Project["exhibit"] }) {
       return <Sight />;
     case "local":
       return (
-        <div className="exhibit-stack">
+        <div className="diptych">
           <LocalFirst />
-          <div className="shot">
-            <Image
-              src="/projects/apextracker-dashboard.png"
-              alt="ApexTracker dashboard. Two of four goals are met: screen time under six hours, and reading a paper. An eight-week consistency grid sits below."
-              fill
-              sizes="(max-width: 900px) 100vw, 520px"
-            />
+          <div className="phone">
+            <div className="phone-screen">
+              <Image
+                src="/projects/apextracker-dashboard.png"
+                alt="ApexTracker dashboard. Two of four goals are met: screen time under six hours, and reading a paper. An eight-week consistency grid sits below."
+                fill
+                sizes="260px"
+                style={{ objectFit: "contain", objectPosition: "center top" }}
+              />
+            </div>
           </div>
         </div>
       );
@@ -56,15 +49,18 @@ function Exhibit({ id }: { id: Project["exhibit"] }) {
       return <Scout />;
     case "echo":
       return (
-        <div className="exhibit-stack">
-          <EchoPath />
-          <div className="shot shot-phone">
-            <Image
-              src="/projects/echo-alert.png"
-              alt="Echo alert details for a severe thunderstorm warning. The echo path says the alert was received from a relay node, with zero further echoes."
-              fill
-              sizes="300px"
-            />
+        <div className="diptych">
+          <EchoStory />
+          <div className="phone">
+            <div className="phone-screen">
+              <Image
+                src="/projects/echo-alert.png"
+                alt="Echo alert details for a severe thunderstorm warning. The echo path says the alert was received from a relay node, with zero further echoes."
+                fill
+                sizes="260px"
+                style={{ objectFit: "contain", objectPosition: "center top" }}
+              />
+            </div>
           </div>
         </div>
       );
@@ -81,26 +77,17 @@ export default function Home() {
         <section className="hero shell" id="top">
           <div className="hero-meta">
             <p className="kicker">Computer engineering · SJSU · 2028</p>
-            <p className="kicker">Santa Clara</p>
+            <p className="kicker">Santa Clara · Summer 2027</p>
           </div>
-          <div className="hero-grid">
-            <div>
-              <h1>Aaditya Desai</h1>
-              <p className="thesis">The interesting part<br />is the limit.</p>
-              <p className="intro">
-                I study computer engineering at San José State. The projects below had to fit inside something real: a context window, a phone with no network, a Raspberry Pi, or a day I actually live.
-              </p>
-              <p className="availability">Summer 2027 internships · software, ML, and systems</p>
-              <div className="hero-actions">
-                <a className="btn btn-primary" href="#work">See the work</a>
-                <a className="btn" href={person.resume} target="_blank" rel="noreferrer">Résumé</a>
-                <a className="text-link" href={`mailto:${person.email}`}>{person.email}</a>
-              </div>
-            </div>
-            <div className="hero-instrument">
-              <SectionCut />
+          <div className="hero-title">
+            <h1>Aaditya Desai</h1>
+            <div className="hero-actions">
+              <a className="btn btn-primary" href="#work">See the work</a>
+              <a className="btn" href={person.resume} target="_blank" rel="noreferrer">Résumé</a>
+              <a className="text-link" href={`mailto:${person.email}`}>{person.email}</a>
             </div>
           </div>
+          <Scope />
           <dl className="proofs">
             {proofs.map((item) => (
               <div key={item.kicker}>
@@ -118,7 +105,7 @@ export default function Home() {
           <div className="shell">
             <div className="section-head">
               <h2>Selected work</h2>
-              <p>Eight builds. Each one names the limit, the part I owned, and the claim I won’t make.</p>
+              <p>Each one had to fit inside something real: a context window, a phone with no network, a Raspberry Pi, or a day I actually live.</p>
             </div>
             <nav className="work-index" aria-label="Projects">
               {projects.map((project) => (

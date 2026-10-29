@@ -110,6 +110,7 @@ export function Ladder() {
               <span className="rung-name">
                 {row.name}
                 {slower ? <em className="regress"> slower</em> : null}
+                {slower ? <span className="mini-stamp">Kept</span> : null}
                 {row.fallback ? <em> VM fallback</em> : null}
               </span>
               <span className="rung-track" aria-hidden="true">

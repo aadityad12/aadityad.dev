@@ -28,12 +28,11 @@ export function Plate({
 }) {
   return (
     <article className="plate" id={id}>
-      <div className="plate-top">
-        <div className="plate-copy">
+      <header className="plate-head">
+        <div>
           <p className="kicker"><span className="kicker-index">{index}</span>{kicker}</p>
           <h3>{title}</h3>
           <p className="headline">{headline}</p>
-          <p className="lede">{lede}</p>
           <div className="plate-links">
             {links.map((link) => {
               const external = link.href.startsWith("http");
@@ -52,11 +51,12 @@ export function Plate({
           </div>
           <p className="stack">{stack}</p>
         </div>
-        <figure className="exhibit">
-          {exhibit}
-          <figcaption>{caption}</figcaption>
-        </figure>
-      </div>
+        <p className="lede">{lede}</p>
+      </header>
+      <figure className="exhibit">
+        {exhibit}
+        <figcaption>{caption}</figcaption>
+      </figure>
       <div className="facts">
         {facts.map((fact) => (
           <div key={fact.label}>

@@ -41,8 +41,24 @@ export function Fold() {
     return "The model can see the whole session. The tail is protected either way.";
   }, [mode]);
 
+  const cells = Array.from({ length: 72 }, (_, index) => ({
+    index,
+    kind: index % 4,
+    protect: index >= 56,
+  }));
+
   return (
-    <div className="fold">
+    <div className={`fold is-${mode}`}>
+      <div className="token-map" aria-hidden="true">
+        {mode === "compacted" ? <span className="token-summary">Summary replaced the cold blocks</span> : null}
+        {cells.map((cell) => (
+          <span
+            key={cell.index}
+            className={cell.protect ? "token is-protect" : mode === "folded" ? "token is-cold" : mode === "compacted" ? "token is-gone" : "token"}
+            data-kind={cell.kind}
+          />
+        ))}
+      </div>
       <div className="meter-read">
         <span>Model sees <strong className="measure">{visible}</strong></span>
         <span>Stored <strong>{stored}</strong></span>

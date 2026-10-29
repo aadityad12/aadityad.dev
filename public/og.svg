@@ -1,9 +1,26 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <rect width="1200" height="630" fill="#E6ECEF"/>
-  <circle cx="96" cy="318" r="14" fill="none" stroke="#1A4B84" stroke-width="3"/>
-  <circle cx="1104" cy="318" r="14" fill="none" stroke="#1A4B84" stroke-width="3"/>
-  <path d="M110 318 H1090" stroke="#1A4B84" stroke-width="3"/>
-  <text x="96" y="210" fill="#12171C" font-family="ui-sans-serif, sans-serif" font-size="84" font-weight="600">Aaditya Desai</text>
-  <text x="96" y="430" fill="#1A4B84" font-family="ui-sans-serif, sans-serif" font-size="42">The interesting part is the limit.</text>
-  <text x="96" y="540" fill="#3E4E5A" font-family="ui-monospace, monospace" font-size="22" letter-spacing="2">COMPUTER ENGINEERING · SAN JOSÉ STATE · SUMMER 2027</text>
+  <text x="72" y="118" fill="#12171C" font-family="ui-sans-serif, sans-serif" font-size="64" font-weight="650">Aaditya Desai</text>
+  <text x="72" y="168" fill="#3E4E5A" font-family="ui-monospace, monospace" font-size="18" letter-spacing="2">COMPUTER ENGINEERING · SJSU · SUMMER 2027</text>
+  <g transform="translate(72,210)">
+    <rect width="1056" height="360" rx="22" fill="#141B24"/>
+    <rect x="18" y="64" width="1020" height="230" rx="14" fill="#0C1218"/>
+    <text x="28" y="46" fill="#E7EEF3" font-family="ui-sans-serif, sans-serif" font-size="28" font-weight="600">The interesting part is the limit.</text>
+    <text x="860" y="44" fill="#8FD8C4" font-family="ui-monospace, monospace" font-size="14" letter-spacing="1.5">RUNG · FIB</text>
+    <g stroke="rgba(231,238,243,0.08)" stroke-width="1">
+      <line x1="40" y1="100" x2="1010" y2="100"/>
+      <line x1="40" y1="150" x2="1010" y2="150"/>
+      <line x1="40" y1="200" x2="1010" y2="200"/>
+      <line x1="40" y1="250" x2="1010" y2="250"/>
+    </g>
+    <line x1="70" y1="214" x2="980" y2="214" stroke="rgba(231,238,243,0.35)" stroke-dasharray="4 7"/>
+    <polyline points="70,214 180,120 290,156" fill="none" stroke="#3DDEC0" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+    <polyline points="510,132 640,168 760,108 880,160 980,86" fill="none" stroke="#3DDEC0" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+    <polyline points="290,156 400,250 510,132" fill="none" stroke="#FF5D52" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="400" cy="250" r="6" fill="#FF5D52"/>
+    <g transform="translate(430,228) rotate(-8)">
+      <rect x="-8" y="-28" width="118" height="48" rx="2" fill="none" stroke="#FF5D52" stroke-width="4"/>
+      <text x="51" y="6" text-anchor="middle" fill="#FF5D52" font-family="ui-sans-serif, sans-serif" font-size="28" font-weight="700" letter-spacing="2">KEPT</text>
+    </g>
+  </g>
 </svg>
