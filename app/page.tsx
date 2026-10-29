@@ -169,13 +169,14 @@ export default function Home() {
             </p>
             <p className="card-body">
               <span className="body-kicker">MY PART /</span>
-              On a team of three, I built the hackathon relevance pipeline with keyword scoring, bi-encoder retrieval,
-              and cross-encoder reranking. I also built the live attribution view that shows whether a fold came from the
-              user, agent, or conductor. In an early hackathon-scale SlopCodeBench run at a 100k-token budget,
-              Accordion completed 5 of 6 checkpoints versus 2 of 6 for naive compaction. We won The Token Company
-              sponsor track at UC Berkeley AI Hackathon 2026.
+              Through June 2026 I worked on the conductor, the part that decides what to fold. I built a way to tell
+              whether folding was helping: health metrics, evaluators, and a harness that compares a session against
+              naive compaction. I added a cross-encoder rerank stage for choosing what to unfold, ported the conductor
+              onto Accordion&apos;s command contract, and built a dashboard showing the conductor&apos;s health and each
+              decision it made. Built with Tyler Darisme, Sheel Shah, and Thy Tang; we won The Token Company sponsor
+              track at UC Berkeley AI Hackathon 2026.
             </p>
-            <p className="tech-line">MY PART: PYTHON · HUGGINGFACE TRANSFORMERS · SVELTEKIT</p>
+            <p className="tech-line">MY PART: TYPESCRIPT · HUGGING FACE TRANSFORMERS · SVELTEKIT</p>
             <ul className="chips">
               <li className="win">🏆 WINNER · UC BERKELEY AI HACKATHON 2026</li>
               <li className="chip-link"><a href="https://github.com/a-Fig/accordion" target="_blank" rel="noreferrer">★ 200+ · TEAM REPO ↗</a></li>
@@ -365,17 +366,15 @@ export default function Home() {
         <div className="about-grid">
           <div className="about-copy reveal">
             <p>
-              I keep gravitating toward software with an awkward constraint: no network, a fixed compute budget, a
-              latency target, or an agent that has run out of context. Those projects force me to understand the
-              whole path, from the model or protocol through the interface someone actually touches. They make
-              hand-waving difficult.
+              I&apos;m from India, and I got into engineering through VEX robotics, programming robots in RobotC. That
+              came full circle this year: I wrote the control code for my team&apos;s robot in SJSU&apos;s ENGR 10, then
+              came back the next semester to TA the course. I originally planned to study computer science and switched
+              to computer engineering to get closer to the hardware.
             </p>
             <p>
-              ApexTracker is probably the clearest picture of how I build. It began as an intentionally ordinary
-              tracker so I would write code every day; somewhere along the way, it replaced the post-its, reminder
-              apps, and spreadsheets I was actually using. Teaching C++ and debugging to first-time programmers
-              shaped the same habit: trace the symptom backward, explain the mechanism clearly, and stay with the
-              problem until the abstraction stops hiding it.
+              A lot of what I build starts with something I need or want to understand. ApexTracker began as a way to
+              make myself code every day and ended up replacing my reminder apps and spreadsheets. Teaching shaped how I
+              debug: trace the symptom back to its cause and explain the mechanism, rather than hand over a fix.
             </p>
             <ul className="about-meta">
               <li>BASED / SANTA CLARA, CA</li>
