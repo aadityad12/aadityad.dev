@@ -79,6 +79,27 @@ lifecycle events but is not an audio visualization. No camera, gaze model, or NP
 Dwell and speech stop offscreen or when hidden. Reduced motion keeps the gaze cue and decorative
 animation static without disabling selection. The map uses a compact instance of the portrait.
 
+## Project reels
+
+Cards with more than one good visual show them as a reel (`project-reels.js` / `.css`): the copy stays
+fixed and only the picture changes. Each view advances after about seven seconds, but only while the
+reel is on screen, the tab is visible, motion is allowed (the site's pause button and reduced motion
+both stop it), and nobody is hovering or focused inside it. Choosing a view, swiping, or using the
+arrow keys hands control to the visitor for the rest of the visit. Videos play only while their view
+is showing. Single-visual cards stay static. The map preview shows a reel's first view.
+
+The slide lists live in `REELS` in `site.html`:
+
+- VisionAssist: the Attention and Quiet studies, the mount CAD from the Vision-Assist repo, the device photo.
+  The passive room portrait is no longer used on the site.
+- Rung: the README's `jit.gif` (real output), its speed-up chart, and the results table.
+- Accordion: the demo video, and the context-map screenshot cropped to the map.
+- ApexTracker: dashboard, study session, daily insights (the screen-time screenshot is left out).
+- Echo: the alert, and the home feed.
+
+Rung's numbers follow its README after the recursive JIT landed on Oct 19, 2026 (fib 38.84x,
+loop_sum 22.38x, background JIT warmup p99 0.89 to 0.28 ms).
+
 ## Files
 
 ### VisionAssist portrait
@@ -115,6 +136,7 @@ have one shared pause control outside the artifacts, and stop their decorative m
 - `whale-habitat.js`: shoreline-safe spawn sampling and irregular whale encounter scheduling.
 - `ink3d.js`: the ink style: toon shading, hatching, boiling outlines, trees, birds, planes.
 - `stamps.js`: postage stamps for the project postcards (a landmark still, or a ridgeline map of the place).
+- `project-reels.js` / `project-reels.css`: rotating views inside one project card.
 - `project-artifacts.js` / `project-artifacts.css`: the GazeBoard gaze-to-voice portrait and its interaction lifecycle.
 - `gazeboard-words.js`: the app's ordered spelling dictionary, used for local candidate matching.
 - `visionassist-artifact.js` / `visionassist-artifact.css`: the passive priority-warning portrait and its motion lifecycle.

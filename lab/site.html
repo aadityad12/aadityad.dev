@@ -3,6 +3,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="stylesheet" href="./project-artifacts.css">
 <link rel="stylesheet" href="./visionassist-artifact.css">
+<link rel="stylesheet" href="./visionassist-directions.css">
+<link rel="stylesheet" href="./project-reels.css">
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=block" rel="stylesheet">
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
 <style>
@@ -151,7 +153,7 @@ footer p{color:var(--muted);max-width:520px;margin:0 0 24px}
 .map-paused .bay-pin svg{animation-play-state:paused}
 .project-visual{margin:16px;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:14px}
 .pc.flip .project-visual{order:2}
-#preview-artifact>.project-artifact{margin-bottom:16px}
+#preview-artifact>.project-artifact,#preview-artifact>.direction-art{margin-bottom:16px}
 .map-entry{position:absolute;inset:0;z-index:1;border:0;background:transparent;cursor:zoom-in;color:transparent}
 .map-entry:focus-visible{outline-offset:-8px}
 .map-caption{z-index:2}
@@ -190,7 +192,7 @@ footer p{color:var(--muted);max-width:520px;margin:0 0 24px}
 @media(max-width:700px){
  .pc.flip .project-visual{order:0}
  .project-visual{margin:12px}
- .project-preview:has(.project-artifact){max-height:62dvh}
+ .project-preview:has(.project-artifact),.project-preview:has(.direction-art){max-height:62dvh}
  #preview-artifact>.project-artifact{width:100%;margin:0 0 12px}
  .explorer-bar{padding:16px;align-items:flex-start}
  .explorer-bar h2{font-size:25px}
@@ -341,14 +343,14 @@ footer p{color:var(--muted);max-width:520px;margin:0 0 24px}
   <article class="pc flip" id="rung" style="--r:.45deg" data-stamp="ridge:home" data-bg="#F6DCD3" data-pin="home" data-where="Home, Santa Clara" data-pm="SANTA CLARA, CA|SEP–OCT|2026">
     <div class="pc-pic"><div class="panel"><p class="mono">Median per call · Apple M1 Pro</p><dl>
       <div><dt>Stack VM vs tree-walker</dt><dd>1.30x to 4.99x</dd></div>
-      <div><dt>JIT vs tree-walker, loop_sum</dt><dd>22.64x</dd></div>
+      <div><dt>JIT vs tree-walker, fib</dt><dd>38.84x</dd></div>
       <div><dt>NaN-boxing vs previous rung, sieve</dt><dd class="slow">0.63x</dd></div>
-      <div><dt>Background JIT, p99 on warmup</dt><dd>0.82 to 0.32 ms</dd></div></dl></div><p class="cap mono">including the one that got slower</p></div>
+      <div><dt>Background JIT, p99 on warmup</dt><dd>0.89 to 0.28 ms</dd></div></dl></div><p class="cap mono">including the one that got slower</p></div>
     <div class="pc-msg"><span class="side mono">aadityad.dev · postcard 02</span>
       <div class="pc-head"><p class="kicker mono">Project 02 · Languages · C++ and ARM64</p><h3>Rung</h3><p class="hook">One tiny language, five engines, every speed-up measured.</p></div>
       <div class="body">
         <p><b>The project /</b>Every explanation of how Python, Lua, or JavaScript get fast lists the same tricks: bytecode, register machines, smaller values, JITs. I wanted to know how much each one actually helps, so I built a tiny language and implemented it five times: a tree-walking interpreter, a stack VM, a register VM, an ARM64 JIT, and a JIT that compiles on a background thread. All five have to print byte-identical output.</p>
-        <p><b>What I found /</b>The stack VM ran 1.30x to 4.99x faster than the tree-walker, and the JIT reached 22.64x on the one benchmark where a function compiles. NaN-boxing halved the size of every value and still made every benchmark slower. I don't know why yet, so it stays in the table. The JIT's ARM64 encoder is hand-written and checked byte for byte against LLVM's assembler.</p>
+        <p><b>What I found /</b>The stack VM ran 1.30x to 4.99x faster than the tree-walker, and the JIT, which now compiles two of the six benchmarks, reached 38.84x on fib and 22.38x on loop_sum. NaN-boxing halved the size of every value and still made every benchmark slower. I don't know why yet, so it stays in the table. The JIT's ARM64 encoder is hand-written and checked byte for byte against LLVM's assembler.</p>
         <p><b>Testing /</b>Sanitizers, a fuzzer, and CI on macOS and Linux across ARM64 and x86-64. Looping the tests hundreds of times in CI exposed a crash in about 5% of runs: UBSan reads 8 bytes before the target of an indirect call, and JIT code at the very start of a page made that read hit unmapped memory. Sixteen zero bytes fixed it.</p>
       </div>
       <div class="addr"><p class="mono">C++20 · ARM64 · CMake · libFuzzer · ASan / UBSan / TSan · GitHub Actions</p></div>
@@ -522,6 +524,8 @@ footer p{color:var(--muted);max-width:520px;margin:0 0 24px}
 </dialog>
 <script type="module">
 import { PROJECT_ARTIFACTS, createProjectArtifact, releaseProjectArtifact, setArtifactsPaused } from "./project-artifacts.js";
+import { createVisionDirection, releaseVisionDirection, setVisionDirectionsPaused } from "./visionassist-directions.js";
+import { createReel, releaseReel, setReelsPaused } from "./project-reels.js";
 
 const header = document.getElementById("hdr");
 const map = document.getElementById("map");
@@ -529,28 +533,67 @@ const resetButton = document.getElementById("whole");
 const motionButton = document.getElementById("map-motion");
 const motionPreference = matchMedia("(prefers-reduced-motion: reduce)");
 const cards = [...document.querySelectorAll(".pc")];
+const originalPictures = new Map(cards.map((card) => [card.id, card.querySelector(".pc-pic").cloneNode(true)]));
 const explorer = document.getElementById("map-explorer");
 const heroScene = document.querySelector(".hero-scene");
 const entryButton = document.getElementById("map-entry");
 const preview = document.getElementById("project-preview");
 const explorerMotion = document.getElementById("explorer-motion");
 const explorerIndex = document.getElementById("explorer-index");
+const picture = (src, alt, className) => {
+  const image = document.createElement("img");
+  Object.assign(image, { src, alt, className, loading: "lazy", decoding: "async" });
+  return image;
+};
+const phone = (src, alt) => {
+  const frame = document.createElement("figure");
+  frame.className = "phone";
+  frame.style.margin = "0";
+  frame.append(picture(src, alt, ""));
+  return frame;
+};
+// The card's original visual, minus its caption (the caption becomes the view's label).
+const original = (card) => () => [...originalPictures.get(card.id).children].find((child) => !child.matches(".cap")).cloneNode(true);
+const REELS = {
+  visionassist: [
+    { label: "What it sees", make: () => createVisionDirection("attention") },
+    { label: "What it says", make: () => createVisionDirection("quiet") },
+    { label: "How it's worn", make: () => picture("/public/projects/visionassist-fit-cad.png", "CAD model of the VisionAssist mount: the Pi 5 and camera on a visor bracket, shown on a head form", "reel-plate") },
+    { label: "The build", make: () => picture("/public/projects/visionassist-device.jpg", "VisionAssist's Raspberry Pi 5 in a red 3D-printed case with a cooling fan, and an Arducam camera module mounted on top", "photo") },
+  ],
+  rung: [
+    { label: "Watch it run", make: () => picture("/public/projects/rung-jit.gif", "Terminal output: Rung compiles add to ARM64, then a float fails the integer type guard and the VM finishes the call, printing 42 and 22.5", "reel-terminal"), dwell: 9000 },
+    { label: "Speed-ups by engine", make: () => picture("/public/projects/rung-performance.svg", "Bar chart of speedups over tree-walking for the stack VM, register VM and JIT across six benchmarks, up to 38.84x on fib", "reel-chart") },
+    { label: "The one that got slower", make: original },
+  ],
+  accordion: [
+    { label: "The context map, live", make: original, dwell: 10000 },
+    { label: "One session, block by block", make: () => picture("/public/projects/accordion-context-map.png", "Accordion's context map: a 109,407 of 512,000 token session drawn as coloured blocks for user, reply, thinking, tool call and tool result, with a protected range on the budget bar", "reel-ui") },
+  ],
+  apextracker: [
+    { label: "The day, scored", make: original },
+    { label: "Study sessions", make: () => phone("/public/projects/apextracker-study.png", "ApexTracker's study session timer with a weekly study chart") },
+    { label: "Daily insights", make: () => phone("/public/projects/apextracker-insights.png", "ApexTracker's daily insights: money spent, study time and screen time for one day") },
+  ],
+  echo: [
+    { label: "An alert that arrived with no internet", make: original },
+    { label: "Every alert it has carried", make: () => phone("/public/projects/echo-home.png", "Echo's home screen listing severe weather alerts received from nearby phones") },
+  ],
+};
+const buildSlide = (card, slide) => slide.make === original ? original(card)() : slide.make();
 for (const card of cards) {
+  const slides = REELS[card.id];
+  if (slides) {
+    const reel = createReel({ name: card.querySelector("h3").textContent, slides: slides.map((slide) => ({ ...slide, node: buildSlide(card, slide) })) });
+    reel.querySelectorAll("video").forEach((video) => { video.autoplay = false; video.removeAttribute("autoplay"); });
+    card.querySelector(".pc-pic").replaceWith(reel);
+    continue;
+  }
   if (!PROJECT_ARTIFACTS[card.id]) continue;
-  const original = card.querySelector(".pc-pic");
   const visual = document.createElement("div");
   visual.className = "project-visual";
-  original.replaceWith(visual);
+  card.querySelector(".pc-pic").replaceWith(visual);
   visual.append(createProjectArtifact(card.id));
-  if (card.id === "visionassist") {
-    const evidence = document.createElement("details");
-    evidence.className = "vision-evidence";
-    const summary = document.createElement("summary");
-    summary.textContent = "See the real prototype";
-    original.querySelector("img").loading = "lazy";
-    evidence.append(summary, original);
-    visual.append(evidence);
-  }
 }
 let bay = null;
 let paused = motionPreference.matches;
@@ -588,11 +631,14 @@ function showProject(target, pinId) {
   document.getElementById("preview-meta").textContent = isProject ? target.querySelector(".kicker").textContent : "B.S. Computer Engineering · Expected May 2028";
   const artifactHost = document.getElementById("preview-artifact");
   artifactHost.querySelectorAll(".project-artifact").forEach(releaseProjectArtifact);
+  artifactHost.querySelectorAll(".direction-art").forEach(releaseVisionDirection);
   artifactHost.replaceChildren();
   if (isProject) {
-    if (PROJECT_ARTIFACTS[target.id]) artifactHost.append(createProjectArtifact(target.id, { compact: true }));
+    const lead = REELS[target.id]?.[0];
+    if (lead && lead.make !== original) artifactHost.append(lead.make());
+    else if (PROJECT_ARTIFACTS[target.id]) artifactHost.append(createProjectArtifact(target.id, { compact: true }));
     else {
-      const artifact = target.querySelector(".pc-pic").cloneNode(true);
+      const artifact = originalPictures.get(target.id).cloneNode(true);
       artifact.classList.add("preview-artifact");
       artifact.querySelectorAll("[id]").forEach((element) => element.removeAttribute("id"));
       artifactHost.append(artifact);
@@ -676,6 +722,8 @@ syncHeader();
 function syncAnimation() {
   map.classList.toggle("map-paused", paused);
   setArtifactsPaused(paused);
+  setVisionDirectionsPaused(paused);
+  setReelsPaused(paused);
   motionButton.textContent = paused ? "Play map" : "Pause map";
   motionButton.setAttribute("aria-pressed", String(paused));
   explorerMotion.textContent = paused ? "Play map" : "Pause map";
