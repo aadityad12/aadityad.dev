@@ -24,5 +24,6 @@ Pushes to `main` are built and deployed automatically by
 
 ## Design
 
-The redesign direction lives in [`docs/design-brief.md`](docs/design-brief.md);
-implementation is tracked in the repo issues.
+This branch (`Kimi2`) renders the portfolio as a **preliminary engineering
+datasheet** — document AD-2027, Rev A. The direction, content provenance, and
+claim-status notes live in [`docs/kimi2-design.md`](docs/kimi2-design.md).
