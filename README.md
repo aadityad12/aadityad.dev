@@ -24,5 +24,7 @@ Pushes to `main` are built and deployed automatically by
 
 ## Design
 
-The redesign direction lives in [`docs/design-brief.md`](docs/design-brief.md);
-implementation is tracked in the repo issues.
+This branch implements **Sol: the constraint lab**, with five interactive engineering
+exhibits and five statically exported case studies. The direction, content provenance,
+and research references live in [`docs/sol-design.md`](docs/sol-design.md).
+The earlier direction is preserved in [`docs/design-brief.md`](docs/design-brief.md).

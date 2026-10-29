@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#faf9f6"/>
+  <path d="M60 113h1080M60 532h1080" stroke="#dedfd7"/>
+  <rect x="60" y="43" width="40" height="40" rx="2" fill="#3155d9"/>
+  <path d="m69 71 7-17h3l7 17m-14-6h11M86 54v17h3c7 0 7-17 0-17h-3Z" fill="none" stroke="#faf9f6" stroke-width="1.8"/>
+  <text x="116" y="69" font-family="Arial,sans-serif" font-size="23" fill="#262923">Aaditya Desai</text>
+  <text x="973" y="68" font-family="monospace" font-size="14" fill="#6c7068">AADITYAD.DEV</text>
+  <text x="60" y="174" font-family="monospace" font-size="13" letter-spacing="1" fill="#3155d9">COMPUTER ENGINEER &amp; BUILDER</text>
+  <text x="55" y="295" font-family="Arial,sans-serif" font-size="112" letter-spacing="-7" fill="#262923">Big ideas.</text>
+  <text x="55" y="418" font-family="Arial,sans-serif" font-size="112" letter-spacing="-7" fill="#262923">Real</text>
+  <text x="285" y="418" font-family="Georgia,serif" font-style="italic" font-size="112" letter-spacing="-6" fill="#3155d9">constraints.</text>
+  <text x="60" y="477" font-family="Arial,sans-serif" font-size="20" fill="#6c7068">AI tools · Language runtimes · Embedded vision · Android</text>
+  <g transform="translate(735 30)">
+    <path d="m110 290 140-70 140 70v16l-140 70-140-70Z" fill="#b5c3e6" stroke="#8e9fc9"/>
+    <path d="m110 290 140-70 140 70-140 70Z" fill="#e1e7f6" stroke="#9eaed2"/>
+    <path d="m110 226 140-70 140 70v16l-140 70-140-70Z" fill="#2945b3"/>
+    <path d="m110 226 140-70 140 70-140 70Z" fill="#3155d9" stroke="#8095e3"/>
+    <path d="m142 226 108-54 108 54-108 54Z" fill="none" stroke="#9ab0ff"/>
+    <path d="m110 162 140-70 140 70v14l-140 70-140-70Z" fill="#b9c7e7" stroke="#a0afd1"/>
+    <path d="m110 162 140-70 140 70-140 70Z" fill="#eef1fa" stroke="#9eadd1"/>
+    <path d="m155 152 58-29 70 35-58 29Z" fill="#bac9ed"/>
+    <path d="m230 189 58-29 22 11-58 29Z" fill="#3155d9"/>
+  </g>
+  <text x="60" y="575" font-family="monospace" font-size="12" fill="#6c7068">SAN JOSÉ STATE UNIVERSITY / CLASS OF 2028</text>
+  <circle cx="898" cy="570" r="4" fill="#648247"/>
+  <text x="915" y="575" font-family="monospace" font-size="12" fill="#6c7068">OPEN TO 2027 INTERNSHIPS</text>
+</svg>
