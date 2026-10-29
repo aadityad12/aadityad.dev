@@ -15,6 +15,9 @@ python3 scripts/lab-server.py     # serves the repo root on :4173, with caching 
 | http://127.0.0.1:4173/lab/arena.html | The arena: the whole 3D Bay, full screen, for testing the map, landmarks and Pathfinder |
 | http://127.0.0.1:4173/lab/site.html | The site mockup: an explorable Bay Area hero, followed by an uninterrupted project portfolio |
 | http://127.0.0.1:4173/lab/specimens.html | Single landmarks on turntables, for modelling |
+| http://127.0.0.1:4173/lab/artifacts.html | GazeBoard predictive-spelling portrait, with letter-group selection and local word candidates |
+| http://127.0.0.1:4173/lab/visionassist.html | VisionAssist passive portrait: the scene becomes one prioritized spoken warning |
+| http://127.0.0.1:4173/lab/visionassist-directions.html | Three unapplied VisionAssist alternatives: attention field, physical object, and quiet warning episode |
 
 Arena URL switches: `#sf #sj #eb #pen #sc #gg` open on a close-up; `?go=<pin id>` clicks that pin after
 1.2 s (`?go=temper` rides the Caltrain); `?debug` marks where the bridges land.
@@ -53,7 +56,58 @@ is 8–18 seconds. Each encounter chooses a different region when available, and
 only happen while the whale is hidden. Scheduling uses active animation time, so pausing or
 leaving the map offscreen does not skip forward into the middle of an encounter.
 
+### Project artifacts: portrait study
+
+The anatomical-eye study was too unsettling and understated the spelling capability. The
+current portrait puts typography first: four curved letter groups surround an abstract gaze
+focus, and the selected pattern resolves into candidate words. It starts with the example
+T–Z / A–G / T–Z, yielding water, wet, and watch. Reset tries another pattern; undo reverses
+the last group. The ambiguous prefix uses the first candidate's letters, not a claim that
+the app knows exactly which individual letter was intended. No confidence scores,
+sentence-context prediction, or language-model behavior are implied.
+
+`gazeboard-words.js` copies the ordered 378-word asset from
+https://github.com/aadityad12/GazeBoard/blob/main/app/src/main/assets/words.txt (reviewed October 24,
+2026). `predictWords` mirrors its four-group prefix matching and presents the first three matches,
+as the Android spelling interface does. This is an artistic interpretation, not an app replica
+or a claim of target-device validation. Other projects retain their baseline artifacts,
+including Accordion's actual recording.
+
+Native targets support tapping and keyboard selection immediately, or a one-second pointer
+dwell. Optional browser speech only runs after **Speak word**; the waveform follows speech
+lifecycle events but is not an audio visualization. No camera, gaze model, or NPU is used.
+Dwell and speech stop offscreen or when hidden. Reduced motion keeps the gaze cue and decorative
+animation static without disabling selection. The map uses a compact instance of the portrait.
+
 ## Files
+
+### VisionAssist portrait
+
+The next study deliberately asks for less interaction: an illustrated indoor scene highlights
+a chair while a farther person stays secondary. The warning is readable without waiting or
+clicking. It follows the source's high-risk-first sorting and warning thresholds: an illustrative
+five-foot estimate maps to two steps and produces “stop, chair, 2 steps ahead.” These numbers
+are scenario values, not measured accuracy, live inference, or a safety claim. No camera,
+speech synthesis, or model runs in this portrait. Subtle emphasis repeats on a ten-second loop,
+stops offscreen or when hidden, and respects the existing pause/reduced-motion settings.
+The real hardware photograph remains behind **See the real prototype** in the full project;
+the map uses a compact portrait. GazeBoard's artifact and its dedicated study are unchanged.
+
+The room and chair now use a consistent eye-level perspective. The construction-line floor
+fan is removed; the floor stays quiet, with contact shadows grounding the chair, standing
+figure, and plant. The plant's pot and shadow are fully inside the floor boundary. Chair
+geometry determines its detection frame, so the brackets stay tied to the actual object.
+
+### Prototype files
+
+The VisionAssist room remains the site placeholder. `visionassist-directions.html` is a separate
+art-direction comparison, not a new selected design. Its three passive studies test prioritization,
+the real DIY hardware as an illustrated object, and restraint over time. The hardware study is
+based on `public/projects/visionassist-device.jpg`, not a newly invented wearable enclosure.
+The quiet study shows an illustrative safe → warning → safe episode, not a recorded inference
+or speech trace. It does not imply the actual three-second warning cooldown is a one-shot event.
+No alternative is integrated into the map or project cards. The studies respect reduced motion,
+have one shared pause control outside the artifacts, and stop their decorative motion offscreen.
 
 - `bay.js`: the map engine (`createBay(el, opts)`): terrain, landmarks, Caltrain, gulls, pins, Pathfinder.
   The arena and the site mockup both use it, so what you test in the arena is what the site shows.
@@ -61,6 +115,12 @@ leaving the map offscreen does not skip forward into the middle of an encounter.
 - `whale-habitat.js`: shoreline-safe spawn sampling and irregular whale encounter scheduling.
 - `ink3d.js`: the ink style: toon shading, hatching, boiling outlines, trees, birds, planes.
 - `stamps.js`: postage stamps for the project postcards (a landmark still, or a ridgeline map of the place).
+- `project-artifacts.js` / `project-artifacts.css`: the GazeBoard gaze-to-voice portrait and its interaction lifecycle.
+- `gazeboard-words.js`: the app's ordered spelling dictionary, used for local candidate matching.
+- `visionassist-artifact.js` / `visionassist-artifact.css`: the passive priority-warning portrait and its motion lifecycle.
+- `visionassist-directions.html` / `.js` / `.css`: independent alternative-art-direction studies; leave the main placeholder intact.
+- `visionassist.html`: focused review page for the quieter VisionAssist study.
+- `artifacts.html`: focused review page for the portrait direction.
 - `shared.js`: Pathfinder's paths, the heightmap loader, and the project pins.
 - `heightmap.json`: elevation grid, written by `node lab/heightmap.mjs` from the cached terrain tiles.
 

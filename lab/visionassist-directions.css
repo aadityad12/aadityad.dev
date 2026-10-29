@@ -1,0 +1,49 @@
+.direction-art{--direction-ink:#352640;--direction-accent:#B8503B;position:relative;isolation:isolate;container-type:inline-size;box-sizing:border-box;width:100%;min-width:0;margin:0;overflow:hidden;border:1px solid #D5C9D5;border-radius:8px;background:#F7F2ED;color:var(--direction-ink);font:400 12px/1.5 Manrope,system-ui,sans-serif}
+.direction-art *{box-sizing:border-box}
+.direction-art::after{content:"";position:absolute;inset:6px;z-index:-1;border:1px solid #3526400E;border-radius:4px;pointer-events:none}
+.direction-masthead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:27px 30px 0;font:400 8px/1.5 "DM Mono",monospace;text-transform:uppercase;letter-spacing:.11em}
+.direction-masthead>span:last-child{font-size:7px;letter-spacing:.03em;color:#8A768C}
+.direction-scene{display:block;width:100%;height:auto}
+.field-scene{margin-top:28px}
+.field-secondary{opacity:.47}
+.field-cup{opacity:.5}
+.field-plate-title{font:400 27px "Instrument Serif",Georgia,serif;letter-spacing:-.02em;fill:#8A7398}
+.field-chair-title{font:400 32px "Instrument Serif",Georgia,serif;letter-spacing:-.02em;fill:#352640}
+.direction-art .vision-timber-grain{stroke:#8A7198;stroke-width:.45;opacity:.28}
+.field-detail{font:400 7px "DM Mono",monospace;letter-spacing:.07em;fill:#8D7B98}
+.field-chosen-label{font:400 8px "DM Mono",monospace;letter-spacing:.1em;fill:#B8503B}
+.field-selected-detail{fill:#A66D61;font-size:7px}
+.field-caption{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;padding:14px 30px 32px}
+.field-caption>p{margin:0;font:400 clamp(31px,7.7cqi,49px)/.95 "Instrument Serif",Georgia,serif;letter-spacing:-.025em}
+.field-caption>p>em{color:#A85A4A}
+.field-caption>span{padding-bottom:2px;color:#857084;font:400 11px/1.9 "DM Mono",monospace;text-align:right}
+.direction-object{background:linear-gradient(140deg,#F8F1E4,#EFE2D9)}
+.direction-object .direction-masthead>span:last-child{color:#9B796D}
+.hardware-scene{margin-top:14px}
+.hardware-case-text{font:400 6px "DM Mono",monospace;letter-spacing:.2em;fill:#F1BAA7}
+.hardware-margin-note{font:400 7px "DM Mono",monospace;letter-spacing:.1em;fill:#A87C6C}
+.hardware-rotor{transform-origin:105px 103px}
+.hardware-caption{display:flex;align-items:flex-end;justify-content:space-between;gap:15px;padding:13px 30px 32px}
+.hardware-caption>p{margin:0;font:400 clamp(27px,6.7cqi,43px)/.99 "Instrument Serif",Georgia,serif;letter-spacing:-.025em}
+.hardware-caption>p>em{color:#A85A4A}
+.hardware-caption>span{padding-bottom:1px;color:#9B796D;font:400 11px/1.8 "DM Mono",monospace;text-align:right}
+.direction-quiet{color:#F3EDE2;background:#302938;border-color:#4A3C50}
+.direction-quiet::after{border-color:#DDCBD815}
+.direction-quiet .direction-masthead>span:last-child{color:#B4A2B9}
+.quiet-title{margin:44px 30px 0;font:400 clamp(37px,10.5cqi,67px)/.97 "Instrument Serif",Georgia,serif;letter-spacing:-.035em}
+.quiet-title>em{color:#ECAD8A}
+.quiet-scene{margin-top:12px}
+.quiet-warning{font:400 32px "Instrument Serif",Georgia,serif;fill:#F1DED2;letter-spacing:-.015em}
+.quiet-small{font:400 6.5px "DM Mono",monospace;fill:#A995AE;letter-spacing:.035em}
+.quiet-frame{stroke:#A693B0;stroke-width:.75;opacity:.48}
+.quiet-frame-chosen{stroke:#ECAD8A;opacity:1}
+.quiet-chair{stroke-width:1.15;stroke-linecap:round;stroke-linejoin:round}
+.quiet-caption{padding:24px 30px 30px;color:#C5B4CA;font:400 11px/1.8 "DM Mono",monospace}
+.direction-art.is-animating .field-choice-stroke{animation:direction-attention 12s ease-in-out infinite}
+.direction-art.is-animating .hardware-rotor{animation:direction-rotor 18s linear infinite}
+.direction-art.is-animating .quiet-marker{animation:direction-interruption 12s ease-in-out infinite}
+@keyframes direction-attention{0%,50%,100%{opacity:.6}20%{opacity:1}}
+@keyframes direction-rotor{to{transform:rotate(360deg)}}
+@keyframes direction-interruption{0%,35%,100%{opacity:.55}50%,60%{opacity:1}}
+@container(max-width:390px){.direction-masthead{padding:23px 20px 0;font-size:8px;letter-spacing:.06em}.direction-masthead>span:last-child{font-size:7px}.field-scene{margin-top:25px}.field-caption{padding:16px 20px 26px;gap:14px;align-items:flex-start;flex-direction:column}.field-caption>span{text-align:left}.hardware-caption{padding:16px 20px 26px;gap:14px;align-items:flex-start;flex-direction:column}.hardware-caption>span{text-align:left}.quiet-title{margin:37px 20px 0}.quiet-caption{padding:24px 20px 26px}}
+@media(prefers-reduced-motion:reduce){.direction-art *{animation:none!important;transition:none!important}}
