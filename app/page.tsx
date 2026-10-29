@@ -1,415 +1,285 @@
-"use client";
+import type { ReactNode } from "react";
+import Enhance from "./components/Enhance";
+import {
+  ABOUT, AWARDS, CERTS, EDUCATION, EMAIL, EXPERIENCE, GITHUB, HERO, LINKEDIN, MORE, OPEN_SOURCE, OSS, PROJECTS, PROOF, RESUME, SKILLS,
+  type Project, type Visual,
+} from "./content";
 
-import { useEffect } from "react";
-import Image from "next/image";
-import AccordionVideo from "./components/AccordionVideo";
-import GazeDemo from "./components/GazeDemo";
-import TemperBench from "./components/TemperBench";
-import OpenSourceCard from "./components/OpenSourceCard";
-import HeroMascot from "./components/mascot/HeroMascot";
-import { StaticMascot } from "./components/mascot/StaticMascot";
+const ext = { target: "_blank", rel: "noreferrer" } as const;
 
-const SCRAMBLE_GLYPHS = "/\\-_=+*·<>";
+// "**bold**" in the copy becomes <strong>
+function rich(text: string): ReactNode[] {
+  return text.split(/\*\*(.+?)\*\*/g).map((part, i) => (i % 2 ? <strong key={i}>{part}</strong> : part));
+}
+
+function VisualFallback({ visual }: { visual: Visual }) {
+  switch (visual.kind) {
+    case "image":
+      // eslint-disable-next-line @next/next/no-img-element
+      return <img className={`v-${visual.frame ?? "plate"}`} src={visual.src} alt={visual.alt} loading="lazy" decoding="async" />;
+    case "phone":
+      return (
+        <figure className="phone">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={visual.src} alt={visual.alt} loading="lazy" decoding="async" />
+        </figure>
+      );
+    case "video":
+      return <video className="demo" src={visual.src} poster={visual.poster} muted loop playsInline preload="none" aria-label={visual.label} />;
+    case "artifact":
+      return <p className="artifact-fallback">{visual.label}</p>;
+  }
+}
+
+function ProjectCard({ project, index }: { project: Project; index: number }) {
+  const n = String(index + 1).padStart(2, "0");
+  return (
+    <article
+      className={`pc${index % 2 ? " flip" : ""}`}
+      id={project.id}
+      aria-labelledby={`${project.id}-title`}
+      data-pin={project.pin}
+      data-stamp={project.stamp}
+      data-bg={project.stampBg}
+      data-where={project.where}
+    >
+      <div className="pc-pic">
+        <VisualFallback visual={project.visual} />
+      </div>
+      <div className="pc-msg">
+        <div className="pc-head">
+          <p className="kicker mono"><span className="num">{n}</span>{project.kicker}</p>
+          <h3 id={`${project.id}-title`}>{project.title}</h3>
+          <p className="hook">{project.hook}</p>
+          <p className="pc-place mono">{project.where} · {project.when}</p>
+        </div>
+        <ul className="badges" aria-label="Highlights">
+          {project.badges.map((badge) => <li key={badge.text} className={badge.win ? "win" : undefined}>{badge.text}</li>)}
+        </ul>
+        <p className="summary">{project.summary}</p>
+        <h4 className="mono built-title">What I built</h4>
+        <ul className="built">
+          {project.built.map((line) => <li key={line}>{rich(line)}</li>)}
+        </ul>
+        <p className="stack mono" aria-label="Stack">{project.stack.join(" · ")}</p>
+        <div className="links">
+          {project.links.map((link) => <a key={link.href} href={link.href} {...ext}>{link.label} ↗</a>)}
+        </div>
+      </div>
+    </article>
+  );
+}
 
 export default function Home() {
-  useEffect(() => {
-    document.documentElement.classList.add("js-ready");
-
-    // threshold must stay 0: a hidden/clipped target can report zero
-    // intersection area, so any ratio threshold above 0 may never fire
-    const revealObserver = new IntersectionObserver(
-      (entries) => entries.forEach((entry) => entry.isIntersecting && entry.target.classList.add("is-visible")),
-      { threshold: 0, rootMargin: "0px 0px -10% 0px" },
-    );
-    document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
-
-    // scramble-decode: mono labels resolve from glyph soup on first sight
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const scrambled = new WeakSet<Element>();
-    const scramble = (el: Element) => {
-      const final = el.textContent ?? "";
-      const start = performance.now();
-      const duration = 500;
-      const tick = (now: number) => {
-        const t = Math.min(1, (now - start) / duration);
-        const settled = Math.floor(final.length * t);
-        el.textContent =
-          final.slice(0, settled) +
-          Array.from(final.slice(settled), (ch) =>
-            ch === " " ? " " : SCRAMBLE_GLYPHS[Math.floor(Math.random() * SCRAMBLE_GLYPHS.length)],
-          ).join("");
-        if (t < 1) requestAnimationFrame(tick);
-        else el.textContent = final;
-      };
-      requestAnimationFrame(tick);
-    };
-    const scrambleObserver = new IntersectionObserver(
-      (entries) =>
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !scrambled.has(entry.target)) {
-            scrambled.add(entry.target);
-            scramble(entry.target);
-          }
-        }),
-      { threshold: 0 },
-    );
-    if (!reduceMotion) {
-      document.querySelectorAll("[data-scramble]").forEach((el) => scrambleObserver.observe(el));
-    }
-
-    // one passive listener drives both the header pin and the progress bar
-    const header = document.getElementById("site-header");
-    const bar = document.getElementById("header-progress-bar");
-    const hero = document.getElementById("top");
-    let frame = 0;
-    const sync = () => {
-      frame = 0;
-      const y = window.scrollY;
-      // pin once the hero is most of the way gone, so the two button sets never coexist
-      const trigger = Math.max(160, (hero?.offsetHeight ?? 600) * 0.62);
-      header?.classList.toggle("is-pinned", y > trigger);
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      if (bar) bar.style.transform = `scaleX(${max > 0 ? Math.min(1, y / max) : 0})`;
-    };
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(sync);
-    };
-    sync();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
-
-    return () => {
-      revealObserver.disconnect();
-      scrambleObserver.disconnect();
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (frame) cancelAnimationFrame(frame);
-    };
-  }, []);
-
   return (
-    <main>
-      <a className="skip-link" href="#top">Skip to content</a>
-      <header className="site-header" id="site-header">
-        <div className="shell header-inner">
-          <a className="header-mark" href="#top" aria-label="Back to top">
-            <span className="header-mark-initials" aria-hidden="true">AD</span>
-            <span className="header-mark-name">Aaditya Desai</span>
-          </a>
-          <nav className="site-nav" aria-label="Primary navigation">
-            <a className="nav-projects" href="#projects">Projects</a>
-            <a className="nav-oss" href="https://oss.aadityad.dev" target="_blank" rel="noreferrer">Open Source</a>
-            <a href="https://github.com/aadityad12" target="_blank" rel="noreferrer">GitHub</a>
-            <a href="https://www.linkedin.com/in/aaditya-desai-12d" target="_blank" rel="noreferrer">LinkedIn</a>
-            <a className="nav-resume" href="/Aaditya_Desai_Portfolio_Resume.pdf" target="_blank" rel="noreferrer">Résumé ↗</a>
+    <>
+      <a className="skip-link" href="#projects">Skip to projects</a>
+
+      <header className="top" id="hdr">
+        <div className="shell">
+          <a className="mark" href="#top" aria-label="Aaditya Desai, back to top"><b>AD</b><span>Aaditya Desai</span></a>
+          <nav aria-label="Primary">
+            <a href="#projects">Projects</a>
+            <a href="#experience">Experience</a>
+            <a href="#recognition" className="wide-only">Awards</a>
+            <a href="#about" className="wide-only">About</a>
+            <a href={GITHUB} className="wide-only" {...ext}>GitHub</a>
+            <a href={LINKEDIN} className="wide-only" {...ext}>LinkedIn</a>
+            <a className="cv" href={RESUME} {...ext}>Résumé ↗</a>
           </nav>
         </div>
-        <div className="header-progress" aria-hidden="true"><span id="header-progress-bar" /></div>
       </header>
 
-      <section className="hero shell" id="top">
-        <div className="hero-grid">
+      <main>
+        <section className="hero" id="top" aria-labelledby="hero-name">
+          <div className="hero-scene">
+            <div id="map" role="region" aria-label="Illustrated map of the San Francisco Bay Area with a pin for each project"></div>
+            <button className="map-entry" id="map-entry" type="button" aria-label="Open the Bay Area map explorer" aria-haspopup="dialog" disabled>Open the map</button>
+            <p className="map-load mono" role="status">Drawing the Bay…</p>
+            <div className="map-caption">
+              <p className="map-title">Where I&apos;ve built things.</p>
+              <p className="mono map-instructions">Pick a pin, or let Pathfinder show you around</p>
+              <div className="map-tools">
+                <button className="btn primary" id="whole" type="button" aria-haspopup="dialog" disabled>Explore the map ↗</button>
+                <button className="btn" id="map-motion" type="button" aria-pressed="false" disabled>Pause</button>
+              </div>
+            </div>
+          </div>
           <div className="hero-copy">
-            <p className="hero-eyebrow" data-scramble>COMPUTER ENGINEERING @ SJSU · EXPECTED MAY 2028</p>
-            <h1 className="hero-name">Aaditya Desai</h1>
-            <p className="hero-headline">Software for real constraints.</p>
-            <p className="hero-intro">
-              I work across on-device ML, offline-first applications, and AI infrastructure, following each
-              project from the model or protocol to the interface people use.
-            </p>
-            <p className="hero-availability">Seeking Summer 2027 software engineering, ML, and systems internships.</p>
-            <div className="hero-actions" id="hero-actions" aria-label="Résumé and professional profiles">
-              <a className="button button-primary" href="/Aaditya_Desai_Portfolio_Resume.pdf" target="_blank" rel="noreferrer">Résumé ↗</a>
-              <a className="button" href="https://github.com/aadityad12" target="_blank" rel="noreferrer">GitHub ↗</a>
-              <a className="button" href="https://www.linkedin.com/in/aaditya-desai-12d" target="_blank" rel="noreferrer">LinkedIn ↗</a>
+            <p className="eyebrow mono">{HERO.eyebrow}</p>
+            <h1 id="hero-name">Aaditya Desai<span>.</span></h1>
+            <p className="lead">{HERO.lead}</p>
+            <p className="intro">{HERO.intro}</p>
+            <div className="actions">
+              <a className="btn primary" href="#projects">See my work ↓</a>
+              <a className="btn" href={RESUME} {...ext}>Résumé ↗</a>
+              <a className="btn" href={`mailto:${EMAIL}`}>Email me</a>
             </div>
-            <p className="hero-secondary">
-              <a href="mailto:aaditya.d.desai@gmail.com">aaditya.d.desai@gmail.com</a>
-              <span aria-hidden="true">·</span>
-              <a className="hero-jump" href="#projects">Jump to projects <span aria-hidden="true">↓</span></a>
+            <p className="hero-socials">
+              <a href={GITHUB} {...ext}>GitHub ↗</a>
+              <a href={LINKEDIN} {...ext}>LinkedIn ↗</a>
+              <span>Santa Clara, CA</span>
             </p>
           </div>
-          <div className="hero-critter-slot">
-            <HeroMascot />
-          </div>
-        </div>
-        <dl className="hero-highlights" aria-label="Selected highlights">
-          <div>
-            <dt>UC Berkeley AI Hackathon</dt>
-            <dd><strong>Winner</strong><span>The Token Company sponsor track</span></dd>
-          </div>
-          <div>
-            <dt>Accordion</dt>
-            <dd><strong>200+</strong><span>GitHub stars on the team repository</span></dd>
-          </div>
-          <div>
-            <dt>GazeBoard</dt>
-            <dd><strong>~8 ms</strong><span>inference on a phone NPU</span></dd>
-          </div>
-        </dl>
-      </section>
-
-      <section className="section shell" id="projects">
-        <div className="section-head">
-          <h2>Selected Projects</h2>
-          <div className="section-peek reveal"><StaticMascot pose="peek" label="The portfolio mascot peeking over a line" /></div>
-        </div>
-
-        <article className="card flagship">
-          <div className="reveal">
-            <p className="card-kicker" data-scramble>PROJECT 01 · OPEN-SOURCE AI TOOLING</p>
-            <h3>Accordion</h3>
-            <p className="card-hook">See what your agent remembers.</p>
-            <p className="card-body">
-              <span className="body-kicker">THE PROJECT /</span>
-              Most coding agents handle a full context window by flattening the session into one lossy summary.
-              Accordion makes the window visible and reversible: individual blocks can be folded, unfolded, pinned,
-              or recalled while a protected recent window stays intact.
-            </p>
-            <p className="card-body">
-              <span className="body-kicker">MY PART /</span>
-              On a team of three, I built the hackathon relevance pipeline with keyword scoring, bi-encoder retrieval,
-              and cross-encoder reranking. I also built the live attribution view that shows whether a fold came from the
-              user, agent, or conductor. In an early hackathon-scale SlopCodeBench run at a 100k-token budget,
-              Accordion completed 5 of 6 checkpoints versus 2 of 6 for naive compaction. We won The Token Company
-              sponsor track at UC Berkeley AI Hackathon 2026.
-            </p>
-            <p className="tech-line">MY PART: PYTHON · HUGGINGFACE TRANSFORMERS · SVELTEKIT</p>
-            <ul className="chips">
-              <li className="win">🏆 WINNER · UC BERKELEY AI HACKATHON 2026</li>
-              <li className="chip-link"><a href="https://github.com/a-Fig/accordion" target="_blank" rel="noreferrer">★ 200+ · TEAM REPO ↗</a></li>
-              <li>MIT</li>
+          <div className="hero-foot">
+            <ul className="proof" aria-label="Highlights">
+              {PROOF.map((item) => (
+                <li key={item.big}><a href={item.href}><b>{item.big}</b><span>{item.small}</span></a></li>
+              ))}
             </ul>
-            <div className="card-links">
-              <a href="https://get-accordion.dev" target="_blank" rel="noreferrer">get-accordion.dev ↗</a>
-              <a href="https://github.com/a-Fig/accordion" target="_blank" rel="noreferrer">GitHub ↗</a>
-            </div>
+            <p className="avail"><span className="dot" aria-hidden="true"></span>{HERO.avail}</p>
           </div>
-          <div className="card-media reveal">
-            <AccordionVideo />
-            <div className="card-cameo cameo-perch">
-              <StaticMascot pose="perch" hoverFrame="point" label="The portfolio mascot perched on the demo, pointing at the star count when you hover" />
-            </div>
-            <p className="media-caption">the context map, live</p>
-          </div>
-        </article>
+        </section>
 
-        <article className="card flip">
-          <div className="reveal">
-            <p className="card-kicker" data-scramble>PROJECT 02 · ANDROID · DAILY DRIVER</p>
-            <h3>ApexTracker</h3>
-            <p className="card-hook">One app instead of a pile of post-its.</p>
-            <p className="card-body">
-              <span className="body-kicker">WHY IT EXISTS /</span>
-              ApexTracker is the one app I use instead of a pile of post-its, three reminder apps, a calendar, and a
-              couple of spreadsheets. It tracks budget, study time, screen time, reminders, notes, and papers, then
-              scores each day by the goals I actually hit. Everything works offline; an account is optional and only
-              adds Firestore sync.
-            </p>
-            <p className="card-body">
-              <span className="body-kicker">WHAT I BUILT /</span>
-              Room is the source of truth, encrypted with SQLCipher and gated by biometrics where needed. Reboot-safe
-              alarms, five Glance widgets, on-device receipt parsing, handwritten schema migrations, JUnit tests,
-              lint, and Compose screenshot tests make it a codebase I can keep using, not a demo I am afraid to
-              update.
-            </p>
-            <p className="tech-line">KOTLIN · JETPACK COMPOSE · ROOM · SQLCIPHER</p>
-            <ul className="chips">
-              <li>DAILY DRIVER</li>
-              <li>LOCAL-FIRST</li>
+        <div className="land">
+          <section className="work shell" id="projects" aria-labelledby="work-title">
+            <div className="work-heading">
+              <div>
+                <p className="mono">Selected work · {PROJECTS.length} projects</p>
+                <h2 id="work-title">Things I&apos;ve built.</h2>
+              </div>
+              <p>Compilers, firmware, on-device AI, Android, and agent tooling. Each one shipped, measured, and on GitHub.</p>
+            </div>
+            <nav className="rack" aria-label="Jump to a project">
+              {PROJECTS.map((project) => <a key={project.id} href={`#${project.id}`}>{project.title}</a>)}
+            </nav>
+            <div className="journey">
+              {PROJECTS.map((project, i) => <ProjectCard key={project.id} project={project} index={i} />)}
+            </div>
+          </section>
+
+          <section className="sec shell" id="more" aria-labelledby="more-title">
+            <div className="sec-head"><h2 id="more-title">More builds</h2><p>Smaller projects, hackathon wins, and one fast robot.</p></div>
+            <ul className="more">
+              {MORE.map((item) => (
+                <li key={item.title}>
+                  <p className="mono tag">{item.tag}</p>
+                  <h3>{item.title}</h3>
+                  <p>{item.text}</p>
+                  <a href={item.href} {...ext}>{item.link} ↗</a>
+                </li>
+              ))}
             </ul>
-            <div className="card-links">
-              <a href="https://github.com/aadityad12/Apex-Tracker" target="_blank" rel="noreferrer">GitHub ↗</a>
-            </div>
-          </div>
-          <div className="card-media tilt reveal" style={{ "--tilt": "1.1deg" } as React.CSSProperties}>
-            <figure className="phone">
-              <Image
-                src="/projects/apextracker-dashboard.png"
-                alt="ApexTracker's graphite dashboard: daily goal score and a consistency bar chart in monochrome"
-                width={1080}
-                height={2340}
-              />
-            </figure>
-            <p className="media-caption">the day, scored</p>
-          </div>
-        </article>
+          </section>
 
-        <article className="card">
-          <div className="reveal">
-            <p className="card-kicker" data-scramble>PROJECT 03 · ON-DEVICE ML</p>
-            <h3>GazeBoard</h3>
-            <p className="card-hook">Typing with your eyes, entirely on-device.</p>
-            <p className="card-body">
-              <span className="body-kicker">THE PROJECT /</span>
-              A gaze-driven communication board for people who cannot reliably speak or use their hands. Because the
-              camera stays pointed at the user&apos;s face, privacy was a requirement rather than a feature: frames stay
-              on the phone and the app declares no network permission.
-            </p>
-            <p className="card-body">
-              <span className="body-kicker">MY PART /</span>
-              I built the Kotlin pipeline from CameraX capture and ML Kit face detection through LiteRT inference on
-              the Hexagon NPU, four-point affine calibration, dwell-based tile selection, and speech output. On the
-              Galaxy S25 Ultra used during the hackathon, the pipeline measured roughly 8 ms per inference at 15+
-              FPS. Built with a team at the Qualcomm × Google LiteRT On-Device &amp; Edge AI Hackathon.
-            </p>
-            <p className="tech-line">KOTLIN · COMPOSE · CAMERAX · ML KIT · LITERT / HEXAGON NPU</p>
-            <ul className="chips">
-              <li>ON-DEVICE</li>
-              <li>~8 MS INFERENCE</li>
-              <li>ZERO NETWORK PERMISSIONS</li>
-              <li>APACHE-2.0</li>
+          <section className="sec shell" id="open-source" aria-labelledby="oss-title">
+            <div className="sec-head"><h2 id="oss-title">Open source</h2><p>Merged pull requests in projects I don&apos;t own.</p></div>
+            <ul className="oss">
+              {OPEN_SOURCE.map((item) => (
+                <li key={item.href}>
+                  <a href={item.href} {...ext}>
+                    <p className="mono"><span className="merged">Merged</span>{item.repo} · {item.stars}</p>
+                    <h3>{item.what}</h3>
+                    <p>{item.pr}</p>
+                  </a>
+                </li>
+              ))}
             </ul>
-            <div className="card-links">
-              <a href="https://github.com/aadityad12/GazeBoard" target="_blank" rel="noreferrer">GitHub ↗</a>
-            </div>
-          </div>
-          <div className="card-media reveal">
-            <GazeDemo />
-          </div>
-        </article>
+            <p className="oss-more"><a href={OSS} {...ext}>Every contribution, tracked live ↗</a></p>
+          </section>
 
-        <article className="card flip">
-          <div className="reveal">
-            <p className="card-kicker" data-scramble>PROJECT 04 · OFFLINE SYSTEMS</p>
-            <h3>Echo</h3>
-            <p className="card-hook">Emergency alerts that survive the internet dying.</p>
-            <p className="card-body">
-              <span className="body-kicker">THE PROJECT /</span>
-              Echo is a prototype for carrying National Weather Service alerts between nearby devices when cellular
-              and internet infrastructure are unavailable. It implements BLE discovery and a custom chunked GATT
-              transfer path on Android and iOS, with optional Raspberry Pi relay utilities and compact alert IDs for
-              deduplication.
-            </p>
-            <p className="card-body">
-              <span className="body-kicker">MY PART /</span>
-              I built the native Kotlin and Swift protocol layers. Once received, an alert can be translated
-              on-device into 22 target languages and read aloud. Built for Hack for Humanity at Santa Clara
-              University.
-            </p>
-            <p className="tech-line">FLUTTER · KOTLIN · SWIFT · BLE / GATT · SQLITE</p>
-            <ul className="chips">
-              <li>OFFLINE MESH</li>
-              <li>22 LANGUAGES</li>
+          <section className="sec shell" id="experience" aria-labelledby="xp-title">
+            <div className="sec-head"><h2 id="xp-title">Experience</h2><p>Industry research, teaching, and leadership.</p></div>
+            <ol className="xp">
+              {EXPERIENCE.map((job) => (
+                <li key={job.role}>
+                  <p className="when mono">{job.when}<br />{job.where}</p>
+                  <div>
+                    <h3>{job.role}</h3>
+                    <p className="org">{job.org}</p>
+                    <ul>{job.points.map((point) => <li key={point}>{point}</li>)}</ul>
+                    {job.link ? <p className="xp-link"><a href={job.link.href}>More on {job.link.label} ↓</a></p> : null}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </section>
+
+          <section className="sec shell" id="recognition" aria-labelledby="awards-title">
+            <div className="sec-head"><h2 id="awards-title">Recognition</h2><p>Awards, honors, and certifications.</p></div>
+            <ul className="awards">
+              {AWARDS.map((award) => (
+                <li key={award.title} className={award.win ? "win" : undefined}><b>{award.title}</b><span>{award.detail}</span></li>
+              ))}
             </ul>
-            <div className="card-links">
-              <a href="https://github.com/aadityad12/Echo" target="_blank" rel="noreferrer">GitHub ↗</a>
-            </div>
-          </div>
-          <div className="card-media tilt reveal" style={{ "--tilt": "-1deg" } as React.CSSProperties}>
-            <figure className="phone">
-              <Image
-                src="/projects/echo-alert.png"
-                alt="Echo showing a severe weather alert received over Bluetooth mesh, with translation controls"
-                width={1206}
-                height={2461}
-              />
-            </figure>
-            <p className="media-caption">an alert that arrived with no internet</p>
-          </div>
-        </article>
+            <p className="certs"><span className="mono">Certifications</span>{CERTS.join(" · ")}</p>
+          </section>
 
-        <article className="card">
-          <div className="reveal">
-            <p className="card-kicker" data-scramble>PROJECT 05 · AI EVALUATION</p>
-            <h3>Temper</h3>
-            <p className="card-hook">Test the system around the model.</p>
-            <p className="card-body">
-              <span className="body-kicker">THE PROJECT /</span>
-              AI agents are more than their base model. Prompts, tools, skills, and orchestration can help, or they
-              can quietly make the same model worse. Temper compares an agent harness with a bare-model baseline across
-              six dimensions, identifies harness-caused regressions, produces replacement artifacts, and reruns only
-              the affected checks.
-            </p>
-            <p className="card-body">
-              <span className="body-kicker">MY PART /</span>
-              I built the local evaluator, FastAPI service, schemas and contracts, patch loop, deterministic
-              integration path, and streaming dashboard. Its strongest current evidence is a reproducible offline
-              fixture that verifies the complete evaluate → patch → re-evaluate protocol; live-model evaluation
-              remains prototype work. Built at the AI Engineer World&apos;s Fair Hackathon 2026.
-            </p>
-            <p className="tech-line">PYTHON · FASTAPI · REACT · SSE · JSON SCHEMA</p>
-            <ul className="chips">
-              <li>AI EVALS</li>
-              <li>HACKATHON BUILD</li>
-            </ul>
-            <div className="card-links">
-              <a href="https://github.com/aadityad12/Temper" target="_blank" rel="noreferrer">GitHub ↗</a>
+          <section className="sec shell split" id="education" aria-labelledby="edu-title">
+            <div>
+              <div className="sec-head"><h2 id="edu-title">Education</h2></div>
+              <ul className="edu">
+                {EDUCATION.map((school) => (
+                  <li key={school.school}>
+                    <p className="when mono">{school.when}</p>
+                    <h3>{school.school}</h3>
+                    <p className="org">{school.degree}</p>
+                    <p className="note">{school.note}</p>
+                    <p className="courses"><span className="mono">Coursework</span>{school.courses}</p>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </div>
-          <div className="card-media reveal">
-            <TemperBench />
-            <div className="card-cameo cameo-work">
-              <StaticMascot pose="work" hoverFrame="work-turn" label="The portfolio mascot tightening a bolt on the test bench" />
+            <div id="skills">
+              <div className="sec-head"><h2>Toolbox</h2></div>
+              <dl className="skills">
+                {SKILLS.map((group) => (
+                  <div key={group.area}><dt className="mono">{group.area}</dt><dd>{group.items.join(" · ")}</dd></div>
+                ))}
+              </dl>
             </div>
-            <p className="media-caption">the test bench, drawn</p>
-          </div>
-        </article>
+          </section>
 
-        <div className="also-built reveal">
-          <p>
-            ALSO BUILT / <a href="https://github.com/aadityad12/Clear-Dispatch" target="_blank" rel="noreferrer">CLEAR DISPATCH</a>: a local
-            emergency-dispatch simulation with a four-stage FastAPI pipeline, live WebSocket dashboard, Haversine
-            unit assignment, and explicit dispatcher approval before heavy assets move · team project at HackDavis
-            2026
-          </p>
+          <section className="sec shell" id="about" aria-labelledby="about-title">
+            <div className="sec-head"><h2 id="about-title">About</h2></div>
+            <div className="about">
+              <div>{ABOUT.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
+              <ul>
+                <li><span className="mono">Based</span>Santa Clara, CA</li>
+                <li><span className="mono">Studying</span>B.S. Computer Engineering, minor in AI, SJSU</li>
+                <li><span className="mono">Graduating</span>May 2028</li>
+                <li><span className="mono">Available</span>Summer 2027 · Winter 2027 co-op</li>
+              </ul>
+            </div>
+          </section>
+
+          <footer className="shell" id="contact">
+            <p className="mono kicker-accent">Summer 2027 internships · Winter 2027 co-ops</p>
+            <h2>Let&apos;s build something<span>.</span></h2>
+            <p>I&apos;m looking for roles in software, AI/ML, and embedded systems. Email is the fastest way to reach me.</p>
+            <div className="actions">
+              <a className="btn primary" href={`mailto:${EMAIL}`}>{EMAIL}</a>
+              <a className="btn" href={RESUME} {...ext}>Résumé ↗</a>
+              <a className="btn" href={GITHUB} {...ext}>GitHub ↗</a>
+              <a className="btn" href={LINKEDIN} {...ext}>LinkedIn ↗</a>
+            </div>
+            <div className="fline mono"><span>Aaditya Desai</span><span>Santa Clara, CA</span><span>aadityad.dev</span></div>
+          </footer>
         </div>
-        <OpenSourceCard />
-      </section>
+      </main>
 
-      <section className="section shell" id="about">
-        <div className="section-head">
-          <h2>About</h2>
-        </div>
-        <div className="about-grid">
-          <div className="about-copy reveal">
-            <p>
-              I keep gravitating toward software with an awkward constraint: no network, a fixed compute budget, a
-              latency target, or an agent that has run out of context. Those projects force me to understand the
-              whole path, from the model or protocol through the interface someone actually touches. They make
-              hand-waving difficult.
-            </p>
-            <p>
-              ApexTracker is probably the clearest picture of how I build. It began as an intentionally ordinary
-              tracker so I would write code every day; somewhere along the way, it replaced the post-its, reminder
-              apps, and spreadsheets I was actually using. Teaching C++ and debugging to first-time programmers
-              shaped the same habit: trace the symptom backward, explain the mechanism clearly, and stay with the
-              problem until the abstraction stops hiding it.
-            </p>
-            <ul className="about-meta">
-              <li>BASED / SANTA CLARA, CA</li>
-              <li>STUDY / COMPUTER ENGINEERING @ SJSU · EXPECTED MAY 2028</li>
-              <li>LOOKING FOR / SUMMER 2027 SOFTWARE, ML, OR SYSTEMS INTERNSHIPS</li>
-            </ul>
-          </div>
-          <div className="about-mascot reveal">
-            <StaticMascot pose="work" label="The portfolio mascot tinkering with a wrench" />
+      <dialog className="map-explorer" id="map-explorer" aria-labelledby="explorer-title">
+        <div className="explorer-stage" id="explorer-stage"></div>
+        <div className="explorer-bar">
+          <div><h2 id="explorer-title">Around the Bay.</h2><p>Drag to wander · scroll to zoom · pick a pin</p></div>
+          <div className="explorer-controls">
+            <button className="btn" id="explorer-reset" type="button">Whole Bay</button>
+            <button className="btn" id="explorer-motion" type="button">Pause</button>
+            <button className="btn primary" id="explorer-close" type="button">Back to site ↙</button>
           </div>
         </div>
-      </section>
-
-      <footer className="section shell contact" id="contact">
-        <div className="contact-grid">
-          <div className="reveal">
-            <p className="contact-kicker">SUMMER 2027 INTERNSHIPS</p>
-            <h2>Get in touch.</h2>
-            <p className="contact-sub">
-              I&apos;m looking for software engineering, ML, and systems roles. Email is the fastest way to reach me.
-            </p>
-            <div className="contact-links">
-              <a className="contact-primary" href="mailto:aaditya.d.desai@gmail.com">EMAIL ME ↗</a>
-              <a href="/Aaditya_Desai_Portfolio_Resume.pdf" target="_blank" rel="noreferrer">RÉSUMÉ ↗</a>
-              <a href="https://github.com/aadityad12" target="_blank" rel="noreferrer">GITHUB ↗</a>
-              <a href="https://www.linkedin.com/in/aaditya-desai-12d" target="_blank" rel="noreferrer">LINKEDIN ↗</a>
-            </div>
-          </div>
-        </div>
-        <div className="footer-line">
-          <span>AADITYA DESAI</span>
-          <span>AADITYAD.DEV</span>
-          <span>BUILT WITH NEXT.JS · 2026</span>
-        </div>
-      </footer>
-    </main>
+        <nav className="explorer-index" id="explorer-index" aria-label="Projects by place"></nav>
+        <aside className="project-preview" id="project-preview" aria-label="Selected project" hidden>
+          <div className="preview-top"><p className="mono" id="preview-place"></p><button id="preview-dismiss" type="button" aria-label="Close preview">×</button></div>
+          <h3 id="preview-title" aria-live="polite" aria-atomic="true">Project</h3>
+          <div id="preview-artifact"></div>
+          <p className="preview-hook" id="preview-hook"></p>
+          <p className="preview-meta mono" id="preview-meta"></p>
+          <div className="preview-related" id="preview-related"></div>
+          <button className="btn primary preview-cta" id="preview-cta" type="button">View full project ↓</button>
+        </aside>
+      </dialog>
+      <Enhance />
+    </>
   );
 }

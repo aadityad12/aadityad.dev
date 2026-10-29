@@ -39,3 +39,4 @@ yarn-error.log*
 figures/*/.cache/
 figures/directions/shots/
 lab/shots/
+tsconfig.tsbuildinfo

@@ -1,65 +1,61 @@
-import type { Metadata } from "next";
-import { Caveat, Fraunces, Instrument_Sans, Martian_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import "@/lab/project-artifacts.css";
+import "@/lab/visionassist-artifact.css";
+import "@/lab/visionassist-directions.css";
+import "@/lab/project-reels.css";
 import "./globals.css";
+import { EMAIL, GITHUB, LINKEDIN } from "./content";
 
-const fraunces = Fraunces({
-  variable: "--font-display",
-  subsets: ["latin"],
-  weight: ["300", "600"],
-  style: ["normal", "italic"],
-  display: "swap",
-});
-
-const instrumentSans = Instrument_Sans({
-  variable: "--font-body",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const martianMono = Martian_Mono({
-  variable: "--font-mono",
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  display: "swap",
-});
-
-const caveat = Caveat({
-  variable: "--font-hand",
-  subsets: ["latin"],
-  display: "swap",
-});
+const title = "Aaditya Desai | Computer Engineering @ SJSU";
+const description =
+  "Computer engineering student at San José State. ARM64 JIT compilers, bare-metal firmware, on-device vision with Infineon, and award-winning AI developer tools. Open to Summer 2027 internships.";
 
 export const metadata: Metadata = {
-  title: "Aaditya Desai | Software, ML & Systems",
-  description:
-    "Computer engineering student at SJSU building on-device ML, offline-first applications, and AI infrastructure. Seeking Summer 2027 internships.",
+  title,
+  description,
   metadataBase: new URL("https://aadityad.dev"),
-  icons: {
-    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
-  },
+  alternates: { canonical: "/" },
+  icons: { icon: [{ url: "/favicon.svg", type: "image/svg+xml" }] },
   openGraph: {
-    title: "Aaditya Desai | Software, ML & Systems",
-    description:
-      "On-device ML, offline-first applications, and AI infrastructure. Computer engineering @ SJSU, seeking Summer 2027 internships.",
+    title,
+    description,
     type: "website",
     url: "/",
-    images: [{ url: "/og-v2.png", width: 1200, height: 630, alt: "Aaditya Desai | Software, ML & Systems" }],
+    siteName: "Aaditya Desai",
+    images: [{ url: "/og-v4.png", width: 1200, height: 630, alt: "Aaditya Desai, computer engineering at SJSU" }],
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Aaditya Desai | Software, ML & Systems",
-    description:
-      "On-device ML, offline-first applications, and AI infrastructure. Computer engineering @ SJSU, seeking Summer 2027 internships.",
-    images: ["/og-v2.png"],
-  },
+  twitter: { card: "summary_large_image", title, description, images: ["/og-v4.png"] },
+};
+
+export const viewport: Viewport = { themeColor: "#EEECF7" };
+
+const person = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Aaditya Desai",
+  alternateName: "Aadi Desai",
+  url: "https://aadityad.dev",
+  email: `mailto:${EMAIL}`,
+  jobTitle: "Computer Engineering Student",
+  affiliation: { "@type": "CollegeOrUniversity", name: "San José State University" },
+  address: { "@type": "PostalAddress", addressLocality: "Santa Clara", addressRegion: "CA", addressCountry: "US" },
+  sameAs: [GITHUB, LINKEDIN],
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${fraunces.variable} ${instrumentSans.variable} ${martianMono.variable} ${caveat.variable}`}>
-        {children}
-      </body>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap"
+        />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(person) }} />
+      </head>
+      <body>{children}</body>
     </html>
   );
 }
