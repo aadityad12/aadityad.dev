@@ -1,0 +1,60 @@
+.root { display: flex; flex-direction: column; gap: 12px; container-type: inline-size; }
+.panels { display: grid; grid-template-columns: 4fr 3fr; gap: 14px; align-items: start; }
+.panel { min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.head { display: flex; justify-content: space-between; gap: 8px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); border-bottom: 1px solid var(--ink); padding-bottom: 4px; }
+.head span:last-child { color: var(--muted); }
+.plan, .frame { width: 100%; height: auto; display: block; overflow: visible; }
+.plan { overflow: hidden; }
+.plan { touch-action: none; user-select: none; -webkit-user-select: none; }
+.wall { stroke: var(--ink); stroke-width: 1.5; }
+.ring { fill: none; stroke: var(--ink); stroke-width: 0.8; stroke-dasharray: 3 2; }
+.ringHot { stroke: var(--hot); }
+.clipRing { fill: none; stroke: var(--muted); stroke-width: 0.6; stroke-dasharray: 1 2; }
+.fov { fill: none; stroke: var(--accent); stroke-width: 0.8; }
+.zl { font-family: var(--mono); font-size: 7px; letter-spacing: 0.05em; fill: var(--ink-2); }
+.zlHot { fill: var(--hot); }
+.zs { font-family: var(--mono); font-size: 6px; fill: var(--muted); letter-spacing: 0.04em; stroke: none; }
+.tick { stroke: var(--ink); stroke-width: 0.8; }
+.ray { stroke: var(--accent); stroke-width: 0.8; stroke-dasharray: 2 2; }
+.head0 { fill: var(--paper); stroke: var(--ink); stroke-width: 1.2; }
+.cam { fill: var(--ink); stroke: none; }
+.obj { cursor: grab; fill: var(--paper); stroke-width: 1.4; outline: none; }
+.obj:active { cursor: grabbing; }
+.obj .hit { fill: transparent; stroke: none; }
+.obj.out { opacity: 0.4; }
+.obj.sub { stroke: var(--accent) !important; }
+.ol { font-family: var(--mono); font-size: 7px; letter-spacing: 0.05em; fill: var(--ink); stroke: none; font-weight: 600; }
+.sub .ol { fill: var(--accent); }
+.focus { fill: none; stroke: var(--accent); stroke-width: 1; stroke-dasharray: 2 1.5; }
+.subBox { fill: var(--accent-wash); stroke: none; }
+.scale { stroke: var(--ink); stroke-width: 1; }
+.fr { fill: var(--paper-2); stroke: var(--ink); stroke-width: 5; }
+.hz { stroke: var(--muted); stroke-width: 3; stroke-dasharray: 14 10; }
+.ft { font-family: var(--mono); font-size: 30px; fill: var(--muted); letter-spacing: 0.04em; }
+.ghost { fill: var(--hot-wash); stroke: var(--hot); stroke-width: 4; stroke-dasharray: 14 10; }
+.cap { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.03em; line-height: 1.5; margin: 0; }
+.edge { stroke: var(--hot); stroke-width: 12; }
+.tag { font-family: var(--mono); font-size: 31px; fill: #fff; }
+.est { font-family: var(--mono); font-size: 31px; font-weight: 600; }
+.formula { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; border: 1px solid var(--hair); background: var(--paper); padding: 8px 10px; }
+.warn { color: var(--hot); }
+.dim { color: var(--muted); }
+.tbl { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 11.5px; background: var(--paper); }
+.tbl th { text-align: left; font-weight: 500; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--ink); padding: 5px 8px; }
+.tbl td { padding: 6px 8px; border-bottom: 1px solid var(--hair); vertical-align: top; }
+.subRow td { background: var(--accent-wash); }
+.subTag { color: var(--accent); font-weight: 600; }
+.sw { display: inline-block; width: 9px; height: 9px; border: 2px solid; margin-right: 6px; vertical-align: -1px; }
+.WARNING { color: var(--hot); font-weight: 600; }
+.CAUTION { color: var(--amber); font-weight: 600; }
+.SAFE { color: var(--ok); }
+.say { display: flex; flex-direction: column; gap: 4px; border-top: 1.5px solid var(--ink); border-bottom: 1.5px solid var(--ink); padding: 10px 0; }
+.msg { font-family: var(--mono); font-size: clamp(17px, 4.2cqi, 24px); font-weight: 600; color: var(--ink); }
+.msgHot { color: var(--hot); }
+.note { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.02em; line-height: 1.5; margin: 0; }
+@container (max-width: 520px) {
+  .panels { grid-template-columns: 1fr; }
+  .frame, .cap { width: 70%; margin: 0 auto; }
+  .tbl { font-size: 10.5px; }
+  .tbl td, .tbl th { padding: 5px 4px; }
+}
