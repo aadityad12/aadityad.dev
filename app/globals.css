@@ -411,6 +411,61 @@ a:hover { color: var(--accent-ink); }
   a { text-decoration: none; }
 }
 
+/* ---- brief ---- */
+main.brief { max-width: 1180px; margin: 0 auto; padding: 0 var(--pad) 64px; }
+
+main.brief .brief-hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: clamp(20px, 4vw, 56px); align-items: center; padding-top: clamp(8px, 2vw, 24px); }
+main.brief .brief-copy { min-width: 0; }
+main.brief .avail { display: inline-flex; align-items: center; gap: 9px; margin: 0 0 18px; padding: 5px 11px; border: 1px solid var(--hair); background: var(--paper); font-family: var(--mono); font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; line-height: 1.35; color: var(--ink-2); }
+main.brief .avail i { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--ok); }
+main.brief .brief-eyebrow { margin: 0 0 12px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: #58564f; }
+main.brief h1 { margin: 0; font-weight: 800; font-stretch: 112%; font-size: clamp(44px, 7vw, 76px); line-height: 0.95; letter-spacing: -0.03em; }
+main.brief .brief-lead { margin: 20px 0 0; font-size: clamp(21px, 2.1vw, 26px); line-height: 1.25; font-weight: 500; letter-spacing: -0.01em; max-width: 30ch; }
+main.brief .brief-lead em { font-style: normal; color: var(--accent); }
+main.brief .brief-intro { margin: 16px 0 0; font-size: 17px; line-height: 1.5; color: var(--ink-2); max-width: 56ch; }
+main.brief .actions { margin-top: 24px; }
+
+main.brief .brief-chip { min-width: 0; }
+main.brief .brief-chip .chip-wrap { max-width: 520px; }
+main.brief .brief-cap { margin: 8px auto 0; max-width: 520px; font-family: var(--mono); font-size: 12px; line-height: 1.45; color: #58564f; }
+main.brief .brief-cap a { color: var(--ink-2); }
+main.brief .brief-cap-touch { display: none; }
+
+.chip-svg .pin.pick { cursor: pointer; }
+.chip-svg .pin.dead { cursor: default; }
+.chip-svg .pin.sel text.lbl { fill: var(--accent); font-weight: 600; }
+.chip-svg .pin:focus { outline: none; }
+.chip-svg .pin:focus-visible rect.lead { stroke: var(--accent); stroke-width: 2.5; }
+.chip-svg .pin:focus-visible text.lbl { fill: var(--accent); font-weight: 600; text-decoration: underline; }
+
+main.brief .proof { list-style: none; margin: clamp(24px, 3vw, 36px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+main.brief .proof li + li { border-left: 1px solid var(--hair); }
+main.brief .proof a { display: block; height: 100%; padding: 14px 20px 14px 18px; text-decoration: none; }
+main.brief .proof li:first-child a { padding-left: 0; }
+main.brief .proof a:hover { background: var(--paper); color: inherit; }
+main.brief .proof b { font-size: clamp(22px, 2.4vw, 30px); font-weight: 800; font-stretch: 112%; letter-spacing: -0.02em; line-height: 1.1; margin-right: 8px; }
+main.brief .proof .tag { vertical-align: 0.35em; }
+main.brief .proof .tag.measured { color: #0b6b3d; }
+main.brief .proof span:not(.tag) { display: block; margin-top: 4px; font-size: 13.5px; line-height: 1.35; color: var(--ink-2); }
+
+@media (max-width: 900px) {
+  main.brief .brief-hero { grid-template-columns: minmax(0, 1fr); }
+  main.brief .brief-chip .chip-wrap, main.brief .brief-cap { max-width: 320px; }
+  main.brief .proof { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  main.brief .proof li:nth-child(odd) { border-left: 0; }
+  main.brief .proof li:nth-child(odd) a { padding-left: 0; }
+  main.brief .proof li:nth-child(n + 3) { border-top: 1px solid var(--hair); }
+}
+@media (max-width: 767px) {
+  main.brief .brief-cap-hover { display: none; }
+  main.brief .brief-cap-touch { display: inline; }
+}
+@media (max-width: 560px) {
+  main.brief .brief-chip .chip-wrap, main.brief .brief-cap { max-width: 280px; }
+  main.brief .avail { font-size: 11px; }
+  main.brief .proof a { padding-right: 12px; }
+}
+
 /* ---- work ---- */
 main.work { max-width: 1080px; margin: 0 auto; padding: 0 var(--pad) clamp(40px, 6vw, 80px); }
 .work-head { padding: clamp(8px, 2vw, 24px) 0 clamp(20px, 3vw, 36px); }

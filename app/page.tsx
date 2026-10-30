@@ -1,9 +1,16 @@
+import Masthead from "./components/Masthead";
+import Hero from "./components/brief/Hero";
+import Proof from "./components/brief/Proof";
+
 export default function Home() {
   return (
-    <main className="brief">
-      <h1>Aaditya Desai</h1>
-      <p>Front page: issue 03.</p>
-      <p><a href="/datasheet/">Full datasheet</a></p>
-    </main>
+    <>
+      <Masthead />
+      <main className="brief" id="main">
+        <Hero />
+        <Proof />
+        <p><a href="/datasheet/">Full datasheet</a></p>
+      </main>
+    </>
   );
 }
