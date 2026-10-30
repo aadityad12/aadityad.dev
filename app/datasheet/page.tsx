@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import AppNote from "../components/AppNote";
 import BlockDiagram from "../components/BlockDiagram";
 import Chip from "../components/Chip";
@@ -46,6 +47,9 @@ export default function Home() {
       <main>
         {/* ---------------- Page 1 ---------------- */}
         <Sheet id="top" page={1} title="Engineer, intern grade · Datasheet" section="1|Overview">
+          <p className="sheet-banner no-print">
+            This is the long version. The short version is at <Link href="/">aadityad.dev</Link>, and each project has its own page.
+          </p>
           <div className="hero">
             <div>
               <p className="part-line">
@@ -126,7 +130,7 @@ export default function Home() {
                         <td className="pin-type">{p.type}</td>
                         <td className="cond">{p.desc}</td>
                         <td className="uses">
-                          {p.uses.length ? p.uses.map((u) => <a key={u} href={`#${u}`}>{noteById(u).an}</a>) : <span className="muted">TA</span>}
+                          {p.uses.length ? p.uses.map((u) => <a key={u} href={`#${u}`} title="Jump to the application note">{noteById(u).an}</a>) : <span className="muted">TA</span>}
                         </td>
                       </tr>
                     ))}
@@ -308,6 +312,7 @@ export default function Home() {
                 <li><a href={RESUME} target="_blank" rel="noreferrer"><span>Résumé</span><span>One-page PDF</span><span>↓</span></a></li>
                 <li><a href={GITHUB} target="_blank" rel="noreferrer"><span>GitHub</span><span>github.com/aadityad12</span><span>↗</span></a></li>
                 <li><a href={LINKEDIN} target="_blank" rel="noreferrer"><span>LinkedIn</span><span>in/aaditya-desai-12d</span><span>↗</span></a></li>
+                <li><Link href="/"><span>Short version</span><span>aadityad.dev</span><span>→</span></Link></li>
                 <li><a href={DEVPOST} target="_blank" rel="noreferrer"><span>Devpost</span><span>devpost.com/aadityad12</span><span>↗</span></a></li>
               </ul>
               <p className="colophon">
