@@ -4,6 +4,7 @@ import BlockDiagram from "../components/BlockDiagram";
 import Chip from "../components/Chip";
 import Masthead from "../components/Masthead";
 import { SectionHead, Sheet } from "../components/parts";
+import Status from "../components/Status";
 import { FIGURES } from "../figures";
 import {
   ABOUT,
@@ -11,11 +12,11 @@ import {
   APPLICATIONS,
   AWARDS,
   CERTS,
-  COURSEWORK,
   DESCRIPTION,
   DEVPOST,
   EDUCATION,
   EMAIL,
+  EXPERIENCE,
   FEATURES,
   GITHUB,
   LINKEDIN,
@@ -24,7 +25,6 @@ import {
   OSS,
   PINS,
   RESUME,
-  REVISIONS,
   SPECS,
 } from "../content";
 
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
 };
 
 const noteById = (id: string) => NOTES.find((n) => n.id === id)!;
-const statusClass = (s: string) => (s === "Measured" ? "measured" : s === "Observed" ? "observed" : s === "Single run" ? "single" : "repo");
+const REV_LETTERS = ["D", "C", "B", "A"];
 
 export default function Home() {
   const half = Math.ceil(PINS.length / 2);
@@ -185,7 +185,7 @@ export default function Home() {
                     <td className="cond">{r.cond}</td>
                     <td className="big">{r.typ}</td>
                     <td className="mono" style={{ fontSize: 12 }}>{r.u}</td>
-                    <td><span className={`tag ${statusClass(r.status)}`}>{r.status}</span></td>
+                    <td><Status s={r.status} /></td>
                     <td><a href={`#${r.src}`}>{noteById(r.src).an} →</a></td>
                   </tr>
                 ))}
@@ -193,7 +193,7 @@ export default function Home() {
             </table>
           </div>
           <p className="note">
-            Measured: a recorded result in the repo. Observed: read live during a hackathon, not logged. Single run: one hackathon-scale benchmark. Repo: a count you can check in the code.
+            Measured: a recorded result in the repo. Observed: read live during a hackathon, not logged. Single run: one hackathon-scale benchmark. Repo: a count you can check in the code. Stated: my account; nothing public behind it.
           </p>
         </Sheet>
 
@@ -209,18 +209,18 @@ export default function Home() {
 
         {/* ---------------- Page 14 ---------------- */}
         <Sheet id="revisions" page={14} title="Revision history and background" section="8|Revision history">
-          <SectionHead num="8" title="Revision history" aside="Experience, newest first" />
+          <SectionHead num="8" title="Revision history" aside="Experience" />
           <div className="tbl-wrap">
             <table className="dt rev-tbl">
               <thead><tr><th>Rev</th><th>Date</th><th>Changes</th></tr></thead>
               <tbody>
-                {REVISIONS.map((r) => (
-                  <tr key={r.rev}>
-                    <td>{r.rev}</td>
-                    <td>{r.date}</td>
+                {EXPERIENCE.map((r, i) => (
+                  <tr key={r.role}>
+                    <td>{REV_LETTERS[i]}</td>
+                    <td>{r.when}</td>
                     <td>
-                      <span className="role">{r.title}</span>
-                      <span className="org">{r.org}{r.link && <> · <a href={r.link}>see AN-03</a></>}</span>
+                      <span className="role">{r.role}</span>
+                      <span className="org">{r.org}{r.link && <> · <a href={r.link.href}>see AN-03</a></>}</span>
                       <ul>{r.points.map((p) => <li key={p}>{p}</li>)}</ul>
                     </td>
                   </tr>
@@ -237,14 +237,13 @@ export default function Home() {
                   <tbody>
                     {EDUCATION.map((e) => (
                       <tr key={e.school}>
-                        <td><b style={{ fontWeight: 650 }}>{e.school}</b><span className="muted" style={{ display: "block" }}>{e.degree}</span></td>
+                        <td><b style={{ fontWeight: 650 }}>{e.school}</b><span className="muted" style={{ display: "block" }}>{e.degree}</span><span className="muted" style={{ display: "block", fontSize: 12.5 }}>Coursework: {e.courses}</span></td>
                         <td className="num" style={{ fontSize: 12.5 }}>{e.when}<span className="muted" style={{ display: "block" }}>{e.note}</span></td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-              <p className="note">Coursework: {COURSEWORK}</p>
 
               <div className="ssh"><span>8.2</span>Awards and certifications</div>
               <div className="tbl-wrap">
@@ -265,7 +264,7 @@ export default function Home() {
               <ul className="oss-list">
                 {OPEN_SOURCE.map((o) => (
                   <li key={o.name}>
-                    <b>{o.name} {o.stars}</b>{o.what} <a href={o.href} target="_blank" rel="noreferrer">PR ↗</a>
+                    <b>{o.name} {o.stars}</b>{o.pr} <a href={o.href} target="_blank" rel="noreferrer">PR ↗</a>
                   </li>
                 ))}
                 <li><a href={OSS} target="_blank" rel="noreferrer">All contributions at oss.aadityad.dev ↗</a></li>

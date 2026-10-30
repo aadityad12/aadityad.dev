@@ -247,6 +247,7 @@ a:hover { color: var(--accent-ink); }
 .tag.observed { color: var(--amber); }
 .tag.single { color: var(--amber); }
 .tag.repo { color: var(--ink-2); }
+.tag.stated { color: var(--muted); border-style: dashed; border-color: var(--hair); }
 .pin-type { font-family: var(--mono); font-size: 11px; }
 .uses a { margin-right: 8px; }
 .spec-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; }
