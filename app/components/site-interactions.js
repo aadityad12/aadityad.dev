@@ -37,8 +37,8 @@ const REELS = {
     { label: "One session, block by block", make: () => picture("/projects/accordion-context-map.png", "Accordion's context map: a 109,407-token session drawn as coloured blocks for user, reply, thinking, tool call and tool result", "v-ui") },
   ],
   rung: [
-    { label: "Watch it run", make: () => picture("/projects/rung-jit.gif", "Terminal output: Rung compiles a function to ARM64, then a float fails the integer type guard and the VM finishes the call, printing 42 and 22.5", "v-terminal"), dwell: 9000 },
     { label: "Speed-ups by engine", make: () => picture("/projects/rung-performance.svg", "Bar chart of speed-ups over the tree-walker for the stack VM, register VM and JIT across six benchmarks, up to 38.84x on fib", "v-chart") },
+    { label: "Watch it run", make: () => picture("/projects/rung-jit.gif", "Terminal output: Rung compiles a function to ARM64, then a float fails the integer type guard and the VM finishes the call, printing 42 and 22.5", "v-terminal"), dwell: 9000 },
   ],
   alta: [
     { label: "Probe to voice", make: () => extra.alta?.(), optional: true },
@@ -117,6 +117,9 @@ export async function start() {
     void blinkTimer;
   }
 
+  // on phones the bullet lists start folded, so a skim sees every project's hook first
+  if (matchMedia("(max-width: 700px)").matches) document.querySelectorAll(".built-wrap").forEach((d) => d.removeAttribute("open"));
+
   await loadOptionalArtifacts();
 
   const cards = [...document.querySelectorAll(".pc")];
@@ -151,7 +154,7 @@ export async function start() {
 
   const heroFrame = () => ({
     insetLeft: (width) => (innerWidth >= 1000 ? Math.min(560, width * 0.38) : 0),
-    offsetY: (width, height) => (innerWidth >= 1000 ? -height * 0.04 : -height * 0.07),
+    offsetY: (width, height) => (innerWidth >= 1000 ? height * 0.03 : -height * 0.07),
     fit: innerWidth >= 1200 ? 0.5 : innerWidth >= 1000 ? 0.58 : 0.69,
   });
   const explorerFrame = () => ({ insetLeft: 0, offsetY: 0, fit: innerWidth <= 700 ? 0.65 : 0.53 });

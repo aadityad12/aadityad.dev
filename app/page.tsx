@@ -58,11 +58,13 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           {project.badges.map((badge) => <li key={badge.text} className={badge.win ? "win" : undefined}>{badge.text}</li>)}
         </ul>
         <p className="summary">{project.summary}</p>
-        <h4 className="mono built-title">What I built</h4>
-        <ul className="built">
-          {project.built.map((line) => <li key={line}>{rich(line)}</li>)}
-        </ul>
-        <p className="stack mono" aria-label="Stack">{project.stack.join(" · ")}</p>
+        <details className="built-wrap" open>
+          <summary className="mono built-title">What I built</summary>
+          <ul className="built">
+            {project.built.map((line) => <li key={line}>{rich(line)}</li>)}
+          </ul>
+          <p className="stack"><span className="mono">Stack</span>{project.stack.join(" · ")}</p>
+        </details>
         <div className="links">
           {project.links.map((link) => <a key={link.href} href={link.href} {...ext}>{link.label} ↗</a>)}
         </div>
@@ -107,6 +109,7 @@ export default function Home() {
             </div>
           </div>
           <div className="hero-copy">
+            <p className="avail-pill"><span className="dot" aria-hidden="true"></span>{HERO.avail}</p>
             <p className="eyebrow mono">{HERO.eyebrow}</p>
             <h1 id="hero-name">Aaditya Desai<span>.</span></h1>
             <p className="lead">{HERO.lead}</p>
@@ -119,7 +122,7 @@ export default function Home() {
             <p className="hero-socials">
               <a href={GITHUB} {...ext}>GitHub ↗</a>
               <a href={LINKEDIN} {...ext}>LinkedIn ↗</a>
-              <span>Santa Clara, CA</span>
+              <a href={OSS} {...ext}>Open source ↗</a>
             </p>
           </div>
           <div className="hero-foot">
@@ -128,7 +131,7 @@ export default function Home() {
                 <li key={item.big}><a href={item.href}><b>{item.big}</b><span>{item.small}</span></a></li>
               ))}
             </ul>
-            <p className="avail"><span className="dot" aria-hidden="true"></span>{HERO.avail}</p>
+            <p className="avail">Based in Santa Clara, CA. Email is the fastest way to reach me: <a href={`mailto:${EMAIL}`}>{EMAIL}</a></p>
           </div>
         </section>
 
@@ -136,10 +139,10 @@ export default function Home() {
           <section className="work shell" id="projects" aria-labelledby="work-title">
             <div className="work-heading">
               <div>
-                <p className="mono">Selected work · {PROJECTS.length} projects</p>
+                <p className="mono">Projects</p>
                 <h2 id="work-title">Things I&apos;ve built.</h2>
               </div>
-              <p>Compilers, firmware, on-device AI, Android, and agent tooling. Each one shipped, measured, and on GitHub.</p>
+              <p>Compilers, firmware, on-device AI, Android, and agent tooling. All of it is on GitHub, with numbers where they count.</p>
             </div>
             <nav className="rack" aria-label="Jump to a project">
               {PROJECTS.map((project) => <a key={project.id} href={`#${project.id}`}>{project.title}</a>)}
@@ -147,6 +150,23 @@ export default function Home() {
             <div className="journey">
               {PROJECTS.map((project, i) => <ProjectCard key={project.id} project={project} index={i} />)}
             </div>
+          </section>
+
+          <section className="sec shell" id="experience" aria-labelledby="xp-title">
+            <div className="sec-head"><h2 id="xp-title">Experience</h2><p>Industry research, teaching, and leadership.</p></div>
+            <ol className="xp">
+              {EXPERIENCE.map((job) => (
+                <li key={job.role}>
+                  <p className="when mono">{job.when}<br />{job.where}</p>
+                  <div>
+                    <h3>{job.role}</h3>
+                    <p className="org">{job.org}</p>
+                    <ul>{job.points.map((point) => <li key={point}>{point}</li>)}</ul>
+                    {job.link ? <p className="xp-link"><a href={job.link.href}>More on {job.link.label} ↓</a></p> : null}
+                  </div>
+                </li>
+              ))}
+            </ol>
           </section>
 
           <section className="sec shell" id="more" aria-labelledby="more-title">
@@ -170,7 +190,7 @@ export default function Home() {
                 <li key={item.href}>
                   <a href={item.href} {...ext}>
                     <p className="mono"><span className="merged">Merged</span>{item.repo} · {item.stars}</p>
-                    <h3>{item.what}</h3>
+                    <h3>{item.name} <span>{item.what}</span></h3>
                     <p>{item.pr}</p>
                   </a>
                 </li>
@@ -179,22 +199,6 @@ export default function Home() {
             <p className="oss-more"><a href={OSS} {...ext}>Every contribution, tracked live ↗</a></p>
           </section>
 
-          <section className="sec shell" id="experience" aria-labelledby="xp-title">
-            <div className="sec-head"><h2 id="xp-title">Experience</h2><p>Industry research, teaching, and leadership.</p></div>
-            <ol className="xp">
-              {EXPERIENCE.map((job) => (
-                <li key={job.role}>
-                  <p className="when mono">{job.when}<br />{job.where}</p>
-                  <div>
-                    <h3>{job.role}</h3>
-                    <p className="org">{job.org}</p>
-                    <ul>{job.points.map((point) => <li key={point}>{point}</li>)}</ul>
-                    {job.link ? <p className="xp-link"><a href={job.link.href}>More on {job.link.label} ↓</a></p> : null}
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </section>
 
           <section className="sec shell" id="recognition" aria-labelledby="awards-title">
             <div className="sec-head"><h2 id="awards-title">Recognition</h2><p>Awards, honors, and certifications.</p></div>
@@ -203,7 +207,7 @@ export default function Home() {
                 <li key={award.title} className={award.win ? "win" : undefined}><b>{award.title}</b><span>{award.detail}</span></li>
               ))}
             </ul>
-            <p className="certs"><span className="mono">Certifications</span>{CERTS.join(" · ")}</p>
+            <div className="certs"><p className="mono">Certifications</p><ul>{CERTS.map((cert) => <li key={cert}>{cert}</li>)}</ul></div>
           </section>
 
           <section className="sec shell split" id="education" aria-labelledby="edu-title">

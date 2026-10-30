@@ -34,17 +34,17 @@ export type Project = {
 };
 
 export const HERO = {
-  eyebrow: "Computer Engineering · San José State · Class of 2028",
-  lead: "I build from the metal up: hand-written ARM64 machine code, bare-metal firmware, on-device vision, and tools for AI agents.",
+  eyebrow: "Computer Engineering · SJSU · Class of 2028",
+  lead: "I build from the metal up: an ARM64 JIT compiler, bare-metal firmware, on-device vision, and tools for AI agents.",
   intro:
-    "I'm a computer engineering student at SJSU. I led the software for a wearable obstacle detector with Infineon Technologies, and I helped build Accordion, a context manager for AI coding agents that won its track at the UC Berkeley AI Hackathon and has 240+ stars on GitHub.",
-  avail: "Open to Summer 2027 internships and Winter 2027 co-ops in software, AI/ML, and embedded systems.",
+    "I led the software for VisionAssist, a wearable obstacle detector built with Infineon Technologies, and co-built Accordion, a context manager for AI coding agents that won the Sponsor Track at the UC Berkeley AI Hackathon 2026 and has 240+ stars on GitHub.",
+  avail: "Open to Summer 2027 internships in software, embedded, and AI/ML",
 };
 
 export const PROOF = [
   { big: "Infineon", small: "Research intern and technical lead", href: "#experience" },
-  { big: "Winner", small: "UC Berkeley AI Hackathon 2026", href: "#accordion" },
-  { big: "38.8×", small: "faster with my ARM64 JIT", href: "#rung" },
+  { big: "Winner", small: "Sponsor Track, UC Berkeley AI Hackathon", href: "#accordion" },
+  { big: "38.8×", small: "my ARM64 JIT vs. the interpreter", href: "#rung" },
   { big: "3.8 GPA", small: "Dean's Scholar at SJSU", href: "#education" },
 ];
 
@@ -53,16 +53,16 @@ export const PROJECTS: Project[] = [
     id: "visionassist",
     title: "VisionAssist",
     kicker: "Embedded vision · Infineon Technologies",
-    hook: "A wearable that spots obstacles and tells you how many steps away they are. No phone, no cloud.",
+    hook: "A wearable that spots obstacles and tells you how many steps away they are, entirely on the device.",
     summary:
-      "A head-mounted Raspberry Pi 5 and camera that detect obstacles, estimate their distance, and announce the most urgent one through Bluetooth earbuds, entirely on the device. Built by a team of five with Infineon Technologies and demoed to Infineon's sponsors.",
+      "A head-mounted Raspberry Pi 5 and camera that detect obstacles, estimate their distance, and announce the most urgent one through Bluetooth earbuds, entirely on the device. Built by a team of five with Infineon Technologies and demoed to the sponsors at Infineon.",
     built: [
       "Led the software and built the whole pipeline, from camera capture to **YOLOv8n detection at about 200 ms a frame** on the Pi 5's CPU, distance estimation, and risk-ranked speech **in feet and steps**.",
       "Evaluated Infineon's **60 GHz radar**, traced its phantom close-range readings to antenna leakage and floor reflections, and delivered the analysis to Infineon.",
       "Shipped it as a **headless systemd service** that boots on power-up, with a phone web app and live annotated video stream as a second output.",
     ],
     stack: ["Python", "PyTorch", "YOLOv8", "OpenCV", "Picamera2", "Flask", "Piper TTS", "systemd", "Raspberry Pi 5"],
-    badges: [{ text: "Infineon Technologies", win: true }, { text: "Software lead · team of 5" }, { text: "Demoed to sponsors" }],
+    badges: [{ text: "Infineon Technologies", win: true }, { text: "Software lead · team of 5" }],
     links: [{ label: "GitHub", href: "https://github.com/aadityad12/Vision-Assist" }],
     where: "De Anza College, Cupertino",
     when: "APR–JUN 2026",
@@ -74,14 +74,14 @@ export const PROJECTS: Project[] = [
   {
     id: "accordion",
     title: "Accordion",
-    kicker: "AI developer tools · UC Berkeley AI Hackathon 2026",
+    kicker: "AI developer tools · Berkeley AI Hackathon",
     hook: "Lets AI coding agents forget without losing anything, so long sessions stay sharp.",
     summary:
       "Coding agents get worse as their context fills up, and the usual fix, summarizing the session, throws information away. Accordion folds stale blocks out of the agent's view instead, so anything can come back, and it won the Sponsor Track at the UC Berkeley AI Hackathon 2026.",
     built: [
-      "Built the conductor's **health and evaluation layer**: health metrics, folding and session evaluators, and a harness that benchmarks folding against naive compaction.",
-      "Added a **cross-encoder rerank stage** (MS MARCO MiniLM) that decides what to unfold, plus retention telemetry and a fact ledger.",
-      "Ported the conductor onto Accordion's fold, replace, and group contract, and built the **activity dashboard** that shows every fold decision.",
+      "Built the **evaluation harness** that benchmarks folding against standard summarization, plus health metrics that show whether folding is helping a session.",
+      "Added a **cross-encoder reranker** (MS MARCO MiniLM) that picks which folded context to bring back when the agent needs it.",
+      "Built the **live dashboard** that shows every fold decision the system makes, and ported my folding policy into Accordion itself.",
     ],
     stack: ["TypeScript", "Hugging Face Transformers", "SvelteKit", "Tauri", "Node.js", "WebSockets"],
     badges: [{ text: "🏆 Sponsor Track winner", win: true }, { text: "★ 240+ on GitHub" }, { text: "10,000+ site visits" }],
@@ -100,7 +100,7 @@ export const PROJECTS: Project[] = [
     id: "rung",
     title: "Rung",
     kicker: "Compilers and runtimes · Solo",
-    hook: "One programming language, built five times over, down to hand-written ARM64 machine code.",
+    hook: "One programming language, built five times over, all the way down to a hand-built ARM64 JIT.",
     summary:
       "To measure what each classic interpreter speed-up is actually worth, I built one small language five ways: a tree-walker, a stack VM, a register VM, a baseline ARM64 JIT, and a background-thread JIT. All five share one runtime and garbage collector and must print byte-identical output.",
     built: [
@@ -109,14 +109,14 @@ export const PROJECTS: Project[] = [
       "Hardened with **ASan, UBSan, TSan, and libFuzzer** in CI on three platforms, and root-caused a crash in 5% of Linux ARM64 runs to UBSan reading 8 bytes before a JIT entry point.",
     ],
     stack: ["C++20", "ARM64", "CMake", "Clang", "libFuzzer", "ASan / UBSan / TSan", "Docker", "GitHub Actions"],
-    badges: [{ text: "38.8× speed-up", win: true }, { text: "Solo" }, { text: "Released v0.1.0" }],
+    badges: [{ text: "38.8× speed-up", win: true }, { text: "Solo" }, { text: "Fuzzed and sanitized in CI" }],
     links: [{ label: "GitHub", href: "https://github.com/aadityad12/rung" }],
     where: "Home, Santa Clara",
     when: "SEP–OCT 2026",
     pin: "home",
     stamp: "ridge:home",
     stampBg: "#F6DCD3",
-    visual: { kind: "image", frame: "terminal", src: "/projects/rung-jit.gif", alt: "Terminal output: Rung compiles a function to ARM64, then a float fails the integer type guard and the VM finishes the call" },
+    visual: { kind: "image", frame: "chart", src: "/projects/rung-performance.svg", alt: "Bar chart of speed-ups over the tree-walker for the stack VM, register VM and JIT across six benchmarks, up to 38.84x on fib" },
   },
   {
     id: "alta",
@@ -128,7 +128,7 @@ export const PROJECTS: Project[] = [
     built: [
       "Owned the hardware and firmware: the probe pod runs **bare-metal C on the ATmega328P's registers**, with interrupt-driven ADC, UART, and timer code, no Arduino libraries, in 4.6 KB of flash.",
       "Each probe gets **about 1,200 reads a second**, corrected against the measured supply voltage and streamed as a JSON line every 50 ms. In a 60 s soak test it sent 1,199 samples with **zero bad lines**.",
-      "Built the board overlay engine and the probe monitor that spots a changed reading and confirms the fix on its own. On the real board, Alta **found and fixed the fault in 3 of 3 timed runs**.",
+      "Built the board overlay engine and the probe monitor that spots a changed reading and confirms the fix on its own. On the real board, Alta **guided the student to the fault in 3 of 3 timed trials**.",
     ],
     stack: ["C", "avr-gcc", "ATmega328P", "simavr", "Python", "OpenCV", "Arduino Uno"],
     badges: [{ text: "Bare-metal firmware", win: true }, { text: "Hardware lead · team of 4" }, { text: "Built in 36 hours" }],
@@ -139,12 +139,33 @@ export const PROJECTS: Project[] = [
     visual: { kind: "image", frame: "ui", src: "/projects/alta-setup.png", alt: "Alta's bench: a phone camera over the student's breadboard, the probe pod in its printed dock, and a laptop showing 'Yellow 5.01 V (expect about 2)'" },
   },
   {
+    id: "gazeboard",
+    title: "GazeBoard",
+    kicker: "On-device ML · Qualcomm × Google hackathon",
+    hook: "Lets someone who can't speak or use their hands talk by looking at a phone.",
+    summary:
+      "The front camera finds the face, crops one eye, and Qualcomm's EyeGaze model estimates where the person is looking; a one-second look picks a phrase or a letter group, and the phone speaks. Nothing leaves the device: the app has no internet permission at all.",
+    built: [
+      "Owned the inference path: EyeGaze running **only on the Snapdragon's Hexagon NPU** through LiteRT, at **about 8 ms per inference and 15+ FPS** on a Galaxy S25 Ultra.",
+      "Made failure loud: if the NPU can't load the model, the app says so instead of silently falling back to a slower accelerator.",
+      "Built the debug overlay and the recalibration flow, and tuned spelling mode's word prediction to a **378-word dictionary**.",
+    ],
+    stack: ["Kotlin", "Jetpack Compose", "CameraX", "ML Kit", "LiteRT", "Hexagon NPU"],
+    badges: [{ text: "~8 ms per inference", win: true }, { text: "NPU-only" }, { text: "Team of 3" }],
+    links: [{ label: "GitHub", href: "https://github.com/aadityad12/GazeBoard" }],
+    where: "Sunnyvale",
+    when: "APR 30 2026",
+    pin: "gazeboard",
+    stamp: "ridge:sunnyvale",
+    stampBg: "#DCE6F2",
+    visual: { kind: "artifact", label: "Gaze picks a letter group, the dictionary predicts the word, and the phone speaks it." },
+  },  {
     id: "oss-scout",
     title: "OSS Scout",
     kicker: "Automation and security design · Solo",
     hook: "An agent pipeline that finds open-source work every night, and can't post a thing without my approval.",
     summary:
-      "Maintainers are buried in low-effort, machine-generated pull requests. OSS Scout automates the tedious parts of contributing, like finding good issues and reading unfamiliar code, and leaves every decision to me; its work has landed merged PRs upstream.",
+      "Every night OSS Scout finds open-source issues worth fixing, ranks the projects that welcome outside contributors, and prepares a tested draft. Only I can publish: the agent has no GitHub write access by construction. I've landed merged PRs upstream with it.",
     built: [
       "A nightly scan in plain Python on GitHub Actions ranks issues by **how each project treats outside contributors**: merge rate, time to merge, and time to first maintainer reply.",
       "An agent prepares **at most one tested draft fix a night** for a private dashboard behind Cloudflare Access, with an 8 am email digest.",
@@ -185,28 +206,7 @@ export const PROJECTS: Project[] = [
     stampBg: "#F3E7C9",
     visual: { kind: "phone", src: "/projects/apextracker-dashboard.jpg", alt: "ApexTracker's graphite dashboard: daily goal score and a consistency chart" },
   },
-  {
-    id: "gazeboard",
-    title: "GazeBoard",
-    kicker: "On-device ML · Qualcomm × Google LiteRT Hackathon",
-    hook: "Lets someone who can't speak or use their hands talk by looking at a phone.",
-    summary:
-      "The front camera finds the face, crops one eye, and Qualcomm's EyeGaze model estimates where the person is looking; a one-second look picks a phrase or a letter group, and the phone speaks. Nothing leaves the device: the app has no internet permission at all.",
-    built: [
-      "Owned the inference path: EyeGaze running **only on the Snapdragon's Hexagon NPU** through LiteRT, at **about 8 ms per inference and 15+ FPS** on a Galaxy S25 Ultra.",
-      "Made failure loud: if the NPU can't load the model, the app says so instead of silently falling back to a slower accelerator.",
-      "Built the debug overlay and the recalibration flow, and tuned spelling mode's word prediction to a **378-word dictionary**.",
-    ],
-    stack: ["Kotlin", "Jetpack Compose", "CameraX", "ML Kit", "LiteRT", "Hexagon NPU"],
-    badges: [{ text: "NPU-only inference", win: true }, { text: "Camera permission only" }, { text: "Team of 3" }],
-    links: [{ label: "GitHub", href: "https://github.com/aadityad12/GazeBoard" }],
-    where: "Sunnyvale",
-    when: "APR 30 2026",
-    pin: "gazeboard",
-    stamp: "ridge:sunnyvale",
-    stampBg: "#DCE6F2",
-    visual: { kind: "artifact", label: "Gaze picks a letter group, the dictionary predicts the word, and the phone speaks it." },
-  },
+
   {
     id: "echo",
     title: "Echo",
@@ -232,17 +232,17 @@ export const PROJECTS: Project[] = [
   {
     id: "temper",
     title: "Temper",
-    kicker: "AI evaluation · AI Engineer World's Fair Hackathon 2026",
+    kicker: "AI evaluation · AI Engineer World's Fair hackathon",
     hook: "Finds where an AI agent's own prompts and tools make it worse, then patches them.",
     summary:
       "A model's system prompt, skills, and tools can quietly make it worse. Temper asks the same questions with and without that harness, has a judge score both across six dimensions, then rewrites whatever failed and re-tests just those parts.",
     built: [
       "Wrote the spec, API contract, and JSON Schemas, then built **both the local client and the FastAPI cloud service**, with Gemini judging against a **bare DeepSeek baseline**.",
-      "Built the **patch loop** that rewrites failing files and re-evaluates only those dimensions, plus a pi extension that streams results to a live dashboard.",
+      "Built the **patch loop** that rewrites failing files and re-evaluates only those dimensions, plus an extension for the pi coding agent that streams results to a live dashboard.",
       "Wrote a deliberately flawed \"villain\" agent with an answer key, so the full evaluate, patch, re-evaluate loop **runs offline with no API keys**.",
     ],
     stack: ["Python", "FastAPI", "JSON Schema", "SSE", "Gemini", "DeepSeek", "Rich"],
-    badges: [{ text: "Evaluate · patch · re-test", win: true }, { text: "Team of 3" }],
+    badges: [{ text: "Six-dimension LLM judge", win: true }, { text: "Team of 3" }],
     links: [{ label: "GitHub", href: "https://github.com/aadityad12/Temper" }],
     where: "Ferry Building, San Francisco",
     when: "JUN 27–28 2026",
@@ -286,6 +286,7 @@ export const MORE = [
 
 export const OPEN_SOURCE = [
   {
+    name: "Soup",
     repo: "MakazhanAlpamys/Soup",
     stars: "9.8k★",
     what: "LLM fine-tuning toolkit",
@@ -293,6 +294,7 @@ export const OPEN_SOURCE = [
     href: "https://github.com/MakazhanAlpamys/Soup/pull/1953",
   },
   {
+    name: "fusioncore",
     repo: "manankharwar/fusioncore",
     stars: "380★",
     what: "ROS 2 localization for outdoor robots",
@@ -310,8 +312,8 @@ export const EXPERIENCE = [
     points: [
       "Led software on a five-person team building an offline navigation aid for blind users on a Raspberry Pi 5, through the Infineon University Alliance.",
       "Built the on-device detection, distance, and speech pipeline, and deployed it as a service that boots headless on power-up.",
-      "Evaluated Infineon's 60 GHz radar, showed camera-radar fusion needed 3D localization beyond the project's scope, and delivered the findings to Infineon.",
-      "Demoed the finished device to Infineon's sponsors.",
+      "Characterized Infineon's 60 GHz radar, root-caused its phantom close-range readings to antenna leakage and floor reflections, and delivered the analysis to Infineon.",
+      "Demoed the finished device to the sponsors at Infineon.",
     ],
     link: { label: "VisionAssist", href: "#visionassist" },
   },
@@ -321,8 +323,8 @@ export const EXPERIENCE = [
     role: "Teaching Assistant, ENGR 10: Introduction to Engineering",
     org: "San José State University",
     points: [
-      "Brought back to TA the course one semester after taking it, where I wrote the control code for the fastest robot run in my section.",
-      "Run two weekly lab sections of 30 students who solder IR receiver boards and build and program VEX robots in C++ and RobotC.",
+      "Invited back to TA the course one semester after taking it.",
+      "Run two weekly lab sections of 30 students each, who solder IR receiver boards and build and program VEX robots in C++ and RobotC.",
       "Debug student circuits and code live at the bench, and support CAD, fabrication, and power testing for the wind turbine project.",
     ],
   },
@@ -351,8 +353,6 @@ export const AWARDS = [
   { title: "Sponsor Track Winner", detail: "UC Berkeley AI Hackathon 2026 · Accordion", win: true },
   { title: "2nd Place", detail: "DA Hacks 3.5 · ClassPath AI", win: true },
   { title: "Top 10 at site", detail: "ICPC 2025 Regionals, Division 2" },
-  { title: "Most Valuable Peer", detail: "HackStorm 2.0 · peer-nominated" },
-  { title: "Fastest run in section", detail: "SJSU ENGR 10 robot challenge · 14.41 s" },
   { title: "Dean's Scholar", detail: "San José State University" },
 ];
 
@@ -366,7 +366,7 @@ export const CERTS = [
 export const SKILLS = [
   { area: "Languages", items: ["C++", "C", "Python", "Kotlin", "TypeScript", "JavaScript", "SQL", "ARM64 assembly", "x86 assembly", "Dart", "Swift"] },
   { area: "Systems and hardware", items: ["Linux", "Raspberry Pi", "ATmega328P", "PSoC 6", "BLE / GATT", "Hexagon NPU", "systemd", "Soldering", "CAD", "3D printing"] },
-  { area: "AI and ML", items: ["PyTorch", "YOLOv8", "OpenCV", "Hugging Face Transformers", "LiteRT", "ML Kit", "Vertex AI", "Claude API", "Claude Code"] },
+  { area: "AI and ML", items: ["PyTorch", "YOLOv8", "OpenCV", "Hugging Face Transformers", "LiteRT", "ML Kit", "Claude API", "Claude Code"] },
   { area: "Infrastructure and testing", items: ["GitHub Actions", "Docker", "CMake", "Cloudflare Workers", "Firebase", "ASan / UBSan / TSan", "libFuzzer", "pytest", "JUnit"] },
   { area: "Frameworks", items: ["FastAPI", "Flask", "React", "Next.js", "SvelteKit", "Jetpack Compose", "Flutter", "Room", "three.js"] },
 ];
