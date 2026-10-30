@@ -18,6 +18,7 @@ export default function AppNote({ note, page, index, children }: { note: Note; p
           <p className="an-hook">{note.hook}</p>
         </div>
         <div className="an-links">
+          <a className="button primary no-print" href={`/work/${note.id}/`}>Project page →</a>
           {note.links.map((l) => (
             <a key={l.href} className="button" href={l.href} target="_blank" rel="noreferrer">
               {l.label} ↗
