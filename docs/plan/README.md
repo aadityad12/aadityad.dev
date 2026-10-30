@@ -122,5 +122,7 @@ after 06.
 
 ## Working on an issue with a subagent
 
-Use `docs/plan/PROMPT-TEMPLATE.md`. Give the subagent exactly one issue file, the rules
+To run the whole plan, give an Opus session `docs/plan/MANAGER-PROMPT.md`; it manages and
+reviews, and dispatches one Sonnet subagent per issue. For a single issue by hand, use
+`docs/plan/PROMPT-TEMPLATE.md`. Give the subagent exactly one issue file, the rules
 section above, and the paths it will touch. Ask for a PR, not a direct commit to `Fable1`.
