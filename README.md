@@ -33,6 +33,15 @@ The static site is written to `out/`.
 Pushes to `main` are built and deployed automatically by
 `.github/workflows/pages.yml` to https://aadityad.dev (CNAME in repo root).
 
+## Budgets
+
+`npm run budget` (`scripts/check-budget.mjs`) reads the built `out/` and fails if a
+page loads more JavaScript than its budget. It counts every `/_next/` JS chunk a page
+references, subtracts the Next runtime shared by all three budgeted pages, and compares
+the rest to the page's limit. It also fails if any page except `/map/` loads three.js
+or heightmap data. The budgets live in the table in `docs/plan/README.md`. CI runs
+lint, build and budget on every pull request (`.github/workflows/ci.yml`).
+
 ## Design: the AD2028 datasheet
 
 The site is written as the datasheet for a fictional part, the **AD2028**
