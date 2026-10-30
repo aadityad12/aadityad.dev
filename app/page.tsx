@@ -1,6 +1,7 @@
 import Masthead from "./components/Masthead";
 import Hero from "./components/brief/Hero";
 import Proof from "./components/brief/Proof";
+import ProjectIndex from "./components/brief/ProjectIndex";
 
 export default function Home() {
   return (
@@ -9,7 +10,7 @@ export default function Home() {
       <main className="brief" id="main">
         <Hero />
         <Proof />
-        <p><a href="/datasheet/">Full datasheet</a></p>
+        <ProjectIndex />
       </main>
     </>
   );

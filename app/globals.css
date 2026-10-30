@@ -466,6 +466,50 @@ main.brief .proof span:not(.tag) { display: block; margin-top: 4px; font-size: 1
   main.brief .proof a { padding-right: 12px; }
 }
 
+/* ---- projects ---- */
+main.brief .brief-projects { margin-top: clamp(36px, 5vw, 64px); }
+main.brief .pi-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 24px; padding-bottom: 10px; border-bottom: 1px solid var(--ink); }
+main.brief .pi-head h2 { margin: 0; font-size: clamp(26px, 3vw, 34px); font-weight: 800; font-stretch: 112%; letter-spacing: -0.02em; line-height: 1.1; }
+main.brief .pi-head p { margin: 0; font-family: var(--mono); font-size: 13px; line-height: 1.45; color: #58564f; }
+main.brief .pi-filter { margin: 12px 0 0; padding: 8px 12px; border: 1px solid var(--accent); background: var(--accent-wash); font-family: var(--mono); font-size: 13px; line-height: 1.4; }
+main.brief .pi-filter button { padding: 0; border: 0; background: none; font: inherit; color: var(--accent-ink); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+main.brief .pi-cols, main.brief .pi .row { display: grid; grid-template-columns: 40px 150px minmax(0, 1fr) 210px 190px 28px; column-gap: 14px; }
+main.brief .pi-cols { padding: 8px 12px 6px; border-bottom: 1px solid var(--hair); font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: #58564f; }
+main.brief .pi { list-style: none; margin: 0; padding: 0; }
+main.brief .pi li + li { border-top: 1px solid var(--hair); }
+main.brief .pi li:last-child { border-bottom: 1px solid var(--ink); }
+main.brief .pi .row { grid-template-areas: "n t d h s a" "n c c h s a"; align-items: start; padding: 6px 12px; text-decoration: none; color: inherit; transition: opacity 0.15s; }
+main.brief .pi .row:hover { background: var(--paper); color: inherit; }
+main.brief .pi .row:focus-visible { outline-offset: -2px; }
+main.brief .pi .row.dim { opacity: 0.35; }
+main.brief .pi .row.lit { box-shadow: inset 3px 0 0 var(--accent); }
+main.brief .pi-n { grid-area: n; font-family: var(--mono); font-size: 13px; line-height: 1.45; color: #58564f; }
+main.brief .pi-t { grid-area: t; font-size: 16px; font-weight: 800; font-stretch: 112%; letter-spacing: -0.01em; line-height: 1.3; }
+main.brief .pi-c { grid-area: c; margin-top: 2px; font-family: var(--mono); font-size: 12px; line-height: 1.4; color: #58564f; }
+main.brief .pi-d { grid-area: d; font-size: 14px; line-height: 1.35; color: var(--ink-2); }
+main.brief .pi-h { grid-area: h; display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; min-width: 0; }
+main.brief .pi-h .num { font-family: var(--mono); font-size: 14px; font-weight: 600; line-height: 1.4; }
+main.brief .pi-h .tag { order: 1; }
+main.brief .pi-h small { order: 2; flex-basis: 100%; font-family: var(--mono); font-size: 12px; line-height: 1.35; color: #58564f; }
+main.brief .pi-s { grid-area: s; font-family: var(--mono); font-size: 12px; line-height: 1.45; color: var(--ink-2); }
+main.brief .pi-a { grid-area: a; justify-self: end; color: var(--accent); font-size: 18px; line-height: 1.3; transition: transform 0.15s; }
+main.brief .pi .row:hover .pi-a, main.brief .pi .row:focus-visible .pi-a { transform: translateX(4px); }
+main.brief .pi-also { margin: 14px 0 0; font-family: var(--mono); font-size: 13px; line-height: 1.5; color: var(--ink-2); }
+@media (prefers-reduced-motion: reduce) {
+  main.brief .pi .row, main.brief .pi-a { transition: none; }
+  main.brief .pi .row:hover .pi-a, main.brief .pi .row:focus-visible .pi-a { transform: none; }
+}
+@media (max-width: 1000px) {
+  main.brief .pi-cols { display: none; }
+  main.brief .pi .row { grid-template-columns: 40px minmax(0, 1fr) 160px 32px; grid-template-areas: "n t h a" "n c h a" "n d h a"; }
+  main.brief .pi-s { display: none; }
+  main.brief .pi-d { margin-top: 4px; }
+}
+@media (max-width: 600px) {
+  main.brief .pi .row { grid-template-columns: 26px minmax(0, 1fr) 24px; column-gap: 10px; grid-template-areas: "n t a" "n c a" "n d a" ". h ."; padding: 12px 8px; }
+  main.brief .pi-h { margin-top: 8px; }
+}
+
 /* ---- work ---- */
 main.work { max-width: 1080px; margin: 0 auto; padding: 0 var(--pad) clamp(40px, 6vw, 80px); }
 .work-head { padding: clamp(8px, 2vw, 24px) 0 clamp(20px, 3vw, 36px); }
