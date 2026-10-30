@@ -38,7 +38,7 @@ export default function BlockDiagram() {
             <div className="bd-row" role="listitem" key={r.id}>
               <span className="bd-pin in" aria-hidden="true">{r.in}</span>
               <span className="bd-wire in" aria-hidden="true" />
-              <a className="bd-blk" href={`#${r.id}`}>
+              <a className="bd-blk" href={`#${r.id}`} title="Jump to the application note">
                 <span className="bk"><b>{n.an}</b>{n.block}</span>
                 <span className="bp">{n.title}</span>
                 <span className="bf">{r.fn}</span>

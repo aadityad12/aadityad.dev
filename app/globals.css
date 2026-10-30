@@ -265,6 +265,8 @@ a:hover { color: var(--accent-ink); }
 .an-kicker b { color: var(--accent); font-weight: 600; }
 .an-title { margin: 0; font-size: clamp(42px, 7vw, 104px); font-weight: 800; font-stretch: 118%; line-height: 0.88; letter-spacing: -0.04em; }
 .an-hook { margin: 16px 0 0; font-size: clamp(18px, 1.9vw, 24px); line-height: 1.3; font-weight: 500; max-width: 40ch; letter-spacing: -0.01em; }
+.sheet-banner { margin: 0 0 clamp(16px, 2.5vw, 26px); padding-bottom: 10px; border-bottom: 1px solid var(--hair); font-family: var(--mono); font-size: 12px; letter-spacing: 0.02em; line-height: 1.5; color: var(--muted); }
+.sheet-banner a { color: var(--ink-2); }
 .an-links { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
 @media (max-width: 760px) { .an-top { grid-template-columns: 1fr; } .an-links { justify-content: flex-start; } }
 .an-meta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1px solid var(--hair); }
@@ -543,3 +545,29 @@ main.work { max-width: 1080px; margin: 0 auto; padding: 0 var(--pad) clamp(40px,
 .work .an-photo-row { flex-wrap: wrap; overflow: visible; }
 .work-next { display: flex; flex-wrap: wrap; gap: 10px 28px; justify-content: space-between; margin-top: clamp(36px, 6vw, 72px); padding-top: 14px; border-top: 2px solid var(--ink); font-family: var(--mono); font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; }
 .work-next a:first-child { font-weight: 600; }
+
+/* ---- reel ---- */
+.reel { margin-bottom: clamp(28px, 4vw, 48px); }
+.reel-figure { position: sticky; top: var(--mast-h); z-index: 2; max-height: 44vh; overflow: hidden; padding: 8px 0; background: var(--bg); box-shadow: 0 calc(-1 * var(--mast-h)) 0 var(--bg); }
+.reel-figure > * { max-height: 100%; }
+.reel-figure .fig-bar { display: none; }
+.reel-figure .fig-body { padding: 8px; }
+.reel-beats { list-style: none; margin: 20px 0 0; padding: 0; display: grid; gap: 28px; }
+.beat { color: var(--muted); }
+.beat[aria-current="step"] { color: var(--ink); }
+.beat-n { display: block; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.07em; }
+.beat h3 { margin: 4px 0 6px; font-size: clamp(22px, 5.5vw, 28px); font-weight: 700; line-height: 1.12; letter-spacing: -0.02em; }
+.beat p { margin: 0; max-width: 46ch; font-size: 16.5px; line-height: 1.5; }
+.beat:last-child { margin-bottom: 20vh; }
+.reel-free { margin: 0; }
+.reel-free button { padding: 8px 14px; border: 1.5px solid var(--ink); background: var(--paper); color: var(--ink); font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; }
+.reel-free button:hover { background: var(--ink); color: var(--paper); }
+@media (min-width: 900px) {
+  .reel { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); column-gap: 48px; }
+  .reel-figure { grid-column: 1; grid-row: 1 / span 2; align-self: start; top: calc(var(--mast-h) + 24px); max-height: none; overflow: visible; padding: 0; background: none; box-shadow: none; }
+  .reel-figure .fig-bar { display: flex; }
+  .reel-figure .fig-body { padding: clamp(10px, 1.6vw, 18px); }
+  .reel-beats { grid-column: 2; grid-row: 1; margin: 0; gap: 0; }
+  .beat { min-height: 52vh; }
+  .reel-free { grid-column: 2; grid-row: 2; }
+}

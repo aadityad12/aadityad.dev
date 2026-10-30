@@ -10,7 +10,10 @@ import ScoutInterlock from "./ScoutInterlock";
 import TemperLoop from "./TemperLoop";
 import VisionScene from "./VisionScene";
 
-export const FIGURES: Record<string, ComponentType> = {
+// 0-based beat from the Reel; null or undefined means free interactive mode.
+export type FigureProps = { beat?: number | null };
+
+export const FIGURES: Record<string, ComponentType<FigureProps>> = {
   accordion: AccordionMap,
   rung: RungLadder,
   visionassist: VisionScene,
