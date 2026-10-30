@@ -2,6 +2,17 @@
 
 Aaditya Desai's personal portfolio. Next.js static export, deployed to GitHub Pages.
 
+The plan for this version lives in `docs/plan/`.
+
+## Routes
+
+| Route | What it is |
+| --- | --- |
+| `/` | Front page (placeholder until issue 03) |
+| `/work/<slug>/` | One page per project (placeholder until issue 06) |
+| `/datasheet/` | The full AD2028 datasheet |
+| `/map/` | Planned |
+
 ## Local development
 
 ```bash

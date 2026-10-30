@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { RESUME } from "../content";
 
 export default function Masthead() {
@@ -9,6 +10,7 @@ export default function Masthead() {
 
   useEffect(() => {
     const sheets = Array.from(document.querySelectorAll<HTMLElement>("[data-section]"));
+    if (sheets.length === 0) return;
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
@@ -59,7 +61,7 @@ export default function Masthead() {
   return (
     <header className="mast">
       <div className="mast-inner">
-        <a className="mast-mark" href="#top" aria-label="Aaditya Desai, back to top">
+        <Link className="mast-mark" href="/" aria-label="Aaditya Desai, back to top">
           <svg className="mast-ic" viewBox="0 0 24 24" aria-hidden="true">
             <g fill="#8d8d87">
               {[5, 9.5, 14, 18.5].map((p) => (
@@ -76,16 +78,16 @@ export default function Masthead() {
           </svg>
           <b>AD2028</b>
           <span>Aaditya Desai</span>
-        </a>
+        </Link>
         <div className="mast-sec" aria-live="polite">
           <span>§{label.num}</span>
           {label.title}
         </div>
         <nav className="mast-nav" aria-label="Primary">
-          <a href="#block-diagram">Projects</a>
-          <a href="#specs">Specs</a>
-          <a href="#revisions">Experience</a>
-          <a href="#ordering">Contact</a>
+          <a href="/datasheet/#block-diagram">Projects</a>
+          <a href="/datasheet/#specs">Specs</a>
+          <a href="/datasheet/#revisions">Experience</a>
+          <a href="/datasheet/#ordering">Contact</a>
           <a className="pdf" href={RESUME} target="_blank" rel="noreferrer">Résumé PDF ↓</a>
         </nav>
       </div>
