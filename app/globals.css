@@ -213,6 +213,9 @@ footer h2 span{color:var(--accent)}
 footer>p{color:var(--muted);max-width:540px;margin:0 0 26px;font-size:16.5px}
 .fline{display:flex;justify-content:space-between;margin-top:90px;padding-top:14px;border-top:1px solid rgba(33,25,70,.2);color:var(--muted)}
 
+/* without JavaScript the map never draws, so its controls stay out of the way */
+html:not(.js) .map-load,html:not(.js) .map-tools,html:not(.js) .map-entry{display:none}
+
 /* map explorer */
 .map-paused .bay-pin svg{animation-play-state:paused}
 .map-explorer{position:fixed;inset:0;width:100%;max-width:none;height:100dvh;max-height:none;margin:0;padding:0;border:0;background:var(--bg);color:var(--ink);overflow:hidden}

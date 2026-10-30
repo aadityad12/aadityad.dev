@@ -58,7 +58,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           {project.badges.map((badge) => <li key={badge.text} className={badge.win ? "win" : undefined}>{badge.text}</li>)}
         </ul>
         <p className="summary">{project.summary}</p>
-        <details className="built-wrap" open>
+        <details className="built-wrap" open suppressHydrationWarning>
           <summary className="mono built-title">What I built</summary>
           <ul className="built">
             {project.built.map((line) => <li key={line}>{rich(line)}</li>)}
@@ -275,6 +275,8 @@ export default function Home() {
           </footer>
         </div>
       </main>
+      {/* fold the bullet lists on phones before first paint, so nothing jumps once scripts load */}
+      <script dangerouslySetInnerHTML={{ __html: `if(matchMedia("(max-width: 700px)").matches)document.querySelectorAll(".built-wrap").forEach(function(d){d.removeAttribute("open")})` }} />
 
       <dialog className="map-explorer" id="map-explorer" aria-labelledby="explorer-title">
         <div className="explorer-stage" id="explorer-stage"></div>

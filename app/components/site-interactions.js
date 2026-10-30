@@ -6,6 +6,7 @@ import { createReel, setReelsPaused } from "@/lab/project-reels.js";
 
 const pausers = [setArtifactsPaused, setVisionDirectionsPaused, setReelsPaused];
 const extra = {}; // project id -> () => HTMLElement, for artifacts from optional modules
+const releasers = []; // [selector, release] for nodes built for the explorer preview
 
 function picture(src, alt, className) {
   const image = document.createElement("img");
@@ -75,6 +76,8 @@ async function loadOptionalArtifacts() {
       const mod = await load();
       extra[id] = () => mod[make]();
       pausers.push(mod[pause]);
+      const release = Object.entries(mod).find(([name]) => name.startsWith("release"))?.[1];
+      if (release) releasers.push(release);
     } catch (error) { console.warn(`Artifact for ${id} unavailable:`, error); }
   }));
 }
@@ -84,6 +87,8 @@ export async function start() {
   if (started) return;
   started = true;
   const motionPreference = matchMedia("(prefers-reduced-motion: reduce)");
+  let paused = motionPreference.matches;
+  const pfPaused = () => paused;
   const header = document.getElementById("hdr");
   const syncHeader = () => header.classList.toggle("solid", scrollY > 40);
   addEventListener("scroll", syncHeader, { passive: true });
@@ -93,7 +98,6 @@ export async function start() {
   const pf = document.querySelector("[data-pathfinder]");
   if (pf) {
     const eye = pf.querySelector(".pf-eye");
-    let blinkTimer = 0;
     const look = (x, y) => {
       const box = pf.getBoundingClientRect();
       const dx = x - (box.left + box.width * 0.51), dy = y - (box.top + box.height * 0.51);
@@ -101,24 +105,24 @@ export async function start() {
       eye.setAttribute("cx", String(122 + (dx / d) * k));
       eye.setAttribute("cy", String(130 + (dy / d) * k));
     };
-    addEventListener("pointermove", (event) => look(event.clientX, event.clientY), { passive: true });
+    let onScreen = false;
+    new IntersectionObserver(([entry]) => { onScreen = entry.isIntersecting; }).observe(pf);
+    addEventListener("pointermove", (event) => { if (onScreen) look(event.clientX, event.clientY); }, { passive: true });
     const blink = () => {
-      eye.setAttribute("ry", "1.2");
-      setTimeout(() => eye.setAttribute("ry", "7"), 130);
-      blinkTimer = setTimeout(blink, 2800 + Math.random() * 3500);
+      if (onScreen && !document.hidden && !motionPreference.matches && !pfPaused()) {
+        eye.setAttribute("ry", "1.2");
+        setTimeout(() => eye.setAttribute("ry", "7"), 130);
+      }
+      setTimeout(blink, 2800 + Math.random() * 3500);
     };
-    if (!motionPreference.matches) blinkTimer = setTimeout(blink, 2000);
+    setTimeout(blink, 2000);
     pf.addEventListener("click", () => {
       pf.classList.remove("hop", "wave");
       void pf.offsetWidth;
       pf.classList.add("hop", "wave");
     });
     pf.addEventListener("animationend", (event) => { if (event.animationName === "pf-hop") pf.classList.remove("hop"); if (event.animationName === "pf-wave") pf.classList.remove("wave"); });
-    void blinkTimer;
   }
-
-  // on phones the bullet lists start folded, so a skim sees every project's hook first
-  if (matchMedia("(max-width: 700px)").matches) document.querySelectorAll(".built-wrap").forEach((d) => d.removeAttribute("open"));
 
   await loadOptionalArtifacts();
 
@@ -144,7 +148,6 @@ export async function start() {
   const artifactHost = document.getElementById("preview-artifact");
 
   let bay = null;
-  let paused = motionPreference.matches;
   let mapVisible = true;
   let returnFocus = null;
   let returnScroll = 0;
@@ -166,6 +169,7 @@ export async function start() {
   function syncAnimation() {
     map.classList.toggle("map-paused", paused);
     pausers.forEach((pause) => pause(paused));
+    artifactHost.querySelectorAll("video").forEach((v) => (paused ? v.pause() : v.play().catch(() => {})));
     for (const button of [motionButton, explorerMotion]) {
       button.textContent = paused ? "Play" : "Pause";
       button.setAttribute("aria-pressed", String(paused));
@@ -177,8 +181,11 @@ export async function start() {
   }
 
   function clearPreviewArtifact() {
-    artifactHost.querySelectorAll(".project-artifact").forEach(releaseProjectArtifact);
-    artifactHost.querySelectorAll(".direction-art").forEach(releaseVisionDirection);
+    for (const node of artifactHost.children) {
+      releaseProjectArtifact(node);
+      releaseVisionDirection(node);
+      releasers.forEach((release) => release(node));
+    }
     artifactHost.replaceChildren();
   }
   function dismissPreview() {
@@ -314,12 +321,20 @@ export async function start() {
       button.addEventListener("click", () => showProject(target, target.dataset.pin || "sjsu"));
       explorerIndex.append(button);
     }
+    let resizeTimer = 0, lastWidth = innerWidth, lastHeight = innerHeight;
     addEventListener("resize", () => {
-      frameMap();
-      if (paused && mapVisible) {
-        bay.setActive(true);
-        requestAnimationFrame(syncAnimation);
-      }
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        // phones fire resize when the browser bar collapses; only a width change reframes the map
+        if (innerWidth === lastWidth && Math.abs(innerHeight - lastHeight) < 120) return;
+        lastWidth = innerWidth;
+        lastHeight = innerHeight;
+        if (explorer.open) bay.setFrame(explorerFrame()); else frameMap();
+        if (paused && mapVisible) {
+          bay.setActive(true);
+          requestAnimationFrame(syncAnimation);
+        }
+      }, 150);
     });
     await new Promise(requestAnimationFrame);
     syncAnimation();
@@ -333,11 +348,15 @@ export async function start() {
     const [{ landmarkStamp, ridgeStamp }, { ferryBuilding, campanile }] = await Promise.all([import("@/lab/stamps.js"), import("@/lab/landmarks3d.js")]);
     const builders = { campanile, ferryBuilding };
     const looks = { campanile: { zoom: 1.05, yaw: 0.5 }, ferryBuilding: { zoom: 1.9, yaw: 0.35, dy: 12 } };
+    const rendered = new Map();
     for (const card of cards) {
       if (!card.dataset.stamp) continue;
       const [kind, key] = card.dataset.stamp.split(":");
       const bg = card.dataset.bg;
-      const url = kind === "lm" ? landmarkStamp(builders[key], { w: 140, h: 176, bg, ...looks[key] }) : await ridgeStamp(key, { w: 140, h: 176, bg });
+      const cacheKey = `${card.dataset.stamp}|${bg}`;
+      if (kind === "lm" && !builders[key]) continue;
+      if (!rendered.has(cacheKey)) rendered.set(cacheKey, kind === "lm" ? landmarkStamp(builders[key], { w: 140, h: 176, bg, ...looks[key] }) : await ridgeStamp(key, { w: 140, h: 176, bg }));
+      const url = rendered.get(cacheKey);
       const stamp = document.createElement("span");
       stamp.className = "stamp";
       stamp.setAttribute("aria-hidden", "true");
