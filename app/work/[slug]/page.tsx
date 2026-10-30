@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Fig, Rich } from "../../components/parts";
 import Status from "../../components/Status";
+import Reel from "../../components/work/Reel";
 import { FIGURES } from "../../figures";
 import { NOTES, PHOTOS } from "../../content";
 
@@ -38,6 +39,7 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
   if (!note) notFound();
   const photos = PHOTOS[note.id] ?? [];
   const F = FIGURES[note.id];
+  const hasReel = !!F && (note.beats?.length ?? 0) >= 3;
   const next = BY_ORDER[note.order % BY_ORDER.length];
 
   return (
@@ -63,7 +65,10 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
       </header>
 
       <div className="work-figure" data-slot="reel">
-        <div className={WIDE.has(note.id) ? "work-fig-wide" : "work-fig-narrow"}>
+        {hasReel && (
+          <Reel beats={note.beats!} figure={F!} title={note.title} caption={note.figure} />
+        )}
+        <div id={hasReel ? "figure" : undefined} className={WIDE.has(note.id) ? "work-fig-wide" : "work-fig-narrow"}>
           {F ? (
             <Fig num="1" label={note.title} caption={note.figure}>
               <F />
