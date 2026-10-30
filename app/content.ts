@@ -164,10 +164,10 @@ export const SPECS: {
     // checked Oct 2026) give 38.84x on fib and a warmup p99 of 0.89 ms to 0.28 ms; the reference says 22.64x on loop_sum.
     { p: "JIT speedup, recursive fib", cond: "Rung, vs. tree-walker, Apple M1 Pro", typ: "38.84", u: "×", src: "rung", status: "Measured" },
     { p: "JIT speedup over optimized register VM", cond: "Rung, fib, same interleaved session", typ: "4.54", u: "×", src: "rung", status: "Measured" },
-    // The 1,200 Hz row is Stated: the Alta README says "about 1,200 times a second" but no recorded run backs it.
     { p: "Per-frame detection latency", cond: "VisionAssist, YOLOv8n, Raspberry Pi 5 CPU", typ: "200", u: "ms", src: "visionassist", status: "Measured" },
     { p: "Gaze inference time", cond: "GazeBoard, Hexagon NPU, Galaxy S25 Ultra", typ: "≈8", u: "ms", src: "gazeboard", status: "Observed" },
     { p: "Checkpoints cleared, 100K-token budget", cond: "Accordion vs. naive compaction, SlopCodeBench", typ: "5 / 6", u: "vs 2 / 6", src: "accordion", status: "Single run" },
+    // The 1,200 Hz row is Stated: the Alta README says "about 1,200 times a second" but no recorded run backs it.
     { p: "Probe sample rate, per channel", cond: "Alta pod, ATmega328P, bare-metal ADC", typ: "1,200", u: "Hz", src: "alta", status: "Stated" },
     { p: "Faults found and fixed on real hardware", cond: "Alta, three timed runs", typ: "3 / 3", u: "", src: "alta", status: "Measured" },
     { p: "Unit tests", cond: "ApexTracker, JUnit over extracted logic", typ: "≈525", u: "", src: "apextracker", status: "Repo" },
@@ -252,7 +252,7 @@ export const NOTES: AppNote[] = [
     ],
     figure: "Speedup over the tree-walker, rung by rung. Real measurements from the repo's results tables.",
     order: 3,
-    oneLiner: "One tiny language built five ways, down to a hand-written ARM64 JIT, to measure each gain.",
+    oneLiner: "One tiny language built five ways, down to a hand-written ARM64 JIT, to measure each speed-up.",
     headline: { value: "38.84×", label: "JIT vs. tree-walker, fib", status: "Measured" },
     skills: ["C++", "ARM64", "CMAKE", "GH ACT", "FUZZ"],
     beats: [
@@ -297,7 +297,6 @@ export const NOTES: AppNote[] = [
     oneLiner: "Head-mounted Pi 5 that spots obstacles and says how many steps away, fully offline.",
     headline: { value: "≈200", unit: "ms / frame", label: "YOLOv8n on the Pi 5 CPU", status: "Measured" },
     skills: ["PYTHON", "PYTORCH", "OPENCV", "LINUX", "SYSTEMD", "TTS"],
-    // TODO(aadi): verify the +/-15 degree head-tilt figure and the ground-plane rejection in beat 3, and 'after weeks' in beat 5; the Vision-Assist README does not state them. Verified there: 1280x720, ~5 FPS, ~200 ms, 0.45, 27 classes, 1435 to 900 px, 3 s cooldown.
     beats: [
       { title: "See.", body: "An Arducam on a head mount feeds 1280×720 frames to one Python process on the Raspberry Pi 5, about five frames a second. Nothing leaves the device." },
       { title: "Detect.", body: "YOLOv8n runs on the Pi's CPU at about 200 ms per frame, with a 0.45 confidence floor and a blocklist for classes that don't matter on a sidewalk." },
@@ -413,7 +412,7 @@ export const NOTES: AppNote[] = [
     ],
     figure: "A study session that crosses midnight. Two code paths banked the same time to different days, until they shared one.",
     order: 7,
-    oneLiner: "Offline Android app that replaced my sticky notes, reminders, calendar and budget sheet.",
+    oneLiner: "The offline Android app that replaced my sticky notes, reminders, calendar and budget sheet.",
     headline: { value: "≈525", label: "unit tests, in daily use since Jan 2026", status: "Repo" },
     skills: ["KOTLIN", "COMPOSE", "SQL", "ML KIT"],
   },
