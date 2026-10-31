@@ -11,15 +11,9 @@ export const LINKEDIN = "https://www.linkedin.com/in/aaditya-desai-12d";
 export const DEVPOST = "https://devpost.com/aadityad12";
 export const OSS = "https://oss.aadityad.dev";
 
-export type Status = "Measured" | "Observed" | "Single run" | "Repo" | "Stated";
-
-export const STATUS_HELP: Record<Status, string> = {
-  Measured: "A recorded result in the project repository.",
-  Observed: "Read live during the event, not logged.",
-  "Single run": "One benchmark run at hackathon scale.",
-  Repo: "A count you can check in the code.",
-  Stated: "My account; nothing public behind it.",
-};
+// Status lives in its own module so client figures can tag numbers without bundling this file.
+import type { Status } from "./status";
+export { STATUS_HELP, type Status } from "./status";
 
 export type Link = { label: string; href: string };
 export type Photo = { src: string; w: number; h: number; alt: string; cap: string };
