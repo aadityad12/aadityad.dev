@@ -41,7 +41,9 @@
 .beat .rung:not(.on) .val, .beat .rung:not(.on) .marg { visibility: hidden; }
 .beat .rung.hl { box-shadow: inset 2px 0 0 var(--accent); }
 .beat .rung.hl .name, .beat .rung.hl .val { color: var(--ink); font-weight: 600; }
-.beat .rung:not(.hl) .name { font-weight: 400; }
+.beat .rung:not(.hl) .name, .beat .rung:not(.hl) .val { font-weight: 400; }
+.beat .legend { flex-wrap: wrap; }
+.nw { white-space: nowrap; }
 /* The sticky Reel box is 44vh under 900px: tighten rows so all nine and the summary fit. */
 @media (max-width: 899px) {
   .beat { gap: 8px; }

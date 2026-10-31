@@ -130,7 +130,7 @@ export default function RungLadder({ beat }: FigureProps) {
               </span>
             )}
             <span className={s.legend}>
-              {isBeat && <>Tree-walker = {d.v[0].toFixed(2)}×</>}
+              {isBeat && <span className={s.nw}>Tree-walker = {d.v[0].toFixed(2)}×</span>}
               {(!isBeat || beat >= 4) && (d.fallback ? <><i className={s.kfb} /> ‡ JIT declined; the VM ran it</> : <><i className={s.kjit} /> native ARM64</>)}
               {(!isBeat || beat >= 3) && <><i className={s.kloss} /> slower than the rung below</>}
             </span>
