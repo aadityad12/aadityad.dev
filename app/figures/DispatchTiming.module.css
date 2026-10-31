@@ -1,0 +1,68 @@
+.root { display: flex; flex-direction: column; gap: 10px; container-type: inline-size; }
+.spacer { flex: 1; }
+.read { display: flex; flex-wrap: wrap; gap: 0; border: 1px solid var(--ink); background: var(--paper); font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-2); }
+.read > span { padding: 6px 10px; border-left: 1px solid var(--hair); }
+.read > span:first-child { border-left: 0; }
+.read b { color: var(--ink); font-weight: 600; font-size: 12px; margin-left: 4px; }
+.mode { min-width: 150px; }
+.mode.surge { background: var(--hot-wash); }
+.mode.surge b { color: var(--hot); }
+
+.plot { border: 1px solid var(--ink); background: var(--paper); }
+.svg { display: block; width: 100%; height: auto; font-family: var(--mono); }
+.grid { stroke: var(--hair-2); stroke-width: 1; }
+.ink { stroke: var(--ink); stroke-width: 1.25; }
+.base { stroke: var(--hair); stroke-width: 1; }
+.inj { stroke: var(--accent); stroke-width: 1.5; }
+.hv { stroke: var(--hot); stroke-width: 1.5; }
+.row { font-size: 10px; letter-spacing: 0.05em; fill: var(--ink); }
+.tick { font-size: 10px; fill: var(--muted); }
+.th { stroke: var(--hot); stroke-width: 1; stroke-dasharray: 4 3; }
+.thl { font-size: 10px; fill: var(--hot); letter-spacing: 0.04em; }
+.step { fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-linejoin: miter; }
+.dot { fill: var(--paper); stroke: var(--ink); stroke-width: 1.2; }
+.dotHot { fill: var(--hot); stroke: var(--hot); stroke-width: 1.2; }
+.wave { fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-linejoin: miter; }
+.surgeFill { fill: var(--hot-wash); }
+.st { font-size: 10px; fill: var(--ink-2); letter-spacing: 0.05em; }
+.stHot { font-size: 10px; fill: var(--hot); letter-spacing: 0.05em; font-weight: 600; }
+.dim path { fill: none; stroke: var(--ink-2); stroke-width: 1; }
+.dim text { font-size: 9.5px; fill: var(--ink-2); letter-spacing: 0.04em; }
+.holdW { fill: none; stroke: var(--ink); stroke-width: 1.5; }
+.holdOn { fill: var(--accent-wash); stroke: var(--accent); stroke-width: 1.5; }
+.endOk { font-size: 9.5px; fill: var(--ok); }
+.endHot { font-size: 9.5px; fill: var(--hot); }
+.now { stroke: var(--accent); stroke-width: 1; stroke-dasharray: 2 2; }
+
+.lower { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 10px; align-items: stretch; }
+.head { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid var(--ink); padding-bottom: 5px; margin-bottom: 6px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 8px; }
+.head span { color: var(--muted); font-size: 9.5px; }
+.log { border: 1px solid var(--ink); background: var(--paper); padding: 7px 9px; min-height: 172px; }
+.log ol { list-style: none; margin: 0; padding: 0; font-family: var(--mono); font-size: 11px; line-height: 1.3; }
+.log li { display: grid; grid-template-columns: 44px auto minmax(0, 1fr); gap: 8px; padding: 2.5px 0; border-top: 1px dashed var(--hair-2); }
+.log li:first-child { border-top: 0; }
+.log b { font-weight: 600; }
+.lt { color: var(--muted); text-align: right; }
+.li { color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.eMode { color: var(--hot); }
+.eHold { color: var(--accent); }
+.eOk { color: var(--ok); }
+.eHot { color: var(--hot); }
+.card { border: 1px dashed var(--ink-2); background: var(--paper); padding: 7px 9px 9px; display: flex; flex-direction: column; gap: 6px; }
+.card p { margin: 0; font-size: 12.5px; line-height: 1.4; color: var(--ink-2); }
+.card .head { margin-bottom: 0; }
+.cardOn { border: 1.5px solid var(--accent); }
+.head .unit { color: var(--accent); font-size: 10.5px; text-transform: none; }
+.cardOn .head { color: var(--accent); border-color: var(--accent); }
+.count { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-2); }
+.count b { font-size: 18px; color: var(--ink); margin-right: 4px; }
+.bar { height: 6px; border: 1px solid var(--ink); }
+.bar i { display: block; height: 100%; background: var(--accent); }
+
+@container (max-width: 540px) {
+  .lower { grid-template-columns: 1fr; }
+  .read > span { padding: 5px 7px; font-size: 10px; }
+  .mode { min-width: 0; }
+  .log { min-height: 0; }
+  .log li { grid-template-columns: 38px auto minmax(0, 1fr); gap: 6px; font-size: 10.5px; }
+}
