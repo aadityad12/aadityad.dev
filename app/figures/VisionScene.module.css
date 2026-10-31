@@ -58,3 +58,30 @@
   .tbl { font-size: 10.5px; }
   .tbl td, .tbl th { padding: 5px 4px; }
 }
+
+/* ---- reel beat mode (only applied when the Reel drives the figure) ---- */
+.beat { gap: 8px; }
+.beat .panels { --bh: calc(44vh - 134px); display: flex; justify-content: center; align-items: flex-start; gap: 14px; }
+.beat .panel { flex: 0 1 auto; }
+.beat .plan { height: min(var(--bh), calc((100cqi - 14px) / 1.35)); width: auto; aspect-ratio: 232 / 300; max-width: 100%; touch-action: pan-y; }
+.beat .frame { height: min(var(--bh), calc((100cqi - 14px) / 1.35)); width: auto; aspect-ratio: 900 / 1560; max-width: 100%; margin: 0; }
+.beat .obj { touch-action: none; }
+.beat .obj.sub { stroke: var(--hot) !important; }
+.beat .sub .ol { fill: var(--hot); }
+.beat .subBox { fill: var(--hot-wash); }
+.beat .ray { stroke: var(--hot); }
+.drop { fill: none; stroke: var(--muted); stroke-width: 5; stroke-dasharray: 14 10; }
+.dim line { stroke: var(--accent); stroke-width: 4; }
+.dim text { font-family: var(--mono); fill: var(--accent); }
+.info { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; min-height: 56px; }
+.info .formula { flex: 1 1 100%; padding: 5px 8px; font-size: 12px; }
+.tagChip { font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em; color: var(--ink); border: 1px solid var(--ink); padding: 3px 7px; background: var(--paper); }
+.simBm { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.03em; }
+.sayBm { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; flex: 1 1 100%; }
+.sayBm .msg { font-size: clamp(13px, 3.6cqi, 18px); display: inline-flex; align-items: center; gap: 6px; }
+.spk { width: 1.1em; height: 1.1em; flex: none; fill: none; stroke: currentColor; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+.noteBm { display: none; }
+@media (min-width: 900px) {
+  .beat .panels { --bh: min(54vh, 480px); }
+  .noteBm { display: block; }
+}
