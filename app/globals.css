@@ -271,12 +271,13 @@ a:hover { color: var(--accent-ink); }
 .dt tbody tr:hover td { background: var(--accent-wash); }
 .dt a { text-decoration: none; font-family: var(--mono); font-size: 12px; }
 .dt a:hover { text-decoration: underline; }
+/* Tag text uses darker shades of --ok, --amber and --muted so 10px labels reach 4.5:1 on --bg. */
 .tag { display: inline-block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase; padding: 2px 6px; border: 1px solid currentColor; white-space: nowrap; }
-.tag.measured { color: var(--ok); }
-.tag.observed { color: var(--amber); }
-.tag.single { color: var(--amber); }
+.tag.measured { color: #0a6e3f; }
+.tag.observed { color: #7d5200; }
+.tag.single { color: #7d5200; }
 .tag.repo { color: var(--ink-2); }
-.tag.stated { color: var(--muted); border-style: dashed; border-color: var(--hair); }
+.tag.stated { color: #5f5d56; border-style: dashed; border-color: var(--hair); }
 .pin-type { font-family: var(--mono); font-size: 11px; }
 .uses a { margin-right: 8px; }
 .spec-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; }
@@ -459,7 +460,7 @@ main.brief .actions { margin-top: 24px; }
 main.brief .brief-chip { min-width: 0; }
 main.brief .brief-chip .chip-wrap { max-width: 520px; }
 main.brief .brief-cap { margin: 8px auto 0; max-width: 520px; font-family: var(--mono); font-size: 12px; line-height: 1.45; color: #58564f; }
-main.brief .brief-cap a { color: var(--ink-2); }
+main.brief .brief-cap a { color: var(--ink-2); text-decoration: underline; text-underline-offset: 2px; }
 main.brief .brief-cap-touch { display: none; }
 
 .chip-svg .pin.pick { cursor: pointer; }
@@ -659,7 +660,7 @@ main.work { max-width: 1080px; margin: 0 auto; padding: 0 var(--pad) clamp(40px,
 .reel-figure .fig-bar { display: none; }
 .reel-figure .fig-body { padding: 8px; }
 .reel-beats { list-style: none; margin: 20px 0 0; padding: 0; display: grid; gap: 28px; }
-.beat { color: var(--muted); }
+.beat { color: #5f5d56; } /* darker than --muted so inactive beats keep 4.5:1 */
 .beat[aria-current="step"] { color: var(--ink); }
 .beat-n { display: block; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.07em; }
 .beat h3 { margin: 4px 0 6px; font-size: clamp(22px, 5.5vw, 28px); font-weight: 700; line-height: 1.12; letter-spacing: -0.02em; }

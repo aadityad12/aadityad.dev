@@ -197,7 +197,7 @@ export default function Chip({ activePin, selectedPin, onHoverPin, onSelectPin }
                 <rect x={x - (horiz ? 0 : 8)} y={y - (horiz ? 8 : 0)} width={w + (horiz ? 0 : 16)} height={h + (horiz ? 16 : 0)} fill="transparent" />
                 <rect className="lead" x={x} y={y} width={w} height={h} fill="url(#lead)" />
                 {lbl}
-                <text className="num" x={nIn.x} y={nIn.y} textAnchor={nIn.a as "start" | "end" | "middle"} style={{ fill: "#6d6d68" }}>{pin.n}</text>
+                <text className="num" aria-hidden="true" x={nIn.x} y={nIn.y} textAnchor={nIn.a as "start" | "end" | "middle"} style={{ fill: "#6d6d68" }}>{pin.n}</text>
               </g>
             );
           })}
