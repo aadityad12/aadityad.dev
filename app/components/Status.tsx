@@ -1,4 +1,4 @@
-import { STATUS_HELP, type Status as StatusName } from "../content";
+import { STATUS_HELP, type Status as StatusName } from "../status";
 
 const CLASS: Record<StatusName, string> = {
   Measured: "measured",
