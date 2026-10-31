@@ -24,12 +24,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const note = NOTES.find((n) => n.id === slug);
   if (!note) return {};
   const url = `/work/${note.id}/`;
-  const title = `${note.title} · Aaditya Desai`;
+  const image = { url: `/og/work/${note.id}.png`, width: 1200, height: 630, alt: `${note.title}: ${note.hook}` };
   return {
-    title,
+    title: note.title,
     description: note.hook,
     alternates: { canonical: url },
-    openGraph: { title, description: note.hook, url },
+    openGraph: { title: `${note.title} · Aaditya Desai`, description: note.hook, url, siteName: "Aaditya Desai", type: "website", images: [image] },
+    twitter: { card: "summary_large_image", title: `${note.title} · Aaditya Desai`, description: note.hook, images: [image.url] },
   };
 }
 
