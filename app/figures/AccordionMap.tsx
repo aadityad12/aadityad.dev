@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import Status from "../components/Status";
 import { commas, mulberry32, useReducedMotion } from "./hooks";
+import type { FigureProps } from ".";
 import s from "./AccordionMap.module.css";
 
 type Kind = "user" | "think" | "call" | "result" | "reply";
@@ -58,7 +60,41 @@ const k = (n: number) => (n >= 1000 ? `${(n / 1000).toFixed(1)}k` : `${n}`);
 
 type Mode = "live" | "compact";
 
-export default function AccordionMap() {
+// What the Reel shows. The folded set is the conductor's rule (lowest relevance first, stop at the
+// target) run once on the seeded session, so every load folds the same blocks.
+const BEAT_TARGET = BUDGET * 0.72;
+const SHORTLIST = 3;
+const BEAT_TEXT = [
+  "A long session fills the window and goes over budget. Every block is shown at full size.",
+  "Stale blocks fold into thin slivers in place. The newest blocks sit in a protected tail that never folds. The budget bar drops under the limit.",
+  "One folded block is chosen from a shortlist of three, ranked by cross-encoder rerank score, and unfolds.",
+  "A health strip reports whether folding helped. Its values are illustrative.",
+];
+
+function planBeats(blocks: Block[], tailStart: number) {
+  const order = blocks.slice(0, tailStart).sort((a, b) => a.rel - b.rel);
+  let cur = blocks.reduce((a, b) => a + b.tokens, 0);
+  const folded: Block[] = [];
+  for (const b of order) {
+    if (cur <= BEAT_TARGET) break;
+    folded.push(b);
+    cur -= b.tokens - DIGEST;
+  }
+  const shortlist = [...folded].sort((a, b) => b.rel - a.rel).slice(0, SHORTLIST);
+  return { folded: new Set(folded.map((b) => b.id)), shortlist };
+}
+
+function Legend({ className }: { className: string }) {
+  return (
+    <div className={className} aria-hidden="true">
+      {(Object.keys(KIND_NAME) as Kind[]).map((kk) => (
+        <span key={kk}><i className={`${s.sw} ${s[kk]}`} />{KIND_NAME[kk]}</span>
+      ))}
+    </div>
+  );
+}
+
+export default function AccordionMap({ beat }: FigureProps = {}) {
   const blocks = useMemo(() => makeSession(), []);
   const tailStart = useMemo(() => {
     let sum = 0;
@@ -68,6 +104,8 @@ export default function AccordionMap() {
     }
     return 0;
   }, [blocks]);
+  const plan = useMemo(() => planBeats(blocks, tailStart), [blocks, tailStart]);
+  const inBeat = typeof beat === "number";
   const [folded, setFolded] = useState<Set<number>>(() => new Set());
   const [mode, setMode] = useState<Mode>("live");
   const [stage, setStage] = useState(-1);
@@ -84,8 +122,17 @@ export default function AccordionMap() {
   const total = blocks.reduce((a, b) => a + b.tokens, 0);
   const histTokens = history.reduce((a, b) => a + b.tokens, 0);
   const tailTokens = total - histTokens;
+  // In a beat the folded set comes from the plan; the chosen block is back by beat 2.
+  const chosen = plan.shortlist[0]?.id;
+  const beatFolded = useMemo(() => {
+    if (!inBeat || beat === 0) return new Set<number>();
+    const f = new Set(plan.folded);
+    if (beat >= 2 && chosen !== undefined) f.delete(chosen);
+    return f;
+  }, [inBeat, beat, plan, chosen]);
+  const shown = inBeat ? beatFolded : folded;
   const inView =
-    mode === "compact" ? tailTokens + 1800 : blocks.reduce((a, b) => a + (folded.has(b.id) ? DIGEST : b.tokens), 0);
+    mode === "compact" && !inBeat ? tailTokens + 1800 : blocks.reduce((a, b) => a + (shown.has(b.id) ? DIGEST : b.tokens), 0);
   const over = inView > BUDGET;
   const recoverable = mode === "compact" ? 0 : history.length;
 
@@ -158,6 +205,81 @@ export default function AccordionMap() {
       </button>
     );
   };
+
+  // Beat mode: plain, non-interactive squares. A folded block shrinks to a sliver inside its cell.
+  const beatCell = (b: Block) => {
+    const f = beatFolded.has(b.id);
+    const pulse = beat === 2 && b.id === chosen;
+    return (
+      <span key={b.id} className={s.cellW} aria-hidden="true">
+        <span className={`${s.blk} ${s.flat} ${s[b.kind]} ${f ? s.sliver : ""} ${pulse ? s.pulse : ""}`}>
+          <svg viewBox="0 0 4 4">
+            {PIPS[dice(b.tokens)].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="0.42" />)}
+          </svg>
+        </span>
+      </span>
+    );
+  };
+
+  if (inBeat) {
+    const b = Math.min(Math.max(beat, 0), BEAT_TEXT.length - 1);
+    return (
+      <div className={`${s.root} ${s.beatRoot}`} data-beat={b}>
+        <p className="visually-hidden">{BEAT_TEXT[b]}</p>
+        <div className={s.meter}>
+          <div className={s.meterTop}>
+            <span className="lbl">Tokens the agent sees</span>
+            <span className={`readout ${over ? s.overTxt : ""}`}>
+              <b>{commas(inView)}</b> / {commas(BUDGET)} budget
+              <span className={s.state}>{over ? " · over" : " · within"}</span>
+            </span>
+          </div>
+          <div className={s.bar}>
+            <span className={`${s.fill} ${over ? s.over : ""}`} style={{ width: `${Math.min(100, (inView / (BUDGET * 1.5)) * 100).toFixed(2)}%` }} />
+            <span className={s.budget} style={{ left: `${(100 / 1.5).toFixed(2)}%` }} />
+          </div>
+        </div>
+
+        <div className={s.grid} aria-hidden="true">{history.map(beatCell)}</div>
+        <div className={s.tailBracket} aria-hidden="true">
+          <span className={s.tailLbl2}>Protected tail · never folded</span>
+          <div className={s.grid}>{tail.map(beatCell)}</div>
+        </div>
+
+        <div className={s.slot}>
+          {b === 0 && <Legend className={`${s.legend} ${s.legendNarrow}`} />}
+          {b === 2 && (
+            <div className={s.short} aria-hidden="true">
+              <span className="lbl">Unfold shortlist · cross-encoder rerank · simulated scores</span>
+              <ol>
+                {plan.shortlist.map((c, i) => (
+                  <li key={c.id} className={i === 0 ? s.pick : ""}>
+                    <i className={`${s.sw} ${s[c.kind]}`} />
+                    <span>{KIND_NAME[c.kind]}</span>
+                    <span className={s.dim}>{c.label}</span>
+                    <b>{c.rel.toFixed(2)}</b>
+                    {i === 0 && <em>unfolded</em>}
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )}
+          {b === 3 && (
+            <div className={s.health}>
+              <span className="lbl">Health · illustrative</span>
+              {/* TODO(aadi): illustrative values in the beat 3 health strip; replace with real numbers or confirm */}
+              <ul>
+                <li><span>Health: OK</span><Status s="Stated" /></li>
+                <li><span>Needed-fold rate 0.18</span><Status s="Stated" /></li>
+                <li><span>vs. naive compaction: +2 facts retained</span><Status s="Stated" /></li>
+              </ul>
+            </div>
+          )}
+        </div>
+        <Legend className={`${s.legend} ${s.legendWide}`} />
+      </div>
+    );
+  }
 
   const hb = hover;
   const hFolded = hb && folded.has(hb.id) && mode === "live";

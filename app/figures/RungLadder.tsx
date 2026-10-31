@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { useInView, useReducedMotion } from "./hooks";
+import type { FigureProps } from "./index";
 import s from "./RungLadder.module.css";
 
 // From the repo's generated results tables (median process total ÷ calls, Apple M1 Pro).
@@ -29,11 +30,25 @@ const DATA: Record<string, { v: number[]; fallback: boolean }> = {
 const BENCHES = Object.keys(DATA);
 const MAX = 50;
 const TICKS = [1, 2, 5, 10, 20, 40];
+
+// Reel beat -> what the chart shows. Only visibility changes; every number stays in DATA.
+const BEAT_STATE: { show: string[]; hl: string | null }[] = [
+  { show: ["01_tree"], hl: null },
+  { show: ["01_tree", "02_stack", "03_goto"], hl: "02_stack" },
+  { show: ["01_tree", "02_stack", "03_goto", "05_register", "06_super"], hl: "05_register" },
+  { show: ["01_tree", "02_stack", "03_goto", "04_nanbox", "05_register", "06_super"], hl: "04_nanbox" },
+  { show: RUNGS.map((r) => r.id), hl: "09_jit" },
+];
+
 const pct = (v: number) => +((Math.log(v) / Math.log(MAX)) * 100).toFixed(2);
 
-export default function RungLadder() {
-  const [bench, setBench] = useState("fib");
-  const [view, setView] = useState<"chart" | "term">("chart");
+export default function RungLadder({ beat }: FigureProps) {
+  const isBeat = typeof beat === "number";
+  const state = isBeat ? BEAT_STATE[Math.min(Math.max(beat, 0), BEAT_STATE.length - 1)] : null;
+  const [benchPick, setBench] = useState("fib");
+  const bench = isBeat ? "fib" : benchPick;
+  const [viewPick, setView] = useState<"chart" | "term">("chart");
+  const view = isBeat ? "chart" : viewPick;
   const [climb, setClimb] = useState(RUNGS.length);
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref);
@@ -46,11 +61,11 @@ export default function RungLadder() {
   };
 
   useEffect(() => {
-    if (inView && !played.current && !reduced) {
+    if (inView && !played.current && !reduced && !isBeat) {
       played.current = true;
       setClimb(0);
     }
-  }, [inView, reduced]);
+  }, [inView, reduced, isBeat]);
 
   useEffect(() => {
     if (climb >= RUNGS.length) return;
@@ -62,8 +77,8 @@ export default function RungLadder() {
   const top = d.v[d.v.length - 1];
 
   return (
-    <div ref={ref} className={s.root}>
-      <div className="ctl" role="group" aria-label="Benchmark">
+    <div ref={ref} className={`${s.root} ${isBeat ? s.beat : ""} ${reduced ? s.still : ""}`}>
+      {!isBeat && <div className="ctl" role="group" aria-label="Benchmark">
         {BENCHES.map((b) => (
           <button key={b} className="btn" aria-pressed={bench === b && view === "chart"} onClick={() => { setBench(b); setView("chart"); runClimb(); }}>
             {b}
@@ -73,7 +88,7 @@ export default function RungLadder() {
         <button className="btn" aria-pressed={view === "term"} onClick={() => setView(view === "term" ? "chart" : "term")}>
           {view === "term" ? "Chart" : "Watch it run"}
         </button>
-      </div>
+      </div>}
 
       {view === "chart" ? (
         <div className={s.chart} aria-label={`Speedup over the tree-walker on ${bench}`}>
@@ -89,9 +104,10 @@ export default function RungLadder() {
               const marg = v / prev;
               const loss = i > 0 && marg < 0.995;
               const fb = i === RUNGS.length - 1 && d.fallback;
-              const shown = i < climb;
+              const shown = state ? state.show.includes(r.id) : i < climb;
+              const hl = state?.hl === r.id;
               return (
-                <li key={r.id} className={`${s.rung} ${shown ? s.on : ""} ${i === climb - 1 ? s.cur : ""}`}>
+                <li key={r.id} className={`${s.rung} ${shown ? s.on : ""} ${!state && i === climb - 1 ? s.cur : ""} ${hl ? s.hl : ""}`}>
                   <span className={s.id}>{r.id.slice(0, 2)}</span>
                   <span className={s.name}>{r.name}</span>
                   <span className={s.track}>
@@ -108,15 +124,18 @@ export default function RungLadder() {
             })}
           </ol>
           <div className={s.read}>
-            <span className="readout">
-              <b>{bench}</b>: tree-walker → {d.fallback ? "JIT build" : "ARM64 JIT"} = <b>{top.toFixed(2)}×</b>
-            </span>
+            {(!isBeat || beat >= 4) && (
+              <span className="readout">
+                <b>{bench}</b>: tree-walker → {d.fallback ? "JIT build" : "ARM64 JIT"} = <b>{top.toFixed(2)}×</b>
+              </span>
+            )}
             <span className={s.legend}>
-              {d.fallback ? <><i className={s.kfb} /> ‡ JIT declined; the VM ran it</> : <><i className={s.kjit} /> native ARM64</>}
-              <i className={s.kloss} /> slower than the rung below
+              {isBeat && <span className={s.nw}>Tree-walker = {d.v[0].toFixed(2)}×</span>}
+              {(!isBeat || beat >= 4) && (d.fallback ? <><i className={s.kfb} /> ‡ JIT declined; the VM ran it</> : <><i className={s.kjit} /> native ARM64</>)}
+              {(!isBeat || beat >= 3) && <><i className={s.kloss} /> slower than the rung below</>}
             </span>
           </div>
-          <button className="btn" onClick={runClimb} style={{ marginTop: 10 }}>Climb again ↑</button>
+          {!isBeat && <button className="btn" onClick={runClimb} style={{ marginTop: 10 }}>Climb again ↑</button>}
         </div>
       ) : (
         <div className={s.term}>

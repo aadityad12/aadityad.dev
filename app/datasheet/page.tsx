@@ -29,10 +29,16 @@ import {
   SPECS,
 } from "../content";
 
+const title = "AD2028 Datasheet";
+const description = "The long version: every project, number and limitation on one printable page.";
+const image = { url: "/og/datasheet.png", width: 1200, height: 630, alt: "AD2028 Datasheet: Aaditya Desai, computer engineering at SJSU" };
+
 export const metadata: Metadata = {
-  title: "AD2028 Datasheet · Aaditya Desai",
-  description:
-    "Computer engineering student at SJSU building from the metal up: an ARM64 JIT, bare-metal firmware, on-device vision, and tools for AI agents. Available for Summer 2027 internships.",
+  title,
+  description,
+  alternates: { canonical: "/datasheet/" },
+  openGraph: { title: `${title} · Aaditya Desai`, description, url: "/datasheet/", siteName: "Aaditya Desai", type: "website", images: [image] },
+  twitter: { card: "summary_large_image", title: `${title} · Aaditya Desai`, description, images: [image.url] },
 };
 
 const noteById = (id: string) => NOTES.find((n) => n.id === id)!;
