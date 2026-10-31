@@ -1,0 +1,141 @@
+{
+  "hero": {
+    "lead": "I build from the metal up: an ARM64 JIT compiler, bare-metal firmware, on-device vision, and tools for AI agents."
+  },
+  "proof": [
+    {
+      "big": "Infineon",
+      "small": "Research intern and technical lead"
+    },
+    {
+      "big": "Winner",
+      "small": "Sponsor Track, UC Berkeley AI Hackathon 2026"
+    },
+    {
+      "big": "38.84×",
+      "small": "my ARM64 JIT vs. the interpreter",
+      "status": "Measured"
+    },
+    {
+      "big": "3.8 GPA",
+      "small": "Dean's Scholar, SJSU"
+    }
+  ],
+  "notes": [
+    {
+      "id": "accordion",
+      "an": "AN-01",
+      "title": "Accordion",
+      "hook": "Lets an AI coding agent forget without losing anything.",
+      "headline": {
+        "value": "240+",
+        "unit": "★",
+        "label": "team repo, Oct 2026",
+        "status": "Repo"
+      }
+    },
+    {
+      "id": "rung",
+      "an": "AN-02",
+      "title": "Rung",
+      "hook": "One small language, built five ways, down to hand-written ARM64 machine code.",
+      "headline": {
+        "value": "38.84×",
+        "label": "JIT vs. tree-walker, fib",
+        "status": "Measured"
+      }
+    },
+    {
+      "id": "visionassist",
+      "an": "AN-03",
+      "title": "VisionAssist",
+      "hook": "A wearable that tells a blind user what is ahead, and how many steps away.",
+      "headline": {
+        "value": "≈200",
+        "unit": "ms / frame",
+        "label": "YOLOv8n on the Pi 5 CPU",
+        "status": "Measured"
+      }
+    },
+    {
+      "id": "gazeboard",
+      "an": "AN-04",
+      "title": "GazeBoard",
+      "hook": "Lets someone who can't speak or use their hands talk by looking at a phone.",
+      "headline": {
+        "value": "≈8",
+        "unit": "ms",
+        "label": "per inference, Hexagon NPU",
+        "status": "Observed"
+      }
+    },
+    {
+      "id": "alta",
+      "an": "AN-05",
+      "title": "Alta",
+      "hook": "A voice lab TA that measures your breadboard and walks you to the fault.",
+      "headline": {
+        "value": "≈1,200",
+        "unit": "Hz",
+        "label": "per probe, bare-metal ADC",
+        "status": "Stated"
+      }
+    },
+    {
+      "id": "apextracker",
+      "an": "AN-06",
+      "title": "ApexTracker",
+      "hook": "One offline app that replaced my sticky notes, three reminder apps, a calendar and a spreadsheet.",
+      "headline": {
+        "value": "≈525",
+        "label": "unit tests, in daily use since Jan 2026",
+        "status": "Repo"
+      }
+    },
+    {
+      "id": "echo",
+      "an": "AN-07",
+      "title": "Echo",
+      "hook": "Emergency alerts that travel phone to phone when the network is down.",
+      "headline": {
+        "value": "0",
+        "label": "internet needed after the first phone has the alert",
+        "status": "Repo"
+      }
+    },
+    {
+      "id": "oss-scout",
+      "an": "AN-08",
+      "title": "OSS Scout",
+      "hook": "An agent that prepares open-source fixes every night, and can't post a thing without my tap.",
+      "headline": {
+        "value": "2",
+        "label": "PRs merged upstream (9.8k★ and 380★ repos)",
+        "status": "Repo"
+      }
+    },
+    {
+      "id": "temper",
+      "an": "AN-09",
+      "title": "Temper",
+      "hook": "Finds where an agent's own prompts and tools make it worse, then patches them.",
+      "headline": {
+        "value": "6",
+        "label": "judged dimensions, offline-reproducible loop",
+        "status": "Repo"
+      }
+    },
+    {
+      "id": "clear-dispatch",
+      "an": "AN-10",
+      "title": "Clear Dispatch",
+      "hook": "Automation handles the volume of 911 calls. A human keeps the authority.",
+      "headline": {
+        "value": "60",
+        "unit": "s",
+        "label": "human hold before any heavy asset moves",
+        "status": "Repo"
+      }
+    }
+  ]
+}

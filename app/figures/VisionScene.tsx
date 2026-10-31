@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
-import { useInView } from "./hooks";
+import { useEffect, useId, useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
+import type { FigureProps } from ".";
+import { useInView, useReducedMotion } from "./hooks";
 import s from "./VisionScene.module.css";
 
 type Tier = "High" | "Medium" | "Low";
@@ -27,6 +28,28 @@ const CLIP_FT = (CAM * F) / (FH - HZ) / FT;
 const HALF_FOV = Math.atan(FW / 2 / F);
 const RANK: Record<Tier, number> = { High: 0, Medium: 1, Low: 2 };
 const TIER_C: Record<Tier, string> = { High: "var(--ink)", Medium: "var(--amber)", Low: "var(--muted)" };
+
+// Reel beats: which layers each beat reveals. Later beats keep what earlier ones showed,
+// except `drop` and `formula`, which belong to their own beat only.
+type Layers = { boxes: boolean; drop: boolean; distances: boolean; formula: boolean; risk: boolean; zones: boolean; announce: boolean };
+const NONE: Layers = { boxes: false, drop: false, distances: false, formula: false, risk: false, zones: false, announce: false };
+const LAYERS: Layers[] = [
+  NONE,
+  { ...NONE, boxes: true, drop: true },
+  { ...NONE, boxes: true, drop: true, distances: true, formula: true },
+  { ...NONE, boxes: true, distances: true, risk: true, zones: true },
+  { ...NONE, boxes: true, distances: true, risk: true, zones: true, announce: true },
+];
+const TAGS = ["1280×720 · ~5 FPS", "YOLOv8n · ≈200 ms"];
+// TODO(aadi): the "dropped (0.41)" box is an illustration of the 0.45 confidence floor, not a real detection; confirm it reads that way.
+const DROP = { x: 560, y: 780, w: 125, h: 150, conf: 0.41 };
+// Frame rows where the floor reaches 9 ft and 6 ft (same pinhole model as analyse()).
+const rowAt = (ft: number) => HZ + (CAM * F) / (ft * FT);
+const BANDS = [
+  { id: "SAFE", label: "> 9 FT", from: HZ, to: rowAt(9), c: "var(--ok)" },
+  { id: "CAUTION", label: "6–9 FT", from: rowAt(9), to: rowAt(6), c: "var(--amber)" },
+  { id: "WARNING", label: "< 6 FT", from: rowAt(6), to: FH, c: "var(--hot)" },
+] as const;
 
 const n2 = (v: number) => +v.toFixed(2);
 const PX = (x: number) => n2(100 + x * 20);
@@ -70,7 +93,17 @@ function Glyph({ cls }: { cls: string }) {
 
 const arc = (ft: number) => `M ${PX(-ft)} ${PY(0)} A ${ft * 20} ${ft * 20} 0 0 1 ${PX(ft)} ${PY(0)}`;
 
-export default function VisionScene() {
+export default function VisionScene({ beat }: FigureProps) {
+  const bm = typeof beat === "number";
+  const L = bm ? LAYERS[Math.min(Math.max(beat, 0), LAYERS.length - 1)] : null;
+  const rm = useReducedMotion();
+  const uid = useId().replace(/[^a-zA-Z0-9_-]/g, "");
+  const ids = { plan: `vs-plan-${uid}`, hatch: `vs-hatch-${uid}`, frame: `vs-frame-${uid}`, margin: `vs-margin-${uid}` };
+  // Layer fade: 240 ms opacity in beat mode, none under reduced motion.
+  const fade = bm && !rm ? "opacity 240ms, stroke 240ms, fill 240ms" : undefined;
+  const lay = (on: boolean, children: ReactNode, key?: string) =>
+    bm ? <g key={key} style={{ opacity: on ? 1 : 0, transition: fade, pointerEvents: on ? undefined : "none" }} aria-hidden={on ? undefined : true}>{children}</g> : children;
+  const k = bm ? 1.5 : 1;
   const [objs, setObjs] = useState(START);
   const [active, setActive] = useState("chair");
   const [focus, setFocus] = useState<string | null>(null);
@@ -152,46 +185,73 @@ export default function VisionScene() {
   const visTop = (r: Row) => Math.max(r.top, 0);
   const visBot = (r: Row) => Math.min(r.base, FH);
   const actVis = act.vis;
+  const L0 = L ?? { ...NONE, boxes: true, drop: false, distances: true, formula: true, risk: true, zones: true, announce: true };
+  const subId = !bm || L0.risk ? subject?.o.id : undefined;
+
+  const readout = (
+    <>
+      <span className="lbl">d = H · f / h</span>
+      {bm && <span className="readout">f = 900 px</span>}
+      <span className="readout">
+        <b>{act.o.cls}</b> {act.o.H.toFixed(2)} m × 900 px / {act.detected ? `${Math.round(actVis)} px` : "—"} ={" "}
+        <b>{!act.detected ? "not in frame" : act.suppressed ? "suppressed (edge clip)" : `${act.estFt.toFixed(1)} ft`}</b>
+        {act.detected && act.clipped && (
+          <span className={s.warn}> · true {act.trueFt.toFixed(1)} ft ⚠ partial view</span>
+        )}
+      </span>
+    </>
+  );
+  const msgLine = msg ? `«${msg}»` : "— silent —";
 
   return (
-    <div ref={root} className={s.root}>
+    <div ref={root} className={`${s.root} ${bm ? s.beat : ""}`}>
       <div className={s.panels}>
         <div className={s.panel}>
-          <div className={s.head}><span>A · Top view, hallway</span><span>ft</span></div>
+          <div className={s.head}><span>{bm ? "A · Top view" : "A · Top view, hallway"}</span>{!bm && <span>ft</span>}</div>
           <svg ref={svg} viewBox="0 0 232 300" className={s.plan} role="img" aria-label="Top-down floor plan with the wearer at the bottom, distance zones, and draggable obstacles">
             <defs>
-              <clipPath id="vs-plan"><rect x="20" y="0" width="160" height="300" /></clipPath>
-              <pattern id="vs-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <clipPath id={ids.plan}><rect x="20" y="0" width="160" height="300" /></clipPath>
+              <pattern id={ids.hatch} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
                 <line x1="0" y1="0" x2="0" y2="6" stroke="var(--ink)" strokeWidth="1" />
               </pattern>
             </defs>
-            <rect x="12" y="0" width="8" height="300" fill="url(#vs-hatch)" opacity="0.35" />
-            <rect x="180" y="0" width="6" height="300" fill="url(#vs-hatch)" opacity="0.35" />
+            <rect x="12" y="0" width="8" height="300" fill={`url(#${ids.hatch})`} opacity="0.35" />
+            <rect x="180" y="0" width="6" height="300" fill={`url(#${ids.hatch})`} opacity="0.35" />
             <line x1="20" y1="0" x2="20" y2="300" className={s.wall} />
             <line x1="180" y1="0" x2="180" y2="300" className={s.wall} />
-            <g clipPath="url(#vs-plan)">
-              <path d={`${arc(9)} Z`} fill="var(--amber)" opacity="0.06" />
-              <path d={`${arc(6)} Z`} fill="var(--hot)" opacity="0.07" />
-              <path d={arc(9)} className={s.ring} />
-              <path d={arc(6)} className={`${s.ring} ${s.ringHot}`} />
-              <path d={arc(CLIP_FT)} className={s.clipRing} />
+            <g clipPath={`url(#${ids.plan})`}>
+              {lay(L0.zones, <>
+                <path d={`${arc(9)} Z`} fill="var(--amber)" opacity="0.06" />
+                <path d={`${arc(6)} Z`} fill="var(--hot)" opacity="0.07" />
+                <path d={arc(9)} className={s.ring} />
+                <path d={arc(6)} className={`${s.ring} ${s.ringHot}`} />
+              </>, "rings")}
+              {!bm && <path d={arc(CLIP_FT)} className={s.clipRing} />}
               <polygon points={`${fov(-1)} ${fov(1).split(" ")[1]}`} fill="var(--accent)" opacity="0.05" />
               <polyline points={fov(-1)} className={s.fov} />
               <polyline points={fov(1)} className={s.fov} />
             </g>
-            {([["SAFE", "> 9 FT", 10.2, ""], ["CAUTION", "6–9 FT", 7.2, ""], ["WARNING", "< 6 FT", 5.2, s.zlHot], ["EDGE CLIP", `≈${CLIP_FT.toFixed(1)} FT`, 2.6, ""]] as const).map(([a, b, y, c]) => (
-              <text key={a} x="190" y={PY(y)} className={`${s.zl} ${c}`}>
-                <tspan x="190">{a}</tspan>
-                <tspan x="190" dy="8" className={s.zs}>{b}</tspan>
+            {lay(L0.zones, <>
+              {([["SAFE", "> 9 FT", 10.2, ""], ["CAUTION", "6–9 FT", 7.2, ""], ["WARNING", "< 6 FT", 5.2, s.zlHot]] as const).map(([a, b, y, c]) => (
+                <text key={a} x="190" y={PY(y)} className={`${s.zl} ${c}`}>
+                  <tspan x="190">{a}</tspan>
+                  <tspan x="190" dy="8" className={s.zs}>{b}</tspan>
+                </text>
+              ))}
+            </>, "zl")}
+            {!bm && (
+              <text x="190" y={PY(2.6)} className={s.zl}>
+                <tspan x="190">EDGE CLIP</tspan>
+                <tspan x="190" dy="8" className={s.zs}>{`≈${CLIP_FT.toFixed(1)} FT`}</tspan>
               </text>
-            ))}
+            )}
             {[2, 4, 6, 8, 10, 12, 14].map((f) => (
               <g key={f}>
                 <line x1="20" x2="25" y1={PY(f)} y2={PY(f)} className={s.tick} />
                 <text x="9" y={PY(f) + 2.5} className={s.zs} textAnchor="middle">{f}</text>
               </g>
             ))}
-            {subject && <line x1={PX(0)} y1={PY(0)} x2={PX(subject.o.x)} y2={PY(subject.o.y)} className={s.ray} />}
+            {subject && lay(L0.risk, <line x1={PX(0)} y1={PY(0)} x2={PX(subject.o.x)} y2={PY(subject.o.y)} className={s.ray} />, "ray")}
             <g transform={`translate(${PX(0)} ${PY(0)})`} className={s.head0}>
               <ellipse rx="9" ry="10.5" />
               <path d="M -3 -10 L 0 -15 L 3 -10" />
@@ -200,7 +260,8 @@ export default function VisionScene() {
             </g>
             {rows.map((r) => {
               const o = r.o;
-              const sub = subject?.o.id === o.id;
+              const sub = subId === o.id;
+              const fadeOut = bm && L0.risk && subject && !sub;
               const left = o.x < 0 ? o.x > -2.2 : o.x > 2.2;
               const lx = (o.cls === "cup" ? 10 : 22) * (left ? -1 : 1);
               return (
@@ -208,7 +269,7 @@ export default function VisionScene() {
                   key={o.id}
                   transform={`translate(${PX(o.x)} ${PY(o.y)})`}
                   className={`${s.obj} ${r.detected ? "" : s.out} ${sub ? s.sub : ""}`}
-                  style={{ stroke: TIER_C[o.tier] }}
+                  style={{ stroke: !bm || L0.risk ? TIER_C[o.tier] : "var(--ink)", ...(bm ? { opacity: fadeOut ? 0.5 : undefined, transition: fade } : null) }}
                   tabIndex={0}
                   role="button"
                   data-keys
@@ -224,8 +285,8 @@ export default function VisionScene() {
                   <circle r="20" className={s.hit} />
                   {(focus === o.id || sub) && <rect x="-21" y="-21" width="42" height="42" className={focus === o.id ? s.focus : s.subBox} />}
                   <Glyph cls={o.cls} />
-                  <text x={lx} y="-3" textAnchor={left ? "end" : "start"} className={s.ol}>{o.cls.toUpperCase()}</text>
-                  <text x={lx} y="7" textAnchor={left ? "end" : "start"} className={s.zs}>{r.detected ? `${r.trueFt.toFixed(1)} ft` : "out of view"}</text>
+                  {lay(L0.boxes, <text x={lx} y="-3" textAnchor={left ? "end" : "start"} className={s.ol}>{o.cls.toUpperCase()}</text>, "ol")}
+                  {lay(L0.distances, <text x={lx} y="7" textAnchor={left ? "end" : "start"} className={s.zs}>{r.detected ? `${r.trueFt.toFixed(1)} ft` : "out of view"}</text>, "ft")}
                 </g>
               );
             })}
@@ -238,38 +299,70 @@ export default function VisionScene() {
         </div>
 
         <div className={s.panel}>
-          <div className={s.head}><span>B · Camera frame</span><span>720×1280 · simulated</span></div>
-          <svg viewBox="-30 -60 780 1560" className={s.frame} role="img" aria-label="Simulated portrait camera frame with bounding boxes. Boxes that run off the frame edge are clipped.">
+          <div className={s.head}><span>B · Camera frame</span>{!bm && <span>720×1280 · simulated</span>}</div>
+          <svg viewBox={bm ? "-30 -60 900 1560" : "-30 -60 780 1560"} className={s.frame} role="img" aria-label="Simulated portrait camera frame with bounding boxes. Boxes that run off the frame edge are clipped.">
             <defs>
-              <clipPath id="vs-frame"><rect x="0" y="0" width={FW} height={FH} /></clipPath>
-              <clipPath id="vs-margin"><rect x="-30" y="-60" width="780" height="1560" /></clipPath>
+              <clipPath id={ids.frame}><rect x="0" y="0" width={FW} height={FH} /></clipPath>
+              <clipPath id={ids.margin}><rect x="-30" y="-60" width="780" height="1560" /></clipPath>
             </defs>
             <rect x="0" y="0" width={FW} height={FH} className={s.fr} />
+            {bm && lay(L0.zones, <>
+              {BANDS.map((b) => (
+                <g key={b.id}>
+                  <rect x="0" y={n2(b.from)} width={FW} height={n2(b.to - b.from)} fill={b.c} opacity="0.09" />
+                  <text x={FW + 10} y={n2(b.to - 14)} className={s.ft} style={{ fontSize: 26 * k }}>{b.label}</text>
+                </g>
+              ))}
+            </>, "bands")}
             <line x1="0" x2={FW} y1={HZ} y2={HZ} className={s.hz} />
             <text x="10" y={HZ - 10} className={s.ft}>HORIZON</text>
-            <g clipPath="url(#vs-margin)">
+            <g clipPath={`url(#${ids.margin})`}>
               {rows.filter((r) => r.detected && r.clipped).map((r) => (
-                <rect key={r.o.id} x={n2(r.cx - r.w / 2)} y={n2(r.top)} width={n2(r.w)} height={n2(r.base - r.top)} className={s.ghost} />
+                <g key={r.o.id}>
+                  {lay(L0.boxes, <rect x={n2(r.cx - r.w / 2)} y={n2(r.top)} width={n2(r.w)} height={n2(r.base - r.top)} className={s.ghost} />)}
+                </g>
               ))}
             </g>
-            <g clipPath="url(#vs-frame)">
+            <g clipPath={`url(#${ids.frame})`}>
               {rows.filter((r) => r.detected).map((r) => {
-                const sub = subject?.o.id === r.o.id;
-                const c = sub ? "var(--accent)" : TIER_C[r.o.tier];
+                const sub = subId === r.o.id;
+                const c = bm ? (L0.risk ? (sub ? "var(--hot)" : TIER_C[r.o.tier]) : "var(--ink)") : sub ? "var(--accent)" : TIER_C[r.o.tier];
                 const x = n2(Math.max(2, r.cx - r.w / 2));
                 const t = n2(visTop(r));
-                const tagY = t > 46 ? t - 44 : t;
+                const tagH = 44 * k;
+                const tagY = t > tagH + 2 ? t - tagH : t;
+                const fadeOut = bm && L0.risk && subject && !sub;
                 return (
-                  <g key={r.o.id}>
-                    <rect x={n2(r.cx - r.w / 2)} y={t} width={n2(r.w)} height={n2(visBot(r) - visTop(r))} fill="none" stroke={c} strokeWidth={sub ? 7 : 5} />
-                    <rect x={x} y={n2(tagY)} width={r.o.cls.length * 19 + 104} height="44" fill={c} />
-                    <text x={x + 8} y={n2(tagY + 32)} className={s.tag}>{r.o.cls} {r.o.conf.toFixed(2)}</text>
-                    <text x={x + 8} y={n2(tagY + 80)} className={s.est} fill={c}>
+                  <g key={r.o.id} style={bm ? { opacity: fadeOut ? 0.5 : 1, transition: fade } : undefined}>
+                    {bm && <rect x={n2(r.cx - r.w / 2)} y={t} width={n2(r.w)} height={n2(visBot(r) - visTop(r))} fill="var(--ink)" opacity="0.14" />}
+                    {lay(L0.boxes, <>
+                      <rect x={n2(r.cx - r.w / 2)} y={t} width={n2(r.w)} height={n2(visBot(r) - visTop(r))} fill="none" style={{ stroke: c, transition: fade }} strokeWidth={sub ? 7 : 5} />
+                      <rect x={x} y={n2(tagY)} width={(r.o.cls.length * 19 + 104) * k} height={tagH} style={{ fill: c, transition: fade }} />
+                      <text x={x + 8} y={n2(tagY + 32 * k)} className={s.tag} style={{ fontSize: 31 * k }}>{r.o.cls} {r.o.conf.toFixed(2)}</text>
+                    </>, "box")}
+                    {lay(L0.distances, <text x={x + 8} y={n2(tagY + 80 * k)} className={s.est} style={{ fill: c, fontSize: 31 * k, transition: fade }}>
                       {r.suppressed ? "dist. —" : `${r.estFt.toFixed(1)} ft`}
-                    </text>
+                    </text>, "dist")}
                   </g>
                 );
               })}
+              {bm && lay(L0.drop, <>
+                <rect x={DROP.x} y={DROP.y} width={DROP.w} height={DROP.h} className={s.drop} />
+                <text x={DROP.x + DROP.w} y={DROP.y - 14} textAnchor="end" className={s.est} style={{ fill: "var(--muted)", fontSize: 31 * k }}>dropped ({DROP.conf.toFixed(2)})</text>
+              </>, "drop")}
+              {bm && lay(L0.formula && act.detected && !act.suppressed, (() => {
+                const dx = n2(Math.min(FW - 30, act.cx + act.w / 2 + 24));
+                const y1 = n2(visTop(act));
+                const y2 = n2(visBot(act));
+                return (
+                  <g className={s.dim}>
+                    <line x1={dx} x2={dx} y1={y1} y2={y2} />
+                    <line x1={dx - 12} x2={dx + 12} y1={y1} y2={y1} />
+                    <line x1={dx - 12} x2={dx + 12} y1={y2} y2={y2} />
+                    <text transform={`translate(${dx - 12} ${n2((y1 + y2) / 2)}) rotate(-90)`} textAnchor="middle" style={{ fontSize: 30 * k }}>h = {Math.round(actVis)} px</text>
+                  </g>
+                );
+              })(), "dim")}
             </g>
             {rows.filter((r) => r.detected && r.base > FH).map((r) => (
               <line key={r.o.id} x1={n2(Math.max(0, r.cx - r.w / 2))} x2={n2(Math.min(FW, r.cx + r.w / 2))} y1={FH} y2={FH} className={s.edge} />
@@ -278,60 +371,78 @@ export default function VisionScene() {
               <line key={r.o.id} x1={n2(Math.max(0, r.cx - r.w / 2))} x2={n2(Math.min(FW, r.cx + r.w / 2))} y1="0" y2="0" className={s.edge} />
             ))}
           </svg>
-          <p className={s.cap}>YOLOv8n · ≈200 ms/frame · conf ≥ 0.45<br /><span className={s.warn}>- - -</span> true extent, off-frame</p>
+          {!bm && <p className={s.cap}>YOLOv8n · ≈200 ms/frame · conf ≥ 0.45<br /><span className={s.warn}>- - -</span> true extent, off-frame</p>}
         </div>
       </div>
 
-      <div className={s.formula} aria-live="polite">
-        <span className="lbl">d = H · f / h</span>
-        <span className="readout">
-          <b>{act.o.cls}</b> {act.o.H.toFixed(2)} m × 900 px / {act.detected ? `${Math.round(actVis)} px` : "—"} ={" "}
-          <b>{!act.detected ? "not in frame" : act.suppressed ? "suppressed (edge clip)" : `${act.estFt.toFixed(1)} ft`}</b>
-          {act.detected && act.clipped && (
-            <span className={s.warn}> · true {act.trueFt.toFixed(1)} ft ⚠ partial view</span>
+      {bm ? (
+        <div className={s.info}>
+          {beat === 2 ? (
+            <div className={s.formula}>{readout}</div>
+          ) : beat === 4 ? (
+            <div className={s.sayBm}>
+              <output className={`${s.msg} ${subject?.zone === "WARNING" ? s.msgHot : ""}`}>
+                <svg viewBox="0 0 16 16" className={s.spk} aria-hidden="true"><path d="M2 6h3l4-3v10l-4-3H2z" /><path d="M11.5 5.5a3.5 3.5 0 0 1 0 5M13.5 3.5a6.5 6.5 0 0 1 0 9" /></svg>
+                {msgLine}
+              </output>
+              <span className={s.tagChip}>Piper TTS · earbuds · systemd</span>
+            </div>
+          ) : beat === 3 ? (
+            <span className={s.tagChip}>Rank by tier, then distance</span>
+          ) : (
+            <span className={s.tagChip}>{TAGS[beat] ?? TAGS[0]}</span>
           )}
-        </span>
-      </div>
+          <span className={s.simBm}>Simulated scene</span>
+        </div>
+      ) : (
+        <div className={s.formula} aria-live="polite">{readout}</div>
+      )}
 
-      <table className={s.tbl}>
-        <thead><tr><th>Object</th><th>Tier</th><th>Est. distance</th><th>Zone</th></tr></thead>
-        <tbody>
-          {[...rows].sort((a, b) => RANK[a.o.tier] - RANK[b.o.tier] || a.estFt - b.estFt).map((r) => (
-            <tr key={r.o.id} className={subject?.o.id === r.o.id ? s.subRow : ""}>
-              <td><i className={s.sw} style={{ borderColor: TIER_C[r.o.tier] }} />{r.o.cls}{subject?.o.id === r.o.id && <b className={s.subTag}> ◀ subject</b>}</td>
-              <td>{r.o.tier}</td>
-              <td>
-                {!r.detected ? <span className={s.dim}>not in frame</span> : r.suppressed ? <span className={s.warn}>partial view, distance suppressed</span> : (
-                  <>
-                    {r.estFt.toFixed(1)} ft
-                    {r.clipped && <span className={s.warn}> · true {r.trueFt.toFixed(1)} ft ⚠ partial view</span>}
-                  </>
-                )}
-              </td>
-              <td className={r.detected ? s[r.zone] : s.dim}>
-                {r.detected ? r.zone : "—"}
-                {r.detected && !r.speaks && r.zone !== "SAFE" && <span className={s.dim}> · low risk, silent</span>}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {!bm && (
+        <table className={s.tbl}>
+          <thead><tr><th>Object</th><th>Tier</th><th>Est. distance</th><th>Zone</th></tr></thead>
+          <tbody>
+            {[...rows].sort((a, b) => RANK[a.o.tier] - RANK[b.o.tier] || a.estFt - b.estFt).map((r) => (
+              <tr key={r.o.id} className={subject?.o.id === r.o.id ? s.subRow : ""}>
+                <td><i className={s.sw} style={{ borderColor: TIER_C[r.o.tier] }} />{r.o.cls}{subject?.o.id === r.o.id && <b className={s.subTag}> ◀ subject</b>}</td>
+                <td>{r.o.tier}</td>
+                <td>
+                  {!r.detected ? <span className={s.dim}>not in frame</span> : r.suppressed ? <span className={s.warn}>partial view, distance suppressed</span> : (
+                    <>
+                      {r.estFt.toFixed(1)} ft
+                      {r.clipped && <span className={s.warn}> · true {r.trueFt.toFixed(1)} ft ⚠ partial view</span>}
+                    </>
+                  )}
+                </td>
+                <td className={r.detected ? s[r.zone] : s.dim}>
+                  {r.detected ? r.zone : "—"}
+                  {r.detected && !r.speaks && r.zone !== "SAFE" && <span className={s.dim}> · low risk, silent</span>}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
 
-      <div className={s.say}>
-        <span className="lbl">Announcement · one per frame · wording illustrative</span>
-        <output className={`${s.msg} ${subject?.zone === "WARNING" ? s.msgHot : ""}`} aria-live="polite">
-          {msg ? `«${msg}»` : "— silent —"}
-        </output>
-        <span className={s.note}>Rank by tier, then distance. 2.5 ft per step. Repeats only when the message changes or after a 3 s cooldown.</span>
-      </div>
+      {!bm && (
+        <div className={s.say}>
+          <span className="lbl">Announcement · one per frame · wording illustrative</span>
+          <output className={`${s.msg} ${subject?.zone === "WARNING" ? s.msgHot : ""}`} aria-live="polite">
+            {msgLine}
+          </output>
+          <span className={s.note}>Rank by tier, then distance. 2.5 ft per step. Repeats only when the message changes or after a 3 s cooldown.</span>
+        </div>
+      )}
 
-      <div className="ctl">
-        <button className="btn" aria-pressed={fix} onClick={() => setFix(!fix)}>Edge-clip fix (not shipped)</button>
-        <button className="btn" aria-pressed={speak} onClick={toggleSpeak}>Speak {speak ? "on" : "off"}</button>
-        <button className="btn" onClick={reset}>Reset</button>
-        {noTts && <span className="lbl">Speech is not available in this browser.</span>}
-      </div>
-      <p className={s.note}>Drag an obstacle inside {CLIP_FT.toFixed(0)} ft: its box runs off the frame, the visible part is shorter, and the estimate goes up. Camera mount, widths and confidences are simulated; heights are the project&apos;s typical-height lookup.</p>
+      {!bm && (
+        <div className="ctl">
+          <button className="btn" aria-pressed={fix} onClick={() => setFix(!fix)}>Edge-clip fix (not shipped)</button>
+          <button className="btn" aria-pressed={speak} onClick={toggleSpeak}>Speak {speak ? "on" : "off"}</button>
+          <button className="btn" onClick={reset}>Reset</button>
+          {noTts && <span className="lbl">Speech is not available in this browser.</span>}
+        </div>
+      )}
+      <p className={`${s.note} ${bm ? s.noteBm : ""}`}>Drag an obstacle inside {CLIP_FT.toFixed(0)} ft: its box runs off the frame, the visible part is shorter, and the estimate goes up. Camera mount, widths and confidences are simulated; heights are the project&apos;s typical-height lookup.</p>
     </div>
   );
 }
