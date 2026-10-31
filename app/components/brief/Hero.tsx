@@ -31,8 +31,8 @@ export default function Hero() {
         <div className="actions">
           <a className="button primary" href={RESUME}>Résumé PDF ↓</a>
           <a className="button" href={`mailto:${EMAIL}`}>Email</a>
-          <a className="button" href={GITHUB}>GitHub ↗</a>
-          <a className="button" href={LINKEDIN}>LinkedIn ↗</a>
+          <a className="button" href={GITHUB} target="_blank" rel="noreferrer">GitHub ↗</a>
+          <a className="button" href={LINKEDIN} target="_blank" rel="noreferrer">LinkedIn ↗</a>
         </div>
       </div>
       <div className="brief-chip">

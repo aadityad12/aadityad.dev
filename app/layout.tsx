@@ -45,11 +45,11 @@ const person = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${archivo.variable} ${plexMono.variable}`}>
       <head>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(person) }} />
       </head>
-      <body className={`${archivo.variable} ${plexMono.variable}`}>{children}</body>
+      <body>{children}</body>
     </html>
   );
 }
