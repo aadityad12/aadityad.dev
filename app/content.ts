@@ -15,6 +15,8 @@ export const OSS = "https://oss.aadityad.dev";
 import type { Status } from "./status";
 export { STATUS_HELP, type Status } from "./status";
 
+export { ALTA } from "./alta";
+
 export type Link = { label: string; href: string };
 export type Photo = { src: string; w: number; h: number; alt: string; cap: string };
 
