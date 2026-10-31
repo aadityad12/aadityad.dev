@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import Masthead from "../../components/Masthead";
 import { Fig, Rich } from "../../components/parts";
 import Status from "../../components/Status";
 import Reel from "../../components/work/Reel";
 import { FIGURES } from "../../figures";
-import { NOTES, PHOTOS } from "../../content";
+import { NOTES, PHOTOS, RESUME } from "../../content";
 
 export const dynamicParams = false;
 
@@ -42,8 +43,18 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
   const F = FIGURES[note.id];
   const hasReel = !!F && (note.beats?.length ?? 0) >= 3;
   const next = BY_ORDER[note.order % BY_ORDER.length];
+  const prev = BY_ORDER[(note.order - 2 + BY_ORDER.length) % BY_ORDER.length];
 
   return (
+    <>
+    <Masthead
+      variant="work"
+      resume={RESUME}
+      id={note.id}
+      title={note.title}
+      prev={{ id: prev.id, title: prev.title }}
+      next={{ id: next.id, title: next.title }}
+    />
     <main className="work" id="main">
       <header className="work-head">
         <p className="work-meta">
@@ -141,5 +152,6 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
         <a href={`/datasheet/#${note.id}`}>Full entry in the datasheet ↗</a>
       </nav>
     </main>
+    </>
   );
 }

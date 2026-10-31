@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { HERO } from "./content";
+import { HERO, RESUME } from "./content";
 import Masthead from "./components/Masthead";
 import Hero from "./components/brief/Hero";
 import Proof from "./components/brief/Proof";
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
-      <Masthead />
+      <Masthead variant="brief" resume={RESUME} />
       <main className="brief" id="main">
         <Hero />
         <Proof />

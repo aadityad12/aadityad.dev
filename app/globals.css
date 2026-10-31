@@ -67,24 +67,53 @@ a:hover { color: var(--accent-ink); }
   -webkit-backdrop-filter: saturate(1.2) blur(10px);
   border-bottom: 1px solid var(--hair);
 }
-.mast-inner { max-width: calc(var(--sheet-w) + 40px); margin: 0 auto; height: 100%; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 20px; padding: 0 20px; }
-.mast-mark { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; }
+.mast-inner { max-width: calc(var(--sheet-w) + 40px); margin: 0 auto; height: 100%; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 20px; padding: 0 20px; }
+.mast-mark { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; white-space: nowrap; }
 .mast-mark b { font-family: var(--sans); font-stretch: 125%; font-weight: 800; font-size: 15px; letter-spacing: -0.01em; }
-.mast-ic { width: 22px; height: 22px; }
-.mast-sec { font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; }
+.mast-mark span { font-family: var(--sans); font-stretch: 112%; font-weight: 700; font-size: 14px; letter-spacing: -0.005em; }
+.mast-datasheet .mast-mark span { font-family: var(--mono); font-stretch: 100%; font-weight: 400; font-size: 12px; letter-spacing: 0.04em; }
+.mast-ic { width: 22px; height: 22px; flex: none; }
+.mast-mid { font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mast-sec, .mast-avail { text-align: center; }
 .mast-sec span { color: var(--accent); margin-right: 8px; }
-.mast-nav { display: flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.05em; }
-.mast-nav a { text-decoration: none; padding: 6px 8px; }
+.mast-crumb { text-align: left; }
+.mast-crumb b { color: var(--ink); font-weight: 600; }
+.mast-end { display: flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.05em; }
+.mast-nav { display: flex; align-items: center; gap: 2px; }
+.mast-nav a { text-decoration: none; padding: 6px 8px; white-space: nowrap; }
 .mast-nav a:hover { background: var(--ink); color: var(--paper); }
-.mast-nav .pdf { border: 1px solid var(--ink); padding: 6px 10px; margin-left: 6px; }
-.mast-nav .pdf:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+.mast-nav a[aria-current="true"] { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 6px; }
+.mast-nav .mast-step-l { display: inline-block; max-width: 15ch; overflow: hidden; text-overflow: ellipsis; vertical-align: bottom; }
+.mast-nav .mast-step-s { display: none; font-size: 14px; line-height: 1; }
+.mast .pdf { border: 1px solid var(--ink); padding: 6px 10px; margin-left: 6px; text-decoration: none; white-space: nowrap; }
+.mast .pdf:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+.mast-menu { display: none; position: relative; }
+.mast-menu summary { list-style: none; cursor: pointer; border: 1px solid var(--hair); padding: 6px 10px; user-select: none; }
+.mast-menu summary::-webkit-details-marker { display: none; }
+.mast-menu summary::after { content: " +"; }
+.mast-menu[open] summary::after { content: " \2212"; }
+.mast-menu[open] summary { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.mast-menu-list { position: fixed; left: 0; right: 0; top: var(--mast-h); background: var(--bg); border-bottom: 1px solid var(--hair); box-shadow: 0 24px 40px -28px rgba(30, 28, 20, 0.45); display: flex; flex-direction: column; padding: 4px 20px 10px; }
+.mast-menu-list a { text-decoration: none; padding: 14px 4px; border-bottom: 1px solid var(--hair); }
+.mast-menu-list a:last-child { border-bottom: 0; }
+.mast-menu-list a:hover { background: var(--ink); color: var(--paper); }
+.mast-menu-list a[aria-current="true"] { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 6px; }
 .mast-prog { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; }
 .mast-prog span { display: block; height: 100%; background: var(--accent); transform-origin: 0 50%; transform: scaleX(0); }
-@media (max-width: 900px) {
-  .mast-nav a:not(.pdf) { display: none; }
-  .mast-sec { text-align: left; }
+@media (max-width: 1180px) {
+  .mast-nav .mast-step-l { display: none; }
+  .mast-nav .mast-step-s { display: inline; }
+  .mast-brief .mast-avail { display: none; }
 }
-@media (max-width: 560px) { .mast { background: var(--bg); } .mast-sec { display: none; } .mast-inner { grid-template-columns: 1fr auto; } .decoder { font-size: 24px; gap: 14px 6px; } }
+@media (max-width: 1000px) { .mast-pdf-x { display: none; } }
+@media (max-width: 759px) {
+  .mast-nav { display: none; }
+  .mast-menu { display: block; }
+  .mast-inner { gap: 12px; padding: 0 14px; }
+  .mast .pdf { margin-left: 0; }
+  .mast-menu-list { padding: 4px 14px 10px; }
+}
+@media (max-width: 559px) { .mast-mid { display: none; } .mast-inner { grid-template-columns: 1fr auto; } .decoder { font-size: 24px; gap: 14px 6px; } }
 
 /* ---------- Sheets ---------- */
 .sheet {
@@ -625,7 +654,7 @@ main.work { max-width: 1080px; margin: 0 auto; padding: 0 var(--pad) clamp(40px,
 
 /* ---- reel ---- */
 .reel { margin-bottom: clamp(28px, 4vw, 48px); }
-.reel-figure { position: sticky; top: var(--mast-h); z-index: 2; max-height: 44vh; overflow: hidden; padding: 8px 0; background: var(--bg); box-shadow: 0 calc(-1 * var(--mast-h)) 0 var(--bg); }
+.reel-figure { position: sticky; top: var(--mast-h); z-index: 2; max-height: 44vh; overflow: hidden; padding: 8px 0; background: var(--bg); }
 .reel-figure > * { max-height: 100%; }
 .reel-figure .fig-bar { display: none; }
 .reel-figure .fig-body { padding: 8px; }
