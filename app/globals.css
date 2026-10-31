@@ -654,7 +654,7 @@ main.work { max-width: 1080px; margin: 0 auto; padding: 0 var(--pad) clamp(40px,
 
 /* ---- reel ---- */
 .reel { margin-bottom: clamp(28px, 4vw, 48px); }
-.reel-figure { position: sticky; top: var(--mast-h); z-index: 2; max-height: 44vh; overflow: hidden; padding: 8px 0; background: var(--bg); box-shadow: 0 calc(-1 * var(--mast-h)) 0 var(--bg); }
+.reel-figure { position: sticky; top: var(--mast-h); z-index: 2; max-height: 44vh; overflow: hidden; padding: 8px 0; background: var(--bg); }
 .reel-figure > * { max-height: 100%; }
 .reel-figure .fig-bar { display: none; }
 .reel-figure .fig-body { padding: 8px; }
