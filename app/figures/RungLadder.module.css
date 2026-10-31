@@ -33,3 +33,19 @@
   .name { font-size: 10.5px; }
   .axis { margin-left: calc(24px + 96px + 12px); margin-right: calc(58px + 14px); }
 }
+
+/* Reel beat mode: rows are always present, filled in by beat. */
+.beat .rung { transition: opacity 0.25s; }
+.beat .bar { transition: width 0.32s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.still.beat .rung, .still.beat .bar { transition: none; }
+.beat .rung:not(.on) .val, .beat .rung:not(.on) .marg { visibility: hidden; }
+.beat .rung.hl { box-shadow: inset 2px 0 0 var(--accent); }
+.beat .rung.hl .name, .beat .rung.hl .val { color: var(--ink); font-weight: 600; }
+.beat .rung:not(.hl) .name { font-weight: 400; }
+/* The sticky Reel box is 44vh under 900px: tighten rows so all nine and the summary fit. */
+@media (max-width: 899px) {
+  .beat { gap: 8px; }
+  .beat .rung { height: 25px; }
+  .beat .read { margin-top: 8px; }
+  .beat .axis { height: 14px; }
+}
