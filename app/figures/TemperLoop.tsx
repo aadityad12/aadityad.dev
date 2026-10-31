@@ -39,7 +39,7 @@ const DIMS: { name: string; before: Sign; after?: Sign; file?: string }[] = [
   { name: "Error recovery", before: "st" },
 ];
 
-const GLYPH: Record<Sign, string> = { dn: "▼", eq: "=", up: "▲", st: "—" };
+const GLYPH: Record<Sign, string> = { dn: "▼", eq: "=", up: "▲", st: "–" };
 const SIGN_WORD: Record<Sign, string> = { dn: "worse", eq: "same", up: "better", st: "not inferred" };
 const LEVEL: Record<Sign, number> = { dn: 1, eq: 2, up: 3, st: 0 };
 

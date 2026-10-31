@@ -284,7 +284,7 @@ export default function AltaBench({ beat }: FigureProps) {
     const showEx = row === ex.row && st.step >= ex.from;
     const v = typeof rd === "object" ? rd.mean / 1000 : 0;
     const inBand = typeof rd === "object" && !rd.float && v >= ex.lo && v <= ex.hi;
-    const big = rd === "parked" ? "—" : rd === "nc" ? "no contact" : rd.float && reduced ? "4.0–5.0 V" : `${v.toFixed(2)} V`;
+    const big = rd === "parked" ? "–" : rd === "nc" ? "no contact" : rd.float && reduced ? "4.0–5.0 V" : `${v.toFixed(2)} V`;
     const sub = rd === "parked" ? "parked" : rd === "nc" ? "row not in the circuit" : rd.float && reduced ? "floating · jumps between 4 and 5 V" : `${rd.float ? "floating · " : ""}min ${(rd.min / 1000).toFixed(2)} · max ${(rd.max / 1000).toFixed(2)}`;
     return (
       <div className={`${s.gauge} ${sel === p ? s.gSel : ""}`} key={p}>

@@ -185,7 +185,7 @@ export default function GazeBoardDemo() {
 
   const cands = st.mode === "spell" || st.mode === "words" ? matches(st.seq) : [];
   const labels =
-    st.mode === "phrases" ? PHRASES : st.mode === "spell" ? GROUPS : st.mode === "words" ? [cands[0] ?? "—", cands[1] ?? "—", cands[2] ?? "—", "More letters"] : [];
+    st.mode === "phrases" ? PHRASES : st.mode === "spell" ? GROUPS : st.mode === "words" ? [cands[0] ?? "–", cands[1] ?? "–", cands[2] ?? "–", "More letters"] : [];
   const subs =
     st.mode === "phrases" ? ["speaks", "speaks", "speaks", "A–Z mode"]
       : st.mode === "spell" ? GROUPS.map((_, g) => `${matches([...st.seq, g]).length} words`)
@@ -243,7 +243,7 @@ export default function GazeBoardDemo() {
               labels.map((l, q) => (
                 <div
                   key={q}
-                  className={`${s.quad} ${view.raw && view.q === q ? s.on : ""} ${view.flash === q ? s.flash : ""} ${l === "—" ? s.empty : ""}`}
+                  className={`${s.quad} ${view.raw && view.q === q ? s.on : ""} ${view.flash === q ? s.flash : ""} ${l === "–" ? s.empty : ""}`}
                 >
                   {ring(q)}
                   <b className={st.mode === "spell" ? s.mono : ""}>{l}</b>
@@ -305,7 +305,7 @@ export default function GazeBoardDemo() {
       <div className={s.debug}>
         <span><em>STATE</em> {STATE_NAME[st.mode]}</span>
         <span><em>ACCEL</em> NPU (simulated)</span>
-        <span><em>yaw/pitch from pointer</em> {view.sm ? `${signed(yaw)} / ${signed(pitch)}` : "— / —"}</span>
+        <span><em>yaw/pitch from pointer</em> {view.sm ? `${signed(yaw)} / ${signed(pitch)}` : "– / –"}</span>
         <span><em>dwell</em> {view.raw && !view.cool ? Math.round(view.ms) : 0} ms</span>
       </div>
     </div>
