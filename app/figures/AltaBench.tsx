@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import Status from "../components/Status";
-import { ALTA } from "../content";
+import { ALTA } from "../alta";
 import type { FigureProps } from ".";
 import { commas, mulberry32, useInView, useReducedMotion } from "./hooks";
 import s from "./AltaBench.module.css";
