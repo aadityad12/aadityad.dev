@@ -40,7 +40,8 @@ export default function Reel({ beats, figure: F, title, caption }: ReelProps) {
   };
 
   return (
-    <section className="reel" aria-label={`${title} highlights`} data-active-beat={active ?? "free"}>
+    <section className="reel" aria-labelledby="reel-h" data-active-beat={active ?? "free"}>
+      <h2 id="reel-h" className="visually-hidden">{title} highlights</h2>
       <div className="reel-figure">
         <figure className="fig" role="group" aria-label={caption}>
           <div className="fig-frame">
