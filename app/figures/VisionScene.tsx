@@ -193,7 +193,7 @@ export default function VisionScene({ beat }: FigureProps) {
       <span className="lbl">d = H · f / h</span>
       {bm && <span className="readout">f = 900 px</span>}
       <span className="readout">
-        <b>{act.o.cls}</b> {act.o.H.toFixed(2)} m × 900 px / {act.detected ? `${Math.round(actVis)} px` : "—"} ={" "}
+        <b>{act.o.cls}</b> {act.o.H.toFixed(2)} m × 900 px / {act.detected ? `${Math.round(actVis)} px` : "–"} ={" "}
         <b>{!act.detected ? "not in frame" : act.suppressed ? "suppressed (edge clip)" : `${act.estFt.toFixed(1)} ft`}</b>
         {act.detected && act.clipped && (
           <span className={s.warn}> · true {act.trueFt.toFixed(1)} ft ⚠ partial view</span>
@@ -201,7 +201,7 @@ export default function VisionScene({ beat }: FigureProps) {
       </span>
     </>
   );
-  const msgLine = msg ? `«${msg}»` : "— silent —";
+  const msgLine = msg ? `«${msg}»` : "– silent –";
 
   return (
     <div ref={root} className={`${s.root} ${bm ? s.beat : ""}`}>
@@ -341,7 +341,7 @@ export default function VisionScene({ beat }: FigureProps) {
                       <text x={x + 8} y={n2(tagY + 32 * k)} className={s.tag} style={{ fontSize: 31 * k }}>{r.o.cls} {r.o.conf.toFixed(2)}</text>
                     </>, "box")}
                     {lay(L0.distances, <text x={x + 8} y={n2(tagY + 80 * k)} className={s.est} style={{ fill: c, fontSize: 31 * k, transition: fade }}>
-                      {r.suppressed ? "dist. —" : `${r.estFt.toFixed(1)} ft`}
+                      {r.suppressed ? "dist. –" : `${r.estFt.toFixed(1)} ft`}
                     </text>, "dist")}
                   </g>
                 );
@@ -415,7 +415,7 @@ export default function VisionScene({ beat }: FigureProps) {
                   )}
                 </td>
                 <td className={r.detected ? s[r.zone] : s.dim}>
-                  {r.detected ? r.zone : "—"}
+                  {r.detected ? r.zone : "–"}
                   {r.detected && !r.speaks && r.zone !== "SAFE" && <span className={s.dim}> · low risk, silent</span>}
                 </td>
               </tr>

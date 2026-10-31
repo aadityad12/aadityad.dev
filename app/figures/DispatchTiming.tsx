@@ -190,7 +190,7 @@ export default function DispatchTiming() {
       <div className={s.read} aria-live="polite" aria-atomic="true">
         <span className={`${s.mode} ${surge ? s.surge : ""}`}>MODE <b>{surge ? "SURGE" : "ASSISTED"}</b></span>
         <span>WINDOW_60s <b>{lastN}</b> calls {lastN > TH ? "> 10" : "≤ 10"}</span>
-        <span>SINCE SURGE <b>{age === null ? "—" : `${age} s`}</b>{age !== null && age <= MIN_SURGE ? " · min 120" : ""}</span>
+        <span>SINCE SURGE <b>{age === null ? "–" : `${age} s`}</b>{age !== null && age <= MIN_SURGE ? " · min 120" : ""}</span>
       </div>
 
       <div ref={plotRef} className={s.plot}>
