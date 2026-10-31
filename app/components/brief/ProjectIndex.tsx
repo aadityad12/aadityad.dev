@@ -7,6 +7,12 @@ import { pinStore, usePins } from "./pinStore";
 const ROWS = [...NOTES].sort((a, b) => a.order - b.order);
 const SHOWN = 4;
 
+// Clearing the filter also drops the #skill= hash the chip wrote.
+const clear = () => {
+  pinStore.set({ selected: null, active: null });
+  history.replaceState(null, "", location.pathname + location.search);
+};
+
 export default function ProjectIndex() {
   const { active, selected } = usePins();
   const pin = selected ?? active;
@@ -23,7 +29,7 @@ export default function ProjectIndex() {
       {selected && (
         <p className="pi-filter" role="status">
           Showing <b>{hits}</b> {hits === 1 ? "project" : "projects"} using <b>{selected}</b> ·{" "}
-          <button type="button" onClick={() => pinStore.set({ selected: null, active: null })}>
+          <button type="button" onClick={clear}>
             Clear
           </button>
         </p>
@@ -74,8 +80,8 @@ export default function ProjectIndex() {
         })}
       </ul>
       <p className="pi-also">
-        Also: <a href={ALSO[0].href}>{ALSO[0].title}</a> (2nd place, DA Hacks 3.5) ·{" "}
-        <a href={ALSO[1].href}>{ALSO[1].title}</a> (fastest run in section, 14.41 s) ↗
+        Also: <a href={ALSO[0].href} target="_blank" rel="noreferrer">{ALSO[0].title}</a> (2nd place, DA Hacks 3.5) ·{" "}
+        <a href={ALSO[1].href} target="_blank" rel="noreferrer">{ALSO[1].title}</a> (fastest run in section, 14.41 s) ↗
       </p>
     </section>
   );
