@@ -43,7 +43,7 @@ export default function Home() {
   return (
     <>
       <a className="skip-link" href="#block-diagram">Skip to projects</a>
-      <Masthead />
+      <Masthead variant="datasheet" resume={RESUME} />
       <main>
         {/* ---------------- Page 1 ---------------- */}
         <Sheet id="top" page={1} title="Engineer, intern grade · Datasheet" section="1|Overview">

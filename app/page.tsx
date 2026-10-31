@@ -1,3 +1,4 @@
+import { RESUME } from "./content";
 import Masthead from "./components/Masthead";
 import Hero from "./components/brief/Hero";
 import Proof from "./components/brief/Proof";
@@ -10,7 +11,7 @@ import Contact from "./components/brief/Contact";
 export default function Home() {
   return (
     <>
-      <Masthead />
+      <Masthead variant="brief" resume={RESUME} />
       <main className="brief" id="main">
         <Hero />
         <Proof />
