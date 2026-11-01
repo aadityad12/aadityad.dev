@@ -11,8 +11,10 @@ export (output: "export", trailingSlash: true) deployed to GitHub Pages.
 **Issue**: read `docs/fable2/issues/<NN-slug>.md` in full before touching anything.
 **Rules**: read the "Rules that apply to every issue" and "Definition of done" sections
 of `docs/fable2/README.md`. They are not optional. Rule 1 (content visible without JS),
-rule 3 (no status tags or benchmark numbers on the front page) and rule 4 (no invented
-facts or sentences) are the ones most often broken.
+rule 3 (no status tags, benchmark numbers, team sizes or effort counts on the front page,
+`/work/`, `/skills/` or a project page header), rule 4 (no invented facts or sentences) and
+rule 11 (facts live in landmarks; body copy is one sentence with nothing bold in it) are
+the ones most often broken.
 
 Work only on a branch named `fable2/<NN-slug>` cut from `Fable2`. Do not modify any other
 branch; `Fable1` in particular is an archive and must not change. Do not add dependencies.

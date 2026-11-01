@@ -29,7 +29,7 @@ Ten things I built, one page each.
 ...
 10  Clear Dispatch ...
 ──────────────────────────────────────────────────────────────────────────
-Also: ClassPath AI (2nd place, DA Hacks 3.5) ↗ · Beacon robot (fastest run in section) ↗
+Also: ClassPath AI ↗ (2nd place · DA Hacks 3.5) · Beacon robot ↗ (Fastest run in section)
 The long version of all of this is the datasheet ↗
 ```
 
@@ -48,10 +48,10 @@ The long version of all of this is the datasheet ↗
   `<small className="wi-w">{n.where}</small>`, `<span className="wi-a" aria-hidden>→</span>`.
   `id` on the `<li>` so `/work/#rung` lands on the row (the row gets
   `scroll-margin-top: calc(var(--mast-h) + 12px)`).
-- After the list, `<p className="wi-also">`: "Also: " then `ALSO[0].title` linked to its
-  href with " (2nd place, DA Hacks 3.5)", " · ", `ALSO[1].title` linked with " (fastest run
-  in section)". External links `target="_blank" rel="noreferrer"` with ↗. Note: the
-  "14.41 s" time is not shown; it is a benchmark-style number (rule 3).
+- After the list, `<p className="wi-also">`: "Also: " then, for each `ALSO` entry, its
+  `title` linked to its `href` followed by ` (${tag})`, the two joined by " · ". External
+  links `target="_blank" rel="noreferrer"` with ↗. Only `title`, `tag` and `href` are
+  rendered; `text` is not (it holds the "14.41 s" time, a benchmark-style number, rule 3).
 - `<p className="wi-long">`: "The long version of all of this is the " + link "datasheet ↗"
   to `/datasheet/`.
 - Metadata: title "Work", description "Ten things I built, one page each: an ARM64 JIT,
@@ -74,7 +74,7 @@ Modify: `app/globals.css`.
 
 - [ ] `/work/` lists ten rows in `order` with title, one-liner and `where`; each row links to its page.
 - [ ] `/work/#alta` scrolls to the Alta row under the masthead.
-- [ ] The page contains no `.tag` and none of: "38.84", "200 ms", "1,200", "8 ms", "525" (check `out/work/index.html`).
+- [ ] The page contains no `.tag` and none of: "38.84", "200 ms", "1,200", "8 ms", "525", "team of", "Solo", "14.41" (check `out/work/index.html`, case-insensitive).
 - [ ] At 390 px nothing scrolls sideways. Screenshot at 390 and 1440.
 - [ ] No-JS: identical. Masthead shows Work as current.
 - [ ] `npm run budget` shows `/work/` under 60 KB page-specific JS (add the row to `BUDGETS` in `scripts/check-budget.mjs` with `maxKB: 60`; 10 also touches this file, so keep the change to that one line).

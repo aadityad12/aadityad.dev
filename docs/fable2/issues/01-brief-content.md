@@ -50,12 +50,15 @@ Replaces the role of `PROOF` on the front page. Three items, no status, no bench
 export type Fact = { big: string; small: string; href: string };
 export const FACTS: Fact[] = [
   { big: "Infineon", small: "Research intern and software lead, 2026. Built an offline navigation aid for blind users.", href: "/work/visionassist/" },
-  { big: "Hackathon winner", small: "Sponsor Track, UC Berkeley AI Hackathon 2026, with Accordion. 240+ stars on GitHub.", href: "/work/accordion/" },
+  { big: "Hackathon winner", small: "Sponsor Track, UC Berkeley AI Hackathon 2026, with Accordion.", href: "/work/accordion/" },
   { big: "3.8 GPA", small: "Dean's Scholar. B.S. Computer Engineering, minor in AI, SJSU, May 2028.", href: "#education" },
 ];
 ```
 
-Sources: `EXPERIENCE[0]`, `NOTES[accordion].context` and `.specs[1]`, `EDUCATION[0]`.
+Sources: `EXPERIENCE[0]`, `NOTES[accordion].context`, `EDUCATION[0]`. The Accordion star
+count is not here: a recruiter cannot judge it (rule 3), and it stays on the Accordion
+page in `specs` and `headline` with its `Repo` tag. The `big` values are landmarks; the
+`small` lines are body (README, "How a recruiter reads a page").
 Keep the `PROOF` export in place until issue 04 deletes `Proof.tsx`; then remove `PROOF`
 in that issue if nothing else imports it.
 
@@ -69,9 +72,10 @@ export const FEATURED = ["visionassist", "accordion", "rung", "alta"] as const;
 ### `AppNote.where`
 
 Add a required field `where: string` to the `AppNote` type, after `when`: one line for
-cards and index rows, replacing the long `context` and `role` pair there. It names the
-venue, the role where it is more than "built it", and the date. **Never the team size or
-"solo"**: a recruiter cannot use that, and it costs space. Values:
+cards, index rows and the project page header (issue 08), replacing the `context`,
+`role` and `when` trio there. It names the venue, the role where it is more than "built
+it", and the date. **Never the team size or "solo"**: a recruiter cannot use that, and it
+costs a stop. Values:
 
 | id | where |
 | --- | --- |
@@ -87,21 +91,22 @@ venue, the role where it is more than "built it", and the date. **Never the team
 | clear-dispatch | `"HackDavis 2026 · backend · May 2026"` |
 
 Each is `context`, `role` and `when` of the same note, shortened, with team sizes
-dropped. `context`, `role` and `when` stay unchanged; the work page header and the
-datasheet still use them.
+dropped. `context`, `role` and `when` stay unchanged; the datasheet still uses them, and
+the project page header does until issue 08 switches it to `where`.
 
 ### `EXPERIENCE[].summary`
 
-Add `summary: string` to each entry, after `points`. One sentence that carries the facts
-a recruiter must not miss: what was built, for whom, and what it led to. No team sizes.
-`points` stays for the datasheet.
+Add `summary: string` to each entry, after `points`. One sentence of body copy under the
+role and organisation (the landmarks): what was built, for whom, and what it led to. No
+team sizes, no headcounts, no hours: "five-person team", "30 students", "54 members" and
+"6 contact hours" stay in `points`, which the datasheet keeps.
 
 | org | summary |
 | --- | --- |
 | Infineon Technologies, with De Anza College | `"Led the software for an offline navigation aid for blind users on a Raspberry Pi 5: the detection, distance and speech pipeline, the radar characterization delivered to Infineon, and the demo to the sponsors."` |
-| San José State University | `"Run two weekly lab sections of 30 students who solder IR receiver boards and program VEX robots in C++; invited back to TA the course one semester after taking it."` |
+| San José State University | `"Run the ENGR 10 lab sections, where students solder IR receiver boards and build and program VEX robots in C++; invited back to TA the course one semester after taking it."` |
 | De Anza College | `"TA for x86 assembly, computer architecture and both introductory C++ courses; tutored C++, assembly, Python and data structures in the CS lab."` |
-| Applied Data Analytics Club, De Anza College | `"Started the campus's first applied-ML student group and grew it to 54 members, with a workshop program on model evaluation and Python data pipelines."` |
+| Applied Data Analytics Club, De Anza College | `"Started the campus's first applied-ML student group and built its workshop program on model evaluation and Python data pipelines from scratch."` |
 
 ### `Pin.full` and `PIN_GROUPS`
 
@@ -165,6 +170,16 @@ export const AWARDS_BRIEF = AWARDS.slice(0, 3);
 
 (`AWARDS[0..2]` are Sponsor Track winner, 2nd place DA Hacks 3.5, Top 10 at site ICPC.)
 
+### `CERTS_BRIEF`
+
+```ts
+// The front page lists finished certifications only. The datasheet shows all, including in progress.
+export const CERTS_BRIEF = CERTS.filter((c) => !c.endsWith("(in progress)"));
+```
+
+(Five entries today. "(in progress)" is a status a recruiter cannot act on; it stays in
+the datasheet.)
+
 ## Files
 
 Modify: `app/content.ts` only.
@@ -174,7 +189,8 @@ Modify: `app/content.ts` only.
 - [ ] `npm run build` passes; `/datasheet/` renders exactly as before (diff the HTML of `out/datasheet/index.html` against a build of `Fable2` before this PR: identical).
 - [ ] Every new string above appears in `app/content.ts` verbatim.
 - [ ] `grep -c "where:" app/content.ts` is at least 10; every `NOTES` entry has `where`.
-- [ ] Every `EXPERIENCE` entry has `summary`; every `PINS` entry has `full`.
+- [ ] Every `EXPERIENCE` entry has `summary`; every `PINS` entry has `full`; `CERTS_BRIEF` has five entries.
+- [ ] None of the new strings (`BRIEF`, `FACTS`, `where`, `summary`) contains "team of", "-person", "solo", "★", or a number followed by "students", "members", "hours", "stars", "PRs" or "commits".
 - [ ] The build-time group check throws if a pin is removed from `PIN_GROUPS` (test it, then restore).
 - [ ] `grep -n "—" app/content.ts` returns nothing new.
 - [ ] Lint passes.

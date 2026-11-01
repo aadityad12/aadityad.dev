@@ -9,11 +9,24 @@ small follow-up PRs against `Fable2`.
 
 ## The recruiter test (do this first)
 
-Open `/` at 1440 x 900 and at 390 x 844 as a stranger. Start a timer. In 30 seconds, can
-you answer all six without clicking: his name, his school and year, the company he interned
-at, the award, his GPA, when he is available? Then click once and find all ten projects.
-Then from any project page, get to the next project, to all projects, and home. If any step
-needs thought, open an issue against `Fable2` with a screenshot and what you expected.
+Three passes, in this order. The model behind them is "How a recruiter reads a page" in
+`docs/fable2/README.md`.
+
+1. **The landmark read.** Run `npm run brief` and read the printed list top to bottom as a
+   stranger, without looking at the page. Can you answer the six questions (name, school
+   and year, availability, company, award, GPA) from the list alone? Is there any stop
+   you do not understand, or that tells you nothing? Does anything repeat? Compare with
+   the target read in the README; every difference is a finding.
+2. **The squint test.** Open `/` at 1440 x 900 and at 390 x 844, zoom the browser to 50 %
+   (or blur the screenshot) so body copy becomes grey texture and only large, bold and
+   mono-capital type stays legible. Scroll at reading speed. What is legible should be the
+   landmark read and nothing else; if a line of body copy is still legible, it is styled
+   as a landmark and should not be. If a whole screen goes by at 390 with nothing legible
+   on it, that section's landmarks are too far apart.
+3. **The thirty-second test.** Fresh eyes, normal zoom, start a timer. In 30 seconds, can
+   you answer all six without clicking? Then click once and find all ten projects. Then
+   from any project page, get to the next project, to all projects, and home. If any step
+   needs thought, open an issue against `Fable2` with a screenshot and what you expected.
 
 ## Checks (attach screenshots or output for each)
 
@@ -21,7 +34,8 @@ needs thought, open an issue against `Fable2` with a screenshot and what you exp
 - [ ] Read every word on `/`, `/work/`, `/skills/`, all ten `/work/` pages and `/datasheet/` once. Fix typos in `content.ts`.
 - [ ] `grep -rn "—" app/ docs/fable2/` returns nothing.
 - [ ] `grep -rni "passionate\|innovative\|awkward constraint" app/content.ts` returns nothing.
-- [ ] `npm run brief` passes; record the word count in the PR.
+- [ ] `npm run brief` passes; paste the landmark read in the PR.
+- [ ] Nothing on `/`, `/work/`, `/skills/` or any project page's header line says "team of", "Solo", or gives a count of students, members, hours, stars, PRs or commits (the script covers the first three pages; check the ten header lines with the one-liner in issue 08).
 - [ ] `grep -c 'class="tag' out/index.html out/work/index.html out/skills/index.html` is 0 for all three; `out/work/rung/index.html` and `out/datasheet/index.html` still have tags.
 - [ ] Every `TODO(aadi)` in the repo is resolved or listed in the PR for Aadi to decide.
 

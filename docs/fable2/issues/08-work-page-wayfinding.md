@@ -7,14 +7,17 @@
 A reader who lands on `/work/rung/` from a README should see at a glance where they are
 (project 3 of 10, under Work) and, when they reach the bottom, be offered the next
 project, the previous one, the list of all ten, and the front page, in type they can read.
-Today the only exits are a 13 px mono line and the masthead.
+Today the only exits are a 13 px mono line and the masthead. The header's meta line also
+stops saying "team of 5" and "Solo": it is the first thing a recruiter arriving from a
+Devpost or README link reads, and rule 3 applies to it.
 
 ## Source material
 
 - `app/work/[slug]/page.tsx`: `.work-head`, `.work-links` (with the `work-all` link),
   `.work-next`.
 - `app/globals.css` lines 622 to 655.
-- `app/content.ts`: `NOTES[].oneLiner`, `.order`, `.title`.
+- `app/content.ts`: `NOTES[].oneLiner`, `.order`, `.title`, `.where` (issue 01), `.an`,
+  `.domain`.
 - `app/components/Masthead.tsx` after issue 03: J/K still navigate; the crumb reads
   "Work / {title}".
 
@@ -24,7 +27,7 @@ Top of the page, above the mono meta line:
 
 ```
 ← All work                                                     Project 03 of 10
-AN-02 · COMPILERS AND RUNTIMES · PERSONAL PROJECT · SOLO · SEP–OCT 2026
+AN-02 · COMPILERS AND RUNTIMES · PERSONAL PROJECT · SEP TO OCT 2026
 Rung
 One small language, built five ways, ...
 [GitHub ↗]
@@ -61,6 +64,11 @@ Insert before `.work-meta`:
 
 Mono 12 px uppercase, `--ink-2`, flex with `justify-content: space-between`, margin-bottom
 18 px. Remove the `work-all` link from `.work-links` (and its CSS).
+
+Then in `.work-meta`, replace the three spans `{note.context}`, `{note.role}` and
+`{note.when}` with one `<span>{note.where}</span>`, so the line reads
+`{an} · {domain} · {where}`. `context`, `role` and `when` stay in `content.ts` for the
+datasheet; nothing else on the project page changes.
 
 ### Footer
 
@@ -109,6 +117,9 @@ Modify: `app/work/[slug]/page.tsx`, `app/globals.css`.
 ## Acceptance criteria
 
 - [ ] `/work/rung/` shows "← All work" and "Project 03 of 10" above the meta line; the link goes to `/work/`.
+- [ ] The meta line on `/work/visionassist/` reads `<an> · <domain> · Infineon Technologies · software lead · Apr to Jun 2026`, and on no project page does it contain "team of" or "Solo". Check all ten with:
+  `node -e 'for (const f of process.argv.slice(1)) { const m = require("fs").readFileSync(f, "utf8").match(/<p class="work-meta">.*?<\/p>/); console.log(f, m ? m[0].replace(/<[^>]+>/g, " | ") : "NO META"); }' out/work/*/index.html`
+  and paste the ten lines in the PR. `/datasheet/` still shows `role` (diff `out/datasheet/index.html` before and after: identical).
 - [ ] The footer shows a Previous card (Accordion) and a Next card (Alta) with titles and one-liners, then All work, Home, the datasheet link.
 - [ ] `/work/visionassist/` footer additionally shows "Experience: Infineon →".
 - [ ] `/work/clear-dispatch/` Next is VisionAssist (wraps); `/work/visionassist/` Previous is Clear Dispatch.

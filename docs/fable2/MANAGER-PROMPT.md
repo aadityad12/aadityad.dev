@@ -34,8 +34,10 @@ fix small things, and merge.
 
 ## 2. What gets built
 
-Read "The one-paragraph version" in `docs/fable2/README.md`. In short: the front page
-loses two thirds of its words and every status tag; the chip stays in the hero but opens a
+Read "The one-paragraph version" and "How a recruiter reads a page" in
+`docs/fable2/README.md`. In short: the front page becomes a page a recruiter can scan, a
+short run of landmarks that answer their six questions in order, with no status tags and
+no number they cannot judge; the chip stays in the hero but opens a
 skills panel (a native dialog, with `/skills/` as the static twin); `/work/` lists all ten
 projects; the masthead shows the same four items on every route; project pages get a
 breadcrumb and previous/next cards; the reel is tightened. The datasheet is untouched
@@ -77,21 +79,28 @@ Do not trust the PR description. Check out the branch and verify yourself:
 1. `npm run lint`, `npm run build`, `npm run budget`, and `npm run brief` once issue 10
    has landed. All green.
 2. Serve `out/` (`npx serve out`) and open every route the issue touches at 390, 768 and
-   1440 px. Take screenshots. Look at them. For the front-page issues, do the recruiter
-   test from issue 12 even before everything is in: is the page getting quieter?
+   1440 px. Take screenshots. Look at them. For the front-page issues (04, 05, 07), print
+   the landmark read (issue 10's script, or its regex by hand before 10 lands) and read it
+   cold: does every stop answer one of the six questions or name a section? Then do the
+   squint test from issue 12 on the screenshots.
 3. Go through the issue's acceptance criteria one by one and mark each pass or fail from
    your own observation.
 4. Check the twelve rules in `docs/fable2/README.md`, with special attention to:
    - Rule 1: nothing hidden without JavaScript. Disable JS and reload. The Skills link
      must go to `/skills/`. If any text is missing, reject.
-   - Rule 3: no status tags, no benchmark numbers and no team sizes on `/`, `/work/`,
-     `/skills/`. `grep -c 'class="tag' out/index.html` must be 0;
-     `grep -ci "team of\|-person\|solo" out/index.html out/work/index.html` must be 0.
+   - Rule 3: no status tags, no benchmark numbers and no effort or scale numbers on `/`,
+     `/work/`, `/skills/` or a project page's header line. `grep -c 'class="tag'
+     out/index.html` must be 0; `grep -ciE "team of|-person|\bsolo\b|★|in progress|[0-9]+
+     (students|members|hours|stars|PRs|commits)" out/index.html out/work/index.html
+     out/skills/index.html` must be 0. After issue 08, the `.work-meta` line of every
+     project page contains no "team of" or "Solo" (the check is in that issue).
    - Rule 4: no invented facts. Diff `app/content.ts`. Every new string must be in issue
      01 verbatim or trace to an existing field. If you cannot trace it, reject.
    - Rule 5: `grep -rn "—" app/` must return nothing in files the PR touched.
-   - Rule 11: word count. Keep a running total as 04, 05 and 07 land; if the three
-     together exceed 600 words, the issue that landed last trims its own section.
+   - Rule 11: the landmark read. As 04, 05 and 07 land, paste the read into your notes
+     and compare it with the target read in the README. Each must leave the starred stops
+     present and in order, add no stop a recruiter cannot use, and put nothing bold inside
+     body copy. If a stop is wrong, the issue that added it fixes it.
    - Rule 12: the masthead has the same items on every route. No PR adds a route-specific
      item to it.
 5. Check the browser console for hydration warnings and errors on each route, with the
@@ -99,7 +108,8 @@ Do not trust the PR description. Check out the branch and verify yourself:
 6. Check that component contracts other issues depend on match the issue exactly: the
    `data-skills` trigger and `skills:open` event (02, used by 03 and 04), `Chip`'s
    `compact` prop (02, used by 04), the Masthead `plain` variant (03, used by 06 and 11),
-   `NOTES[].where` and `EXPERIENCE[].summary` (01, used by 05, 06, 07).
+   `NOTES[].where` (01, used by 05, 06, 08), `EXPERIENCE[].summary` and `CERTS_BRIEF` (01,
+   used by 07).
 
 Outcome:
 - **Approve and merge** (squash, into `Fable2`) when everything passes. Commit message:
@@ -139,8 +149,8 @@ not for you to resolve.
 ## 8. Reporting
 
 After each phase (and whenever you are blocked), write Aadi a short status note:
-issues merged with PR links, issues open and why, the current front-page word count and
-heights at 1440 and 390, every `TODO(aadi)` collected so far, decisions you made that he
+issues merged with PR links, issues open and why, the current landmark read of `/`
+(pasted) and its heights at 1440 and 390, every `TODO(aadi)` collected so far, decisions you made that he
 might want to overrule, and what you need from him. Keep it under 200 words. No em dashes.
 
 ## 9. Finishing

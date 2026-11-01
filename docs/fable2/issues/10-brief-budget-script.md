@@ -1,37 +1,99 @@
-# 10 · The brief budget: words, tags, routes, in CI
+# 10 · The brief check: the landmark read, tags, banned numbers, routes, in CI
 
 **Phase**: E · **Size**: S · **Depends on**: 04, 05, 07
 
 ## Goal
 
-Make the front page's quietness a test, so it cannot creep back. A script checks the built
-`out/index.html` for a word count and a status-tag count, checks the new routes exist, and
-runs in CI next to the JS budget. Also extend the JS budget to the new routes.
+Make the front page's scannability a test, so it cannot creep back. A script reads the
+built pages, prints the landmark read of `/` (the list of things a scanning eye stops on,
+in order), and fails if a required stop is missing or out of order, if a status tag is
+present, if an effort or benchmark number appears anywhere in the text, or if something is
+bold inside body copy. It runs in CI next to the JS budget. Also extend the JS budget to
+the new routes.
+
+There is no word count. The README explains why ("How a recruiter reads a page"): the
+instrument is the read, not the length.
 
 ## Source material
 
 - `scripts/check-budget.mjs`, `package.json` scripts, `.github/workflows/ci.yml`.
-- `docs/fable2/README.md`, "What is wrong with Fable1, in numbers".
+- `docs/fable2/README.md`, "How a recruiter reads a page" and "The landmark read" (the
+  target list; the starred lines are the required stops).
 
 ## Spec
 
 ### `scripts/check-brief.mjs`
 
-Plain Node, no dependencies. Reads `out/index.html` (fail with a clear message if missing).
+Plain Node, no dependencies. Reads `out/index.html`, `out/work/index.html` and
+`out/skills/index.html`; fail with a clear message if any is missing.
 
-- Text extraction: take the `<main ...>...</main>` and `<footer ...>...</footer>` blocks,
-  remove `<script>`, `<style>` and `<svg>` subtrees, strip tags, decode `&amp;` `&lt;`
-  `&gt;` `&quot;` `&#x27;` `&nbsp;`, collapse whitespace, split on spaces.
-- Checks, each printed as a `PASS`/`FAIL` row like `check-budget.mjs` does:
-  1. `words` ≤ 600.
-  2. `status tags` = 0 (count of `class="tag ` in the whole file).
-  3. `banned strings` = 0: none of `38.84`, `200 ms`, `1,200`, `≈8`, `525`, `4.54`,
-     `0.63`, `team of`, `-person team`, `solo` appear in `<main>` text, case-insensitive
-     (benchmark numbers and team sizes that must not leak back onto the front page;
-     extend the list if a new one appears). Run the same check on `out/work/index.html`
-     and `out/skills/index.html`.
-  4. `routes present`: `out/work/index.html` and `out/skills/index.html` exist.
-- Exit 1 if any fails.
+Per file, take the `<main ...>...</main>` block and the `<footer ...>...</footer>` block
+(concatenated; `/work/` and `/skills/` may have no footer), remove `<svg>` subtrees, and
+define `strip(s)`: remove tags, decode `&amp;` `&lt;` `&gt;` `&quot;` `&#x27;` `&nbsp;`,
+collapse whitespace, trim.
+
+**The landmark read** of `out/index.html`: scan `<main>` + `<footer>` in document order
+for these elements and collect `strip(inner)` of each, labelled by kind:
+
+| kind | element |
+| --- | --- |
+| `h1`, `h2`, `h3`, `b`, `strong`, `small` | the tag of that name |
+| `button` | `<a ... class="button...">` |
+| `kicker` | any `<p>`, `<span>` or `<div>` whose class list starts with `avail` or `brief-eyebrow` |
+| `tag` | `<span class="tag ...">` |
+
+One regex does it, alternation in that order:
+
+```js
+const RE = /<(h1|h2|h3|b|strong|small)\b[^>]*>([\s\S]*?)<\/\1>|<a\b[^>]*class="button[^"]*"[^>]*>([\s\S]*?)<\/a>|<(?:p|span|div)\b[^>]*class="(?:avail|brief-eyebrow)[^"]*"[^>]*>([\s\S]*?)<\/(?:p|span|div)>|<span class="tag[^"]*"[^>]*>([\s\S]*?)<\/span>/g;
+```
+
+Print it first, under the heading `landmark read, /`, one line per stop as
+`kind<TAB>text`, then a line `N stops, T tags`. This is the artefact reviewers paste into
+PRs; make it readable.
+
+**Checks**, each printed as a `PASS`/`FAIL` row like `check-budget.mjs` does:
+
+1. `landmarks in order`: the following texts appear in the read, as landmarks, in this
+   order (other stops may sit between them). On failure, name the first one that is
+   missing or out of order and the stop found in its place.
+   ```
+   Available for Summer 2027 internships · May to August 2027
+   Computer Engineering · SJSU · Class of 2028
+   Aaditya Desai
+   Résumé PDF ↓
+   Infineon
+   Hackathon winner
+   3.8 GPA
+   Selected work
+   VisionAssist
+   Accordion
+   Rung
+   Alta
+   Experience
+   Infineon Technologies, with De Anza College
+   Education
+   San José State University
+   Get in touch.
+   aaditya.d.desai@gmail.com
+   ```
+   Compare after `strip` and case-sensitively; these are the recruiter's six answers and
+   two actions, and the section names between them.
+2. `status tags`: count of `class="tag ` is 0 in each of the three files.
+3. `banned patterns`: in the stripped text of `<main>` + `<footer>` of each of the three
+   files, none of these match. Benchmark leaks: `38.84`, `200 ms`, `1,200`, `≈`, `525`,
+   `4.54`, `0.63`, `14.41`. Effort and scale (case-insensitive): `/team of/`, `/-person/`,
+   `/\bsolo\b/`, `/★/`, `/\(in progress\)/`, and
+   `/\d[\d,.]*\+?\s*k?\s*(students?|members?|hours?|stars?|PRs?|pull requests?|commits?|lines?|tests?|contact hours)\b/`.
+   On failure, print the file, the pattern, and 40 characters either side of the match.
+   Extend the list when a new leak appears; the list is the rule made executable, not the
+   rule.
+4. `bold in body`: in `<main>` of `out/index.html`, no `<b>` or `<strong>` opens inside a
+   `<p>`: `/<p\b[^>]*>(?:(?!<\/p>)[\s\S])*?<(?:b|strong)\b/` must not match. (The facts, the
+   chip card and the awards use `<b>` inside `<a>`, `<span>` or `<li>`, not `<p>`.)
+5. `routes present`: `out/work/index.html` and `out/skills/index.html` exist.
+
+Exit 1 if any check fails. Do not count words anywhere in the output.
 
 ### `scripts/check-budget.mjs`
 
@@ -62,11 +124,15 @@ Modify: `scripts/check-budget.mjs`, `package.json`, `.github/workflows/ci.yml`,
 
 ## Acceptance criteria
 
-- [ ] `npm run build && npm run brief` passes on `Fable2` with 04, 05 and 07 merged, and prints the word count.
-- [ ] Temporarily adding `<span className="tag measured">x</span>` to `Facts.tsx` makes it fail with a message naming the check; revert.
+- [ ] `npm run build && npm run brief` passes on `Fable2` with 04, 05 and 07 merged, and prints the landmark read first. Paste the read in the PR; it should match the target list in `docs/fable2/README.md`, "The landmark read" (differences are a finding against 04, 05 or 07, not against this issue; list them).
+- [ ] Each check fails when it should, then revert each change:
+  - adding `<span className="tag measured">x</span>` to `Facts.tsx` fails `status tags`;
+  - appending " on a team of 5" to `FACTS[0].small` fails `banned patterns` and names the file and the match;
+  - wrapping one word of `BRIEF.about` in `<b>` (in `About.tsx`) fails `bold in body`;
+  - changing the Education `<h2>` text to "Credentials" fails `landmarks in order` and names "Education".
 - [ ] `npm run budget` shows five routes, all PASS.
 - [ ] CI workflow runs the new step (check the file; a dry run is not required).
-- [ ] Lint passes.
+- [ ] Lint passes. The script has no dependencies and runs under the Node version in `.nvmrc` or `package.json` `engines`.
 
 ## Out of scope
 

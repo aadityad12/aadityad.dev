@@ -77,6 +77,10 @@ Replaces `ProjectIndex.tsx`. No client code: the filter is gone.
 ApexTracker, Echo, Temper, Clear Dispatch. The old `pi-also` line (ClassPath AI, Beacon
 robot) moves to `/work/` (issue 06) and leaves the front page.
 
+Landmarks in this section (README, "The landmark read"): the `h2`, the four `h3` titles
+and the four mono `where` lines. Body: the one-liners and the "also" line. Nothing inside
+a one-liner is bold.
+
 Keep the existing `.pi-head` header style (title left, mono line right); it is reused by
 07. Section id changes from `projects` to `work`; `grep -rn "#projects" app/` must be
 empty after this PR (the masthead no longer links to it after 03; the work page's
@@ -108,7 +112,7 @@ if 04 left it.
 - [ ] The "also" line names six projects, each linked, then "All ten projects →" to `/work/`.
 - [ ] At 390 px the cards stack, nothing scrolls sideways, the "also" line wraps cleanly.
 - [ ] `grep -rn "#projects" app/` is empty (or every remaining hit is explained in the PR).
-- [ ] The section adds at most 170 words to `<main>` (count `out/index.html` before and after; put both numbers in the PR).
+- [ ] The landmark read of the section (issue 10's script, or its regex by hand) is exactly: `h2 Selected work`, then for each card `h3 <title>` followed by `small <where>`, in the order above. No other `b`, `strong`, `h3` or `small` in the section. Paste the read in the PR.
 - [ ] No-JS: identical. Reduced motion: no arrow movement.
 - [ ] Lint, build, budget pass.
 

@@ -18,7 +18,7 @@ Measured on the Fable1 build, 31 Oct 2026:
 
 | | Fable1 | Fable2 target |
 | --- | --- | --- |
-| Words inside `<main>` on `/` | 1,468 | **600 or fewer** (enforced by `scripts/check-brief.mjs`) |
+| Stops for a scanning eye on `/` (the landmark read, below) | 87, of which 13 are status tags and 10 are bold numbers a recruiter cannot judge | Every stop answers one of the recruiter's six questions or names a section; **no tags, no benchmark or effort numbers** (checked by `scripts/check-brief.mjs`) |
 | Status tags (`Measured`, `Repo`, ...) on `/` | 13 | **0** |
 | Height of `/` at 1440 x 900 | 4,314 px (4.8 screens) | 2,400 px or less (2.7 screens) |
 | Height of `/` at 390 x 844 | 7,795 px (9.2 screens) | 4,400 px or less (5.2 screens) |
@@ -43,12 +43,154 @@ What a recruiter sees today, and why it fails them:
   (previous, next, all projects, datasheet entry, resume) that no other route has, so the
   reader has to relearn the navigation on every page type.
 
+## How a recruiter reads a page
+
+A word count was the wrong instrument: it measures the page, not the reader. A recruiter
+does not read the front page, they scan it, and the scan has a shape. Fable2 is designed
+for that shape and tested against it.
+
+What the eye does on a page it has never seen, in the first thirty seconds:
+
+1. **It lands top left** and reads the first two or three lines in full: the kicker, the
+   name, the first sentence. This is the only place on the page where a whole sentence is
+   reliably read.
+2. **It drops down the left edge.** Each stop is something that stands out from body text:
+   a heading, a bold line, a button, a mono label in capitals, a large number. The eye
+   reads the stop, takes in a few words to its right, and drops to the next one.
+3. **It reads body copy only when a stop pulled it in.** A paragraph under a heading the
+   reader did not care about is skipped whole. A paragraph with no heading is skipped
+   whole.
+4. **It recognises before it reads.** A company or school name (Infineon, UC Berkeley,
+   SJSU), a GPA, a date, "winner", "2nd place": understood in one glance. A number with a
+   unit from outside the reader's world ("38.84×", "≈200 ms / frame", "9.8k★", "team of
+   5", "54 members") is not understood at all. The eye stops, gets nothing, and the stop
+   is wasted; enough wasted stops and the reader leaves.
+5. **On a phone there is only the left edge.** The thumb scrolls about one screen a
+   second; anything that is not bold or large is a grey blur going past. A screen with no
+   stop on it is a screen where the reader learns nothing.
+
+Call the things the eye stops on **landmarks** and everything else **body**. The front
+page then has one design rule: **every fact a recruiter needs is carried by a landmark,
+in the order the eye will meet them, and nothing a recruiter cannot use is a landmark.**
+Body copy exists for the reader who stopped, one sentence at a time, and the page must
+still work if every line of it is skipped.
+
+The recruiter's six questions, in the order the page should answer them: who is this,
+where do they study and when do they graduate, when are they available, where have they
+worked, what have they won, what is the GPA. Then two actions: get the résumé, see the
+projects.
+
+Body copy has three rules of its own:
+
+- One sentence under a landmark (a fact's small line, a card's one-liner, a job's summary,
+  the contact line), or one short paragraph where the section is the paragraph (the lead,
+  About). It adds detail for the reader who stopped; it never holds a fact the landmarks
+  do not already carry.
+- Numbers in body copy obey rule 3 exactly as landmarks do. A skimmed sentence with "30
+  students" or "54 members" in it is still an effort number the reader cannot judge.
+- Nothing is bold inside body copy. If a word needs emphasis it is a landmark and belongs
+  in the read below, or it does not need emphasis.
+
+Heights stay in the table above as a sanity check: they are what the reader feels as
+scrolling. If a page is over, find the section whose landmarks are too far apart and fix
+that; do not shave words at random.
+
+## The landmark read
+
+The test is to read only the landmarks, top to bottom, as a stranger, and see what you
+know. Issue 10 makes a script print this list from the built page; until it lands, the
+regex in that issue does the same by hand.
+
+**Fable1**, front page, build of 31 Oct 2026: **87 stops**, 13 of them status tags and 10
+of them bold numbers. The run of bold items down the project table, which is what the eye
+actually meets there, is: `VisionAssist · ≈200 ms / frame · Measured · Accordion · 240+ ★
+· Repo · Rung · 38.84× · Measured · Alta · ≈1,200 Hz · Stated · GazeBoard · ≈8 ms ·
+Observed · OSS Scout · 2 · Repo · ApexTracker · ≈525 · Repo · Echo · 0 · Repo · Temper · 6
+· Repo · Clear Dispatch · 60 s · Repo`. The mono label lines under those rows say, among
+other things:
+
+```
+Infineon Technologies, with De Anza College · Software lead · team of 5
+UC Berkeley AI Hackathon 2026 · Sponsor Track winner (The Token Company) · Team of 4
+Personal project · Solo
+Cal Hacks 13.0 · 36 hours · Hardware and firmware lead · team of 4
+PRs merged upstream (9.8k★ and 380★ repos)
+unit tests, in daily use since Jan 2026
+```
+
+The eye stops on "0", "6" and "2" and learns nothing. The three facts that matter
+(Infineon, Winner, 3.8 GPA) are there, but they are three stops out of eighty-seven, and
+"Winner" sits beside "38.84× Measured".
+
+**Fable2**, front page, the target read. The starred lines are what issue 10 checks for,
+in this order; the others follow from issues 04, 05 and 07 as written:
+
+```
+kicker  Available for Summer 2027 internships · May to August 2027     *
+kicker  Computer Engineering · SJSU · Class of 2028                    *
+h1      Aaditya Desai                                                  *
+button  Résumé PDF ↓                                                   *
+button  Email
+b       28 skills, one per pin.                     (the chip card, phones only)
+b       Infineon                                                       *
+b       Hackathon winner                                               *
+b       3.8 GPA                                                        *
+h2      Selected work                                                  *
+h3      VisionAssist                                                   *
+small   Infineon Technologies · software lead · Apr to Jun 2026
+h3      Accordion                                                      *
+small   UC Berkeley AI Hackathon 2026 · Sponsor Track winner
+h3      Rung                                                           *
+small   Personal project · Sep to Oct 2026
+h3      Alta                                                           *
+small   Cal Hacks 13.0 · hardware and firmware lead · Oct 2026
+h2      Experience                                                     *
+h3      Research Intern and Technical Lead, VisionAssist
+small   Infineon Technologies, with De Anza College                    *
+h3      Teaching Assistant, ENGR 10: Introduction to Engineering
+small   San José State University
+h3      Teaching Assistant and Computer Science Tutor
+small   De Anza College
+h3      Co-Founder and Co-President
+small   Applied Data Analytics Club, De Anza College
+h2      Education                                                      *
+h3      San José State University                                      *
+h3      De Anza College
+h3      Awards
+b       Sponsor Track winner
+b       2nd place
+b       Top 10 at site
+h3      Open source
+h3      Certifications
+h2      About
+h2      Get in touch.                                                  *
+button  aaditya.d.desai@gmail.com                                      *
+button  Résumé ↗
+button  GitHub ↗
+button  LinkedIn ↗
+```
+
+Read that cold: the six questions are answered by the ninth stop and the first action is
+the fourth. Nothing in it needs context. Nothing in it is an effort number. The only names
+that recur are VisionAssist (a project, then a job) and San José State University (an
+employer, then a school), which is the truth. The experience section's date column
+(mono, left edge) is a landmark the eye also uses; the script does not list it because it
+is a column, not a line.
+
+What left the landmarks, and where it went: every status tag and benchmark number, to the
+project pages and the datasheet, where it keeps its tag; every team size, to the
+datasheet only; the Accordion star count, to the Accordion page with its `Repo` tag; the
+star counts of Soup and fusioncore, to the datasheet; "two weekly lab sections of 30
+students" and "54 members", to the datasheet's `points`; the toolbox, to the skills
+panel; coursework and the sixth, in-progress certification, to the datasheet.
+
 ## The one-paragraph version
 
 The front page becomes a brief a recruiter can finish: availability, name, one sentence,
 two buttons, the chip, three facts in plain words (Infineon, hackathon winner, 3.8 GPA),
 four featured projects as cards, one line per job, two lines of education, three awards,
-one short paragraph, contact. No status tags, no benchmark numbers, no stack lists. The
+one short paragraph, contact. No status tags, no benchmark numbers, no team sizes or
+effort counts, no stack lists. The
 chip stays in the hero on every screen size, small and label-free on phones, and becomes
 the door to a **skills panel**: a pop-up (native `<dialog>`) with the full interactive
 chip beside a plain, grouped list of the 28 skills, each naming the projects that used it.
@@ -57,7 +199,8 @@ itself; `/skills/` is the same content as a page, for links and for readers with
 JavaScript. A new `/work/` page lists all ten projects, so "Work" has a real destination
 and project pages have a parent. The masthead shows the same four items everywhere: Work,
 Experience, Skills, Contact, plus the resume. Project pages gain a breadcrumb row at the
-top and previous/next cards at the bottom. The highlights reel on project pages is
+top and previous/next cards at the bottom, and their header line names the venue and date
+instead of the role and team size. The highlights reel on project pages is
 tightened so beats sit closer together, and on desktop the reel figure becomes free to
 play with after the last beat instead of being repeated below. Everything with a status
 tag, a benchmark number or a long list still exists: on the project pages and in the
@@ -67,7 +210,7 @@ datasheet, where the reader who wants it goes on purpose.
 
 | Reader | Time | Needs | Where they land |
 | --- | --- | --- | --- |
-| Recruiter or screener | 30 s | Company name, award, GPA, availability, contact, and a sense that the projects are real | `/` from the resume PDF, LinkedIn, GitHub profile |
+| Recruiter or screener | 30 s | Name, school and year, availability, company name, award, GPA, contact, and a sense that the projects are real | `/` from the resume PDF, LinkedIn, GitHub profile |
 | Hiring engineer or interviewer | 5 to 10 min | Depth on one project: what he built, what he measured, what doesn't work; then the next project | `/work/<slug>/` from a README, Devpost, a cover letter, or `/work/` |
 | Someone who wants all of it | 20 min | Everything, printable, cross-referenced | `/datasheet/` from footers and project pages |
 
@@ -99,15 +242,19 @@ Fable1's ten rules still apply. They are repeated here with the Fable2 changes m
    opens the overlay is a real link to that URL. Without JavaScript the link just navigates.
 2. **`prefers-reduced-motion: reduce` turns off every transition and animation**, and the
    page is still complete. Use `useReducedMotion()` from `app/figures/hooks.ts`.
-3. **Status tags stay on `/work/<slug>/` and `/datasheet/`, and leave the front page.**
-   Every measured or benchmarked number on a project page or the datasheet still carries
-   `Measured`, `Observed`, `Single run`, `Repo` or `Stated`. The front page (`/`) and the
-   index pages (`/work/`, `/skills/`) carry **no benchmark numbers at all**: no ratios, no
-   latencies, no sample rates. Numbers a recruiter recognises without context are fine
-   there: a GPA, a date, a star count, a place in a competition. **Team sizes are not**:
-   "team of 4", "five-person team" and "solo" never appear on those three pages. They say
-   nothing about what he did and cost the reader a line. (Project page headers and the
-   datasheet keep `role` as it is.)
+3. **Status tags and benchmark numbers stay on `/work/<slug>/` and `/datasheet/`, and
+   leave the front page.** Every measured or benchmarked number on a project page or the
+   datasheet still carries `Measured`, `Observed`, `Single run`, `Repo` or `Stated`. The
+   front page (`/`) and the index pages (`/work/`, `/skills/`) carry **no benchmark
+   numbers at all**: no ratios, no latencies, no sample rates. **Effort and scale numbers
+   appear on no recruiter-facing surface**, which means `/`, `/work/`, `/skills/` and the
+   header line of `/work/<slug>/`: no team sizes ("team of 4", "five-person", "solo"), no
+   member, student, hour, star, PR, commit, line or test counts. They say nothing about
+   what he did and they cost the reader a stop. A number is allowed on those surfaces
+   only when a recruiter can judge it without context: a GPA, a date, a place in a
+   competition, the count of things on this site (ten projects, 28 skills). The datasheet
+   is the long version and keeps `role`, `points` and the open-source star counts as they
+   are; project pages keep their tagged headline numbers below the header.
 4. **Facts come only from `app/content.ts`.** New fields added in issue 01 are rephrasings
    and selections of facts already in that file; they introduce nothing. If an issue needs
    a fact that isn't there, write `TODO(aadi): <what is missing>` in the code and stop; do
@@ -127,10 +274,17 @@ Fable1's ten rules still apply. They are repeated here with the Fable2 changes m
    PR description. Never modify `Fable1`, `main`, or any other branch. `Fable1` is the
    archived version the plan starts from; it must stay exactly as it is.
 10. **Do not add dependencies.** Nothing in this plan needs one.
-11. **Fable2 addition: the front page has a word budget.** `<main>` plus `<footer>` on `/`
-    is at most 600 words and contains zero `.tag` elements. `scripts/check-brief.mjs`
-    (issue 10) enforces it. If your issue would push the page over, cut words from what
-    you are adding, not from another issue's section.
+11. **Fable2 addition: the front page is built for a scan, not a read.** "How a recruiter
+    reads a page" above is the model. Every fact in the recruiter's six questions is
+    carried by a landmark (a heading, a bold line, a button, a kicker, a mono label) in
+    the order given in "The landmark read". Body copy under a landmark is one sentence,
+    carries no fact the landmarks do not, and the page still works if all of it is
+    skipped. Nothing is bold inside body copy. `scripts/check-brief.mjs` (issue 10) prints
+    the landmark read of the built page and checks that the starred stops are present in
+    order, that there are no status tags, that no banned number pattern appears anywhere
+    in `<main>` or `<footer>`, and that no `<b>` sits inside a `<p>`. If your issue adds
+    a landmark, it must answer one of the six questions or name a section; otherwise it
+    is body and is not bold.
 12. **Fable2 addition: one navigation.** The masthead shows the same items on every route
     (issue 03). No route adds its own items to it. Route-specific wayfinding (breadcrumbs,
     previous/next) lives in the page body, never in the masthead.
@@ -152,7 +306,7 @@ Phase B  structure          02 skills map, /skills/ and the dialog      03 masth
 Phase C  front page         04 hero and facts   05 selected work   07 experience, education, about, contact   (parallel; need 01, 02, 03)
          index              06 /work/ page                                                                      (needs 01, 03)
 Phase D  project pages      08 wayfinding (needs 03, 06)        09 reel: tighten and free (needs nothing)      (parallel)
-Phase E  enforcement        10 brief budget script and CI (needs 04, 05, 07)    11 metadata, OG, sitemap (needs 02, 06)
+Phase E  enforcement        10 brief check and CI (needs 04, 05, 07)            11 metadata, OG, sitemap (needs 02, 06)
 Phase F  launch             12 QA and launch (needs everything)
 ```
 
@@ -167,7 +321,8 @@ after their dependencies.
 ## Definition of done, every issue
 
 - `npm run lint`, `npm run build` and `npm run budget` are clean. From issue 10 onward,
-  `npm run brief` too.
+  `npm run brief` too. For issues 04, 05 and 07, paste the landmark read of `/` into the
+  PR (the script prints it; before issue 10, the regex in that issue's spec does).
 - Checked at 390, 768 and 1440 px: `npm run build && npx serve out` and open the route.
   If `agent-browser` is available, take screenshots at those widths and attach them.
 - Keyboard pass: Tab through the page; every control reachable, focus visible.
