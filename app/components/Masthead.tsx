@@ -158,6 +158,7 @@ export default function Masthead(props: MastheadProps) {
     <Link
       key={it.href}
       href={it.href}
+      prefetch={false}
       {...it.data}
       aria-current={ariaCurrent(it)}
       onClick={menuItem ? closeMenu : undefined}
@@ -200,7 +201,7 @@ export default function Masthead(props: MastheadProps) {
             className="mast-mid mast-crumb"
             title={`Work / ${props.title}. Press J for the next project (${props.next.title}), K for the previous (${props.prev.title}).`}
           >
-            <Link href="/work/">Work</Link> / <b>{props.title}</b>
+            <Link href="/work/" prefetch={false}>Work</Link> / <b>{props.title}</b>
           </div>
         )}
 
