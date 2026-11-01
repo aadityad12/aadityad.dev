@@ -1,5 +1,8 @@
 # Fable1: the plan
 
+_Fable1 shipped. The next round of work is planned in `docs/fable2/`; read this file for
+the contracts it set up, not for what to build next._
+
 This branch holds the plan for the next version of aadityad.dev. Every task is an issue
 file in `docs/plan/issues/`, written so that a well-scoped implementer (a Sonnet subagent)
 can complete it without making design or content decisions. The thinking is done here;
