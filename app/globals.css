@@ -688,3 +688,44 @@ main.work { max-width: 1080px; margin: 0 auto; padding: 0 var(--pad) clamp(40px,
   .reel-free { display: block; grid-column: 2; grid-row: 2; min-height: 40vh; }
   .work-fig-mobile { display: none; }
 }
+
+/* ---- skills ---- */
+main.skills { max-width: 1180px; margin: 0 auto; padding: clamp(8px, 2vw, 24px) var(--pad) 64px; }
+.sk-head h1, .sk-head h2 { margin: 0; font-size: clamp(32px, 4vw, 48px); font-weight: 800; font-stretch: 112%; letter-spacing: -0.025em; line-height: 1.1; }
+.sk-head p { margin: 12px 0 0; font-size: 16px; color: var(--ink-2); }
+.sk-cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; margin-top: 28px; }
+.sk-chip { min-width: 0; }
+.sk-chip .chip-wrap { max-width: 320px; }
+.sk-chip .chip-tip { font-size: 16px; }
+.sk-chip .chip-tip .t, .sk-chip .chip-tip .u { font-size: 12px; }
+.sk-list { min-width: 0; }
+.sk-list section + section { margin-top: 28px; }
+.sk-list h3 { margin: 0 0 8px; font-family: var(--mono); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-2); }
+.sk-list ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); }
+.sk-list li { padding: 12px; border-bottom: 1px solid var(--hair); scroll-margin-block: 24px; }
+.sk-list li.on { background: var(--accent-wash); }
+.sk-list li.sel { box-shadow: inset 3px 0 0 var(--accent); background: var(--paper); }
+.sk-list b { display: block; font-size: 18px; font-weight: 700; }
+.sk-desc { display: block; font-size: 16px; color: var(--ink-2); line-height: 1.45; }
+.sk-uses { display: block; margin-top: 4px; font-size: 15px; color: var(--ink-2); line-height: 1.45; }
+.sk-foot { margin: 24px 0 0; font-size: 16px; color: var(--ink-2); }
+.sk-foot a { font-family: var(--mono); font-size: 13px; }
+.chip-svg-compact .pin { pointer-events: none; }
+.skills-dialog { position: fixed; inset: 0; width: 100%; max-width: none; height: 100%; max-height: none; margin: 0; padding: 0; border: 0; border-radius: 0; background: var(--bg); color: var(--ink); overflow-y: auto; overscroll-behavior: contain; }
+.skills-dialog::backdrop { background: rgba(18, 18, 17, 0.42); }
+.skills-dialog-in { min-height: 100%; padding: var(--pad); }
+.skills-close { display: block; margin: 0 0 20px auto; padding: 11px 14px; border: 1px solid var(--ink); background: var(--paper); color: var(--ink); font-family: var(--mono); font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; cursor: pointer; }
+.skills-close:hover { background: var(--ink); color: var(--paper); }
+html:has(.skills-dialog[open]) { overflow: hidden; }
+@media (max-width: 767px) { .sk-hover { display: none; } }
+@media (min-width: 900px) {
+  .sk-cols { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; }
+  .sk-chip { align-self: start; position: sticky; top: calc(var(--mast-h) + 24px); }
+  .sk-chip .chip-wrap { max-width: 460px; }
+  .skills-dialog { inset: 0 0 0 auto; width: min(960px, 92vw); border-left: 1px solid var(--ink); }
+  .skills-dialog .sk-chip { top: 24px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .skills-dialog[open] { animation: skills-enter 180ms ease-out; }
+  @keyframes skills-enter { from { transform: translateX(16px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+}
