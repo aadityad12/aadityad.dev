@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { HERO, RESUME } from "./content";
 import Masthead from "./components/Masthead";
 import Hero from "./components/brief/Hero";
-import Proof from "./components/brief/Proof";
+import Facts from "./components/brief/Facts";
 import ProjectIndex from "./components/brief/ProjectIndex";
 import Experience from "./components/brief/Experience";
 import Credentials from "./components/brief/Credentials";
@@ -25,7 +25,7 @@ export default function Home() {
       <Masthead variant="brief" resume={RESUME} />
       <main className="brief" id="main">
         <Hero />
-        <Proof />
+        <Facts />
         <ProjectIndex />
         <Experience />
         <Credentials />
