@@ -23,7 +23,7 @@
   --pad: clamp(18px, 4.2vw, 60px);
   --mono: var(--font-mono), ui-monospace, "SF Mono", Menlo, monospace;
   --sans: var(--font-sans), "Helvetica Neue", Arial, sans-serif;
-  --mast-h: 52px;
+  --mast-h: 56px;
 }
 
 * { box-sizing: border-box; }
@@ -70,42 +70,38 @@ a:hover { color: var(--accent-ink); }
 .mast-inner { max-width: calc(var(--sheet-w) + 40px); margin: 0 auto; height: 100%; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 20px; padding: 0 20px; }
 .mast-mark { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; white-space: nowrap; }
 .mast-mark b { font-family: var(--sans); font-stretch: 125%; font-weight: 800; font-size: 15px; letter-spacing: -0.01em; }
-.mast-mark span { font-family: var(--sans); font-stretch: 112%; font-weight: 700; font-size: 14px; letter-spacing: -0.005em; }
-.mast-datasheet .mast-mark span { font-family: var(--mono); font-stretch: 100%; font-weight: 400; font-size: 12px; letter-spacing: 0.04em; }
+.mast-mark span { font-family: var(--sans); font-stretch: 112%; font-weight: 700; font-size: 15px; letter-spacing: -0.005em; }
 .mast-ic { width: 22px; height: 22px; flex: none; }
-.mast-mid { font-family: var(--mono); font-size: 11.5px; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mast-mid { font-family: var(--mono); font-size: 13px; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .mast-sec, .mast-avail { text-align: center; }
 .mast-sec span { color: var(--accent); margin-right: 8px; }
 .mast-crumb { text-align: left; }
+.mast-crumb a { text-decoration: underline; }
 .mast-crumb b { color: var(--ink); font-weight: 600; }
-.mast-end { display: flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.05em; }
+.mast-end { grid-column: 3; display: flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.05em; }
 .mast-nav { display: flex; align-items: center; gap: 2px; }
-.mast-nav a { text-decoration: none; padding: 6px 8px; white-space: nowrap; }
+.mast-nav a { font-family: var(--sans); font-size: 14.5px; font-weight: 600; text-transform: none; letter-spacing: 0; text-decoration: none; padding: 8px 10px; white-space: nowrap; }
 .mast-nav a:hover { background: var(--ink); color: var(--paper); }
-.mast-nav a[aria-current="true"] { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 6px; }
-.mast-nav .mast-step-l { display: inline-block; max-width: 20ch; overflow: hidden; text-overflow: ellipsis; vertical-align: bottom; }
-.mast-nav .mast-step-s { display: none; font-size: 14px; line-height: 1; }
-.mast .pdf { border: 1px solid var(--ink); padding: 6px 10px; margin-left: 6px; text-decoration: none; white-space: nowrap; }
+.mast-nav a[aria-current] { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 6px; }
+.mast .pdf { font-size: 13px; border: 1px solid var(--ink); padding: 7px 11px; margin-left: 6px; text-decoration: none; white-space: nowrap; }
 .mast .pdf:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
 .mast-menu { display: none; position: relative; }
-.mast-menu summary { list-style: none; cursor: pointer; border: 1px solid var(--hair); padding: 6px 10px; user-select: none; }
+.mast-menu summary { font-family: var(--sans); font-size: 14px; font-weight: 600; text-transform: none; letter-spacing: 0; white-space: nowrap; list-style: none; cursor: pointer; border: 1px solid var(--hair); padding: 6px 10px; user-select: none; }
 .mast-menu summary::-webkit-details-marker { display: none; }
 .mast-menu summary::after { content: " +"; }
 .mast-menu[open] summary::after { content: " \2212"; }
 .mast-menu[open] summary { background: var(--ink); border-color: var(--ink); color: var(--paper); }
 .mast-menu-list { position: fixed; left: 0; right: 0; top: var(--mast-h); background: var(--bg); border-bottom: 1px solid var(--hair); box-shadow: 0 24px 40px -28px rgba(30, 28, 20, 0.45); display: flex; flex-direction: column; padding: 4px 20px 10px; }
-.mast-menu-list a { text-decoration: none; padding: 14px 4px; border-bottom: 1px solid var(--hair); }
+.mast-menu-list a { font-family: var(--sans); font-size: 17px; font-weight: 600; text-transform: none; letter-spacing: 0; text-decoration: none; padding: 16px 4px; border-bottom: 1px solid var(--hair); }
 .mast-menu-list a:last-child { border-bottom: 0; }
 .mast-menu-list a:hover { background: var(--ink); color: var(--paper); }
-.mast-menu-list a[aria-current="true"] { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 6px; }
+.mast-menu-list a[aria-current] { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 6px; }
 .mast-prog { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; }
 .mast-prog span { display: block; height: 100%; background: var(--accent); transform-origin: 0 50%; transform: scaleX(0); }
 @media (max-width: 1180px) {
-  .mast-nav .mast-step-l { display: none; }
-  .mast-nav .mast-step-s { display: inline; }
   .mast-brief .mast-avail { display: none; }
 }
-@media (max-width: 1000px) { .mast-pdf-x { display: none; } }
+@media (max-width: 1100px) { .mast-pdf-x { display: none; } }
 @media (max-width: 759px) {
   .mast-nav { display: none; }
   .mast-menu { display: block; }
@@ -113,7 +109,7 @@ a:hover { color: var(--accent-ink); }
   .mast .pdf { margin-left: 0; }
   .mast-menu-list { padding: 4px 14px 10px; }
 }
-@media (max-width: 559px) { .mast-mid { display: none; } .mast-inner { grid-template-columns: 1fr auto; } .decoder { font-size: 24px; gap: 14px 6px; } }
+@media (max-width: 559px) { .mast-mid { display: none; } .mast-inner { grid-template-columns: 1fr auto; } .mast-end { grid-column: 2; } .mast-mark b { display: none; } .decoder { font-size: 24px; gap: 14px 6px; } }
 
 /* ---------- Sheets ---------- */
 .sheet {
