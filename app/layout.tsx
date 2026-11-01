@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
+import SkillsDialog from "./components/skills/SkillsDialog";
 import { EMAIL, GITHUB, HERO, LINKEDIN } from "./content";
 
 const archivo = Archivo({
@@ -49,7 +50,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(person) }} />
       </head>
-      <body>{children}</body>
+      <body>{children}<SkillsDialog /></body>
     </html>
   );
 }

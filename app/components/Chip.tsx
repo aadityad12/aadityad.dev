@@ -24,15 +24,16 @@ const PLACED = place();
 const noteTitle = (id: string) => NOTES.find((n) => n.id === id);
 
 type ChipProps = {
+  compact?: boolean;
   activePin?: string | null; // pin name currently hovered or selected
   selectedPin?: string | null; // pin name clicked (sticky filter)
   onHoverPin?: (name: string | null) => void;
   onSelectPin?: (name: string | null) => void; // same pin again clears
 };
 
-export default function Chip({ activePin, selectedPin, onHoverPin, onSelectPin }: ChipProps = {}) {
+export default function Chip({ activePin, selectedPin, onHoverPin, onSelectPin, compact = false }: ChipProps = {}) {
   // Index mode: the front page drives the chip from outside. The datasheet renders <Chip /> bare.
-  const index = !!onSelectPin;
+  const index = !compact && !!onSelectPin;
   const [rove, setRove] = useState(0);
   const wrap = useRef<HTMLDivElement>(null);
   const sheen = useRef<SVGRadialGradientElement>(null);
@@ -103,13 +104,13 @@ export default function Chip({ activePin, selectedPin, onHoverPin, onSelectPin }
   const lit = index ? (activePin ?? selectedPin ?? null) : null;
 
   return (
-    <div className="chip-wrap" ref={wrap} onPointerMove={onMove} onPointerLeave={onLeave}>
+    <div className="chip-wrap" ref={wrap} onPointerMove={compact ? undefined : onMove} onPointerLeave={compact ? undefined : onLeave}>
       <div className="chip-tilt">
         <svg
-          className="chip-svg booting"
+          className={compact ? "chip-svg chip-svg-compact" : "chip-svg booting"}
           viewBox="0 0 600 600"
           role={index ? "group" : "img"}
-          aria-label="Pin diagram of a 28-pin chip package marked AD2028. Each pin is a skill; the same information is in the pin table in section 4."
+          aria-label={compact ? "A 28-pin chip marked AD2028. Each pin is a skill; the pin map lists them." : "Pin diagram of a 28-pin chip package marked AD2028. Each pin is a skill; the same information is in the pin table in section 4."}
         >
           {index && <title>AD2028 pin diagram: each of the 28 pins is a skill. Hover or focus a pin to see where it was used; select it to filter the projects.</title>}
           <defs>
@@ -177,9 +178,9 @@ export default function Chip({ activePin, selectedPin, onHoverPin, onSelectPin }
                 key={pin.n}
                 className={`pin${on ? " on" : ""}${index && selectedPin === pin.name ? " sel" : ""}${index ? (dead ? " dead" : " pick") : ""}`}
                 style={{ "--i": i } as React.CSSProperties}
-                onPointerEnter={(e) => showPin(pl, e)}
-                onPointerMove={(e) => showPin(pl, e)}
-                onPointerLeave={() => hidePin()}
+                onPointerEnter={compact ? undefined : (e) => showPin(pl, e)}
+                onPointerMove={compact ? undefined : (e) => showPin(pl, e)}
+                onPointerLeave={compact ? undefined : () => hidePin()}
                 {...aria}
                 onClick={index ? () => pick(pl) : undefined}
                 onKeyDown={index ? (e) => onPinKey(e, i) : undefined}
@@ -196,15 +197,15 @@ export default function Chip({ activePin, selectedPin, onHoverPin, onSelectPin }
               >
                 <rect x={x - (horiz ? 0 : 8)} y={y - (horiz ? 8 : 0)} width={w + (horiz ? 0 : 16)} height={h + (horiz ? 16 : 0)} fill="transparent" />
                 <rect className="lead" x={x} y={y} width={w} height={h} fill="url(#lead)" />
-                {lbl}
-                <text className="num" aria-hidden="true" x={nIn.x} y={nIn.y} textAnchor={nIn.a as "start" | "end" | "middle"} style={{ fill: "#6d6d68" }}>{pin.n}</text>
+                {!compact && lbl}
+                {!compact && <text className="num" aria-hidden="true" x={nIn.x} y={nIn.y} textAnchor={nIn.a as "start" | "end" | "middle"} style={{ fill: "#6d6d68" }}>{pin.n}</text>}
               </g>
             );
           })}
 
         </svg>
       </div>
-      {hover && (
+      {!compact && hover && (
         <div className="chip-tip" style={{ left: hover.x, top: hover.y }} role="status">
           <span className="t">Pin {hover.p.pin.n} · {hover.p.pin.name} · {hover.p.pin.type}</span>
           {hover.p.pin.desc}
@@ -217,7 +218,7 @@ export default function Chip({ activePin, selectedPin, onHoverPin, onSelectPin }
           </span>
         </div>
       )}
-      {!index && (
+      {!compact && !index && (
         <div className="chip-legend" aria-hidden="true">
           <span>Fig. 0 · 28-pin package, top view</span>
           <span>Hover a pin</span>
