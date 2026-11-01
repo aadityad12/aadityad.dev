@@ -33,14 +33,15 @@ export const BRIEF = {
   workIntro: "Four of ten. Each has its own page.",
   moreWork: "Also with a page each:",
   about:
-    "I'm from India, and I got into engineering through VEX robotics. It came full circle at SJSU: I wrote the control code for my team's robot in ENGR 10, posted the fastest run in the section, and was brought back the next semester to teach the course. Most of what I build starts with something I need or want to understand, and I like work where I can measure the result. Outside engineering I follow F1, basketball, soccer and cricket.",
+    "I'm from India, and I got into engineering through VEX robotics. Most of what I build starts with something I need or want to understand, and I like work where I can measure the result. Outside engineering I follow F1, basketball, soccer and cricket.",
   contactKicker: "Summer 2027 internships · Winter 2027 co-ops",
   contactLine: "I'm looking for roles in software, embedded systems, and AI/ML. Email is the fastest way to reach me.",
 };
 ```
 
-`about` is four sentences taken from `ABOUT[0]`, `ABOUT[1]` and `ABOUT[2]` with the
-ApexTracker and Rung clauses and the meetups clause removed. Do not change `ABOUT`.
+`about` is three sentences taken from `ABOUT[0]`, `ABOUT[1]` and `ABOUT[2]`: the ENGR 10
+story is dropped (Experience already says he was invited back to teach it), as are the
+ApexTracker and Rung clauses and the meetups clause. Do not change `ABOUT`.
 
 ### `FACTS`
 
@@ -50,15 +51,15 @@ Replaces the role of `PROOF` on the front page. Three items, no status, no bench
 export type Fact = { big: string; small: string; href: string };
 export const FACTS: Fact[] = [
   { big: "Infineon", small: "Research intern and software lead, 2026. Built an offline navigation aid for blind users.", href: "/work/visionassist/" },
-  { big: "Hackathon winner", small: "Sponsor Track, UC Berkeley AI Hackathon 2026, with Accordion.", href: "/work/accordion/" },
+  { big: "Hackathon winner", small: "Sponsor Track, UC Berkeley AI Hackathon 2026, with Accordion. 240+ stars on GitHub.", href: "/work/accordion/" },
   { big: "3.8 GPA", small: "Dean's Scholar. B.S. Computer Engineering, minor in AI, SJSU, May 2028.", href: "#education" },
 ];
 ```
 
-Sources: `EXPERIENCE[0]`, `NOTES[accordion].context`, `EDUCATION[0]`. The Accordion star
-count is not here: a recruiter cannot judge it (rule 3), and it stays on the Accordion
-page in `specs` and `headline` with its `Repo` tag. The `big` values are landmarks; the
-`small` lines are body (README, "How a recruiter reads a page").
+Sources: `EXPERIENCE[0]`, `NOTES[accordion].context` and `.specs[1]`, `EDUCATION[0]`. The
+star count stays: anyone who has used GitHub reads "240+ stars" instantly, which is the
+test rule 3 sets. The `big` values are landmarks; the `small` lines are body (README,
+"How a recruiter reads a page").
 Keep the `PROOF` export in place until issue 04 deletes `Proof.tsx`; then remove `PROOF`
 in that issue if nothing else imports it.
 
@@ -91,22 +92,48 @@ costs a stop. Values:
 | clear-dispatch | `"HackDavis 2026 · backend · May 2026"` |
 
 Each is `context`, `role` and `when` of the same note, shortened, with team sizes
-dropped. `context`, `role` and `when` stay unchanged; the datasheet still uses them, and
-the project page header does until issue 08 switches it to `where`.
+dropped. `context` and `when` stay unchanged; the datasheet still uses them, and the
+project page header does until issue 08 switches it to `where`.
+
+### `AppNote.role`: team sizes leave the site
+
+Team sizes say nothing about what he did, on any page, so they go everywhere, the
+datasheet included. Make `role` optional (`role?: string`) and set it to:
+
+| id | role |
+| --- | --- |
+| visionassist | `"Software lead"` |
+| alta | `"Hardware and firmware lead"` |
+| clear-dispatch | `"Backend"` |
+| accordion, rung, gazeboard, apextracker, echo, oss-scout, temper | remove the field |
+
+Then make the two readers tolerate a missing role, each a one-line change:
+- `app/components/AppNote.tsx`: render the `<div><dt>Role</dt>...</div>` entry of
+  `.an-meta` only when `note.role` is set.
+- `app/work/[slug]/page.tsx`: render the `<span>{note.role}</span>` in `.work-meta` only
+  when `note.role` is set (issue 08 replaces this line with `where`; until then it must
+  not print an empty span with a stray separator).
+
+Also change `EXPERIENCE[0].points[0]` from "Led software on a five-person team building
+an offline navigation aid for blind users on a Raspberry Pi 5, through the Infineon
+University Alliance." to "Led the software for an offline navigation aid for blind users
+on a Raspberry Pi 5, through the Infineon University Alliance." Nothing else in `points`
+changes.
 
 ### `EXPERIENCE[].summary`
 
-Add `summary: string` to each entry, after `points`. One sentence of body copy under the
-role and organisation (the landmarks): what was built, for whom, and what it led to. No
-team sizes, no headcounts, no hours: "five-person team", "30 students", "54 members" and
-"6 contact hours" stay in `points`, which the datasheet keeps.
+Add `summary: string` to each entry, after `points`. One short sentence of body copy under
+the role and organisation (the landmarks): what was built, for whom, and what it led to,
+in twenty words or so. The detail is one click away (the VisionAssist page, the
+datasheet), so the sentence does not try to carry it. No headcounts, no hours: "30
+students", "54 members" and "6 contact hours" stay in `points`, which the datasheet keeps.
 
 | org | summary |
 | --- | --- |
-| Infineon Technologies, with De Anza College | `"Led the software for an offline navigation aid for blind users on a Raspberry Pi 5: the detection, distance and speech pipeline, the radar characterization delivered to Infineon, and the demo to the sponsors."` |
-| San José State University | `"Run the ENGR 10 lab sections, where students solder IR receiver boards and build and program VEX robots in C++; invited back to TA the course one semester after taking it."` |
-| De Anza College | `"TA for x86 assembly, computer architecture and both introductory C++ courses; tutored C++, assembly, Python and data structures in the CS lab."` |
-| Applied Data Analytics Club, De Anza College | `"Started the campus's first applied-ML student group and built its workshop program on model evaluation and Python data pipelines from scratch."` |
+| Infineon Technologies, with De Anza College | `"Led the software for an offline navigation aid for blind users on a Raspberry Pi 5; delivered the radar analysis and the demo to Infineon."` |
+| San José State University | `"Run the ENGR 10 labs (soldering, VEX robots in C++); invited back to TA the course one semester after taking it."` |
+| De Anza College | `"TA for x86 assembly, computer architecture and introductory C++; tutored C++, Python and data structures in the CS lab."` |
+| Applied Data Analytics Club, De Anza College | `"Started the campus's first applied-ML student group and built its workshop program from scratch."` |
 
 ### `Pin.full` and `PIN_GROUPS`
 
@@ -182,20 +209,23 @@ the datasheet.)
 
 ## Files
 
-Modify: `app/content.ts` only.
+Modify: `app/content.ts`; one line each in `app/components/AppNote.tsx` and
+`app/work/[slug]/page.tsx` (the optional `role`, above). Nothing else.
 
 ## Acceptance criteria
 
-- [ ] `npm run build` passes; `/datasheet/` renders exactly as before (diff the HTML of `out/datasheet/index.html` against a build of `Fable2` before this PR: identical).
+- [ ] `npm run build` passes; `/datasheet/` renders as before except for the role changes (diff `out/datasheet/index.html` against a build of `Fable2` before this PR: the only differences are seven missing Role cells, three shortened Role values, and the first VisionAssist bullet).
+- [ ] `grep -ciE "team of|-person|\bsolo\b" out/datasheet/index.html out/work/*/index.html out/index.html` is 0 for every file. Team sizes appear nowhere on the site.
 - [ ] Every new string above appears in `app/content.ts` verbatim.
 - [ ] `grep -c "where:" app/content.ts` is at least 10; every `NOTES` entry has `where`.
 - [ ] Every `EXPERIENCE` entry has `summary`; every `PINS` entry has `full`; `CERTS_BRIEF` has five entries.
-- [ ] None of the new strings (`BRIEF`, `FACTS`, `where`, `summary`) contains "team of", "-person", "solo", "★", or a number followed by "students", "members", "hours", "stars", "PRs" or "commits".
+- [ ] None of the new strings (`BRIEF`, `FACTS`, `where`, `summary`) contains "team of", "-person", "solo", or a number followed by "students", "members", "hours", "PRs" or "commits". (Star counts are allowed.)
+- [ ] Each `summary` is 25 words or fewer.
 - [ ] The build-time group check throws if a pin is removed from `PIN_GROUPS` (test it, then restore).
 - [ ] `grep -n "—" app/content.ts` returns nothing new.
 - [ ] Lint passes.
 
 ## Out of scope
 
-Rendering anything. Removing `PROOF`, `SKILLS`, `FEATURES`, `MORE` (the datasheet still
-imports some; later issues remove only what becomes unused).
+Rendering anything new. Removing `PROOF`, `SKILLS`, `FEATURES`, `MORE` (the datasheet
+still imports some; later issues remove only what becomes unused).

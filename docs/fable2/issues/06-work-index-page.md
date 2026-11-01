@@ -62,8 +62,10 @@ The long version of all of this is the datasheet ↗
 
 `.wi-row`: grid `40px 170px minmax(0, 1fr) 28px` at ≥ 900 px with `wi-d` and `wi-w`
 stacked in the third column; under 900 px, `26px minmax(0, 1fr) 24px` with title, line and
-where stacked. Hairline between rows, 1 px ink rule under the last. Row hover: `var(--paper)`
-background. No status tags, no stack, no headline numbers.
+where stacked. Sizes: `wi-t` 18 px weight 700, `wi-d` 16 px `--ink-2`, `wi-w` mono 12 px
+uppercase `--ink-2`, `wi-n` mono 12 px. Row padding 14 px 0. Hairline between rows, 1 px
+ink rule under the last. Row hover: `var(--paper)` background. No status tags, no stack,
+no headline numbers.
 
 ## Files
 

@@ -22,7 +22,7 @@ Measured on the Fable1 build, 31 Oct 2026:
 | Status tags (`Measured`, `Repo`, ...) on `/` | 13 | **0** |
 | Height of `/` at 1440 x 900 | 4,314 px (4.8 screens) | 2,400 px or less (2.7 screens) |
 | Height of `/` at 390 x 844 | 7,795 px (9.2 screens) | 4,400 px or less (5.2 screens) |
-| Links in the masthead on a project page | 5, different from every other route | 4, the same on every route |
+| Links in the masthead on a project page | 5, different from every other route, in 11.5 px mono capitals; previous/next shrink to bare arrows under 1000 px | 4, the same on every route, 14.5 px sans |
 | Way off a project page, apart from the masthead | one mono line "Next: Alta" | previous and next cards, "All work", "Home" |
 
 What a recruiter sees today, and why it fails them:
@@ -41,7 +41,11 @@ What a recruiter sees today, and why it fails them:
   descriptions and a 50-item toolbox. About is three paragraphs plus a facts table.
 - A project page ends in a 13 px mono line. The masthead on that page shows five links
   (previous, next, all projects, datasheet entry, resume) that no other route has, so the
-  reader has to relearn the navigation on every page type.
+  reader has to relearn the navigation on every page type. Aadi's own account of using
+  it: he landed on the front page and did not know where to go; he did not see how to get
+  to all the projects except by clicking each one; once on a project page he did not know
+  how to get out, and did not realise the small items in the bar were the way between
+  projects, because they were not legible.
 
 ## How a recruiter reads a page
 
@@ -61,10 +65,10 @@ What the eye does on a page it has never seen, in the first thirty seconds:
    reader did not care about is skipped whole. A paragraph with no heading is skipped
    whole.
 4. **It recognises before it reads.** A company or school name (Infineon, UC Berkeley,
-   SJSU), a GPA, a date, "winner", "2nd place": understood in one glance. A number with a
-   unit from outside the reader's world ("38.84×", "≈200 ms / frame", "9.8k★", "team of
-   5", "54 members") is not understood at all. The eye stops, gets nothing, and the stop
-   is wasted; enough wasted stops and the reader leaves.
+   SJSU), a GPA, a date, "winner", "2nd place", "240+ stars on GitHub": understood in one
+   glance. A number with a unit from outside the reader's world ("38.84×", "≈200 ms /
+   frame", "team of 5", "54 members") is not understood at all. The eye stops, gets
+   nothing, and the stop is wasted; enough wasted stops and the reader leaves.
 5. **On a phone there is only the left edge.** The thumb scrolls about one screen a
    second; anything that is not bold or large is a grey blur going past. A screen with no
    stop on it is a screen where the reader learns nothing.
@@ -79,6 +83,13 @@ The recruiter's six questions, in the order the page should answer them: who is 
 where do they study and when do they graduate, when are they available, where have they
 worked, what have they won, what is the GPA. Then two actions: get the résumé, see the
 projects.
+
+Depth is one click away, never on the page. The front page is the brief; every section
+that has more to say offers exactly one link to where it lives: the work cards to their
+project pages, "All ten projects" to `/work/`, the chip to the skills panel, Experience
+to the datasheet's revision history, the footer to the whole datasheet. The project pages
+are the optional depth Aadi likes; they stay as they are apart from their wayfinding and
+the reel.
 
 Body copy has three rules of its own:
 
@@ -130,7 +141,7 @@ kicker  Available for Summer 2027 internships · May to August 2027     *
 kicker  Computer Engineering · SJSU · Class of 2028                    *
 h1      Aaditya Desai                                                  *
 button  Résumé PDF ↓                                                   *
-button  Email
+button  See the work ↓                                                 *
 b       28 skills, one per pin.                     (the chip card, phones only)
 b       Infineon                                                       *
 b       Hackathon winner                                               *
@@ -170,19 +181,22 @@ button  GitHub ↗
 button  LinkedIn ↗
 ```
 
-Read that cold: the six questions are answered by the ninth stop and the first action is
-the fourth. Nothing in it needs context. Nothing in it is an effort number. The only names
+Read that cold: the six questions are answered by the ninth stop, the first action (the
+résumé) is the fourth, and the fifth tells the reader where to go next. Nothing in it
+needs context. Nothing in it is an effort number. The only names
 that recur are VisionAssist (a project, then a job) and San José State University (an
 employer, then a school), which is the truth. The experience section's date column
 (mono, left edge) is a landmark the eye also uses; the script does not list it because it
 is a column, not a line.
 
-What left the landmarks, and where it went: every status tag and benchmark number, to the
-project pages and the datasheet, where it keeps its tag; every team size, to the
-datasheet only; the Accordion star count, to the Accordion page with its `Repo` tag; the
-star counts of Soup and fusioncore, to the datasheet; "two weekly lab sections of 30
-students" and "54 members", to the datasheet's `points`; the toolbox, to the skills
-panel; coursework and the sixth, in-progress certification, to the datasheet.
+What left, and where it went: every status tag and benchmark number, to the project
+pages and the datasheet, where it keeps its tag; every team size, nowhere (Aadi's call:
+they say nothing about what he did, on any page, so they leave the datasheet too);
+"two weekly lab sections of 30 students" and "54 members", to the datasheet's `points`;
+the toolbox, to the skills panel; coursework and the sixth, in-progress certification, to
+the datasheet. What stayed, also Aadi's call: GitHub star counts ("240+ stars" in the
+facts strip, "9.8k★" and "380★" in the open-source line), because anyone who has used
+GitHub reads them instantly.
 
 ## The one-paragraph version
 
@@ -196,9 +210,11 @@ the door to a **skills panel**: a pop-up (native `<dialog>`) with the full inter
 chip beside a plain, grouped list of the 28 skills, each naming the projects that used it.
 The panel opens from a "Skills" item in the masthead on every route and from the chip
 itself; `/skills/` is the same content as a page, for links and for readers without
-JavaScript. A new `/work/` page lists all ten projects, so "Work" has a real destination
-and project pages have a parent. The masthead shows the same four items everywhere: Work,
-Experience, Skills, Contact, plus the resume. Project pages gain a breadcrumb row at the
+JavaScript. The hero's second button is "See the work ↓", so the first screen says where
+to go. A new `/work/` page lists all ten projects, so "Work" has a real destination and
+project pages have a parent. The masthead shows the same four items everywhere: Work,
+Experience, Skills, Contact, plus the resume, set in 14.5 px sans instead of 11.5 px mono
+capitals so it reads as navigation. Project pages gain a breadcrumb row at the
 top and previous/next cards at the bottom, and their header line names the venue and date
 instead of the role and team size. The highlights reel on project pages is
 tightened so beats sit closer together, and on desktop the reel figure becomes free to
@@ -248,13 +264,14 @@ Fable1's ten rules still apply. They are repeated here with the Fable2 changes m
    front page (`/`) and the index pages (`/work/`, `/skills/`) carry **no benchmark
    numbers at all**: no ratios, no latencies, no sample rates. **Effort and scale numbers
    appear on no recruiter-facing surface**, which means `/`, `/work/`, `/skills/` and the
-   header line of `/work/<slug>/`: no team sizes ("team of 4", "five-person", "solo"), no
-   member, student, hour, star, PR, commit, line or test counts. They say nothing about
-   what he did and they cost the reader a stop. A number is allowed on those surfaces
-   only when a recruiter can judge it without context: a GPA, a date, a place in a
-   competition, the count of things on this site (ten projects, 28 skills). The datasheet
-   is the long version and keeps `role`, `points` and the open-source star counts as they
-   are; project pages keep their tagged headline numbers below the header.
+   header line of `/work/<slug>/`: no member, student, hour, PR, commit, line or test
+   counts. They say nothing about what he did and they cost the reader a stop. **Team
+   sizes ("team of 4", "five-person", "solo") appear nowhere on the site**, the datasheet
+   included (issue 01 removes them). A number is allowed on recruiter-facing surfaces only
+   when a recruiter can judge it without context: a GPA, a date, a place in a
+   competition, a GitHub star count, the count of things on this site (ten projects, 28
+   skills). The datasheet is the long version and keeps `points` as they are; project
+   pages keep their tagged headline numbers below the header.
 4. **Facts come only from `app/content.ts`.** New fields added in issue 01 are rephrasings
    and selections of facts already in that file; they introduce nothing. If an issue needs
    a fact that isn't there, write `TODO(aadi): <what is missing>` in the code and stop; do
@@ -288,6 +305,12 @@ Fable1's ten rules still apply. They are repeated here with the Fable2 changes m
 12. **Fable2 addition: one navigation.** The masthead shows the same items on every route
     (issue 03). No route adds its own items to it. Route-specific wayfinding (breadcrumbs,
     previous/next) lives in the page body, never in the masthead.
+13. **Fable2 addition: a type floor.** On `/`, `/work/`, `/skills/` and `/work/<slug>/`:
+    body copy is 16 px or larger, secondary lines 15 px or larger, mono labels 12 px or
+    larger, navigation text (masthead items, breadcrumbs, footer links) 13 px or larger
+    and the masthead items 14.5 px sans. Nothing that carries a fact is set in `--muted`;
+    `--muted` is for decoration and hints only. The datasheet keeps its own smaller
+    table type; it is the long version and says so.
 
 ## Where things come from
 

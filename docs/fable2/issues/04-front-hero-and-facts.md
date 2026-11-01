@@ -4,8 +4,10 @@
 
 ## Goal
 
-The first screen says who, what, when, and gives two buttons. The chip stays, on every
-screen size, as the visual signature and the door to the skills panel: full size with hover
+The first screen says who, what, when, and gives two buttons: the résumé, and the way
+into the work. Aadi's words about Fable1: he landed on the front page and did not know
+where to go. The second button answers that before the reader scrolls. The chip stays, on
+every screen size, as the visual signature and the door to the skills panel: full size with hover
 tooltips on desktop, small and label-free on phones. The proof strip becomes three facts a
 recruiter recognises in three seconds, with no status tags and no benchmark numbers. The
 intro paragraph goes; the facts strip now carries what it said.
@@ -32,7 +34,8 @@ shell (max-width 1180px)
 │ I build from the metal up: an ARM64 JIT      │    tooltips, click     │
 │ compiler, bare-metal firmware, on-device     │    opens the panel)    │
 │ vision, and tools for AI agents.   (lead)    │                        │
-│ [Résumé PDF ↓] [Email]   GitHub ↗ · LinkedIn ↗│ 28 skills, one per pin.│
+│ [Résumé PDF ↓] [See the work ↓]              │ 28 skills, one per pin.│
+│ Email · GitHub ↗ · LinkedIn ↗                │                        │
 │                                              │ Hover a pin to see     │
 │                                              │ where I used it.       │
 │                                              │ Open the pin map →     │
@@ -57,7 +60,8 @@ Aaditya Desai
 I build from the metal up: an ARM64 JIT compiler,
 bare-metal firmware, on-device vision, and tools
 for AI agents.
-[Résumé PDF ↓] [Email]  GitHub ↗ · LinkedIn ↗
+[Résumé PDF ↓] [See the work ↓]
+Email · GitHub ↗ · LinkedIn ↗
 ┌──────────┬────────────────────────────────┐
 │ compact  │ 28 skills, one per pin.        │   <- one <a data-skills>, whole card
 │  chip    │ Open the pin map →             │
@@ -83,9 +87,11 @@ visible without scrolling.
   metal up"), then `.actions`.
 - Remove `.brief-intro` and `HERO.intro` from the page.
 - `.actions`: `<a class="button primary" href={RESUME}>Résumé PDF ↓</a>`,
-  `<a class="button" href="mailto:...">Email</a>`, then a `<span class="actions-links">`
-  with `GitHub ↗` and `LinkedIn ↗` as plain mono links separated by " · ". Four actions
-  become two buttons and two links.
+  `<a class="button" href="#work">See the work ↓</a>`, then on its own line a
+  `<span class="actions-links">` with `Email` (`mailto:`), `GitHub ↗` and `LinkedIn ↗` as
+  plain mono links (13 px) separated by " · ". Four buttons become two buttons and three
+  links; the second button is the answer to "where do I go from here". (`#work` is the
+  section id issue 05 sets; until 05 lands it is `#projects`, and 05 updates it.)
 - Right column `.brief-chip`: `<HeroChip />` (below) and the caption:
   `<p class="brief-cap">` with `BRIEF.chip.line`, a `<span class="brief-cap-hover">` with
   `BRIEF.chip.hover` (hidden under 768 px), and `<a href="/skills/" data-skills>` with
@@ -137,7 +143,8 @@ Replaces `Proof.tsx`.
 
 Three equal columns at ≥ 700 px with hairline dividers and 1 px ink rules top and bottom
 (reuse the `.proof` styling, renamed to `.facts`); stacked rows under 700. `big` at
-`clamp(22px, 2.2vw, 28px)` weight 800; `small` 14 px `--ink-2`. No `.tag` anywhere.
+`clamp(22px, 2.2vw, 28px)` weight 800; `small` 16 px `--ink-2` line-height 1.45 (body
+copy is never under 16 px, README rule 13). No `.tag` anywhere.
 
 ### `app/page.tsx`
 
@@ -162,6 +169,7 @@ Delete: `app/components/brief/Proof.tsx`, `app/components/brief/ChipIndex.tsx`,
 
 - [ ] 1440 x 900: masthead, hero and facts strip all visible without scrolling. Screenshot.
 - [ ] 390 x 844: availability, name, lead, both buttons and the chip card visible without scrolling. Screenshot.
+- [ ] "See the work ↓" scrolls to the Selected work heading under the masthead (`scroll-padding-top` already handles the offset); with JS off it still jumps there.
 - [ ] 768: one column, chip 320 px centred with caption, facts stacked. Screenshot.
 - [ ] Hovering the C++ pin at 1440 shows the tooltip with "Used in: Rung"; clicking it opens the skills panel with the C++ row selected; Escape returns focus to the pin.
 - [ ] Tapping the chip card at 390 (or clicking with JS off) goes to `/skills/`; with JS it opens the panel.

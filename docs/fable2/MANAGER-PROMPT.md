@@ -37,11 +37,12 @@ fix small things, and merge.
 Read "The one-paragraph version" and "How a recruiter reads a page" in
 `docs/fable2/README.md`. In short: the front page becomes a page a recruiter can scan, a
 short run of landmarks that answer their six questions in order, with no status tags and
-no number they cannot judge; the chip stays in the hero but opens a
-skills panel (a native dialog, with `/skills/` as the static twin); `/work/` lists all ten
-projects; the masthead shows the same four items on every route; project pages get a
-breadcrumb and previous/next cards; the reel is tightened. The datasheet is untouched
-except for the shared masthead.
+no number they cannot judge; the hero's second button is "See the work"; the chip stays
+in the hero but opens a skills panel (a native dialog, with `/skills/` as the static
+twin); `/work/` lists all ten projects; the masthead shows the same four items on every
+route, in legible sans type; project pages get a breadcrumb and previous/next cards and
+their header drops the team size; the reel is tightened; team sizes leave the datasheet.
+The datasheet is otherwise untouched except for the shared masthead.
 
 ## 3. Order and parallelism
 
@@ -90,10 +91,13 @@ Do not trust the PR description. Check out the branch and verify yourself:
      must go to `/skills/`. If any text is missing, reject.
    - Rule 3: no status tags, no benchmark numbers and no effort or scale numbers on `/`,
      `/work/`, `/skills/` or a project page's header line. `grep -c 'class="tag'
-     out/index.html` must be 0; `grep -ciE "team of|-person|\bsolo\b|★|in progress|[0-9]+
-     (students|members|hours|stars|PRs|commits)" out/index.html out/work/index.html
-     out/skills/index.html` must be 0. After issue 08, the `.work-meta` line of every
-     project page contains no "team of" or "Solo" (the check is in that issue).
+     out/index.html` must be 0; `grep -ciE "in progress|[0-9]+ (students|members|hours|PRs|commits)"
+     out/index.html out/work/index.html out/skills/index.html` must be 0. After issue 01,
+     `grep -rciE "team of|-person|\bsolo\b" out/ --include=index.html` is 0 for every
+     file, the datasheet included. Star counts are allowed everywhere.
+   - Rule 13: the type floor. On front-page and project-page PRs, inspect computed font
+     sizes of the new elements: body 16 px or more, labels 12 px or more, masthead items
+     14.5 px sans. Reject anything that carries a fact in `--muted`.
    - Rule 4: no invented facts. Diff `app/content.ts`. Every new string must be in issue
      01 verbatim or trace to an existing field. If you cannot trace it, reject.
    - Rule 5: `grep -rn "—" app/` must return nothing in files the PR touched.

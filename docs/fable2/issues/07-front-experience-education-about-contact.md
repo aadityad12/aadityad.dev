@@ -8,8 +8,8 @@ Everything below the work cards becomes scannable: one line per job, two lines o
 education, three awards, one line of certifications, one line of open source, one short
 paragraph, and a contact block with the email first. The toolbox leaves the front page
 (the skills panel is the toolbox now). Coursework, the full bullets with their headcounts
-and hours, the in-progress certification, the open-source star counts and PR descriptions
-stay in the datasheet.
+and hours, the in-progress certification and the open-source PR descriptions stay in the
+datasheet, one click away from the section header.
 
 ## Source material
 
@@ -24,7 +24,7 @@ stay in the datasheet.
 ## Layout (1440 px)
 
 ```
-Experience                                          Industry research, teaching, leadership.
+Experience                                            Full record in the datasheet ↗
 ──────────────────────────────────────────────────────────────────────────────────────────
 APR 2026 TO JUN 2026   Research Intern and Technical Lead, VisionAssist
 CUPERTINO, CA          INFINEON TECHNOLOGIES, WITH DE ANZA COLLEGE
@@ -44,8 +44,8 @@ Expected May 2028 · GPA 3.8 · Dean's Scholar   │ 2nd place · DA Hacks 3.5 �
                                                │ Top 10 at site · ICPC 2025 Regionals, Division 2
 De Anza College                                │
 Certificate of Achievement, Programming in     │ Open source
-C/C++, with Honors                             │ Merged upstream: Soup (LLM fine-tuning toolkit), fusioncore (ROS 2 localization
-Mar 2026 · GPA 3.8 · Dean's List               │ for outdoor robots). All contributions ↗
+C/C++, with Honors                             │ Merged upstream: Soup (9.8k★), fusioncore (380★). All contributions ↗
+Mar 2026 · GPA 3.8 · Dean's List               │
                                                │
                                                │ Certifications
                                                │ AWS Certified Cloud Practitioner · Oracle Cloud Infrastructure Generative AI Professional · Anthropic: Model Context Protocol, Advanced Topics · ... (CERTS_BRIEF joined by " · ")
@@ -68,10 +68,12 @@ above the role.
 
 ### `Experience.tsx`
 
-Keep the section id `experience` and the `.pi-head` header (sub-line: "Industry research,
-teaching, leadership."). Each `<li>`: `.xp-when` (when, where) unchanged; `.xp-body` with
-`<h3>{role}</h3>`, `<small className="org">{org}</small>`, `<p className="xp-sum">{summary}</p>`.
-The organisation becomes a mono label (12 px, uppercase, `--ink-2`, letter-spacing 0.06em,
+Keep the section id `experience` and the `.pi-head` header. Its mono sub-line becomes a
+link: `<a href="/datasheet/#revisions">Full record in the datasheet ↗</a>`. This is the
+"optional clickable" for the reader who wants the bullets; the front page shows one
+sentence per job and offers the rest in one click. Each `<li>`: `.xp-when` (when, where) unchanged; `.xp-body` with
+`<h3>{role}</h3>`, `<small className="org">{org}</small>`, `<p className="xp-sum">{summary}</p>`
+(16 px, `--ink-2`, max 60ch). The organisation becomes a mono label (12 px, uppercase, `--ink-2`, letter-spacing 0.06em,
 the same look as the `where` line on the work cards) so the eye stops on the employer's
 name as well as the role; it was a plain sans line before. Remove the `<ul>` of `points`.
 
@@ -89,10 +91,11 @@ Rename the heading to "Education" (keep `id="education"` and `aria-labelledby`);
   `when · note` line as mono. **Do not render `courses`.**
 - Right: `<h3>` "Awards" with `AWARDS_BRIEF` as a `<ul>` of `<li><b>{t}</b> · {d}</li>`
   (drop the table). `<h3>` "Open source": one `<p>`: "Merged upstream: " then for each
-  `OPEN_SOURCE` entry `<a href={o.href}>{o.name}</a> ({o.what})` joined by ", ", then ". "
-  and `<a href={OSS}>All contributions ↗</a>`. **No star counts** (`o.stars` is not
-  rendered; a recruiter cannot judge "9.8k★", rule 3; the datasheet keeps it) and no
-  `Status` tag. `<h3>` "Certifications": one `<p>` with `CERTS_BRIEF` joined by " · ".
+  `OPEN_SOURCE` entry `<a href={o.href}>{o.name}</a> ({o.stars})` joined by ", ", then ". "
+  and `<a href={OSS}>All contributions ↗</a>`. The star counts stay (a GitHub user reads
+  "9.8k★" instantly: that is a serious project to have landed a PR in); the PR
+  descriptions and the `Status` tag do not. `<h3>` "Certifications": one `<p>` with
+  `CERTS_BRIEF` joined by " · ". Both lines 15 px `--ink-2`.
 - Remove the Toolbox `<dl>` and the `SKILLS` import. Remove `Status` import.
 
 Landmarks in this section: the `h2`, the two school `h3`s, the three sub-heading `h3`s,
@@ -133,12 +136,12 @@ Modify: `app/components/brief/Experience.tsx`, `Credentials.tsx`, `About.tsx`,
 
 ## Acceptance criteria
 
-- [ ] Experience shows four entries with one sentence each and no bullets; the first links to `/work/visionassist/`.
-- [ ] Education shows two schools without coursework, three awards, one open-source line naming Soup and fusioncore with what they are and no star counts, one certifications line with five finished certifications, and no toolbox.
+- [ ] Experience shows four entries with one sentence each and no bullets; the first links to `/work/visionassist/`; the section header links to `/datasheet/#revisions` and that anchor lands on the revision history.
+- [ ] Education shows two schools without coursework, three awards, one open-source line (Soup 9.8k★, fusioncore 380★, All contributions), one certifications line with five finished certifications, and no toolbox.
 - [ ] About is one paragraph with no facts table.
 - [ ] `grep -c 'class="tag' out/index.html` is 0.
 - [ ] The landmark read of `/` (issue 10's script, or its regex by hand), with 04 and 05 merged, matches the target read in `docs/fable2/README.md` from `h2 Experience` to the end. Paste the whole read in the PR.
-- [ ] `out/index.html` contains none of: "★", "in progress", "team of", "-person", "solo", "30 students", "54 members", "6 contact hours" (case-insensitive). No `<b>` or `<strong>` sits inside a `<p>`.
+- [ ] `out/index.html` contains none of: "in progress", "team of", "-person", "solo", "30 students", "54 members", "6 contact hours" (case-insensitive). No `<b>` or `<strong>` sits inside a `<p>`. No body text on the page is under 16 px and no mono label under 12 px (inspect `.xp-sum`, `.facts span`, `.wk-card p`, `.oss-line`, `.certs-line`, `.about p`).
 - [ ] Sanity check: height of `/` at 1440 x 900 is 2,400 px or less and at 390 x 844 is 4,400 px or less (`document.documentElement.scrollHeight`). Put both in the PR. If over, find the section whose landmarks sit furthest apart and say so; do not trim copy from issue 01's fields to pass.
 - [ ] 390 px: date column above the role, nothing scrolls sideways. Screenshot 390 and 1440.
 - [ ] No-JS identical. Lint, build, budget pass.

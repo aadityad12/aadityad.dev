@@ -35,7 +35,9 @@ Three passes, in this order. The model behind them is "How a recruiter reads a p
 - [ ] `grep -rn "—" app/ docs/fable2/` returns nothing.
 - [ ] `grep -rni "passionate\|innovative\|awkward constraint" app/content.ts` returns nothing.
 - [ ] `npm run brief` passes; paste the landmark read in the PR.
-- [ ] Nothing on `/`, `/work/`, `/skills/` or any project page's header line says "team of", "Solo", or gives a count of students, members, hours, stars, PRs or commits (the script covers the first three pages; check the ten header lines with the one-liner in issue 08).
+- [ ] `grep -rciE "team of|-person|\bsolo\b" out/ --include=index.html` is 0 for every file, the datasheet included. Nothing on `/`, `/work/` or `/skills/` gives a count of students, members, hours, PRs or commits (the script covers it).
+- [ ] Masthead items are legible at arm's length at 1440 and 390 (14.5 px sans; 17 px in the menu). From a project page, a stranger finds "← All work", the crumb, and the footer cards without being told.
+- [ ] No body copy on `/`, `/work/` or a project page is under 16 px; no mono label under 12 px; nothing that carries a fact is in `--muted`.
 - [ ] `grep -c 'class="tag' out/index.html out/work/index.html out/skills/index.html` is 0 for all three; `out/work/rung/index.html` and `out/datasheet/index.html` still have tags.
 - [ ] Every `TODO(aadi)` in the repo is resolved or listed in the PR for Aadi to decide.
 

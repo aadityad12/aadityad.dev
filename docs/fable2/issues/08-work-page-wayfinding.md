@@ -62,13 +62,13 @@ Insert before `.work-meta`:
 </nav>
 ```
 
-Mono 12 px uppercase, `--ink-2`, flex with `justify-content: space-between`, margin-bottom
-18 px. Remove the `work-all` link from `.work-links` (and its CSS).
+Mono 13 px uppercase, `--ink-2`, flex with `justify-content: space-between`, margin-bottom
+18 px; the "← All work" link weight 600. Remove the `work-all` link from `.work-links` (and its CSS).
 
-Then in `.work-meta`, replace the three spans `{note.context}`, `{note.role}` and
-`{note.when}` with one `<span>{note.where}</span>`, so the line reads
-`{an} · {domain} · {where}`. `context`, `role` and `when` stay in `content.ts` for the
-datasheet; nothing else on the project page changes.
+Then in `.work-meta`, replace the spans `{note.context}`, `{note.role}` (conditional
+since issue 01) and `{note.when}` with one `<span>{note.where}</span>`, so the line reads
+`{an} · {domain} · {where}`. `context`, `when` and the optional `role` stay in
+`content.ts` for the datasheet; nothing else on the project page changes.
 
 ### Footer
 
@@ -99,11 +99,11 @@ Replace `.work-next` with:
 
 `prev` and `next` are the existing `BY_ORDER` neighbours. Cards: `var(--paper)`
 background, 1 px `var(--hair)` border (ink on hover and focus-visible), padding 16 px 18 px,
-`work-card-k` mono 11.5 px uppercase `--muted`, `<b>` 22 px weight 800 stretch 112%,
-`work-card-d` 14.5 px `--ink-2`. The Next card's `work-card-k` and arrow are `--accent`.
+`work-card-k` mono 12 px uppercase `--ink-2`, `<b>` 22 px weight 800 stretch 112%,
+`work-card-d` 15 px `--ink-2`. The Next card's `work-card-k` and arrow are `--accent`.
 Two columns at ≥ 700 px, gap 16 px; stacked under with `.next` first (`order: -1`).
-`.work-foot-links` mono 12.5 px uppercase, margin-top 14 px, `work-keys` floated right
-and hidden under 900 px. 2 px ink rule above the whole nav as `.work-next` had.
+`.work-foot-links` mono 13 px uppercase, margin-top 14 px, `work-keys` floated right,
+`--muted`, and hidden under 900 px. 2 px ink rule above the whole nav as `.work-next` had.
 
 ### The datasheet entry link in the masthead
 
@@ -119,7 +119,7 @@ Modify: `app/work/[slug]/page.tsx`, `app/globals.css`.
 - [ ] `/work/rung/` shows "← All work" and "Project 03 of 10" above the meta line; the link goes to `/work/`.
 - [ ] The meta line on `/work/visionassist/` reads `<an> · <domain> · Infineon Technologies · software lead · Apr to Jun 2026`, and on no project page does it contain "team of" or "Solo". Check all ten with:
   `node -e 'for (const f of process.argv.slice(1)) { const m = require("fs").readFileSync(f, "utf8").match(/<p class="work-meta">.*?<\/p>/); console.log(f, m ? m[0].replace(/<[^>]+>/g, " | ") : "NO META"); }' out/work/*/index.html`
-  and paste the ten lines in the PR. `/datasheet/` still shows `role` (diff `out/datasheet/index.html` before and after: identical).
+  and paste the ten lines in the PR. `/datasheet/` is unchanged by this PR (diff `out/datasheet/index.html` before and after: identical).
 - [ ] The footer shows a Previous card (Accordion) and a Next card (Alta) with titles and one-liners, then All work, Home, the datasheet link.
 - [ ] `/work/visionassist/` footer additionally shows "Experience: Infineon →".
 - [ ] `/work/clear-dispatch/` Next is VisionAssist (wraps); `/work/visionassist/` Previous is Clear Dispatch.

@@ -83,15 +83,17 @@ a one-liner is bold.
 
 Keep the existing `.pi-head` header style (title left, mono line right); it is reused by
 07. Section id changes from `projects` to `work`; `grep -rn "#projects" app/` must be
-empty after this PR (the masthead no longer links to it after 03; the work page's
-"All projects" link is replaced in 08; fix any that remain and say so).
+empty after this PR (the masthead no longer links to it after 03; the hero's "See the
+work ↓" button from 04 points at `#projects` until this PR changes it to `#work`; the
+work page's "All projects" link is replaced in 08; fix any that remain and say so).
 
 ### Styles
 
 `.wk`: `grid-template-columns: repeat(2, minmax(0, 1fr))`, gap 16 px, one column under
 900 px. `.wk-card`: block link, `var(--paper)` background, 1 px `var(--hair)` border,
 padding 18 px 20 px, `text-decoration: none`, `h3` at 22 px weight 800 stretch 112%, `p`
-15.5 px `--ink-2` max 44ch, `small` mono 11.5 px uppercase `--muted` letter-spacing 0.06em.
+16 px `--ink-2` max 44ch, `small` mono 12 px uppercase `--ink-2` letter-spacing 0.06em
+(README rule 13: body 16 px, labels 12 px, nothing in `--muted` that carries a fact).
 Hover and focus-visible: border colour `var(--ink)`, arrow translates 4 px (not under
 reduced motion). `.wk-n` and `.wk-a` mono, top corners. `.wk-more` mono 13 px, margin-top
 16 px; `.wk-all` weight 600.

@@ -62,6 +62,7 @@ PRs; make it readable.
    Computer Engineering · SJSU · Class of 2028
    Aaditya Desai
    Résumé PDF ↓
+   See the work ↓
    Infineon
    Hackathon winner
    3.8 GPA
@@ -83,15 +84,19 @@ PRs; make it readable.
 3. `banned patterns`: in the stripped text of `<main>` + `<footer>` of each of the three
    files, none of these match. Benchmark leaks: `38.84`, `200 ms`, `1,200`, `≈`, `525`,
    `4.54`, `0.63`, `14.41`. Effort and scale (case-insensitive): `/team of/`, `/-person/`,
-   `/\bsolo\b/`, `/★/`, `/\(in progress\)/`, and
-   `/\d[\d,.]*\+?\s*k?\s*(students?|members?|hours?|stars?|PRs?|pull requests?|commits?|lines?|tests?|contact hours)\b/`.
+   `/\bsolo\b/`, `/\(in progress\)/`, and
+   `/\d[\d,.]*\+?\s*k?\s*(students?|members?|hours?|PRs?|pull requests?|commits?|lines?|tests?|contact hours)\b/`.
+   Star counts are not banned: "240+ stars" and "9.8k★" are numbers a GitHub user reads
+   at once (rule 3).
    On failure, print the file, the pattern, and 40 characters either side of the match.
    Extend the list when a new leak appears; the list is the rule made executable, not the
    rule.
 4. `bold in body`: in `<main>` of `out/index.html`, no `<b>` or `<strong>` opens inside a
    `<p>`: `/<p\b[^>]*>(?:(?!<\/p>)[\s\S])*?<(?:b|strong)\b/` must not match. (The facts, the
    chip card and the awards use `<b>` inside `<a>`, `<span>` or `<li>`, not `<p>`.)
-5. `routes present`: `out/work/index.html` and `out/skills/index.html` exist.
+5. `team sizes, site-wide`: `/team of|-person|\bsolo\b/i` matches nothing in the stripped
+   text of any `out/**/index.html`, the datasheet and the ten project pages included.
+6. `routes present`: `out/work/index.html` and `out/skills/index.html` exist.
 
 Exit 1 if any check fails. Do not count words anywhere in the output.
 
