@@ -9,6 +9,7 @@ const SkillsMap = dynamic(() => import("./SkillsMap"), { ssr: false });
 export default function SkillsDialog() {
   const dlg = useRef<HTMLDialogElement>(null);
   const returnTarget = useRef<Element | null>(null);
+  const returnUrl = useRef<string | null>(null);
   const skipHistory = useRef(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [open, setOpen] = useState(false);
@@ -25,6 +26,7 @@ export default function SkillsDialog() {
       if (closeTimer.current) clearTimeout(closeTimer.current);
       if (!dialog.open) {
         returnTarget.current = document.activeElement;
+        returnUrl.current = location.pathname + location.search + (location.hash === "#skills" ? "" : location.hash);
         skipHistory.current = false;
         dialog.showModal();
       }
@@ -39,8 +41,25 @@ export default function SkillsDialog() {
       const link = target instanceof Element ? target.closest<HTMLAnchorElement>("a") : null;
       if (!link) return;
       if (dialog.open && dialog.contains(link) && link.origin === location.origin && (!link.target || link.target === "_self") && !link.hasAttribute("download")) {
-        skipHistory.current = true;
-        dialog.close();
+        if (link.pathname === location.pathname && link.search === location.search) {
+          event.preventDefault();
+          history.replaceState(history.state, "", link.pathname + link.search + link.hash);
+          skipHistory.current = true;
+          dialog.close();
+          if (link.hash) {
+            const id = decodeURIComponent(link.hash.slice(1));
+            requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({ block: "start", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }));
+          }
+        } else {
+          if (location.hash === "#skills") history.replaceState(history.state, "", returnUrl.current ?? location.pathname + location.search);
+          // Let the link handle its click before reduced-motion cleanup unmounts it.
+          queueMicrotask(() => {
+            if (dialog.open) {
+              skipHistory.current = true;
+              dialog.close();
+            }
+          });
+        }
         return;
       }
       if (!link.hasAttribute("data-skills") || location.pathname === "/skills/") return;
@@ -66,9 +85,7 @@ export default function SkillsDialog() {
     };
 
     const onBackdrop = (event: MouseEvent) => { if (event.target === dialog) dialog.close(); };
-    const onKey = (event: KeyboardEvent) => event.stopPropagation();
     dialog.addEventListener("click", onBackdrop);
-    dialog.addEventListener("keydown", onKey);
     document.addEventListener("click", onClick, true);
     window.addEventListener("skills:open", onOpen);
     window.addEventListener("popstate", onPop);
@@ -80,7 +97,6 @@ export default function SkillsDialog() {
       window.removeEventListener("popstate", onPop);
       dialog.removeEventListener("close", onClose);
       dialog.removeEventListener("click", onBackdrop);
-      dialog.removeEventListener("keydown", onKey);
       if (closeTimer.current) clearTimeout(closeTimer.current);
     };
   }, []);
@@ -100,7 +116,7 @@ export default function SkillsDialog() {
       aria-labelledby="skills-dialog-h"
       aria-label="Pin map"
     >
-      <div className="skills-dialog-in">
+      <div className="skills-dialog-in" role="presentation" onKeyDown={(event) => event.stopPropagation()}>
         <button type="button" className="skills-close" onClick={() => dlg.current?.close()} aria-label="Close">Close ✕</button>
         {open && <SkillsMap key={pin ?? ""} heading="h2" initialPin={pin} />}
       </div>
