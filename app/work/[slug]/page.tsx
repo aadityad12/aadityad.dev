@@ -80,7 +80,7 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
         {hasReel && (
           <Reel beats={note.beats!} figure={F!} title={note.title} caption={note.figure} />
         )}
-        <div id={hasReel ? "figure" : undefined} className={WIDE.has(note.id) ? "work-fig-wide" : "work-fig-narrow"}>
+        <div className={`${hasReel ? "work-fig-mobile " : ""}${WIDE.has(note.id) ? "work-fig-wide" : "work-fig-narrow"}`}>
           {F ? (
             <Fig num="1" label={note.title} caption={note.figure}>
               <F />
