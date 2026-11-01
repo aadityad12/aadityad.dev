@@ -49,8 +49,9 @@ export type AppNote = {
   block: string;
   domain: string;
   context: string;
-  role: string;
+  role?: string;
   when: string;
+  where: string;
   hook: string;
   problem: string;
   built: string[];
@@ -83,6 +84,30 @@ export const PROOF: Proof[] = [
   { big: "3.8 GPA", small: "Dean's Scholar, SJSU", href: "#education" },
 ];
 
+// The front page. Everything here is a selection from HERO and NOTES; the long versions stay below.
+export const BRIEF = {
+  avail: HERO.avail,
+  eyebrow: HERO.eyebrow,
+  lead: HERO.lead,
+  chip: { line: "28 skills, one per pin.", hover: "Hover a pin to see where I used it.", action: "Open the pin map" },
+  workIntro: "Four of ten. Each has its own page.",
+  moreWork: "Also with a page each:",
+  about:
+    "I'm from India, and I got into engineering through VEX robotics. Most of what I build starts with something I need or want to understand, and I like work where I can measure the result. Outside engineering I follow F1, basketball, soccer and cricket.",
+  contactKicker: "Summer 2027 internships · Winter 2027 co-ops",
+  contactLine: "I'm looking for roles in software, embedded systems, and AI/ML. Email is the fastest way to reach me.",
+};
+
+export type Fact = { big: string; small: string; href: string };
+export const FACTS: Fact[] = [
+  { big: "Infineon", small: "Research intern and software lead, 2026. Built an offline navigation aid for blind users.", href: "/work/visionassist/" },
+  { big: "Hackathon winner", small: "Sponsor Track, UC Berkeley AI Hackathon 2026, with Accordion. 240+ stars on GitHub.", href: "/work/accordion/" },
+  { big: "3.8 GPA", small: "Dean's Scholar. B.S. Computer Engineering, minor in AI, SJSU, May 2028.", href: "#education" },
+];
+
+// Front-page cards, in this order. All four have highlight reels.
+export const FEATURED = ["visionassist", "accordion", "rung", "alta"] as const;
+
 export const FEATURES = [
   { k: "ARM64 JIT", v: "hand-written in C++20; recursive fib 38.8× faster than the tree-walker" },
   { k: "Infineon", v: "research intern and technical lead for an on-device vision wearable" },
@@ -104,36 +129,46 @@ export const DESCRIPTION =
 
 // Pin map: every pin is a real skill, cross-referenced to the app notes that use it.
 // `uses` is filled in at the bottom of this file from NOTES[].skills (see PIN_USES).
-export type Pin = { n: number; name: string; type: "I/O" | "IN" | "OUT" | "PWR"; desc: string; uses: string[] };
+export type Pin = { n: number; name: string; full: string; type: "I/O" | "IN" | "OUT" | "PWR"; desc: string; uses: string[] };
 export const PINS: Pin[] = [
-  { n: 1, name: "C++", type: "I/O", desc: "C++20 runtime, VMs and JIT; taught intro C++", uses: [] },
-  { n: 2, name: "C", type: "I/O", desc: "Bare-metal AVR firmware, no Arduino libraries", uses: [] },
-  { n: 3, name: "ARM64", type: "I/O", desc: "Hand-encoded instructions, checked against LLVM", uses: [] },
-  { n: 4, name: "x86", type: "I/O", desc: "MASM assembly, taught as a TA at De Anza", uses: [] },
-  { n: 5, name: "PYTHON", type: "I/O", desc: "Perception loop, FastAPI services, CI tooling", uses: [] },
-  { n: 6, name: "KOTLIN", type: "I/O", desc: "Android apps and the native BLE GATT layer", uses: [] },
-  { n: 7, name: "TS", type: "I/O", desc: "TypeScript dashboards and reducers", uses: [] },
-  { n: 8, name: "SWIFT", type: "I/O", desc: "CoreBluetooth GATT server via platform channels", uses: [] },
-  { n: 9, name: "PYTORCH", type: "IN", desc: "YOLOv8n inference on the Pi 5 CPU", uses: [] },
-  { n: 10, name: "LITERT", type: "IN", desc: "CompiledModel on the Hexagon NPU, no fallback", uses: [] },
-  { n: 11, name: "HF", type: "IN", desc: "Cross-encoder relevance reranking", uses: [] },
-  { n: 12, name: "OPENCV", type: "IN", desc: "Frame processing, board overlay engine", uses: [] },
-  { n: 13, name: "ML KIT", type: "IN", desc: "Face landmarks, on-device receipt OCR", uses: [] },
-  { n: 14, name: "LLM API", type: "IN", desc: "Claude, Gemini and DeepSeek with deterministic fallbacks", uses: [] },
-  { n: 15, name: "BLE", type: "I/O", desc: "GATT central and peripheral, chunked transfer", uses: [] },
-  { n: 16, name: "AVR", type: "I/O", desc: "ATmega328P registers, interrupts, simavr", uses: [] },
-  { n: 17, name: "LINUX", type: "PWR", desc: "Raspberry Pi OS, BlueZ, ALSA, headless boot", uses: [] },
-  { n: 18, name: "SYSTEMD", type: "PWR", desc: "Units that run the device on power-up", uses: [] },
-  { n: 19, name: "CMAKE", type: "PWR", desc: "Presets, sanitizer builds, three-platform CI", uses: [] },
-  { n: 20, name: "GH ACT", type: "PWR", desc: "CI pipelines and a nightly scan", uses: [] },
-  { n: 21, name: "FASTAPI", type: "OUT", desc: "REST, WebSockets and Server-Sent Events", uses: [] },
-  { n: 22, name: "REACT", type: "OUT", desc: "Live dashboards fed by event streams", uses: [] },
-  { n: 23, name: "SVELTE", type: "OUT", desc: "Accordion's context map UI", uses: [] },
-  { n: 24, name: "COMPOSE", type: "OUT", desc: "Jetpack Compose UIs and Glance widgets", uses: [] },
-  { n: 25, name: "FLUTTER", type: "OUT", desc: "Cross-platform alert relay app", uses: [] },
-  { n: 26, name: "SQL", type: "I/O", desc: "Room, SQLCipher and SQLite, hand-written migrations", uses: [] },
-  { n: 27, name: "TTS", type: "OUT", desc: "Piper on-device speech, Android TextToSpeech", uses: [] },
-  { n: 28, name: "FUZZ", type: "IN", desc: "libFuzzer, ASan, UBSan and TSan in CI", uses: [] },
+  { n: 1, name: "C++", full: "C++", type: "I/O", desc: "C++20 runtime, VMs and JIT; taught intro C++", uses: [] },
+  { n: 2, name: "C", full: "C", type: "I/O", desc: "Bare-metal AVR firmware, no Arduino libraries", uses: [] },
+  { n: 3, name: "ARM64", full: "ARM64 assembly", type: "I/O", desc: "Hand-encoded instructions, checked against LLVM", uses: [] },
+  { n: 4, name: "x86", full: "x86 assembly", type: "I/O", desc: "MASM assembly, taught as a TA at De Anza", uses: [] },
+  { n: 5, name: "PYTHON", full: "Python", type: "I/O", desc: "Perception loop, FastAPI services, CI tooling", uses: [] },
+  { n: 6, name: "KOTLIN", full: "Kotlin", type: "I/O", desc: "Android apps and the native BLE GATT layer", uses: [] },
+  { n: 7, name: "TS", full: "TypeScript", type: "I/O", desc: "TypeScript dashboards and reducers", uses: [] },
+  { n: 8, name: "SWIFT", full: "Swift", type: "I/O", desc: "CoreBluetooth GATT server via platform channels", uses: [] },
+  { n: 9, name: "PYTORCH", full: "PyTorch", type: "IN", desc: "YOLOv8n inference on the Pi 5 CPU", uses: [] },
+  { n: 10, name: "LITERT", full: "LiteRT", type: "IN", desc: "CompiledModel on the Hexagon NPU, no fallback", uses: [] },
+  { n: 11, name: "HF", full: "Hugging Face Transformers", type: "IN", desc: "Cross-encoder relevance reranking", uses: [] },
+  { n: 12, name: "OPENCV", full: "OpenCV", type: "IN", desc: "Frame processing, board overlay engine", uses: [] },
+  { n: 13, name: "ML KIT", full: "ML Kit", type: "IN", desc: "Face landmarks, on-device receipt OCR", uses: [] },
+  { n: 14, name: "LLM API", full: "LLM APIs: Claude, Gemini, DeepSeek", type: "IN", desc: "Claude, Gemini and DeepSeek with deterministic fallbacks", uses: [] },
+  { n: 15, name: "BLE", full: "Bluetooth Low Energy", type: "I/O", desc: "GATT central and peripheral, chunked transfer", uses: [] },
+  { n: 16, name: "AVR", full: "AVR microcontrollers", type: "I/O", desc: "ATmega328P registers, interrupts, simavr", uses: [] },
+  { n: 17, name: "LINUX", full: "Linux", type: "PWR", desc: "Raspberry Pi OS, BlueZ, ALSA, headless boot", uses: [] },
+  { n: 18, name: "SYSTEMD", full: "systemd", type: "PWR", desc: "Units that run the device on power-up", uses: [] },
+  { n: 19, name: "CMAKE", full: "CMake", type: "PWR", desc: "Presets, sanitizer builds, three-platform CI", uses: [] },
+  { n: 20, name: "GH ACT", full: "GitHub Actions", type: "PWR", desc: "CI pipelines and a nightly scan", uses: [] },
+  { n: 21, name: "FASTAPI", full: "FastAPI", type: "OUT", desc: "REST, WebSockets and Server-Sent Events", uses: [] },
+  { n: 22, name: "REACT", full: "React", type: "OUT", desc: "Live dashboards fed by event streams", uses: [] },
+  { n: 23, name: "SVELTE", full: "Svelte", type: "OUT", desc: "Accordion's context map UI", uses: [] },
+  { n: 24, name: "COMPOSE", full: "Jetpack Compose", type: "OUT", desc: "Jetpack Compose UIs and Glance widgets", uses: [] },
+  { n: 25, name: "FLUTTER", full: "Flutter", type: "OUT", desc: "Cross-platform alert relay app", uses: [] },
+  { n: 26, name: "SQL", full: "SQL", type: "I/O", desc: "Room, SQLCipher and SQLite, hand-written migrations", uses: [] },
+  { n: 27, name: "TTS", full: "Text to speech", type: "OUT", desc: "Piper on-device speech, Android TextToSpeech", uses: [] },
+  { n: 28, name: "FUZZ", full: "Fuzzing and sanitizers", type: "IN", desc: "libFuzzer, ASan, UBSan and TSan in CI", uses: [] },
+];
+
+// The skills panel lists pins in these groups. Every pin appears in exactly one.
+export type PinGroup = { name: string; pins: string[] };
+export const PIN_GROUPS: PinGroup[] = [
+  { name: "Languages", pins: ["C++", "C", "ARM64", "x86", "PYTHON", "KOTLIN", "TS", "SWIFT", "SQL"] },
+  { name: "Machine learning on device", pins: ["PYTORCH", "LITERT", "HF", "OPENCV", "ML KIT", "LLM API", "TTS"] },
+  { name: "Hardware and systems", pins: ["AVR", "BLE", "LINUX", "SYSTEMD"] },
+  { name: "Build, test and ship", pins: ["CMAKE", "GH ACT", "FUZZ"] },
+  { name: "Apps and services", pins: ["FASTAPI", "REACT", "SVELTE", "COMPOSE", "FLUTTER"] },
 ];
 
 export type ElectricalRow = { p: string; cond: string; typ: string; u: string; src: string; status: Status };
@@ -179,8 +214,8 @@ export const NOTES: AppNote[] = [
     block: "CONTEXT MMU",
     domain: "AI developer tools",
     context: "UC Berkeley AI Hackathon 2026 · Sponsor Track winner (The Token Company)",
-    role: "Team of 4",
     when: "Jun 2026",
+    where: "UC Berkeley AI Hackathon 2026 · Sponsor Track winner",
     hook: "Lets an AI coding agent forget without losing anything.",
     problem:
       "Agents get worse on long tasks because their context fills with material that no longer matters. The usual fixes are destructive: compaction flattens the session into one lossy summary, and sliding windows just drop the oldest tokens. Accordion folds stale blocks out of the agent's view instead. Folding changes only what the agent sees, never what is stored, so anything can come back. Developed through June 2026; my active contribution ended June 25, 2026.",
@@ -224,8 +259,8 @@ export const NOTES: AppNote[] = [
     block: "RUNTIME CORE",
     domain: "Compilers and runtimes",
     context: "Personal project",
-    role: "Solo",
     when: "Sep–Oct 2026",
+    where: "Personal project · Sep to Oct 2026",
     hook: "One small language, built five ways, down to hand-written ARM64 machine code.",
     problem:
       "How much is each classic interpreter optimization actually worth? To find out, I built one dynamically typed language five ways: a tree-walker, a stack VM, a register VM, a baseline ARM64 JIT and a background-thread JIT. All five share one runtime and garbage collector, and every configuration must print byte-identical output. The benchmark ladder measures only what changes in speed, and it keeps every regression.",
@@ -266,8 +301,9 @@ export const NOTES: AppNote[] = [
     block: "EDGE VISION",
     domain: "Embedded vision",
     context: "Infineon Technologies, with De Anza College",
-    role: "Software lead · team of 5",
+    role: "Software lead",
     when: "Apr–Jun 2026",
+    where: "Infineon Technologies · software lead · Apr to Jun 2026",
     hook: "A wearable that tells a blind user what is ahead, and how many steps away.",
     problem:
       "A person walking down a sidewalk can't wait for a network, and any round trip adds latency to a collision warning. So everything runs on a head-mounted Raspberry Pi 5: one process, one loop, about five frames a second. That single requirement drove the model choice, the distance method, the speech engine, and the decision to cut the radar.",
@@ -308,8 +344,8 @@ export const NOTES: AppNote[] = [
     block: "GAZE NPU",
     domain: "On-device ML",
     context: "Qualcomm × Google LiteRT On-Device & Edge AI Hackathon",
-    role: "Team of 3",
     when: "Apr 2026",
+    where: "Qualcomm × Google LiteRT Hackathon · Apr 2026",
     hook: "Lets someone who can't speak or use their hands talk by looking at a phone.",
     problem:
       "The camera points at a disabled person's face the whole time, so running on-device was a privacy requirement, not an optimization. The app declares camera permission and nothing else: no internet permission, no network client, no analytics. The front camera finds the eye, Qualcomm's EyeGaze model estimates where it is looking, and a one-second look picks a phrase or a letter group.",
@@ -344,8 +380,9 @@ export const NOTES: AppNote[] = [
     block: "PROBE AFE",
     domain: "Hardware and firmware",
     context: "Cal Hacks 13.0 · 36 hours",
-    role: "Hardware and firmware lead · team of 4",
+    role: "Hardware and firmware lead",
     when: "Oct 2026",
+    where: "Cal Hacks 13.0 · hardware and firmware lead · Oct 2026",
     hook: "A voice lab TA that measures your breadboard and walks you to the fault.",
     problem:
       "In an intro electronics lab, one TA covers a room, and most students get stuck on the same few mistakes. Alta is the TA that is already at the bench. It doesn't guess from a photo. It asks the student to put a probe in a row, reads the real voltage, and teaches from that reading without handing over the answer.",
@@ -386,8 +423,8 @@ export const NOTES: AppNote[] = [
     block: "RTC + NVM",
     domain: "Android",
     context: "Personal, in daily use",
-    role: "Solo",
     when: "Jan 2026 →",
+    where: "Personal · in daily use since Jan 2026",
     hook: "One offline app that replaced my sticky notes, three reminder apps, a calendar and a spreadsheet.",
     problem:
       "I started it to build a habit: the habit of building. It became the app I open most. It tracks budget, study time, screen time, reminders, notes and a research-paper queue, then scores each day by the goals I actually hit. The rule for every feature is simple: would I open this every single day? If not, it doesn't ship.",
@@ -419,8 +456,8 @@ export const NOTES: AppNote[] = [
     block: "BLE MESH PHY",
     domain: "Bluetooth LE",
     context: "Hack for Humanity 2026, Santa Clara University",
-    role: "Team of 3",
     when: "Feb 2026",
+    where: "Hack for Humanity 2026 · Feb 2026",
     hook: "Emergency alerts that travel phone to phone when the network is down.",
     problem:
       "Emergency alerts depend on the same cellular and internet infrastructure that fails during the disasters they warn about. Echo carries National Weather Service alerts between nearby phones over Bluetooth Low Energy. Every phone both listens and broadcasts.",
@@ -453,8 +490,8 @@ export const NOTES: AppNote[] = [
     block: "INTERLOCK",
     domain: "Automation and security design",
     context: "Personal project",
-    role: "Solo",
     when: "Sep–Oct 2026",
+    where: "Personal project · Sep to Oct 2026",
     hook: "An agent that prepares open-source fixes every night, and can't post a thing without my tap.",
     problem:
       "Maintainers are drowning in low-effort, machine-generated pull requests. The answer isn't to generate more of them faster. OSS Scout automates the tedious parts (search, triage, reading unfamiliar code) and leaves the trust-building parts to a person. The tap is the point: someone looked at the change and stands behind it.",
@@ -488,8 +525,8 @@ export const NOTES: AppNote[] = [
     block: "EVAL UNIT",
     domain: "AI evaluation",
     context: "AI Engineer World's Fair Hackathon 2026",
-    role: "Team of 3",
     when: "Jun 2026",
+    where: "AI Engineer World's Fair Hackathon 2026 · Jun 2026",
     hook: "Finds where an agent's own prompts and tools make it worse, then patches them.",
     problem:
       "An agent is more than its base model. Its system prompt, skills and tool definitions can help, or they can quietly make the same model worse. Temper asks the same questions with and without that harness and scores both across six dimensions. A negative delta isolates the harness as the cause.",
@@ -522,8 +559,9 @@ export const NOTES: AppNote[] = [
     block: "ARBITER",
     domain: "Real-time systems",
     context: "HackDavis 2026",
-    role: "Backend · team of 3",
+    role: "Backend",
     when: "May 2026",
+    where: "HackDavis 2026 · backend · May 2026",
     hook: "Automation handles the volume of 911 calls. A human keeps the authority.",
     problem:
       "Where does automation belong in a system whose errors are measured in lives? This dispatch simulation lets automation triage and route, keeps every automated step overridable, and blocks heavy assets until a dispatcher confirms.",
@@ -555,11 +593,12 @@ export const EXPERIENCE = [
     role: "Research Intern and Technical Lead, VisionAssist",
     org: "Infineon Technologies, with De Anza College",
     points: [
-      "Led software on a five-person team building an offline navigation aid for blind users on a Raspberry Pi 5, through the Infineon University Alliance.",
+      "Led the software for an offline navigation aid for blind users on a Raspberry Pi 5, through the Infineon University Alliance.",
       "Built the on-device detection, distance, and speech pipeline, and deployed it as a service that boots headless on power-up.",
       "Characterized Infineon's 60 GHz radar, root-caused its phantom close-range readings to antenna leakage and floor reflections, and delivered the analysis to Infineon.",
       "Demoed the finished device to the sponsors at Infineon.",
     ],
+    summary: "Led the software for an offline navigation aid for blind users on a Raspberry Pi 5; delivered the radar analysis and the demo to Infineon.",
     link: { label: "VisionAssist", href: "#visionassist" },
   },
   {
@@ -572,6 +611,7 @@ export const EXPERIENCE = [
       "Run two weekly lab sections of 30 students each, 6 contact hours a week, who solder IR receiver boards and build and program VEX robots in C++ and RobotC depending on the section.",
       "Debug student circuits and code live at the bench, and support CAD, fabrication, and power testing for the wind turbine project.",
     ],
+    summary: "Run the ENGR 10 labs (soldering, VEX robots in C++); invited back to TA the course one semester after taking it.",
   },
   {
     when: "Jan 2025 to Dec 2025",
@@ -582,6 +622,7 @@ export const EXPERIENCE = [
       "TA for x86 assembly and computer architecture, and for both introductory C++ courses.",
       "Tutored C++, x86 assembly, Python, and data structures in the CS lab, tracing each bug back to its root cause with the student.",
     ],
+    summary: "TA for x86 assembly, computer architecture and introductory C++; tutored C++, Python and data structures in the CS lab.",
   },
   {
     when: "Apr 2025 to Dec 2025",
@@ -591,6 +632,7 @@ export const EXPERIENCE = [
     points: [
       "Started the campus's first applied-ML student group, grew it to 54 members, and built its workshop program on model evaluation and Python data pipelines from scratch.",
     ],
+    summary: "Started the campus's first applied-ML student group and built its workshop program from scratch.",
   },
 ];
 
@@ -619,6 +661,9 @@ export const AWARDS = [
   { t: "Dean's Scholar", d: "San José State University" },
 ];
 
+// The front page shows three. The datasheet shows all.
+export const AWARDS_BRIEF = AWARDS.slice(0, 3);
+
 export const CERTS = [
   "AWS Certified Cloud Practitioner",
   "Oracle Cloud Infrastructure Generative AI Professional",
@@ -627,6 +672,9 @@ export const CERTS = [
   "Anthropic: Claude Code in Action",
   "AWS Certified AI Practitioner (in progress)",
 ];
+
+// The front page lists finished certifications only. The datasheet shows all, including in progress.
+export const CERTS_BRIEF = CERTS.filter((c) => !c.endsWith("(in progress)"));
 
 export const OPEN_SOURCE = [
   {
@@ -703,3 +751,8 @@ for (const p of PINS) p.uses = PIN_USES(p.name);
 
 // Build-time check: every skill named on a project must be a pin.
 for (const n of NOTES) for (const s of n.skills) if (!PINS.some((p) => p.name === s)) throw new Error(`Unknown skill ${s} on ${n.id}`);
+
+// Build-time check: every pin belongs to exactly one group, and every group entry is a pin.
+const groupedPins = PIN_GROUPS.flatMap((group) => group.pins);
+for (const name of groupedPins) if (!PINS.some((pin) => pin.name === name)) throw new Error(`Unknown pin ${name} in PIN_GROUPS`);
+for (const pin of PINS) if (groupedPins.filter((name) => name === pin.name).length !== 1) throw new Error(`Pin ${pin.name} must appear in exactly one group`);

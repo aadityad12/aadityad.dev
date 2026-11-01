@@ -28,7 +28,7 @@ export default function AppNote({ note, page, index, children }: { note: Note; p
       </div>
       <dl className="an-meta">
         <div><dt>Context</dt><dd>{note.context}</dd></div>
-        <div><dt>Role</dt><dd>{note.role}</dd></div>
+        {note.role && <div><dt>Role</dt><dd>{note.role}</dd></div>}
         <div><dt>Date</dt><dd>{note.when}</dd></div>
         <div><dt>Domain</dt><dd>{note.domain}</dd></div>
       </dl>

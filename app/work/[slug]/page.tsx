@@ -61,7 +61,7 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
           <span>{note.an}</span>
           <span>{note.domain}</span>
           <span>{note.context}</span>
-          <span>{note.role}</span>
+          {note.role && <span>{note.role}</span>}
           <span>{note.when}</span>
         </p>
         <h1>{note.title}</h1>
