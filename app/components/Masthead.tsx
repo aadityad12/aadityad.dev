@@ -8,11 +8,12 @@ type Ref = { id: string; title: string };
 // `resume` is passed in so a route that never loads content.ts on the client does not pay for it here.
 export type MastheadProps = { resume: string } & (
   | { variant: "brief" }
+  | { variant: "plain"; current?: "work" | "skills" }
   | { variant: "work"; id: string; title: string; prev: Ref; next: Ref }
   | { variant: "datasheet" }
 );
 
-type Item = { href: string; label: string; short?: string; aria?: string; cur?: string; cls?: string };
+type Item = { href: string; label: string; cur?: string; data?: Record<string, string> };
 
 // J / K land the target sheet 64px below the top of the viewport, under the masthead.
 // The same offset is used to find "where I am", so K from a sheet J just landed on steps back.
@@ -20,26 +21,18 @@ const OFFSET = 64;
 // A sheet within this many px of the reading line counts as "here", not as the next or previous one.
 const NEAR = 24;
 
-const BRIEF_ITEMS: Item[] = [
-  { href: "#projects", label: "Projects", cur: "projects" },
-  { href: "#experience", label: "Experience", cur: "experience" },
-  { href: "#education", label: "Education", cur: "education" },
-  { href: "#contact", label: "Contact", cur: "contact" },
-  { href: "/datasheet/", label: "Datasheet" },
-];
-
-const DATASHEET_ITEMS: Item[] = [
-  { href: "/datasheet/#block-diagram", label: "Projects" },
-  { href: "/datasheet/#specs", label: "Specs" },
-  { href: "/datasheet/#revisions", label: "Experience" },
-  { href: "/datasheet/#ordering", label: "Contact" },
+const ITEMS: Item[] = [
+  { href: "/work/", label: "Work", cur: "work" },
+  { href: "/#experience", label: "Experience", cur: "experience" },
+  { href: "/skills/", label: "Skills", cur: "skills", data: { "data-skills": "" } },
+  { href: "/#contact", label: "Contact", cur: "contact" },
 ];
 
 const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function inField(e: KeyboardEvent) {
   const t = e.target as HTMLElement | null;
-  return !!t?.closest?.("input, textarea, select, [contenteditable], [data-keys]");
+  return !!t?.closest?.("input, textarea, select, [contenteditable], [data-keys], dialog");
 }
 
 export default function Masthead(props: MastheadProps) {
@@ -69,12 +62,15 @@ export default function Masthead(props: MastheadProps) {
 
     if (variant === "brief") {
       // the section under the reading line gets aria-current on its nav item
-      const targets = Array.from(document.querySelectorAll<HTMLElement>("section[id], footer[id]"));
+      const targets = Array.from(document.querySelectorAll<HTMLElement>("#experience, #contact"));
       onSync = () => {
         const line = window.innerHeight * 0.35;
         const atEnd = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
         let cur: string | null = null;
-        for (const t of targets) if (t.getBoundingClientRect().top <= line) cur = t.id;
+        for (const t of targets) {
+          const rect = t.getBoundingClientRect();
+          if (rect.top <= line && rect.bottom > line) cur = t.id;
+        }
         if (atEnd && targets.length) cur = targets[targets.length - 1].id;
         setCurrent(cur);
       };
@@ -151,36 +147,23 @@ export default function Masthead(props: MastheadProps) {
 
   const closeMenu = () => { if (menu.current) menu.current.open = false; };
 
-  let items: Item[];
-  if (props.variant === "work") {
-    items = [
-      { href: `/work/${props.prev.id}/`, label: `← ${props.prev.title}`, short: "←", aria: `Previous project: ${props.prev.title}`, cls: "mast-step" },
-      { href: `/work/${props.next.id}/`, label: `${props.next.title} →`, short: "→", aria: `Next project: ${props.next.title}`, cls: "mast-step" },
-      { href: "/#projects", label: "All projects" },
-      { href: `/datasheet/#${props.id}`, label: "Datasheet entry" },
-    ];
-  } else {
-    items = variant === "brief" ? BRIEF_ITEMS : DATASHEET_ITEMS;
-  }
+  const ariaCurrent = (it: Item): "page" | "true" | undefined => {
+    if (it.cur === "work" && (props.variant === "work" || (props.variant === "plain" && props.current === "work"))) return "page";
+    if (it.cur === "skills" && props.variant === "plain" && props.current === "skills") return "page";
+    if (props.variant === "brief" && it.cur === current && (current === "experience" || current === "contact")) return "true";
+    return undefined;
+  };
 
   const link = (it: Item, menuItem: boolean) => (
     <Link
       key={it.href}
-      className={it.cls}
       href={it.href}
-      aria-label={it.aria}
-      title={it.aria}
-      aria-current={it.cur && it.cur === current ? "true" : undefined}
+      prefetch={false}
+      {...it.data}
+      aria-current={ariaCurrent(it)}
       onClick={menuItem ? closeMenu : undefined}
     >
-      {!menuItem && it.short ? (
-        <>
-          <span className="mast-step-s" aria-hidden="true">{it.short}</span>
-          <span className="mast-step-l" aria-hidden="true">{it.label}</span>
-        </>
-      ) : (
-        it.label
-      )}
+      {it.label}
     </Link>
   );
 
@@ -216,15 +199,15 @@ export default function Masthead(props: MastheadProps) {
         {props.variant === "work" && (
           <div
             className="mast-mid mast-crumb"
-            title={`Projects / ${props.title}. Press J for the next project (${props.next.title}), K for the previous (${props.prev.title}).`}
+            title={`Work / ${props.title}. Press J for the next project (${props.next.title}), K for the previous (${props.prev.title}).`}
           >
-            Projects / <b>{props.title}</b>
+            <Link href="/work/" prefetch={false}>Work</Link> / <b>{props.title}</b>
           </div>
         )}
 
         <div className="mast-end">
           <nav className="mast-nav" aria-label="Primary">
-            {items.map((it) => link(it, false))}
+            {ITEMS.map((it) => link(it, false))}
           </nav>
           <a className="pdf" href={props.resume} target="_blank" rel="noreferrer">
             Résumé<span className="mast-pdf-x"> PDF</span> ↓
@@ -232,7 +215,7 @@ export default function Masthead(props: MastheadProps) {
           <details className="mast-menu" ref={menu}>
             <summary>Menu</summary>
             <nav className="mast-menu-list" aria-label="Menu">
-              {items.map((it) => link(it, true))}
+              {ITEMS.map((it) => link(it, true))}
             </nav>
           </details>
         </div>
