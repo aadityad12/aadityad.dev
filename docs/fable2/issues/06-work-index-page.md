@@ -23,7 +23,7 @@ Ten things I built, one page each.
 ──────────────────────────────────────────────────────────────────────────
 01  VisionAssist   Head-mounted Pi 5 that spots obstacles and says how    →
                    many steps away, fully offline.
-                   INFINEON TECHNOLOGIES · SOFTWARE LEAD, TEAM OF 5 · APR TO JUN 2026
+                   INFINEON TECHNOLOGIES · SOFTWARE LEAD · APR TO JUN 2026
 ──────────────────────────────────────────────────────────────────────────
 02  Accordion      ...
 ...

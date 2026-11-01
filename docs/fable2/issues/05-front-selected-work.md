@@ -29,7 +29,7 @@ Selected work                                  Four of ten. Each has its own pag
 │ obstacles and says how many steps  │ │ agents: folds what isn't carrying  │
 │ away, fully offline.               │ │ weight, reversibly.                │
 │ INFINEON TECHNOLOGIES · SOFTWARE   │ │ UC BERKELEY AI HACKATHON 2026 ·    │
-│ LEAD, TEAM OF 5 · APR TO JUN 2026  │ │ SPONSOR TRACK WINNER · TEAM OF 4   │
+│ LEAD · APR TO JUN 2026             │ │ SPONSOR TRACK WINNER               │
 └────────────────────────────────────┘ └────────────────────────────────────┘
 ┌────────────────────────────────────┐ ┌────────────────────────────────────┐
 │ 03  Rung ...                       │ │ 04  Alta ...                       │

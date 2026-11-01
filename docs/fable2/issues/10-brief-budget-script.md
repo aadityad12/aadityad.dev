@@ -25,9 +25,11 @@ Plain Node, no dependencies. Reads `out/index.html` (fail with a clear message i
 - Checks, each printed as a `PASS`/`FAIL` row like `check-budget.mjs` does:
   1. `words` ≤ 600.
   2. `status tags` = 0 (count of `class="tag ` in the whole file).
-  3. `benchmark strings` = 0: none of `38.84`, `200 ms`, `1,200`, `≈8`, `525`, `4.54`,
-     `0.63` appear in `<main>` text (a short list of the numbers that must not leak back
-     onto the front page; extend it if a new one appears).
+  3. `banned strings` = 0: none of `38.84`, `200 ms`, `1,200`, `≈8`, `525`, `4.54`,
+     `0.63`, `team of`, `-person team`, `solo` appear in `<main>` text, case-insensitive
+     (benchmark numbers and team sizes that must not leak back onto the front page;
+     extend the list if a new one appears). Run the same check on `out/work/index.html`
+     and `out/skills/index.html`.
   4. `routes present`: `out/work/index.html` and `out/skills/index.html` exist.
 - Exit 1 if any fails.
 

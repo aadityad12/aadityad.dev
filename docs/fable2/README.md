@@ -104,7 +104,10 @@ Fable1's ten rules still apply. They are repeated here with the Fable2 changes m
    `Measured`, `Observed`, `Single run`, `Repo` or `Stated`. The front page (`/`) and the
    index pages (`/work/`, `/skills/`) carry **no benchmark numbers at all**: no ratios, no
    latencies, no sample rates. Numbers a recruiter recognises without context are fine
-   there: a GPA, a date, a team size, a star count, a place in a competition.
+   there: a GPA, a date, a star count, a place in a competition. **Team sizes are not**:
+   "team of 4", "five-person team" and "solo" never appear on those three pages. They say
+   nothing about what he did and cost the reader a line. (Project page headers and the
+   datasheet keep `role` as it is.)
 4. **Facts come only from `app/content.ts`.** New fields added in issue 01 are rephrasings
    and selections of facts already in that file; they introduce nothing. If an issue needs
    a fact that isn't there, write `TODO(aadi): <what is missing>` in the code and stop; do

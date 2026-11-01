@@ -84,8 +84,9 @@ Do not trust the PR description. Check out the branch and verify yourself:
 4. Check the twelve rules in `docs/fable2/README.md`, with special attention to:
    - Rule 1: nothing hidden without JavaScript. Disable JS and reload. The Skills link
      must go to `/skills/`. If any text is missing, reject.
-   - Rule 3: no status tags and no benchmark numbers on `/`, `/work/`, `/skills/`.
-     `grep -c 'class="tag' out/index.html` must be 0.
+   - Rule 3: no status tags, no benchmark numbers and no team sizes on `/`, `/work/`,
+     `/skills/`. `grep -c 'class="tag' out/index.html` must be 0;
+     `grep -ci "team of\|-person\|solo" out/index.html out/work/index.html` must be 0.
    - Rule 4: no invented facts. Diff `app/content.ts`. Every new string must be in issue
      01 verbatim or trace to an existing field. If you cannot trace it, reject.
    - Rule 5: `grep -rn "—" app/` must return nothing in files the PR touched.

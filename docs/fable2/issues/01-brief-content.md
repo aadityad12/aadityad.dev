@@ -69,32 +69,36 @@ export const FEATURED = ["visionassist", "accordion", "rung", "alta"] as const;
 ### `AppNote.where`
 
 Add a required field `where: string` to the `AppNote` type, after `when`: one line for
-cards and index rows, replacing the long `context` and `role` pair there. Values:
+cards and index rows, replacing the long `context` and `role` pair there. It names the
+venue, the role where it is more than "built it", and the date. **Never the team size or
+"solo"**: a recruiter cannot use that, and it costs space. Values:
 
 | id | where |
 | --- | --- |
-| accordion | `"UC Berkeley AI Hackathon 2026 · Sponsor Track winner · team of 4"` |
-| rung | `"Personal project · solo · Sep to Oct 2026"` |
-| visionassist | `"Infineon Technologies · software lead, team of 5 · Apr to Jun 2026"` |
-| gazeboard | `"Qualcomm × Google LiteRT Hackathon · team of 3 · Apr 2026"` |
-| alta | `"Cal Hacks 13.0 · hardware and firmware lead, team of 4 · Oct 2026"` |
-| apextracker | `"Personal · in daily use since Jan 2026 · solo"` |
-| echo | `"Hack for Humanity 2026 · team of 3 · Feb 2026"` |
-| oss-scout | `"Personal project · solo · Sep to Oct 2026"` |
-| temper | `"AI Engineer World's Fair Hackathon 2026 · team of 3 · Jun 2026"` |
-| clear-dispatch | `"HackDavis 2026 · backend, team of 3 · May 2026"` |
+| accordion | `"UC Berkeley AI Hackathon 2026 · Sponsor Track winner"` |
+| rung | `"Personal project · Sep to Oct 2026"` |
+| visionassist | `"Infineon Technologies · software lead · Apr to Jun 2026"` |
+| gazeboard | `"Qualcomm × Google LiteRT Hackathon · Apr 2026"` |
+| alta | `"Cal Hacks 13.0 · hardware and firmware lead · Oct 2026"` |
+| apextracker | `"Personal · in daily use since Jan 2026"` |
+| echo | `"Hack for Humanity 2026 · Feb 2026"` |
+| oss-scout | `"Personal project · Sep to Oct 2026"` |
+| temper | `"AI Engineer World's Fair Hackathon 2026 · Jun 2026"` |
+| clear-dispatch | `"HackDavis 2026 · backend · May 2026"` |
 
-Each is `context`, `role` and `when` of the same note, shortened. `context`, `role` and
-`when` stay; the work page header and the datasheet still use them.
+Each is `context`, `role` and `when` of the same note, shortened, with team sizes
+dropped. `context`, `role` and `when` stay unchanged; the work page header and the
+datasheet still use them.
 
 ### `EXPERIENCE[].summary`
 
 Add `summary: string` to each entry, after `points`. One sentence that carries the facts
-a recruiter must not miss. `points` stays for the datasheet.
+a recruiter must not miss: what was built, for whom, and what it led to. No team sizes.
+`points` stays for the datasheet.
 
 | org | summary |
 | --- | --- |
-| Infineon Technologies, with De Anza College | `"Led software on a five-person team building an offline navigation aid for blind users on a Raspberry Pi 5: the detection, distance and speech pipeline, the radar characterization delivered to Infineon, and the demo to the sponsors."` |
+| Infineon Technologies, with De Anza College | `"Led the software for an offline navigation aid for blind users on a Raspberry Pi 5: the detection, distance and speech pipeline, the radar characterization delivered to Infineon, and the demo to the sponsors."` |
 | San José State University | `"Run two weekly lab sections of 30 students who solder IR receiver boards and program VEX robots in C++; invited back to TA the course one semester after taking it."` |
 | De Anza College | `"TA for x86 assembly, computer architecture and both introductory C++ courses; tutored C++, assembly, Python and data structures in the CS lab."` |
 | Applied Data Analytics Club, De Anza College | `"Started the campus's first applied-ML student group and grew it to 54 members, with a workshop program on model evaluation and Python data pipelines."` |

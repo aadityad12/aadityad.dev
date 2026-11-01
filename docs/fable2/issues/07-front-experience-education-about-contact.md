@@ -24,8 +24,8 @@ Experience                                          Industry research, teaching,
 ──────────────────────────────────────────────────────────────────────────────────────────
 APR 2026 TO JUN 2026   Research Intern and Technical Lead, VisionAssist
 CUPERTINO, CA          Infineon Technologies, with De Anza College
-                       Led software on a five-person team building an offline navigation
-                       aid for blind users on a Raspberry Pi 5: ...   VisionAssist →
+                       Led the software for an offline navigation aid for blind users
+                       on a Raspberry Pi 5: ...                        VisionAssist →
 ──────────────────────────────────────────────────────────────────────────────────────────
 AUG 2026 TO NOW        Teaching Assistant, ENGR 10: Introduction to Engineering
 SAN JOSÉ, CA           San José State University
