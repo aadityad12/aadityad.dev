@@ -42,6 +42,8 @@ the rest to the page's limit. It also fails if any page except `/map/` loads thr
 or heightmap data. The budgets live in the table in `docs/plan/README.md`. CI runs
 lint, build and budget on every pull request (`.github/workflows/ci.yml`).
 
+`npm run brief` prints the front-page landmark read and checks tags, banned numbers, bold body copy, team sizes and routes in CI.
+
 ## Design: the AD2028 datasheet
 
 The site is written as the datasheet for a fictional part, the **AD2028**
