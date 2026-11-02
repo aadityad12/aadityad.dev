@@ -2,28 +2,27 @@
   "hero": {
     "lead": "I build from the metal up: an ARM64 JIT compiler, bare-metal firmware, on-device vision, and tools for AI agents."
   },
-  "proof": [
+  "facts": [
     {
       "big": "Infineon",
-      "small": "Research intern and technical lead"
+      "small": "Research intern and software lead, 2026. Built an offline navigation aid for blind users.",
+      "href": "/work/visionassist/"
     },
     {
-      "big": "Winner",
-      "small": "Sponsor Track, UC Berkeley AI Hackathon 2026"
-    },
-    {
-      "big": "38.84×",
-      "small": "my ARM64 JIT vs. the interpreter",
-      "status": "Measured"
+      "big": "Hackathon winner",
+      "small": "Sponsor Track, UC Berkeley AI Hackathon 2026, with Accordion. 240+ stars on GitHub.",
+      "href": "/work/accordion/"
     },
     {
       "big": "3.8 GPA",
-      "small": "Dean's Scholar, SJSU"
+      "small": "Dean's Scholar. B.S. Computer Engineering, minor in AI, SJSU, May 2028.",
+      "href": "#education"
     }
   ],
   "notes": [
     {
       "id": "accordion",
+      "order": 2,
       "an": "AN-01",
       "title": "Accordion",
       "hook": "Lets an AI coding agent forget without losing anything.",
@@ -36,6 +35,7 @@
     },
     {
       "id": "rung",
+      "order": 3,
       "an": "AN-02",
       "title": "Rung",
       "hook": "One small language, built five ways, down to hand-written ARM64 machine code.",
@@ -47,6 +47,7 @@
     },
     {
       "id": "visionassist",
+      "order": 1,
       "an": "AN-03",
       "title": "VisionAssist",
       "hook": "A wearable that tells a blind user what is ahead, and how many steps away.",
@@ -59,6 +60,7 @@
     },
     {
       "id": "gazeboard",
+      "order": 5,
       "an": "AN-04",
       "title": "GazeBoard",
       "hook": "Lets someone who can't speak or use their hands talk by looking at a phone.",
@@ -71,6 +73,7 @@
     },
     {
       "id": "alta",
+      "order": 4,
       "an": "AN-05",
       "title": "Alta",
       "hook": "A voice lab TA that measures your breadboard and walks you to the fault.",
@@ -83,6 +86,7 @@
     },
     {
       "id": "apextracker",
+      "order": 7,
       "an": "AN-06",
       "title": "ApexTracker",
       "hook": "One offline app that replaced my sticky notes, three reminder apps, a calendar and a spreadsheet.",
@@ -94,6 +98,7 @@
     },
     {
       "id": "echo",
+      "order": 8,
       "an": "AN-07",
       "title": "Echo",
       "hook": "Emergency alerts that travel phone to phone when the network is down.",
@@ -105,6 +110,7 @@
     },
     {
       "id": "oss-scout",
+      "order": 6,
       "an": "AN-08",
       "title": "OSS Scout",
       "hook": "An agent that prepares open-source fixes every night, and can't post a thing without my tap.",
@@ -116,6 +122,7 @@
     },
     {
       "id": "temper",
+      "order": 9,
       "an": "AN-09",
       "title": "Temper",
       "hook": "Finds where an agent's own prompts and tools make it worse, then patches them.",
@@ -127,6 +134,7 @@
     },
     {
       "id": "clear-dispatch",
+      "order": 10,
       "an": "AN-10",
       "title": "Clear Dispatch",
       "hook": "Automation handles the volume of 911 calls. A human keeps the authority.",
@@ -136,6 +144,175 @@
         "label": "human hold before any heavy asset moves",
         "status": "Repo"
       }
+    }
+  ],
+  "pinGroups": [
+    {
+      "name": "Languages",
+      "pins": [
+        "C++",
+        "C",
+        "ARM64",
+        "x86",
+        "PYTHON",
+        "KOTLIN",
+        "TS",
+        "SWIFT",
+        "SQL"
+      ]
+    },
+    {
+      "name": "Machine learning on device",
+      "pins": [
+        "PYTORCH",
+        "LITERT",
+        "HF",
+        "OPENCV",
+        "ML KIT",
+        "LLM API",
+        "TTS"
+      ]
+    },
+    {
+      "name": "Hardware and systems",
+      "pins": [
+        "AVR",
+        "BLE",
+        "LINUX",
+        "SYSTEMD"
+      ]
+    },
+    {
+      "name": "Build, test and ship",
+      "pins": [
+        "CMAKE",
+        "GH ACT",
+        "FUZZ"
+      ]
+    },
+    {
+      "name": "Apps and services",
+      "pins": [
+        "FASTAPI",
+        "REACT",
+        "SVELTE",
+        "COMPOSE",
+        "FLUTTER"
+      ]
+    }
+  ],
+  "pins": [
+    {
+      "name": "C++",
+      "full": "C++"
+    },
+    {
+      "name": "C",
+      "full": "C"
+    },
+    {
+      "name": "ARM64",
+      "full": "ARM64 assembly"
+    },
+    {
+      "name": "x86",
+      "full": "x86 assembly"
+    },
+    {
+      "name": "PYTHON",
+      "full": "Python"
+    },
+    {
+      "name": "KOTLIN",
+      "full": "Kotlin"
+    },
+    {
+      "name": "TS",
+      "full": "TypeScript"
+    },
+    {
+      "name": "SWIFT",
+      "full": "Swift"
+    },
+    {
+      "name": "PYTORCH",
+      "full": "PyTorch"
+    },
+    {
+      "name": "LITERT",
+      "full": "LiteRT"
+    },
+    {
+      "name": "HF",
+      "full": "Hugging Face Transformers"
+    },
+    {
+      "name": "OPENCV",
+      "full": "OpenCV"
+    },
+    {
+      "name": "ML KIT",
+      "full": "ML Kit"
+    },
+    {
+      "name": "LLM API",
+      "full": "LLM APIs: Claude, Gemini, DeepSeek"
+    },
+    {
+      "name": "BLE",
+      "full": "Bluetooth Low Energy"
+    },
+    {
+      "name": "AVR",
+      "full": "AVR microcontrollers"
+    },
+    {
+      "name": "LINUX",
+      "full": "Linux"
+    },
+    {
+      "name": "SYSTEMD",
+      "full": "systemd"
+    },
+    {
+      "name": "CMAKE",
+      "full": "CMake"
+    },
+    {
+      "name": "GH ACT",
+      "full": "GitHub Actions"
+    },
+    {
+      "name": "FASTAPI",
+      "full": "FastAPI"
+    },
+    {
+      "name": "REACT",
+      "full": "React"
+    },
+    {
+      "name": "SVELTE",
+      "full": "Svelte"
+    },
+    {
+      "name": "COMPOSE",
+      "full": "Jetpack Compose"
+    },
+    {
+      "name": "FLUTTER",
+      "full": "Flutter"
+    },
+    {
+      "name": "SQL",
+      "full": "SQL"
+    },
+    {
+      "name": "TTS",
+      "full": "Text to speech"
+    },
+    {
+      "name": "FUZZ",
+      "full": "Fuzzing and sanitizers"
     }
   ]
 }

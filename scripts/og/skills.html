@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>OG image: Skills</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="common.css">
+<style>
+  .body { flex: 1; display: grid; grid-template-columns: 1fr 360px; align-items: center; gap: 28px; padding: 24px 34px; }
+  h1 { font-size: 88px; line-height: 1; font-weight: 800; font-stretch: 125%; letter-spacing: -0.03em; }
+  ul { list-style: none; padding: 0; margin-top: 28px; }
+  li { font-family: var(--mono); font-size: 20px; line-height: 1.35; padding: 10px 0; border-top: 1px solid var(--hair); }
+  .chip { width: 360px; height: 360px; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="bar"><b>Aaditya Desai</b><span>Computer Engineering · SJSU</span><span>aadityad.dev</span></div>
+  <div class="body">
+    <div><h1>Skills</h1><ul id="groups"></ul></div>
+    <svg class="chip" viewBox="0 0 300 300" role="img" aria-label="Aaditya Desai's skills as the 28 pins of a chip">
+      <g id="pins" fill="#a3a39c"></g>
+      <rect x="55" y="55" width="190" height="190" rx="6" fill="#151515"/>
+      <rect x="61" y="61" width="178" height="178" rx="4" fill="none" stroke="#333"/>
+      <circle cx="82" cy="82" r="6" fill="var(--accent)"/>
+      <text x="150" y="157" text-anchor="middle" fill="#e2e2dc" style="font-family:var(--sans);font-size:34px;font-weight:800;font-stretch:125%">AD2028</text>
+      <text x="150" y="181" text-anchor="middle" fill="#c9c9c3" style="font-family:var(--mono);font-size:10px;letter-spacing:3px">AADITYA DESAI</text>
+    </svg>
+  </div>
+</div>
+<script>
+  fetch("notes.json").then((r) => r.json()).then((d) => {
+    const list = document.getElementById("groups");
+    for (const group of d.pinGroups) {
+      const item = document.createElement("li"); item.textContent = group.name; list.append(item);
+    }
+    const pins = document.getElementById("pins");
+    d.pins.forEach((pin, i) => {
+      const offset = 55 + 190 / 8 * (i % 7 + 1);
+      const side = Math.floor(i / 7);
+      const coords = side === 0 ? [29, offset - 6, 26, 12] : side === 1 ? [245, offset - 6, 26, 12] : side === 2 ? [offset - 6, 29, 12, 26] : [offset - 6, 245, 12, 26];
+      const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      ["x", "y", "width", "height"].forEach((key, index) => rect.setAttribute(key, coords[index]));
+      const title = document.createElementNS("http://www.w3.org/2000/svg", "title"); title.textContent = pin.full; rect.append(title); pins.append(rect);
+    });
+    document.fonts.ready.then(() => document.body.setAttribute("data-ready", ""));
+  });
+</script>
+</body>
+</html>
