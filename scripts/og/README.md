@@ -1,7 +1,8 @@
 # Regenerating the Open Graph images
 
-`public/og/home.png` and `public/og/work/<slug>.png` (1200 x 630) are rendered from
-`home.html` and `work.html?slug=<id>` in this folder. Both read `notes.json`, which is
+`public/og/home.png`, `public/og/work.png`, `public/og/skills.png` and
+`public/og/work/<slug>.png` (1200 x 630) are rendered from `home.html`, `index.html`,
+`skills.html` and `work.html?slug=<id>` in this folder. All read `notes.json`, which is
 generated from `app/content.ts`, so the text on the images can never drift from the site.
 `public/og/datasheet.png` is the datasheet-era image, moved from `public/og.png`.
 
@@ -10,6 +11,9 @@ generated from `app/content.ts`, so the text on the images can never drift from 
    ```
    node scripts/og/notes.mjs
    ```
+
+   The generator resolves the content module's extensionless local TypeScript imports
+   with Node's built-in module hooks. No extra package is needed.
 
 2. Render the PNGs. The script is not part of the repo because it needs Playwright, which
    the site does not depend on. Save it outside the repo (for example `/tmp/og-render.mjs`
@@ -48,6 +52,8 @@ const shoot = async (url, out) => {
   console.log("wrote", out);
 };
 await shoot(`${base}/home.html`, "home.png");
+await shoot(`${base}/index.html`, "work.png");
+await shoot(`${base}/skills.html`, "skills.png");
 for (const n of notes) await shoot(`${base}/work.html?slug=${n.id}`, `work/${n.id}.png`);
 await browser.close();
 server.close();

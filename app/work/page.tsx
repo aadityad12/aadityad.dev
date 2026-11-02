@@ -6,7 +6,7 @@ import { ALSO, NOTES, RESUME } from "../content";
 
 const BY_ORDER = [...NOTES].sort((a, b) => a.order - b.order);
 const description = "Ten things I built, one page each: an ARM64 JIT, an offline vision wearable, a context manager for AI coding agents, bare-metal probe firmware, and more.";
-const image = { url: "/og/home.png", width: 1200, height: 630, alt: "Work" };
+const image = { url: "/og/work.png", width: 1200, height: 630, alt: "Ten projects by Aaditya Desai, one page each" };
 
 export const metadata: Metadata = {
   title: "Work",
