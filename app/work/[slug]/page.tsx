@@ -57,12 +57,14 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
     />
     <main className="work" id="main">
       <header className="work-head">
+        <nav className="work-crumbs" aria-label="Breadcrumb">
+          <Link href="/work/">← All work</Link>
+          <span>Project {String(note.order).padStart(2, "0")} of {NOTES.length}</span>
+        </nav>
         <p className="work-meta">
           <span>{note.an}</span>
           <span>{note.domain}</span>
-          <span>{note.context}</span>
-          {note.role && <span>{note.role}</span>}
-          <span>{note.when}</span>
+          <span>{note.where}</span>
         </p>
         <h1>{note.title}</h1>
         <p className="hook">{note.hook}</p>
@@ -72,7 +74,6 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
               {l.label} ↗
             </a>
           ))}
-          <Link className="work-all" href="/work/" prefetch={false}>← All projects</Link>
         </div>
       </header>
 
@@ -146,10 +147,25 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
         </section>
       )}
 
-      <nav className="work-next" aria-label="More">
-        <a href={`/work/${next.id}/`}>Next: {next.title} →</a>
-        {note.id === "visionassist" && <Link href="/#experience">Experience: Infineon →</Link>}
-        <a href={`/datasheet/#${note.id}`}>Full entry in the datasheet ↗</a>
+      <nav className="work-foot" aria-label="More work">
+        <div className="work-foot-cards">
+          <a className="work-card prev" href={`/work/${prev.id}/`}>
+            <span className="work-card-k">← Previous</span>
+            <b>{prev.title}</b>
+            <span className="work-card-d">{prev.oneLiner}</span>
+          </a>
+          <a className="work-card next" href={`/work/${next.id}/`}>
+            <span className="work-card-k">Next →</span>
+            <b>{next.title}</b>
+            <span className="work-card-d">{next.oneLiner}</span>
+          </a>
+        </div>
+        <p className="work-foot-links">
+          <Link href="/work/">All work</Link> · <Link href="/">Home</Link> ·{" "}
+          <a href={`/datasheet/#${note.id}`}>This project in the datasheet ↗</a>
+          {note.id === "visionassist" && <> · <Link href="/#experience">Experience: Infineon →</Link></>}
+          <span className="work-keys" aria-hidden="true">Keyboard: J next · K previous</span>
+        </p>
       </nav>
     </main>
     </>
