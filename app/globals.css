@@ -575,6 +575,45 @@ main.brief .about-text { margin: 14px 0 0; max-width: 62ch; font-size: 16px; lin
   .brief-contact .contact-foot span:nth-child(n) { text-align: left; }
 }
 
+/* ---- desktop brief spacing ---- */
+@media (min-width: 900px) {
+  body:has(main.brief .brief-hero) { padding-top: calc(var(--mast-h) + 18px); }
+  main.brief:has(.brief-hero) { padding-bottom: 20px; }
+  main.brief:has(.brief-hero) .brief-hero { padding-top: 12px; }
+  main.brief:has(.brief-hero) .brief-chip .chip-wrap, main.brief:has(.brief-hero) .brief-cap { max-width: 360px; }
+  main.brief:has(.brief-hero) .brief-cap { gap: 2px; }
+  main.brief:has(.brief-hero) .avail { margin-bottom: 12px; }
+  main.brief:has(.brief-hero) .brief-eyebrow { margin-bottom: 8px; }
+  main.brief:has(.brief-hero) .brief-lead { margin-top: 12px; }
+  main.brief:has(.brief-hero) .actions { margin-top: 16px; }
+  main.brief:has(.brief-hero) .facts { margin-top: 24px; }
+  main.brief:has(.brief-hero) .brief-work { margin-top: 20px; }
+  main.brief:has(.brief-hero) .brief-xp, main.brief:has(.brief-hero) .brief-cred, main.brief:has(.brief-hero) .brief-about { margin-top: 28px; }
+  main.brief:has(.brief-hero) .pi-head { padding-bottom: 6px; }
+  main.brief:has(.brief-hero) .wk { gap: 12px; margin-top: 12px; }
+  main.brief:has(.brief-hero) .wk-card { padding: 8px 20px; }
+  main.brief:has(.brief-hero) .wk-n { margin-bottom: 6px; }
+  main.brief:has(.brief-hero) .wk-a { top: 8px; }
+  main.brief:has(.brief-hero) .wk-card p { margin-top: 6px; }
+  main.brief:has(.brief-hero) .wk-card small { margin-top: 8px; }
+  main.brief:has(.brief-hero) .wk-more { margin-top: 12px; }
+  main.brief:has(.brief-hero) .xp > li { padding: 8px 0; }
+  main.brief:has(.brief-hero) .xp-sum { margin-top: 4px; max-width: none; }
+  main.brief:has(.brief-hero) .cred-cols { padding-top: 12px; }
+  main.brief:has(.brief-hero) .edu li { gap: 2px; padding-bottom: 12px; }
+  main.brief:has(.brief-hero) .edu li:last-child { padding-bottom: 0; }
+  main.brief:has(.brief-hero) .cred-h { margin-top: 12px; padding-bottom: 4px; margin-bottom: 6px; }
+  main.brief:has(.brief-hero) .cred-col > .cred-h:first-child { margin-top: 0; }
+  main.brief:has(.brief-hero) .awards-list li + li { margin-top: 4px; }
+  main.brief:has(.brief-hero) .about-text { margin-top: 10px; max-width: 76ch; }
+  .brief-contact { margin-top: 28px; }
+  .brief-contact .contact-in { padding-top: 24px; padding-bottom: 16px; }
+  .brief-contact .contact-kicker { margin-bottom: 8px; }
+  .brief-contact .contact-line { margin-top: 12px; }
+  .brief-contact .contact-actions { margin-top: 16px; }
+  .brief-contact .contact-foot { margin-top: 20px; padding-top: 10px; }
+}
+
 /* ---- work ---- */
 main.work { max-width: 1080px; margin: 0 auto; padding: 0 var(--pad) clamp(40px, 6vw, 80px); }
 .work-head { padding: clamp(8px, 2vw, 24px) 0 clamp(20px, 3vw, 36px); }
