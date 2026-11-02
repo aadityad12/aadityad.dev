@@ -4,7 +4,7 @@ import SkillsMap from "../components/skills/SkillsMap";
 import { RESUME } from "../content";
 
 const description = "28 skills, one per pin, and the projects that used each one.";
-const image = { url: "/og/home.png", width: 1200, height: 630, alt: "28 skills, one per pin, and the projects that used each one." };
+const image = { url: "/og/skills.png", width: 1200, height: 630, alt: "Aaditya Desai's skills as the 28 pins of a chip" };
 
 export const metadata: Metadata = {
   title: "Skills",
