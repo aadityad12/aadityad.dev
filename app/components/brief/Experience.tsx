@@ -6,7 +6,7 @@ export default function Experience() {
     <section id="experience" className="brief-xp" aria-labelledby="experience-h">
       <header className="pi-head">
         <h2 id="experience-h">Experience</h2>
-        <p>Industry research, teaching, and leadership.</p>
+        <p><Link href="/datasheet/#revisions">Full record in the datasheet ↗</Link></p>
       </header>
       <ol className="xp">
         {EXPERIENCE.map((job) => (
@@ -18,17 +18,11 @@ export default function Experience() {
             </p>
             <div className="xp-body">
               <h3>{job.role}</h3>
-              <p className="org">{job.org}</p>
-              <ul>
-                {job.points.map((p) => (
-                  <li key={p}>{p}</li>
-                ))}
-              </ul>
-              {job.link && (
-                <p className="xp-more">
-                  <Link href="/work/visionassist/">More on {job.link.label} →</Link>
-                </p>
-              )}
+              <small className="org">{job.org}</small>
+              <p className="xp-sum">
+                {job.summary}
+                {job.link && <> <Link href="/work/visionassist/">VisionAssist →</Link></>}
+              </p>
             </div>
           </li>
         ))}
