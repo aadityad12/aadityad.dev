@@ -1,5 +1,6 @@
-import { EMAIL, GITHUB, HERO, LINKEDIN, RESUME } from "../../content";
-import ChipIndex from "./ChipIndex";
+import { BRIEF, EMAIL, GITHUB, LINKEDIN, RESUME } from "../../content";
+import Chip from "../Chip";
+import HeroChip from "./HeroChip";
 
 const EM = "from the metal up";
 
@@ -20,33 +21,38 @@ export default function Hero() {
     <section className="brief-hero" aria-labelledby="brief-name">
       <div className="brief-copy">
         <p className="avail">
-          <i aria-hidden="true" /> {HERO.avail}
+          <i aria-hidden="true" /> {BRIEF.avail}
         </p>
-        <p className="brief-eyebrow">{HERO.eyebrow}</p>
+        <p className="brief-eyebrow">{BRIEF.eyebrow}</p>
         <h1 id="brief-name">Aaditya Desai</h1>
         <p className="brief-lead">
-          <Lead text={HERO.lead} />
+          <Lead text={BRIEF.lead} />
         </p>
-        <p className="brief-intro">{HERO.intro}</p>
         <div className="actions">
           <a className="button primary" href={RESUME}>Résumé PDF ↓</a>
-          <a className="button" href={`mailto:${EMAIL}`}>Email</a>
-          <a className="button" href={GITHUB} target="_blank" rel="noreferrer">GitHub ↗</a>
-          <a className="button" href={LINKEDIN} target="_blank" rel="noreferrer">LinkedIn ↗</a>
+          <a className="button" href="#work">See the work ↓</a>
+          <span className="actions-links">
+            <a href={`mailto:${EMAIL}`}>Email</a> ·{" "}
+            <a href={GITHUB} target="_blank" rel="noreferrer">GitHub ↗</a> ·{" "}
+            <a href={LINKEDIN} target="_blank" rel="noreferrer">LinkedIn ↗</a>
+          </span>
         </div>
       </div>
       <div className="brief-chip">
-        <ChipIndex />
+        <HeroChip />
         <p className="brief-cap">
-          <span className="brief-cap-hover">
-            Fig. 0 · 28 pins, one per skill. Hover to see where I used it; click to filter the projects.{" "}
-            <a href="/datasheet/#specs">Pin table ↗</a>
-          </span>
-          <span className="brief-cap-touch">
-            Tap a pin to filter the projects. <a href="/datasheet/#specs">Pin table ↗</a>
-          </span>
+          {BRIEF.chip.line}
+          <span className="brief-cap-hover">{BRIEF.chip.hover}</span>
+          <a href="/skills/" data-skills>{BRIEF.chip.action} →</a>
         </p>
       </div>
+      <a className="brief-chipcard" href="/skills/" data-skills>
+        <Chip compact />
+        <span className="brief-chipcard-t">
+          <b>{BRIEF.chip.line}</b>
+          <span>{BRIEF.chip.action} →</span>
+        </span>
+      </a>
     </section>
   );
 }

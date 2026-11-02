@@ -76,14 +76,6 @@ export const HERO = {
   avail: "Available for Summer 2027 internships · May to August 2027",
 };
 
-export type Proof = { big: string; small: string; href: string; status?: Status };
-export const PROOF: Proof[] = [
-  { big: "Infineon", small: "Research intern and technical lead", href: "#experience" },
-  { big: "Winner", small: "Sponsor Track, UC Berkeley AI Hackathon 2026", href: "/work/accordion/" },
-  { big: "38.84×", small: "my ARM64 JIT vs. the interpreter", href: "/work/rung/", status: "Measured" },
-  { big: "3.8 GPA", small: "Dean's Scholar, SJSU", href: "#education" },
-];
-
 // The front page. Everything here is a selection from HERO and NOTES; the long versions stay below.
 export const BRIEF = {
   avail: HERO.avail,

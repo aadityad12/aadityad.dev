@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { NOTES, PINS, type Pin } from "../content";
+import { useId, useRef, useState } from "react";
+import { BRIEF, NOTES, PINS, type Pin } from "../content";
 
 const BODY = { x: 150, y: 150, s: 300 };
 const PITCH = BODY.s / 8;
@@ -34,6 +34,9 @@ type ChipProps = {
 export default function Chip({ activePin, selectedPin, onHoverPin, onSelectPin, compact = false }: ChipProps = {}) {
   // Index mode: the front page drives the chip from outside. The datasheet renders <Chip /> bare.
   const index = !compact && !!onSelectPin;
+  const instance = useId().replace(/:/g, "");
+  const isolated = index || compact;
+  const resource = (name: string) => isolated ? `${name}-${instance}` : name;
   const [rove, setRove] = useState(0);
   const wrap = useRef<HTMLDivElement>(null);
   const sheen = useRef<SVGRadialGradientElement>(null);
@@ -109,33 +112,34 @@ export default function Chip({ activePin, selectedPin, onHoverPin, onSelectPin, 
         <svg
           className={compact ? "chip-svg chip-svg-compact" : "chip-svg booting"}
           viewBox="0 0 600 600"
+          style={isolated ? { "--chip-lead": `url(#${resource("lead")})` } as React.CSSProperties : undefined}
           role={index ? "group" : "img"}
           aria-label={compact ? "A 28-pin chip marked AD2028. Each pin is a skill; the pin map lists them." : "Pin diagram of a 28-pin chip package marked AD2028. Each pin is a skill; the same information is in the pin table in section 4."}
         >
-          {index && <title>AD2028 pin diagram: each of the 28 pins is a skill. Hover or focus a pin to see where it was used; select it to filter the projects.</title>}
+          {index && <title>{`${BRIEF.chip.line} ${BRIEF.chip.hover}`}</title>}
           <defs>
-            <linearGradient id="lead" x1="0" y1="0" x2="1" y2="1">
+            <linearGradient id={resource("lead")} x1="0" y1="0" x2="1" y2="1">
               <stop offset="0" stopColor="#d9d9d3" />
               <stop offset="0.55" stopColor="#a3a39c" />
               <stop offset="1" stopColor="#7c7c76" />
             </linearGradient>
-            <linearGradient id="body" x1="0" y1="0" x2="1" y2="1">
+            <linearGradient id={resource("body")} x1="0" y1="0" x2="1" y2="1">
               <stop offset="0" stopColor="#262625" />
               <stop offset="1" stopColor="#0c0c0c" />
             </linearGradient>
-            <radialGradient id="sheen" ref={sheen} cx="0.5" cy="0.5" r="0.75">
+            <radialGradient id={resource("sheen")} ref={sheen} cx="0.5" cy="0.5" r="0.75">
               <stop offset="0" stopColor="#fff" stopOpacity="0.13" />
               <stop offset="0.6" stopColor="#fff" stopOpacity="0" />
             </radialGradient>
-            <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+            <filter id={resource("shadow")} x="-30%" y="-30%" width="160%" height="160%">
               <feDropShadow dx="0" dy="18" stdDeviation="16" floodColor="#2a2618" floodOpacity="0.32" />
             </filter>
           </defs>
 
-          <g filter="url(#shadow)">
-            <rect x={BODY.x} y={BODY.y} width={BODY.s} height={BODY.s} rx="7" fill="url(#body)" />
+          <g filter={`url(#${resource("shadow")})`}>
+            <rect x={BODY.x} y={BODY.y} width={BODY.s} height={BODY.s} rx="7" fill={`url(#${resource("body")})`} />
           </g>
-          <rect x={BODY.x} y={BODY.y} width={BODY.s} height={BODY.s} rx="7" fill="url(#sheen)" />
+          <rect x={BODY.x} y={BODY.y} width={BODY.s} height={BODY.s} rx="7" fill={`url(#${resource("sheen")})`} />
           <rect x={BODY.x + 6} y={BODY.y + 6} width={BODY.s - 12} height={BODY.s - 12} rx="4" fill="none" stroke="#2c2c2b" strokeWidth="1" />
           <circle cx={BODY.x + 40} cy={BODY.y + 40} r="8" fill="#0a0a0a" stroke="#2f2f2e" />
           <circle cx={BODY.x + BODY.s - 40} cy={BODY.y + BODY.s - 40} r="15" fill="none" stroke="#252524" strokeWidth="1.5" />
@@ -196,7 +200,7 @@ export default function Chip({ activePin, selectedPin, onHoverPin, onSelectPin, 
                 onBlur={index ? () => hidePin() : undefined}
               >
                 <rect x={x - (horiz ? 0 : 8)} y={y - (horiz ? 8 : 0)} width={w + (horiz ? 0 : 16)} height={h + (horiz ? 16 : 0)} fill="transparent" />
-                <rect className="lead" x={x} y={y} width={w} height={h} fill="url(#lead)" />
+                <rect className="lead" x={x} y={y} width={w} height={h} fill={`url(#${resource("lead")})`} />
                 {!compact && lbl}
                 {!compact && <text className="num" aria-hidden="true" x={nIn.x} y={nIn.y} textAnchor={nIn.a as "start" | "end" | "middle"} style={{ fill: "#6d6d68" }}>{pin.n}</text>}
               </g>
