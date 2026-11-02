@@ -30,7 +30,7 @@ export default function Hero() {
         </p>
         <div className="actions">
           <a className="button primary" href={RESUME}>Résumé PDF ↓</a>
-          <a className="button" href="#projects">See the work ↓</a>
+          <a className="button" href="#work">See the work ↓</a>
           <span className="actions-links">
             <a href={`mailto:${EMAIL}`}>Email</a> ·{" "}
             <a href={GITHUB} target="_blank" rel="noreferrer">GitHub ↗</a> ·{" "}

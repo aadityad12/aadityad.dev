@@ -72,7 +72,7 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
               {l.label} ↗
             </a>
           ))}
-          <Link className="work-all" href="/#projects">← All projects</Link>
+          <Link className="work-all" href="/work/" prefetch={false}>← All projects</Link>
         </div>
       </header>
 

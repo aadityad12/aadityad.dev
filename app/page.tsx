@@ -3,7 +3,7 @@ import { HERO, RESUME } from "./content";
 import Masthead from "./components/Masthead";
 import Hero from "./components/brief/Hero";
 import Facts from "./components/brief/Facts";
-import ProjectIndex from "./components/brief/ProjectIndex";
+import Work from "./components/brief/Work";
 import Experience from "./components/brief/Experience";
 import Credentials from "./components/brief/Credentials";
 import About from "./components/brief/About";
@@ -26,7 +26,7 @@ export default function Home() {
       <main className="brief" id="main">
         <Hero />
         <Facts />
-        <ProjectIndex />
+        <Work />
         <Experience />
         <Credentials />
         <About />
