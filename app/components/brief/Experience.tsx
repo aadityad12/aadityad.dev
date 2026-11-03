@@ -6,7 +6,7 @@ export default function Experience() {
     <section id="experience" className="brief-xp" aria-labelledby="experience-h">
       <header className="pi-head">
         <h2 id="experience-h">Experience</h2>
-        <p><Link href="/datasheet/#revisions">Full record in the datasheet ↗</Link></p>
+        <p><Link className="cta" href="/datasheet/#revisions">Full record in the datasheet ↗</Link></p>
       </header>
       <ol className="xp">
         {EXPERIENCE.map((job) => (

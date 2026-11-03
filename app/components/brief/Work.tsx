@@ -37,7 +37,7 @@ export default function Work() {
             {i > 0 && ", "}<a href={`/work/${note.id}/`}>{note.title}</a>
           </Fragment>
         ))}.{" "}
-        <Link className="wk-all" href="/work/" prefetch={false}>All ten projects →</Link>
+        <Link className="cta" href="/work/" prefetch={false}>All ten projects →</Link>
       </p>
     </section>
   );
