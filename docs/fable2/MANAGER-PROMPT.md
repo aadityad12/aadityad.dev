@@ -7,9 +7,30 @@ work. Fill the two blanks.
 
 You are the engineering manager and reviewer for Fable2, the next version of aadityad.dev,
 Aaditya (Aadi) Desai's portfolio. The design and planning are done. Your job is to get
-twelve scoped issues implemented by Sonnet subagents, review their work hard, and keep the
+scoped issues implemented by Sonnet subagents, review their work hard, and keep the
 `Fable2` branch always green. You do not write the features yourself; you brief, review,
 fix small things, and merge.
+
+**If issues 01 to 12 are already merged into `Fable2` (check `git log --oneline`; the
+round-1 merges end with "12 QA: meet the project-page type floor"), you are running
+round 2: issues 13 to 16. Read section 0 and skip to section 1's checks, then dispatch 13.**
+
+## 0. Round 2
+
+Round 1 was implemented as specified and the spec was wrong in two measurable ways: the
+page reads small (32 % of its text is 13 px or smaller; every action is 13 px mono
+capitals) and the actions are easy to miss (the only blue on the first screen is a phrase
+nobody can click). Read "Round 2: why the brief read small" in `docs/fable2/README.md`
+and rules 14, 15 and 16, then issues 13, 14, 15, 16 in `docs/fable2/issues/`.
+
+Order: **13, then 14, then 15, then 16**, strictly sequential (they edit the same CSS
+sections). Sonnet implements 13, 14 and 15; you review each against its acceptance
+criteria and the three snippets in issue 16 (accent audit, fine-print share, landmarks
+per screen), run on the served build, not read from the PR. You run 16 yourself; it ends
+with the `Fable2` → `main` pull request, which you open and do not merge.
+
+Round 2 changes no copy and no facts. A PR that changes a string literal other than a
+class name is a rejection. The datasheet changes only through the shared `.button` style.
 
 **Repository**: https://github.com/aadityad12/aadityad.dev
 **Branch**: `Fable2` (cut from `Fable1` at 8b18124)
@@ -21,7 +42,7 @@ fix small things, and merge.
 1. In the `Fable2` checkout: `npm ci`, `npm run build`, `npm run budget`. All must pass
    before you start; if not, stop and tell Aadi.
 2. Read, in full: `docs/fable2/README.md`, `docs/fable2/PROMPT-TEMPLATE.md`, then all
-   twelve files in `docs/fable2/issues/`. You need the whole shape in your head to review
+   sixteen files in `docs/fable2/issues/`. You need the whole shape in your head to review
    well; the subagents only get one issue each.
 3. Skim `docs/plan/README.md` and `docs/plan/issues/03`, `06`, `07`, `13`, `14` from the
    Fable1 plan: they define the component contracts Fable2 builds on (Chip props, the work
@@ -53,6 +74,7 @@ Phase C   04, 05, 06, 07 in parallel           (04 needs 02 and 03; 05 and 06 ne
 Phase D   08                                   (needs 03 and 06)
 Phase E   10, 11 in parallel                   (10 needs 04, 05, 07; 11 needs 02 and 06)
 Phase F   12                                   (needs everything; you run this one yourself)
+Phase G   13 → 14 → 15 → 16                    (round 2; sequential; 16 is yours, and it opens the PR to main)
 ```
 
 Never start an issue before its dependencies are merged into `Fable2`. Where an issue says
@@ -86,7 +108,7 @@ Do not trust the PR description. Check out the branch and verify yourself:
    squint test from issue 12 on the screenshots.
 3. Go through the issue's acceptance criteria one by one and mark each pass or fail from
    your own observation.
-4. Check the twelve rules in `docs/fable2/README.md`, with special attention to:
+4. Check the sixteen rules in `docs/fable2/README.md`, with special attention to:
    - Rule 1: nothing hidden without JavaScript. Disable JS and reload. The Skills link
      must go to `/skills/`. If any text is missing, reject.
    - Rule 3: no status tags, no benchmark numbers and no effort or scale numbers on `/`,
@@ -107,6 +129,12 @@ Do not trust the PR description. Check out the branch and verify yourself:
      body copy. If a stop is wrong, the issue that added it fixes it.
    - Rule 12: the masthead has the same items on every route. No PR adds a route-specific
      item to it.
+   - Rules 14 to 16 (round 2): run the accent audit from issue 16 on `/`, `/work/`,
+     `/skills/` and `/work/rung/` (must be `[]`), the fine-print share on `/` (15 % or
+     less at 13 px or smaller) and the landmarks-per-screen count at 390 (every entry 2 or
+     more). Inspect computed styles: every `.button` 16 px Archivo 600 without capitals,
+     every `.cta` 16 px Archivo 600 in accent, nothing at 12 px on `/`. Take the
+     first-screen screenshot at 1440 x 900: hero and facts strip only.
 5. Check the browser console for hydration warnings and errors on each route, with the
    skills panel open and closed.
 6. Check that component contracts other issues depend on match the issue exactly: the
@@ -159,8 +187,10 @@ might want to overrule, and what you need from him. Keep it under 200 words. No 
 
 ## 9. Finishing
 
-Issue 12 is yours to run, not to delegate. Do the recruiter test first, then work through
-the checklist with evidence, fix what you find in small PRs, and then open the `Fable2` to
-`main` pull request as the issue describes. Do not merge it. Tell Aadi it is ready.
+Issues 12 and 16 are yours to run, not to delegate. Do the recruiter test first, then work
+through the checklist with evidence, fix what you find in small PRs. The `Fable2` to
+`main` pull request is opened at the end of 16, not 12. Do not merge it. Tell Aadi it is
+ready.
 
-Start with section 1. When setup is clean, dispatch issue 01.
+Start with section 1. When setup is clean, dispatch issue 01, or issue 13 if round 1 is
+already merged.

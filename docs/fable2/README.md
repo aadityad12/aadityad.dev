@@ -20,8 +20,8 @@ Measured on the Fable1 build, 31 Oct 2026:
 | --- | --- | --- |
 | Stops for a scanning eye on `/` (the landmark read, below) | 87, of which 13 are status tags and 10 are bold numbers a recruiter cannot judge | Every stop answers one of the recruiter's six questions or names a section; **no tags, no benchmark or effort numbers** (checked by `scripts/check-brief.mjs`) |
 | Status tags (`Measured`, `Repo`, ...) on `/` | 13 | **0** |
-| Height of `/` at 1440 x 900 | 4,314 px (4.8 screens) | 2,400 px or less (2.7 screens) |
-| Height of `/` at 390 x 844 | 7,795 px (9.2 screens) | 4,400 px or less (5.2 screens) |
+| Height of `/` at 1440 x 900 | 4,314 px (4.8 screens) | 3,600 px or less (four screens; round 2 raised this from 2,400, see "Round 2" below for why) |
+| Height of `/` at 390 x 844 | 7,795 px (9.2 screens) | 6,500 px or less (round 2 raised this from 4,400) |
 | Links in the masthead on a project page | 5, different from every other route, in 11.5 px mono capitals; previous/next shrink to bare arrows under 1000 px | 4, the same on every route, 14.5 px sans |
 | Way off a project page, apart from the masthead | one mono line "Next: Alta" | previous and next cards, "All work", "Home" |
 
@@ -198,6 +198,169 @@ the datasheet. What stayed, also Aadi's call: GitHub star counts ("240+ stars" i
 facts strip, "9.8k★" and "380★" in the open-source line), because anyone who has used
 GitHub reads them instantly.
 
+## Round 2: why the brief read small
+
+Issues 01 to 12 were implemented as written and merged on 2 Nov 2026. The landmark read
+matches the target list above exactly, every check passes, and the page is still wrong in
+a way the plan did not measure: Aadi's reaction was that the landing page is "too small
+now" and that the links and buttons are easy to miss. Both are faults of the spec, not of
+the implementation, and this section is the fix. Measured on the round-1 build at
+1440 x 900:
+
+| | Round 1 | Round 2 target |
+| --- | --- | --- |
+| Share of text on `/` set at 13 px or smaller (characters, `main` and `footer`, SVG excluded) | 32 % | **15 % or less** |
+| Sizes between the lead and the fine print | 76 → 26 → 13: nothing between 26 and 13 on the first screen | a scale with a step at every level (table below) |
+| Buttons and inline actions | 13 px IBM Plex Mono, capitals: the same voice as the dates and venues | 16 px Archivo, weight 600, no capitals |
+| Links on the first screen in the accent colour | 0 of 13; the only blue on the screen was the non-clickable "from the metal up" | one accent action per section, and nothing static in blue |
+| Chip width | 360 px (Fable1: 460) | 460 px |
+| Zones on the first screen | five: masthead, hero copy, chip, facts, the top of Selected work | two: the hero and the facts strip at the fold |
+| Pictures of the work on `/` | none; four text cards | a frame of each featured project's figure |
+
+Why it reads small, in order of weight:
+
+1. **A third of the page is fine print.** Everything that is not a heading or a sentence
+   is 12 or 13 px mono capitals: the availability pill, the eyebrow, both buttons, the
+   Email · GitHub · LinkedIn line, the chip caption, the section intro lines, the venue
+   lines on the cards, the dates and employers in Experience, the awards and
+   certifications headers, the contact kicker, the footer. 32 % of the characters on the
+   page are 13 px or smaller. The type floor (rule 13) was met and the page still reads
+   as fine print because the floor was treated as the target.
+2. **The scale drops too fast.** 76 px name, 26 px lead, then 13 px for everything a
+   reader might click. Reference sites that feel comfortable (brittanychiang.com,
+   leerob.com, joshwcomeau.com, rauno.me, emilkowalski.com) set their name between 32 and
+   48 px and their links and buttons at 16 or 17 px, the same size as body copy or larger.
+   Ours set the name twice as large and the actions half as large.
+3. **Five zones on the first screen.** The compression block added to meet the 2,400 px
+   ceiling pulled Selected work above the fold and shrank the chip to 360 px. Every
+   reference site puts one thing on the first screen. The height ceiling was the wrong
+   instrument for the same reason the word count was: it measures the page, not the
+   reader. It becomes a sanity ceiling only (below).
+4. **The site's best material is invisible from the landing page.** The project pages
+   have interactive figures Aadi likes and recruiters respond to; the front page has four
+   text cards that look like paragraphs with a border.
+
+Why the links are missed:
+
+1. **Labels and actions share one voice.** Mono capitals mean "metadata" everywhere on the
+   site (dates, venues, figure labels), so the eye learns to skip them, and the buttons are
+   set in the same voice.
+2. **The accent is spent on decoration.** The one blue thing on the first screen is a
+   phrase in the lead that does nothing when clicked. "See the work", the page's answer to
+   "where do I go", is an outlined button in the same style as Email.
+3. **The cards do not look clickable at rest.** A hairline border on paper, a 13 px arrow,
+   and no picture.
+
+### The type scale
+
+Sizes at 1440; the `clamp()` in the issue gives the phone size. Mono is IBM Plex Mono,
+sans is Archivo.
+
+| Element | Round 1 | Round 2 |
+| --- | --- | --- |
+| Name (h1) | 76 | 64 |
+| Lead | 26 / 500 | 24 / 500, max 32ch |
+| Buttons (`.button`, every route) | 13 mono caps | 16 sans 600, no caps, 12 x 18 padding |
+| Inline actions (Email · GitHub ↗ · LinkedIn ↗) | 13 mono | 16 sans 600 |
+| Section call to action (`.cta`: Open the pin map, All ten projects, Full record in the datasheet) | 13 mono | 16 sans 600, accent |
+| Availability pill, eyebrow (they answer three of the six questions) | 12 mono caps | 14 mono caps |
+| Chip caption | 12 mono | 13 mono |
+| Facts, big | 28 | 32 |
+| Facts, small | 16 | 17 |
+| Section heading (h2) | 34 | 40 |
+| Section intro line | 13 mono | 16 sans, `--ink-2` |
+| Card title (h3) | 22 | 26 |
+| Card one-liner | 16 | 17 |
+| Card venue line | 12 mono caps | 14 mono caps |
+| Card index / arrow | 13 / 13 | 13 mono / 18 accent |
+| Experience role (h3) | 17 / 600 | 18 / 700 |
+| Experience employer, dates | 12 mono | 14 mono |
+| Experience summary | 16 | 17 |
+| School (h3) | 18 | 20 |
+| Degree line, awards, open source, certifications | 16 | 17 |
+| School place and dates (`.edu-meta`) | 12 mono | 14 mono |
+| Awards / Open source / Certifications headers | 12 mono caps | 13 mono caps |
+| About | 16 | 17 |
+| Contact kicker | 12 mono caps, accent | 13 mono caps, `--ink-2` |
+| Contact line | 17 | 18 |
+| Footer line | 13 mono | 13 mono (fine print, allowed) |
+| Masthead items | 14.5 sans 600 | 15 sans 600 |
+| Masthead résumé button | 13 mono caps | 15 sans 600, outlined |
+
+Mono has two sizes on purpose: metadata that carries a fact (availability, school and
+year, a card's venue and date, an employer, a job's dates, a school's place and dates) is
+14 px; labels that carry none (the chip caption, the Awards / Open source / Certifications
+headers, the contact kicker, card indices, the footer line) are 13 px. Nothing is 12 px.
+Rule 13's floors still hold; this table is the target for `/`, and `/work/` and `/skills/`
+follow it for the elements they share (buttons, `.cta`, headings, mono labels).
+
+### Two voices
+
+Sans is for content and actions: headings, sentences, buttons, and any link a reader is
+meant to click. Mono capitals are for metadata only: dates, venues, kickers, indices,
+figure labels. On `/`, `/work/`, `/skills/` and a project page, nothing clickable is set
+in mono capitals, apart from the controls inside a figure body (they are the instrument's
+own buttons) and the footer's last line (fine print by design).
+
+### Accent means clickable
+
+`--accent` appears only on things a reader can click, with two exceptions: the live
+indicator in a figure bar, which marks an interactive region, and the inside of a figure
+body, where the figure uses it as a data colour. Nothing static is blue on a
+recruiter-facing surface: not a phrase in the lead, not the contact kicker, not the
+application-note number on a project page. Each section has exactly one accent call to
+action, a `.cta` link in 16 px sans: the hero's "See the work ↓" (an accent-filled
+button), the chip's "Open the pin map →", Selected work's "All ten projects →",
+Experience's "Full record in the datasheet ↗", and the contact footer's email button. A
+clickable card or row shows an 18 px accent arrow at rest. The datasheet keeps its section
+numbers and kickers in accent; it is the long version and has its own conventions.
+
+### The first screen belongs to the hero
+
+At 1440 x 900 the first screen holds the masthead, the hero (copy on the left, the chip at
+460 px on the right) and the facts strip at the fold, fully visible, and nothing of
+Selected work beyond, at most, its heading. After that, one thing per screen: the cards,
+then Experience, then Education and About, then Contact. Heights are a sanity ceiling, not
+a target: `/` at 1440 x 900 is **3,600 px or less** (four screens; pictures on the cards
+account for about 650 px of it) and at 390 x 844 **6,500 px or less**. Within those, the
+instruments are the ones that measure the reader: every screen at 390 has at least two
+landmarks on it, fine print is under 15 % of the text, and the squint test shows only
+landmarks.
+
+### Pictures on the cards
+
+Each of the four featured cards gets a static frame of its project page's figure, rendered
+once from the built site (the same way the Open Graph images are rendered, with a script
+kept outside the repo because it needs Playwright) and saved as `public/cards/<slug>.png`.
+The frame sits at the top of the card at 16:9, top-anchored, so the card reads as a thing
+with a picture, a title, one line and a venue. The image is decorative inside a link that
+already carries `aria-label`, so its `alt` is empty. The project pages are unchanged; the
+figure on the card is the invitation to the interactive one.
+
+### The landmark read, round 2
+
+The `.cta` links are stops the eye uses, so `scripts/check-brief.mjs` prints them (issue
+13). The required stops and their order do not change. The read gains three lines:
+
+```
+button  See the work ↓
+cta     Open the pin map →                 (new, after the buttons)
+b       28 skills, one per pin.
+...
+small   Cal Hacks 13.0 · hardware and firmware lead · Oct 2026
+cta     All ten projects →                 (new, closes Selected work)
+h2      Experience
+cta     Full record in the datasheet ↗     (new, the section's one way down)
+h3      Research Intern and Technical Lead, VisionAssist
+```
+
+### What round 2 does not change
+
+The content, the order of sections, the landmark list, the masthead's items, the skills
+panel, `/work/`, the project pages apart from the shared `.button` style and the
+application-note number losing its blue, and the datasheet apart from the shared `.button`
+style.
+
 ## The one-paragraph version
 
 The front page becomes a brief a recruiter can finish: availability, name, one sentence,
@@ -310,7 +473,26 @@ Fable1's ten rules still apply. They are repeated here with the Fable2 changes m
     larger, navigation text (masthead items, breadcrumbs, footer links) 13 px or larger
     and the masthead items 14.5 px sans. Nothing that carries a fact is set in `--muted`;
     `--muted` is for decoration and hints only. The datasheet keeps its own smaller
-    table type; it is the long version and says so.
+    table type; it is the long version and says so. These are floors; "Round 2: the type
+    scale" is the target.
+14. **Round 2: two voices.** Sans (Archivo) is for content and actions: headings, body,
+    buttons, and every link a reader is meant to click. Mono capitals are for metadata
+    only: dates, venues, kickers, indices, figure labels. On `/`, `/work/`, `/skills/` and
+    `/work/<slug>/`, nothing clickable is set in mono capitals, apart from controls inside
+    a figure body and the footer's last line. Buttons are 16 px sans weight 600 on every
+    route (`.button` is shared, the datasheet included).
+15. **Round 2: accent means clickable.** `--accent` and `--accent-ink` appear only on
+    things a reader can click, plus the live indicator in a figure bar and the inside of
+    a figure body. Nothing static is
+    blue on a recruiter-facing surface. Each section has one accent call to action
+    (`.cta`, 16 px sans 600); every clickable card or row shows an 18 px accent arrow at
+    rest. The audit in issue 16 returns an empty list on `/`, `/work/`, `/skills/` and
+    `/work/rung/`. The datasheet keeps its own accent conventions.
+16. **Round 2: the first screen belongs to the hero.** At 1440 x 900 the first screen is
+    the masthead, the hero with the chip at 460 px, and the facts strip at the fold; the
+    type scale in "Round 2" is the target for `/`; fine print (13 px or smaller) is 15 %
+    or less of the text on `/`; `/` is 3,600 px or less at 1440 x 900 and 6,500 px or less
+    at 390 x 844; every screen at 390 has at least two landmarks on it.
 
 ## Where things come from
 
@@ -331,6 +513,10 @@ Phase C  front page         04 hero and facts   05 selected work   07 experience
 Phase D  project pages      08 wayfinding (needs 03, 06)        09 reel: tighten and free (needs nothing)      (parallel)
 Phase E  enforcement        10 brief check and CI (needs 04, 05, 07)            11 metadata, OG, sitemap (needs 02, 06)
 Phase F  launch             12 QA and launch (needs everything)
+Phase G  round 2            13 voice: sans actions, accent means clickable    (needs 12 merged)
+                            14 first screen and scale                         (needs 13)
+                            15 a picture on each work card                    (needs 14)
+                            16 QA, round 2, then the pull request to main      (needs 13, 14, 15; the manager runs it)
 ```
 
 Dependencies: 02 and 03 need 01. 04 needs 01, 02, 03. 05 needs 01, 03 (and links to `/work/`
@@ -341,10 +527,16 @@ needs everything else.
 Parallel-safe sets: {02, 03, 09} after 01; {04, 05, 06, 07} after 02 and 03; {08, 10, 11}
 after their dependencies.
 
+Round 2 is sequential: 13, then 14, then 15, then 16. All three touch `app/globals.css`
+in the same sections and 14 and 15 both touch the card styles; running them in parallel
+would mean resolving conflicts in CSS by hand. Issue 12's launch step (the pull request
+to `main`) moves to the end of 16.
+
 ## Definition of done, every issue
 
 - `npm run lint`, `npm run build` and `npm run budget` are clean. From issue 10 onward,
-  `npm run brief` too. For issues 04, 05 and 07, paste the landmark read of `/` into the
+  `npm run brief` too. From issue 13 onward, the accent audit and the fine-print share
+  snippets in issue 16, run on `/` at 1440 x 900, with the results pasted in the PR. For issues 04, 05 and 07, paste the landmark read of `/` into the
   PR (the script prints it; before issue 10, the regex in that issue's spec does).
 - Checked at 390, 768 and 1440 px: `npm run build && npx serve out` and open the route.
   If `agent-browser` is available, take screenshots at those widths and attach them.
