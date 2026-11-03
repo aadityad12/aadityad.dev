@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { BRIEF, FEATURED, NOTES } from "../../content";
 
@@ -20,11 +21,16 @@ export default function Work() {
           return (
             <li key={id}>
               <a href={`/work/${id}/`} className="wk-card" aria-label={`${note.title}: ${note.oneLiner}`}>
-                <span className="wk-n" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
-                <span className="wk-a" aria-hidden="true">→</span>
-                <h3>{note.title}</h3>
-                <p>{note.oneLiner}</p>
-                <small>{note.where}</small>
+                <div className="wk-fig" aria-hidden="true">
+                  <Image src={`/cards/${id}.png`} alt="" fill sizes="(max-width: 899px) 92vw, 570px" style={{ objectFit: "cover", objectPosition: "50% 0" }} />
+                </div>
+                <div className="wk-body">
+                  <span className="wk-n" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="wk-a" aria-hidden="true">→</span>
+                  <h3>{note.title}</h3>
+                  <p>{note.oneLiner}</p>
+                  <small>{note.where}</small>
+                </div>
               </a>
             </li>
           );
