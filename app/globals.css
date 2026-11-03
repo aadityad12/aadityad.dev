@@ -519,12 +519,15 @@ main.brief .pi-head { display: flex; flex-wrap: wrap; align-items: baseline; jus
 main.brief .pi-head h2 { margin: 0; font-size: clamp(30px, 3.2vw, 40px); font-weight: 800; font-stretch: 112%; letter-spacing: -0.02em; line-height: 1.1; }
 main.brief .pi-head p { margin: 0; font-family: var(--sans); font-size: 16px; line-height: 1.45; color: var(--ink-2); }
 main.brief .wk { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; list-style: none; margin: 20px 0 0; padding: 0; }
-main.brief .wk-card { display: block; position: relative; height: 100%; padding: 18px 20px 20px; border: 1px solid var(--hair-strong); background: var(--paper); color: var(--ink); text-decoration: none; }
+main.brief .wk-card { display: flex; flex-direction: column; position: relative; height: 100%; padding: 0; border: 1px solid var(--hair-strong); background: var(--paper); color: var(--ink); text-decoration: none; }
 main.brief .wk-card:hover, main.brief .wk-card:focus-visible { border-color: var(--ink); }
+main.brief .wk-fig { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: var(--paper); border-bottom: 1px solid var(--hair-strong); }
+main.brief .wk-card:hover .wk-fig, main.brief .wk-card:focus-visible .wk-fig { border-bottom-color: var(--ink); }
+main.brief .wk-body { position: relative; flex: 1; padding: 16px 20px 20px; }
 main.brief .wk-card:hover h3, main.brief .wk-card:focus-visible h3 { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 4px; }
 main.brief .wk-n, main.brief .wk-a { font-family: var(--mono); font-size: 13px; line-height: 1.4; }
 main.brief .wk-n { display: block; margin-bottom: 10px; color: var(--ink-2); }
-main.brief .wk-a { position: absolute; top: 18px; right: 20px; color: var(--accent); transition: transform 0.15s; }
+main.brief .wk-a { position: absolute; top: 16px; right: 20px; color: var(--accent); transition: transform 0.15s; }
 main.brief .wk-a { font-size: 18px; line-height: 1; }
 main.brief .wk-card:hover .wk-a, main.brief .wk-card:focus-visible .wk-a { transform: translateX(4px); }
 main.brief .wk-card h3 { margin: 0; font-size: clamp(22px, 2vw, 26px); font-weight: 800; font-stretch: 112%; letter-spacing: -0.015em; line-height: 1.15; }
