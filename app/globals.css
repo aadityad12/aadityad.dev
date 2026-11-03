@@ -76,7 +76,7 @@ a:hover { color: var(--accent-ink); }
 .mast-mid { font-family: var(--mono); font-size: 13px; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .mast-sec, .mast-avail { text-align: center; }
 .mast-sec span { color: var(--accent); margin-right: 8px; }
-.mast-crumb { text-align: left; }
+.mast-crumb { text-align: left; font-family: var(--sans); font-size: 15px; font-weight: 600; text-transform: none; letter-spacing: 0; }
 .mast-crumb a { text-decoration: underline; }
 .mast-crumb b { color: var(--ink); font-weight: 600; }
 .mast-end { grid-column: 3; display: flex; align-items: center; gap: 4px; font-family: var(--mono); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.05em; }
@@ -599,7 +599,7 @@ main.brief .about-text { margin: 14px 0 0; max-width: 64ch; font-size: 17px; lin
 main.work { max-width: 1080px; margin: 0 auto; padding: 0 var(--pad) clamp(40px, 6vw, 80px); }
 .work-head { padding: clamp(8px, 2vw, 24px) 0 clamp(20px, 3vw, 36px); }
 .work-crumbs { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 18px; font-family: var(--mono); font-size: 13px; text-transform: uppercase; color: var(--ink-2); }
-.work-crumbs a { font-weight: 600; }
+.work-crumbs a { font-family: var(--sans); font-size: 16px; font-weight: 600; text-transform: none; letter-spacing: 0; color: var(--ink); }
 .work-meta { display: flex; flex-wrap: wrap; gap: 4px 0; margin: 0 0 14px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); }
 .work-meta span:first-child { color: var(--ink); font-weight: 600; }
 .work-meta span:not(:last-child)::after { content: "·"; margin: 0 0.7em; color: var(--muted); }
@@ -642,8 +642,8 @@ main.work { max-width: 1080px; margin: 0 auto; padding: 0 var(--pad) clamp(40px,
 .work-card-d { font-size: 16px; color: var(--ink-2); }
 .work-card.next .work-card-k { color: var(--accent); }
 .work-card.next { order: -1; }
-.work-foot-links { margin: 14px 0 0; font-family: var(--mono); font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; }
-.work-keys { float: right; color: var(--muted); }
+.work-foot-links { margin: 14px 0 0; font-family: var(--sans); font-size: 16px; font-weight: 600; line-height: 1.6; }
+.work-keys { float: right; font-family: var(--mono); font-size: 13px; font-weight: 400; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
 @media (min-width: 700px) {
   .work-foot-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .work-card.next { order: initial; }
