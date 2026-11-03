@@ -450,19 +450,19 @@ main.brief { max-width: 1180px; margin: 0 auto; padding: 0 var(--pad) 64px; }
 
 main.brief .brief-hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: clamp(20px, 4vw, 56px); align-items: center; padding-top: clamp(8px, 2vw, 24px); }
 main.brief .brief-copy { min-width: 0; }
-main.brief .avail { display: inline-flex; align-items: center; gap: 9px; margin: 0 0 18px; padding: 5px 11px; border: 1px solid var(--hair); background: var(--paper); font-family: var(--mono); font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; line-height: 1.35; color: var(--ink-2); }
+main.brief .avail { display: inline-flex; align-items: center; gap: 9px; margin: 0 0 18px; padding: 5px 11px; border: 1px solid var(--hair); background: var(--paper); font-family: var(--mono); font-size: 14px; letter-spacing: 0.05em; text-transform: uppercase; line-height: 1.35; color: var(--ink-2); }
 main.brief .avail i { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--ok); }
-main.brief .brief-eyebrow { margin: 0 0 12px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: #58564f; }
-main.brief h1 { margin: 0; font-weight: 800; font-stretch: 112%; font-size: clamp(44px, 7vw, 76px); line-height: 0.95; letter-spacing: -0.03em; }
-main.brief .brief-lead { margin: 20px 0 0; font-size: clamp(21px, 2.1vw, 26px); line-height: 1.25; font-weight: 500; letter-spacing: -0.01em; max-width: 30ch; }
-main.brief .actions { margin-top: 24px; }
-main.brief .actions-links { flex-basis: 100%; margin-top: 2px; font-family: var(--sans); font-size: 16px; font-weight: 600; line-height: 1.5; }
+main.brief .brief-eyebrow { margin: 0 0 12px; font-family: var(--mono); font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase; color: #58564f; }
+main.brief h1 { margin: 0; font-weight: 800; font-stretch: 112%; font-size: clamp(44px, 6vw, 64px); line-height: 0.98; letter-spacing: -0.03em; }
+main.brief .brief-lead { margin: 16px 0 0; font-size: clamp(20px, 2vw, 24px); line-height: 1.3; font-weight: 500; letter-spacing: -0.01em; max-width: 32ch; }
+main.brief .actions { margin-top: 24px; gap: 12px; }
+main.brief .actions-links { flex-basis: 100%; margin-top: 4px; font-family: var(--sans); font-size: 16px; font-weight: 600; line-height: 1.5; }
 main.brief .actions-links a { text-decoration: none; }
 main.brief .actions-links a:hover { text-decoration: underline; }
 
 main.brief .brief-chip { min-width: 0; }
-main.brief .brief-chip .chip-wrap { max-width: 520px; }
-main.brief .brief-cap { display: flex; flex-direction: column; gap: 6px; margin: 8px auto 0; max-width: 520px; font-family: var(--mono); font-size: 12px; line-height: 1.45; color: var(--ink-2); }
+main.brief .brief-chip .chip-wrap { max-width: 460px; }
+main.brief .brief-cap { display: flex; flex-direction: column; gap: 6px; margin: 10px auto 0; max-width: 460px; font-family: var(--mono); font-size: 13px; line-height: 1.45; color: var(--ink-2); }
 main.brief .brief-chip .chip-tip { font-size: 16px; }
 main.brief .brief-chip .chip-tip .t, main.brief .brief-chip .chip-tip .u { font-size: 12px; }
 main.brief .brief-chipcard { display: none; align-items: center; grid-template-columns: 120px minmax(0, 1fr); gap: 12px; padding: 12px; border: 1px solid var(--hair); background: var(--paper); color: var(--ink); text-decoration: none; }
@@ -479,23 +479,31 @@ main.brief .brief-chipcard-t > span { font-family: var(--mono); font-size: 13px;
 .chip-svg .pin:focus-visible rect.lead { stroke: var(--accent); stroke-width: 2.5; }
 .chip-svg .pin:focus-visible text.lbl { fill: var(--accent); font-weight: 600; text-decoration: underline; }
 
-main.brief .facts { list-style: none; margin: clamp(24px, 3vw, 36px) 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+main.brief .facts { list-style: none; margin: 32px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
 main.brief .facts li + li { border-left: 1px solid var(--hair); }
-main.brief .facts a { display: block; height: 100%; padding: 14px 20px 14px 18px; text-decoration: none; }
+main.brief .facts a { display: block; height: 100%; padding: 18px 44px 18px 20px; text-decoration: none; }
 main.brief .facts li:first-child a { padding-left: 0; }
 main.brief .facts a:hover { background: var(--paper); color: inherit; }
 main.brief .facts a { position: relative; padding-right: 44px; }
-main.brief .facts a::after { content: "→"; position: absolute; right: 16px; top: 14px; font-family: var(--mono); font-size: 18px; line-height: 1; color: var(--accent); transition: transform 0.15s; }
+main.brief .facts a::after { content: "→"; position: absolute; right: 16px; top: 18px; font-family: var(--mono); font-size: 18px; line-height: 1; color: var(--accent); transition: transform 0.15s; }
 main.brief .facts a:hover::after, main.brief .facts a:focus-visible::after { transform: translateX(4px); }
-main.brief .facts b { display: block; font-size: clamp(22px, 2.2vw, 28px); font-weight: 800; font-stretch: 112%; letter-spacing: -0.02em; line-height: 1.1; }
-main.brief .facts span { display: block; margin-top: 4px; font-size: 16px; line-height: 1.45; color: var(--ink-2); }
+main.brief .facts b { display: block; font-size: clamp(26px, 2.4vw, 32px); font-weight: 800; font-stretch: 112%; letter-spacing: -0.02em; line-height: 1.1; }
+main.brief .facts span { display: block; margin-top: 6px; font-size: 17px; line-height: 1.45; color: var(--ink-2); }
 
 @media (max-width: 899px) {
   main.brief .brief-hero { grid-template-columns: minmax(0, 1fr); }
   main.brief .brief-chip .chip-wrap, main.brief .brief-cap { max-width: 320px; }
   main.brief .facts { grid-template-columns: minmax(0, 1fr); }
   main.brief .facts li + li { border-left: 0; border-top: 1px solid var(--hair); }
-  main.brief .facts a { padding: 14px 44px 14px 0; }
+  main.brief .facts a { padding: 18px 44px 18px 0; }
+}
+@media (min-width: 900px) {
+  body:has(main.brief .brief-hero) { padding-top: calc(var(--mast-h) + 24px); }
+  /* The strip below measures about 188 px at 1440 (three wrapped lines of 17 px under each fact) plus a 32 px margin; the hero fills what is left so the strip lands at the fold. */
+  main.brief .brief-hero { min-height: calc(100svh - var(--mast-h) - 24px - 228px); padding-top: 0; }
+}
+@media (min-width: 900px) and (max-height: 759px) {
+  main.brief .brief-hero { min-height: 0; padding-top: 12px; }
 }
 @media (max-width: 767px) {
   main.brief .brief-cap-hover { display: none; }
@@ -506,12 +514,12 @@ main.brief .facts span { display: block; margin-top: 4px; font-size: 16px; line-
 }
 
 /* ---- selected work ---- */
-main.brief .brief-work { margin-top: clamp(28px, 4vw, 48px); }
-main.brief .pi-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 24px; padding-bottom: 10px; border-bottom: 1px solid var(--ink); }
-main.brief .pi-head h2 { margin: 0; font-size: clamp(26px, 3vw, 34px); font-weight: 800; font-stretch: 112%; letter-spacing: -0.02em; line-height: 1.1; }
+main.brief .brief-work { margin-top: clamp(48px, 6vw, 80px); }
+main.brief .pi-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; padding-bottom: 12px; border-bottom: 1px solid var(--ink); }
+main.brief .pi-head h2 { margin: 0; font-size: clamp(30px, 3.2vw, 40px); font-weight: 800; font-stretch: 112%; letter-spacing: -0.02em; line-height: 1.1; }
 main.brief .pi-head p { margin: 0; font-family: var(--sans); font-size: 16px; line-height: 1.45; color: var(--ink-2); }
-main.brief .wk { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; list-style: none; margin: 16px 0 0; padding: 0; }
-main.brief .wk-card { display: block; position: relative; height: 100%; padding: 18px 20px; border: 1px solid var(--hair-strong); background: var(--paper); color: var(--ink); text-decoration: none; }
+main.brief .wk { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; list-style: none; margin: 20px 0 0; padding: 0; }
+main.brief .wk-card { display: block; position: relative; height: 100%; padding: 18px 20px 20px; border: 1px solid var(--hair-strong); background: var(--paper); color: var(--ink); text-decoration: none; }
 main.brief .wk-card:hover, main.brief .wk-card:focus-visible { border-color: var(--ink); }
 main.brief .wk-card:hover h3, main.brief .wk-card:focus-visible h3 { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 4px; }
 main.brief .wk-n, main.brief .wk-a { font-family: var(--mono); font-size: 13px; line-height: 1.4; }
@@ -519,10 +527,10 @@ main.brief .wk-n { display: block; margin-bottom: 10px; color: var(--ink-2); }
 main.brief .wk-a { position: absolute; top: 18px; right: 20px; color: var(--accent); transition: transform 0.15s; }
 main.brief .wk-a { font-size: 18px; line-height: 1; }
 main.brief .wk-card:hover .wk-a, main.brief .wk-card:focus-visible .wk-a { transform: translateX(4px); }
-main.brief .wk-card h3 { margin: 0; font-size: 22px; font-weight: 800; font-stretch: 112%; letter-spacing: -0.015em; line-height: 1.15; }
-main.brief .wk-card p { margin: 10px 0 0; max-width: 44ch; font-size: 16px; color: var(--ink-2); line-height: 1.45; }
-main.brief .wk-card small { display: block; margin-top: 12px; font-family: var(--mono); font-size: 12px; color: var(--ink-2); line-height: 1.5; text-transform: uppercase; letter-spacing: 0.06em; }
-main.brief .wk-more { margin: 16px 0 0; font-family: var(--sans); font-size: 16px; color: var(--ink-2); line-height: 1.5; }
+main.brief .wk-card h3 { margin: 0; font-size: clamp(22px, 2vw, 26px); font-weight: 800; font-stretch: 112%; letter-spacing: -0.015em; line-height: 1.15; }
+main.brief .wk-card p { margin: 10px 0 0; max-width: 46ch; font-size: 17px; color: var(--ink-2); line-height: 1.45; }
+main.brief .wk-card small { display: block; margin-top: 12px; font-family: var(--mono); font-size: 14px; color: var(--ink-2); line-height: 1.5; text-transform: uppercase; letter-spacing: 0.06em; }
+main.brief .wk-more { margin: 18px 0 0; font-family: var(--sans); font-size: 16px; color: var(--ink-2); line-height: 1.5; }
 @media (max-width: 899px) { main.brief .wk { grid-template-columns: minmax(0, 1fr); } }
 @media (prefers-reduced-motion: reduce) {
   main.brief .wk-a { transition: none; }
@@ -532,42 +540,42 @@ main.brief .wk-more { margin: 16px 0 0; font-family: var(--sans); font-size: 16p
 }
 
 /* ---- experience ---- */
-main.brief .brief-xp, main.brief .brief-cred, main.brief .brief-about { margin-top: clamp(28px, 4vw, 48px); }
+main.brief .brief-xp, main.brief .brief-cred, main.brief .brief-about { margin-top: clamp(48px, 6vw, 80px); }
 main.brief .xp { list-style: none; margin: 0; padding: 0; }
-main.brief .xp > li { display: grid; grid-template-columns: 180px minmax(0, 1fr); column-gap: 24px; padding: 14px 0; border-bottom: 1px solid var(--hair); }
+main.brief .xp > li { display: grid; grid-template-columns: 190px minmax(0, 1fr); column-gap: 24px; padding: 16px 0; border-bottom: 1px solid var(--hair); }
 main.brief .xp > li:last-child { border-bottom: 1px solid var(--ink); }
-main.brief .xp-when { margin: 3px 0 0; font-family: var(--mono); font-size: 12px; line-height: 1.5; color: var(--ink-2); }
+main.brief .xp-when { margin: 3px 0 0; font-family: var(--mono); font-size: 14px; line-height: 1.5; color: var(--ink-2); }
 main.brief .xp-body { min-width: 0; }
-main.brief .xp h3 { margin: 0; font-size: 17px; font-weight: 600; line-height: 1.3; }
-main.brief .xp .org { display: block; margin: 2px 0 0; font-family: var(--mono); font-size: 12px; line-height: 1.4; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-2); }
-main.brief .xp-sum { margin: 6px 0 0; max-width: 60ch; font-size: 16px; line-height: 1.45; color: var(--ink-2); }
+main.brief .xp h3 { margin: 0; font-size: 18px; font-weight: 700; line-height: 1.3; }
+main.brief .xp .org { display: block; margin: 3px 0 0; font-family: var(--mono); font-size: 14px; line-height: 1.4; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-2); }
+main.brief .xp-sum { margin: 6px 0 0; max-width: 64ch; font-size: 17px; line-height: 1.45; color: var(--ink-2); }
 
 /* ---- credentials ---- */
-main.brief .cred-cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px clamp(24px, 4vw, 56px); padding-top: 18px; }
+main.brief .cred-cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px clamp(24px, 4vw, 56px); padding-top: 16px; }
 main.brief .cred-col { min-width: 0; }
-main.brief .cred-h { margin: 20px 0 8px; padding-bottom: 6px; border-bottom: 1px solid var(--hair); font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.4; }
+main.brief .cred-h { margin: 22px 0 8px; padding-bottom: 6px; border-bottom: 1px solid var(--hair); font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.4; }
 main.brief .cred-col > .cred-h:first-child { margin-top: 0; }
 main.brief .edu { list-style: none; margin: 0; padding: 0; }
 main.brief .edu li { display: flex; flex-direction: column; gap: 4px; padding: 0 0 18px; }
 main.brief .edu li:last-child { padding-bottom: 0; }
-main.brief .edu h3 { margin: 0; font-weight: 700; font-size: 18px; line-height: 1.3; }
-main.brief .edu-deg { margin: 0; font-size: 16px; line-height: 1.4; }
-main.brief .edu-meta { font-family: var(--mono); font-size: 12px; line-height: 1.5; color: var(--ink-2); }
-main.brief .awards-list { list-style: none; margin: 0; padding: 0; font-size: 16px; line-height: 1.45; color: var(--ink-2); }
+main.brief .edu h3 { margin: 0; font-weight: 700; font-size: 20px; line-height: 1.3; }
+main.brief .edu-deg { margin: 0; font-size: 17px; line-height: 1.4; }
+main.brief .edu-meta { font-family: var(--mono); font-size: 14px; line-height: 1.5; color: var(--ink-2); }
+main.brief .awards-list { list-style: none; margin: 0; padding: 0; font-size: 17px; line-height: 1.45; color: var(--ink-2); }
 main.brief .awards-list li + li { margin-top: 6px; }
 main.brief .awards-list b { color: var(--ink); font-weight: 600; }
-main.brief .oss-line, main.brief .certs-line { margin: 0; font-size: 16px; line-height: 1.45; color: var(--ink-2); overflow-wrap: anywhere; }
+main.brief .oss-line, main.brief .certs-line { margin: 0; font-size: 17px; line-height: 1.45; color: var(--ink-2); overflow-wrap: anywhere; }
 main.brief .oss-line a { white-space: nowrap; }
 
 /* ---- about ---- */
-main.brief .about-text { margin: 14px 0 0; max-width: 62ch; font-size: 16px; line-height: 1.55; color: var(--ink-2); }
+main.brief .about-text { margin: 14px 0 0; max-width: 64ch; font-size: 17px; line-height: 1.55; color: var(--ink-2); }
 
 /* ---- contact ---- */
-.brief-contact { margin-top: clamp(28px, 4vw, 56px); border-top: 1px solid var(--ink); background: var(--paper); }
+.brief-contact { margin-top: clamp(48px, 6vw, 80px); border-top: 1px solid var(--ink); background: var(--paper); }
 .brief-contact .contact-in { max-width: 1180px; margin: 0 auto; padding: clamp(32px, 5vw, 56px) var(--pad) 28px; }
-.brief-contact .contact-kicker { margin: 0 0 12px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); }
+.brief-contact .contact-kicker { margin: 0 0 12px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); }
 .brief-contact h2 { margin: 0; font-size: clamp(36px, 6vw, 48px); font-weight: 800; font-stretch: 112%; letter-spacing: -0.03em; line-height: 1; }
-.brief-contact .contact-line { margin: 16px 0 0; max-width: 56ch; font-size: 17px; line-height: 1.5; color: var(--ink-2); }
+.brief-contact .contact-line { margin: 16px 0 0; max-width: 56ch; font-size: 18px; line-height: 1.5; color: var(--ink-2); }
 .brief-contact .contact-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
 .brief-contact .button.primary { overflow-wrap: anywhere; }
 .brief-contact .contact-foot { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 24px; margin-top: 36px; padding-top: 14px; border-top: 1px solid var(--hair); font-family: var(--mono); font-size: 13px; line-height: 1.5; color: var(--ink-2); }
@@ -582,45 +590,6 @@ main.brief .about-text { margin: 14px 0 0; max-width: 62ch; font-size: 16px; lin
   main.brief .xp-when { margin: 0; }
   .brief-contact .contact-foot { grid-template-columns: minmax(0, 1fr); }
   .brief-contact .contact-foot span:nth-child(n) { text-align: left; }
-}
-
-/* ---- desktop brief spacing ---- */
-@media (min-width: 900px) {
-  body:has(main.brief .brief-hero) { padding-top: calc(var(--mast-h) + 18px); }
-  main.brief:has(.brief-hero) { padding-bottom: 20px; }
-  main.brief:has(.brief-hero) .brief-hero { padding-top: 12px; }
-  main.brief:has(.brief-hero) .brief-chip .chip-wrap, main.brief:has(.brief-hero) .brief-cap { max-width: 360px; }
-  main.brief:has(.brief-hero) .brief-cap { gap: 2px; }
-  main.brief:has(.brief-hero) .avail { margin-bottom: 12px; }
-  main.brief:has(.brief-hero) .brief-eyebrow { margin-bottom: 8px; }
-  main.brief:has(.brief-hero) .brief-lead { margin-top: 12px; }
-  main.brief:has(.brief-hero) .actions { margin-top: 16px; }
-  main.brief:has(.brief-hero) .facts { margin-top: 24px; }
-  main.brief:has(.brief-hero) .brief-work { margin-top: 20px; }
-  main.brief:has(.brief-hero) .brief-xp, main.brief:has(.brief-hero) .brief-cred, main.brief:has(.brief-hero) .brief-about { margin-top: 28px; }
-  main.brief:has(.brief-hero) .pi-head { padding-bottom: 6px; }
-  main.brief:has(.brief-hero) .wk { gap: 12px; margin-top: 12px; }
-  main.brief:has(.brief-hero) .wk-card { padding: 8px 20px; }
-  main.brief:has(.brief-hero) .wk-n { margin-bottom: 6px; }
-  main.brief:has(.brief-hero) .wk-a { top: 8px; }
-  main.brief:has(.brief-hero) .wk-card p { margin-top: 6px; }
-  main.brief:has(.brief-hero) .wk-card small { margin-top: 8px; }
-  main.brief:has(.brief-hero) .wk-more { margin-top: 12px; }
-  main.brief:has(.brief-hero) .xp > li { padding: 8px 0; }
-  main.brief:has(.brief-hero) .xp-sum { margin-top: 4px; max-width: none; }
-  main.brief:has(.brief-hero) .cred-cols { padding-top: 12px; }
-  main.brief:has(.brief-hero) .edu li { gap: 2px; padding-bottom: 12px; }
-  main.brief:has(.brief-hero) .edu li:last-child { padding-bottom: 0; }
-  main.brief:has(.brief-hero) .cred-h { margin-top: 12px; padding-bottom: 4px; margin-bottom: 6px; }
-  main.brief:has(.brief-hero) .cred-col > .cred-h:first-child { margin-top: 0; }
-  main.brief:has(.brief-hero) .awards-list li + li { margin-top: 4px; }
-  main.brief:has(.brief-hero) .about-text { margin-top: 10px; max-width: 76ch; }
-  .brief-contact { margin-top: 28px; }
-  .brief-contact .contact-in { padding-top: 24px; padding-bottom: 16px; }
-  .brief-contact .contact-kicker { margin-bottom: 8px; }
-  .brief-contact .contact-line { margin-top: 12px; }
-  .brief-contact .contact-actions { margin-top: 16px; }
-  .brief-contact .contact-foot { margin-top: 20px; padding-top: 10px; }
 }
 
 /* ---- work ---- */
