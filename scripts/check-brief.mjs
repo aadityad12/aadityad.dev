@@ -24,7 +24,7 @@ const REQUIRED = [
   "Get in touch.",
   "aaditya.d.desai@gmail.com",
 ];
-const RE = /<(h1|h2|h3|b|strong|small)\b[^>]*>([\s\S]*?)<\/\1>|<a\b[^>]*class="button[^"]*"[^>]*>([\s\S]*?)<\/a>|<(?:p|span|div)\b[^>]*class="(?:avail|brief-eyebrow)[^"]*"[^>]*>([\s\S]*?)<\/(?:p|span|div)>|<span class="tag[^"]*"[^>]*>([\s\S]*?)<\/span>/g;
+const RE = /<(h1|h2|h3|b|strong|small)\b[^>]*>([\s\S]*?)<\/\1>|<a\b[^>]*class="(button|cta)[^"]*"[^>]*>([\s\S]*?)<\/a>|<(?:p|span|div)\b[^>]*class="(?:avail|brief-eyebrow)[^"]*"[^>]*>([\s\S]*?)<\/(?:p|span|div)>|<span class="tag[^"]*"[^>]*>([\s\S]*?)<\/span>/g;
 const BANNED = [
   /38\.84/, /200 ms/, /1,200/, /≈/, /525/, /4\.54/, /0\.63/, /14\.41/,
   /team of/i, /-person/i, /\bsolo\b/i, /\(in progress\)/i,
@@ -44,8 +44,8 @@ const pages = new Map(FILES.filter(existsSync).map((file) => {
 }));
 
 const landmarks = [...(pages.get(FILES[0])?.scan ?? "").matchAll(RE)].map((m) => ({
-  kind: m[1] ?? (m[3] !== undefined ? "button" : m[4] !== undefined ? "kicker" : "tag"),
-  text: strip(m[2] ?? m[3] ?? m[4] ?? m[5]),
+  kind: m[1] ?? (m[3] !== undefined ? m[3] : m[5] !== undefined ? "kicker" : "tag"),
+  text: strip(m[2] ?? m[4] ?? m[5] ?? m[6]),
 }));
 console.log("landmark read, /");
 for (const stop of landmarks) console.log(`${stop.kind}\t${stop.text}`);

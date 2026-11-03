@@ -2,20 +2,6 @@ import { BRIEF, EMAIL, GITHUB, LINKEDIN, RESUME } from "../../content";
 import Chip from "../Chip";
 import HeroChip from "./HeroChip";
 
-const EM = "from the metal up";
-
-function Lead({ text }: { text: string }) {
-  const i = text.indexOf(EM);
-  if (i < 0) return <>{text}</>;
-  return (
-    <>
-      {text.slice(0, i)}
-      <em>{EM}</em>
-      {text.slice(i + EM.length)}
-    </>
-  );
-}
-
 export default function Hero() {
   return (
     <section className="brief-hero" aria-labelledby="brief-name">
@@ -25,12 +11,10 @@ export default function Hero() {
         </p>
         <p className="brief-eyebrow">{BRIEF.eyebrow}</p>
         <h1 id="brief-name">Aaditya Desai</h1>
-        <p className="brief-lead">
-          <Lead text={BRIEF.lead} />
-        </p>
+        <p className="brief-lead">{BRIEF.lead}</p>
         <div className="actions">
           <a className="button primary" href={RESUME}>Résumé PDF ↓</a>
-          <a className="button" href="#work">See the work ↓</a>
+          <a className="button accent" href="#work">See the work ↓</a>
           <span className="actions-links">
             <a href={`mailto:${EMAIL}`}>Email</a> ·{" "}
             <a href={GITHUB} target="_blank" rel="noreferrer">GitHub ↗</a> ·{" "}
@@ -43,7 +27,7 @@ export default function Hero() {
         <p className="brief-cap">
           {BRIEF.chip.line}
           <span className="brief-cap-hover">{BRIEF.chip.hover}</span>
-          <a href="/skills/" data-skills>{BRIEF.chip.action} →</a>
+          <a className="cta" href="/skills/" data-skills>{BRIEF.chip.action} →</a>
         </p>
       </div>
       <a className="brief-chipcard" href="/skills/" data-skills>
