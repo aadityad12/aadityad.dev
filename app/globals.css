@@ -504,31 +504,48 @@ main.brief .brief-chipcard-t > span { font-family: var(--mono); font-size: 13px;
   main.brief .brief-chipcard { display: grid; }
 }
 
-/* ---- selected work ---- */
+/* ---- work ---- */
 main.brief .brief-work { margin-top: clamp(48px, 6vw, 80px); }
 main.brief .pi-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; padding: 12px 0; border-top: 2px solid var(--ink); border-bottom: 0; }
 main.brief .pi-head h2 { margin: 0; font-size: clamp(30px, 3.2vw, 40px); font-weight: 800; font-stretch: 112%; letter-spacing: -0.02em; line-height: 1.1; }
 main.brief .pi-head p { margin: 0; font-family: var(--sans); font-size: 16px; line-height: 1.45; color: var(--ink-2); }
-main.brief .wk { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; list-style: none; margin: 20px 0 0; padding: 0; }
-main.brief .wk-card { display: flex; flex-direction: column; position: relative; height: 100%; padding: 0; border: 1px solid var(--hair-strong); background: var(--paper); color: var(--ink); text-decoration: none; }
-main.brief .wk-card:hover, main.brief .wk-card:focus-visible { border-color: var(--ink); }
-main.brief .wk-fig { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: var(--paper); border-bottom: 1px solid var(--hair-strong); }
-main.brief .wk-card:hover .wk-fig, main.brief .wk-card:focus-visible .wk-fig { border-bottom-color: var(--ink); }
-main.brief .wk-body { position: relative; flex: 1; padding: 16px 20px 20px; }
-main.brief .wk-card:hover h3, main.brief .wk-card:focus-visible h3 { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 4px; }
-main.brief .wk-n, main.brief .wk-a { font-family: var(--mono); font-size: 13px; line-height: 1.4; }
-main.brief .wk-n { display: block; margin-bottom: 10px; color: var(--ink-2); }
-main.brief .wk-a { position: absolute; top: 16px; right: 20px; color: var(--accent); transition: transform 0.15s; }
-main.brief .wk-a { font-size: 18px; line-height: 1; }
-main.brief .wk-card:hover .wk-a, main.brief .wk-card:focus-visible .wk-a { transform: translateX(4px); }
-main.brief .wk-card h3 { margin: 0; font-size: clamp(22px, 2vw, 26px); font-weight: 800; font-stretch: 112%; letter-spacing: -0.015em; line-height: 1.15; }
-main.brief .wk-card p { margin: 10px 0 0; max-width: 46ch; font-size: 17px; color: var(--ink-2); line-height: 1.45; }
-main.brief .wk-card small { display: block; margin-top: 12px; font-family: var(--mono); font-size: 14px; color: var(--ink-2); line-height: 1.5; text-transform: uppercase; letter-spacing: 0.06em; }
-main.brief .wk-more { margin: 18px 0 0; font-family: var(--sans); font-size: 16px; color: var(--ink-2); line-height: 1.5; }
-@media (max-width: 899px) { main.brief .wk { grid-template-columns: minmax(0, 1fr); } }
+main.brief .wr { list-style: none; margin: 0; padding: 0; }
+main.brief .wr-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px clamp(24px, 3vw, 44px); padding: clamp(24px, 3vw, 36px) 0; border-bottom: 1px solid var(--hair); }
+main.brief .wr-fig { display: block; border: 1px solid var(--hair-strong); background: var(--paper); line-height: 0; }
+main.brief .wr-fig:hover { border-color: var(--ink); }
+main.brief .wr-fig img { display: block; width: 100%; height: auto; }
+main.brief .wr-body { position: relative; min-width: 0; padding-right: 36px; }
+main.brief .wr-n { display: block; margin-bottom: 8px; font-family: var(--mono); font-size: 13px; line-height: 1.4; color: var(--ink-2); }
+main.brief .wr-a { position: absolute; top: 0; right: 0; font-family: var(--mono); font-size: 18px; line-height: 1; color: var(--accent); text-decoration: none; transition: transform 0.15s; }
+main.brief .wr-body:has(h3 a:hover) .wr-a, main.brief .wr-body:has(h3 a:focus-visible) .wr-a { transform: translateX(4px); }
+main.brief .wr-body h3 { margin: 0; font-size: clamp(24px, 2.2vw, 30px); font-weight: 800; font-stretch: 112%; letter-spacing: -0.015em; line-height: 1.15; }
+main.brief .wr-body h3 a { color: inherit; text-decoration: none; }
+main.brief .wr-body h3 a:hover, main.brief .wr-body h3 a:focus-visible { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+main.brief .wr-line { margin: 10px 0 0; max-width: 44ch; font-size: 18px; line-height: 1.45; color: var(--ink); }
+main.brief .wr-where { margin: 8px 0 0; font-size: 16px; line-height: 1.45; color: var(--ink-2); }
+main.brief .wr-gallery { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 0; padding: 0; }
+main.brief .wr-gallery a { display: block; width: 128px; height: 96px; overflow: hidden; border: 1px solid var(--hair-strong); background: var(--paper-2); }
+main.brief .wr-gallery a:hover, main.brief .wr-gallery a:focus-visible { border-color: var(--ink); }
+main.brief .wr-gallery img { display: block; width: 100%; height: 100%; object-fit: cover; }
+main.brief .wc { list-style: none; margin: 0; padding: 0; }
+main.brief .wc li + li { border-top: 1px solid var(--hair); }
+main.brief .wc li:last-child { border-bottom: 1px solid var(--ink); }
+main.brief .wc-row { display: grid; grid-template-columns: 32px minmax(0, 1fr) 24px; grid-template-areas: "n t a" "n d a"; column-gap: 12px; padding: 14px 0; color: var(--ink); text-decoration: none; }
+main.brief .wc-row:hover, main.brief .wc-row:focus-visible { background: var(--paper-2); }
+main.brief .wc-row:hover .wc-t, main.brief .wc-row:focus-visible .wc-t { text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+main.brief .wc-n { grid-area: n; font-family: var(--mono); font-size: 13px; line-height: 1.6; color: var(--ink-2); }
+main.brief .wc-t { grid-area: t; font-size: 18px; font-weight: 700; line-height: 1.3; }
+main.brief .wc-d { grid-area: d; margin-top: 2px; font-size: 16px; line-height: 1.45; color: var(--ink-2); }
+main.brief .wc-a { grid-area: a; justify-self: end; font-family: var(--mono); font-size: 18px; line-height: 1.3; color: var(--accent); transition: transform 0.15s; }
+main.brief .wc-row:hover .wc-a, main.brief .wc-row:focus-visible .wc-a { transform: translateX(4px); }
+@media (min-width: 900px) {
+  main.brief .wr-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+  main.brief .wc-row { grid-template-columns: 40px 180px minmax(0, 1fr) 28px; grid-template-areas: "n t d a"; column-gap: 16px; }
+  main.brief .wc-d { margin-top: 0; }
+}
 @media (prefers-reduced-motion: reduce) {
-  main.brief .wk-a { transition: none; }
-  main.brief .wk-card:hover .wk-a, main.brief .wk-card:focus-visible .wk-a { transform: none; }
+  main.brief .wr-a, main.brief .wc-a { transition: none; }
+  main.brief .wr-body:has(h3 a:hover) .wr-a, main.brief .wc-row:hover .wc-a { transform: none; }
 }
 
 /* ---- experience ---- */

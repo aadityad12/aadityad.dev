@@ -82,8 +82,7 @@ export const BRIEF = {
   eyebrow: HERO.eyebrow,
   lead: HERO.lead,
   chip: { line: "28 skills, one per pin.", hover: "Hover a pin to see where I used it.", action: "Open the pin map" },
-  workIntro: "Four of ten. Each has its own page.",
-  moreWork: "Also with a page each:",
+  workIntro: "Ten things I built, one page each.",
   about:
     "I'm from India, and I got into engineering through VEX robotics. Most of what I build starts with something I need or want to understand, and I like work where I can measure the result. Outside engineering I follow F1, basketball, soccer and cricket.",
   contactKicker: "Summer 2027 internships · Winter 2027 co-ops",
