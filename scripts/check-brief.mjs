@@ -4,14 +4,14 @@ import { join } from "node:path";
 
 const FILES = ["out/index.html", "out/skills/index.html"];
 const REQUIRED = [
-  "Available for Summer 2027 internships · May to August 2027",
   "Computer Engineering · SJSU · Class of 2028",
   "Aaditya Desai",
-  "Résumé PDF ↓",
-  "See the work ↓",
   "Infineon",
   "Hackathon winner",
   "3.8 GPA",
+  "Résumé PDF ↓",
+  "See the work ↓",
+  "Available for Summer 2027 internships · May to August 2027",
   "Selected work",
   "VisionAssist",
   "Accordion",
