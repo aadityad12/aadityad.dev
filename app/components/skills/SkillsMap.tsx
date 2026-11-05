@@ -6,19 +6,29 @@ import Chip from "../Chip";
 import { BRIEF, NOTES, PINS, PIN_GROUPS } from "../../content";
 import { useReducedMotion } from "../../figures/hooks";
 
-type SkillsMapProps = { initialPin?: string | null; heading?: "h1" | "h2" };
+// /skills/#pin-N selects pin N on arrival, so a pin on the front-page chip can link straight to its row.
+const pinFromHash = () => {
+  const m = /^#pin-(\d+)$/.exec(window.location.hash);
+  const pin = m && PINS.find((p) => p.n === Number(m[1]));
+  return pin ? pin.name : null;
+};
 
-export default function SkillsMap({ initialPin, heading = "h1" }: SkillsMapProps) {
-  const validPin = PINS.some((pin) => pin.name === initialPin) ? initialPin! : null;
-  const [active, setActive] = useState<string | null>(validPin);
-  const [selected, setSelected] = useState<string | null>(validPin);
+export default function SkillsMap() {
+  const [active, setActive] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
   const rows = useRef(new Map<string, HTMLLIElement>());
   const reduced = useReducedMotion();
-  const Heading = heading;
 
   useEffect(() => {
-    if (validPin) rows.current.get(validPin)?.scrollIntoView({ block: "nearest", behavior: reduced ? "auto" : "smooth" });
-  }, [validPin, reduced]);
+    const name = pinFromHash();
+    if (!name) return;
+    // the hash is only readable after hydration, so the first paint matches the static HTML
+    /* eslint-disable react-hooks/set-state-in-effect */
+    setSelected(name);
+    setActive(name);
+    /* eslint-enable react-hooks/set-state-in-effect */
+    rows.current.get(name)?.scrollIntoView({ block: "center", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  }, []);
 
   const select = (name: string | null) => {
     setSelected(name);
@@ -29,7 +39,7 @@ export default function SkillsMap({ initialPin, heading = "h1" }: SkillsMapProps
   return (
     <div className="skills-map">
       <header className="sk-head">
-        <Heading id={heading === "h2" ? "skills-dialog-h" : "skills-h"}>Pin map</Heading>
+        <h1 id="skills-h">Pin map</h1>
         <p>{BRIEF.chip.line}<span className="sk-hover"> {BRIEF.chip.hover}</span></p>
       </header>
       <div className="sk-cols">

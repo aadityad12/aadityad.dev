@@ -58,7 +58,7 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
     <main className="work" id="main">
       <header className="work-head">
         <nav className="work-crumbs" aria-label="Breadcrumb">
-          <Link href="/work/">← All work</Link>
+          <Link href="/#work">← All work</Link>
           <span>Project {String(note.order).padStart(2, "0")} of {NOTES.length}</span>
         </nav>
         <p className="work-meta">
@@ -161,7 +161,7 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
           </a>
         </div>
         <p className="work-foot-links">
-          <Link href="/work/">All work</Link> · <Link href="/">Home</Link> ·{" "}
+          <Link href="/#work">All work</Link> · <Link href="/">Home</Link> ·{" "}
           <a href={`/datasheet/#${note.id}`}>This project in the datasheet ↗</a>
           {note.id === "visionassist" && <> · <Link href="/#experience">Experience: Infineon →</Link></>}
           <span className="work-keys" aria-hidden="true">Keyboard: J next · K previous</span>

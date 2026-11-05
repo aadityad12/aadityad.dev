@@ -8,12 +8,12 @@ type Ref = { id: string; title: string };
 // `resume` is passed in so a route that never loads content.ts on the client does not pay for it here.
 export type MastheadProps = { resume: string } & (
   | { variant: "brief" }
-  | { variant: "plain"; current?: "work" | "skills" }
+  | { variant: "plain"; current?: "skills" }
   | { variant: "work"; id: string; title: string; prev: Ref; next: Ref }
   | { variant: "datasheet" }
 );
 
-type Item = { href: string; label: string; cur?: string; data?: Record<string, string> };
+type Item = { href: string; label: string; cur?: string };
 
 // J / K land the target sheet 64px below the top of the viewport, under the masthead.
 // The same offset is used to find "where I am", so K from a sheet J just landed on steps back.
@@ -22,9 +22,9 @@ const OFFSET = 64;
 const NEAR = 24;
 
 const ITEMS: Item[] = [
-  { href: "/work/", label: "Work", cur: "work" },
+  { href: "/#work", label: "Work", cur: "work" },
   { href: "/#experience", label: "Experience", cur: "experience" },
-  { href: "/skills/", label: "Skills", cur: "skills", data: { "data-skills": "" } },
+  { href: "/skills/", label: "Skills", cur: "skills" },
   { href: "/#contact", label: "Contact", cur: "contact" },
 ];
 
@@ -32,7 +32,7 @@ const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function inField(e: KeyboardEvent) {
   const t = e.target as HTMLElement | null;
-  return !!t?.closest?.("input, textarea, select, [contenteditable], [data-keys], dialog");
+  return !!t?.closest?.("input, textarea, select, [contenteditable], [data-keys]");
 }
 
 export default function Masthead(props: MastheadProps) {
@@ -62,7 +62,7 @@ export default function Masthead(props: MastheadProps) {
 
     if (variant === "brief") {
       // the section under the reading line gets aria-current on its nav item
-      const targets = Array.from(document.querySelectorAll<HTMLElement>("#experience, #contact"));
+      const targets = Array.from(document.querySelectorAll<HTMLElement>("#work, #experience, #contact"));
       onSync = () => {
         const line = window.innerHeight * 0.35;
         const atEnd = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
@@ -148,9 +148,9 @@ export default function Masthead(props: MastheadProps) {
   const closeMenu = () => { if (menu.current) menu.current.open = false; };
 
   const ariaCurrent = (it: Item): "page" | "true" | undefined => {
-    if (it.cur === "work" && (props.variant === "work" || (props.variant === "plain" && props.current === "work"))) return "page";
     if (it.cur === "skills" && props.variant === "plain" && props.current === "skills") return "page";
-    if (props.variant === "brief" && it.cur === current && (current === "experience" || current === "contact")) return "true";
+    if (it.cur === "work" && props.variant === "work") return "true";
+    if (props.variant === "brief" && it.cur === current) return "true";
     return undefined;
   };
 
@@ -159,7 +159,6 @@ export default function Masthead(props: MastheadProps) {
       key={it.href}
       href={it.href}
       prefetch={false}
-      {...it.data}
       aria-current={ariaCurrent(it)}
       onClick={menuItem ? closeMenu : undefined}
     >
@@ -195,13 +194,12 @@ export default function Masthead(props: MastheadProps) {
             {label.title}
           </div>
         )}
-        {props.variant === "brief" && <div className="mast-mid mast-avail">Available Summer 2027</div>}
         {props.variant === "work" && (
           <div
             className="mast-mid mast-crumb"
             title={`Work / ${props.title}. Press J for the next project (${props.next.title}), K for the previous (${props.prev.title}).`}
           >
-            <Link href="/work/" prefetch={false}>Work</Link> / <b>{props.title}</b>
+            <Link href="/#work" prefetch={false}>Work</Link> / <b>{props.title}</b>
           </div>
         )}
 

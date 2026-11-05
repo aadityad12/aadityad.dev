@@ -1,6 +1,5 @@
 import { Fragment } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { BRIEF, FEATURED, NOTES } from "../../content";
 
 const byId = (id: (typeof FEATURED)[number]) => NOTES.find((note) => note.id === id)!;
@@ -42,8 +41,7 @@ export default function Work() {
           <Fragment key={note.id}>
             {i > 0 && ", "}<a href={`/work/${note.id}/`}>{note.title}</a>
           </Fragment>
-        ))}.{" "}
-        <Link className="cta" href="/work/" prefetch={false}>All ten projects →</Link>
+        ))}.
       </p>
     </section>
   );
