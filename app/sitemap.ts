@@ -7,7 +7,7 @@ const SITE = "https://aadityad.dev";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
-  return ["/", "/work/", "/skills/", "/datasheet/", ...NOTES.map((n) => `/work/${n.id}/`)].map((path) => ({
+  return ["/", "/skills/", "/datasheet/", ...NOTES.map((n) => `/work/${n.id}/`)].map((path) => ({
     url: `${SITE}${path}`,
     lastModified,
   }));

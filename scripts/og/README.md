@@ -1,7 +1,7 @@
 # Regenerating the Open Graph images
 
-`public/og/home.png`, `public/og/work.png`, `public/og/skills.png` and
-`public/og/work/<slug>.png` (1200 x 630) are rendered from `home.html`, `index.html`,
+`public/og/home.png`, `public/og/skills.png` and
+`public/og/work/<slug>.png` (1200 x 630) are rendered from `home.html`,
 `skills.html` and `work.html?slug=<id>` in this folder. All read `notes.json`, which is
 generated from `app/content.ts`, so the text on the images can never drift from the site.
 `public/og/datasheet.png` is the datasheet-era image, moved from `public/og.png`.
@@ -52,7 +52,6 @@ const shoot = async (url, out) => {
   console.log("wrote", out);
 };
 await shoot(`${base}/home.html`, "home.png");
-await shoot(`${base}/index.html`, "work.png");
 await shoot(`${base}/skills.html`, "skills.png");
 for (const n of notes) await shoot(`${base}/work.html?slug=${n.id}`, `work/${n.id}.png`);
 await browser.close();

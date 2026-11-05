@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Chip from "../Chip";
+import { PINS } from "../../content";
 
 export default function HeroChip() {
   const [active, setActive] = useState<string | null>(null);
@@ -11,7 +12,10 @@ export default function HeroChip() {
       activePin={active}
       selectedPin={null}
       onHoverPin={setActive}
-      onSelectPin={(name) => name && window.dispatchEvent(new CustomEvent("skills:open", { detail: { pin: name } }))}
+      onSelectPin={(name) => {
+        const pin = PINS.find((p) => p.name === name);
+        if (pin) window.location.assign(`/skills/#pin-${pin.n}`);
+      }}
     />
   );
 }

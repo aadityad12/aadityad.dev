@@ -18,7 +18,7 @@ export default function SkillsPage() {
   return (
     <>
       <Masthead variant="plain" current="skills" resume={RESUME} />
-      <main className="skills" id="main"><SkillsMap heading="h1" /></main>
+      <main className="skills" id="main"><SkillsMap /></main>
     </>
   );
 }

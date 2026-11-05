@@ -27,10 +27,10 @@ export default function Hero() {
         <p className="brief-cap">
           {BRIEF.chip.line}
           <span className="brief-cap-hover">{BRIEF.chip.hover}</span>
-          <a className="cta" href="/skills/" data-skills>{BRIEF.chip.action} →</a>
+          <a className="cta" href="/skills/">{BRIEF.chip.action} →</a>
         </p>
       </div>
-      <a className="brief-chipcard" href="/skills/" data-skills>
+      <a className="brief-chipcard" href="/skills/">
         <Chip compact />
         <span className="brief-chipcard-t">
           <b>{BRIEF.chip.line}</b>

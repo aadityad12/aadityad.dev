@@ -13,7 +13,7 @@ export default function NotFound() {
         <h1>Aaditya Desai</h1>
         <p>Not found.</p>
         <p>
-          <Link href="/">Front page</Link> · <Link href="/work/" prefetch={false}>All work</Link> · <Link href="/skills/" prefetch={false}>Skills</Link> · <a href="/datasheet/">Full datasheet</a>
+          <Link href="/">Front page</Link> · <Link href="/#work" prefetch={false}>Work</Link> · <Link href="/skills/" prefetch={false}>Skills</Link> · <a href="/datasheet/">Full datasheet</a>
         </p>
       </main>
     </>

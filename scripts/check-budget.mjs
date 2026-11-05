@@ -5,7 +5,6 @@ import { join, relative, sep } from "node:path";
 
 const BUDGETS = [
   { html: "out/index.html", label: "/", maxKB: 80 },
-  { html: "out/work/index.html", label: "/work/", maxKB: 60 },
   { html: "out/skills/index.html", label: "/skills/", maxKB: 120 },
   { html: "out/work/rung/index.html", label: "/work/rung/", maxKB: 180 },
   { html: "out/datasheet/index.html", label: "/datasheet/", maxKB: 500 },
