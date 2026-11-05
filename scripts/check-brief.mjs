@@ -12,7 +12,7 @@ const REQUIRED = [
   "Résumé PDF ↓",
   "See the work ↓",
   "Available for Summer 2027 internships · May to August 2027",
-  "Selected work",
+  "Work",
   "VisionAssist",
   "Accordion",
   "Rung",
