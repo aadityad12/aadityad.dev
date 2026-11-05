@@ -90,11 +90,12 @@ export const BRIEF = {
   contactLine: "I'm looking for roles in software, embedded systems, and AI/ML. Email is the fastest way to reach me.",
 };
 
-export type Fact = { big: string; small: string; href: string };
+export type Fact = { big: string; rest: string; href: string };
+// The hero's one line of facts. Each `rest` is a phrase from the round-1 `small` sentences; nothing new.
 export const FACTS: Fact[] = [
-  { big: "Infineon", small: "Research intern and software lead, 2026. Built an offline navigation aid for blind users.", href: "/work/visionassist/" },
-  { big: "Hackathon winner", small: "Sponsor Track, UC Berkeley AI Hackathon 2026, with Accordion. 240+ stars on GitHub.", href: "/work/accordion/" },
-  { big: "3.8 GPA", small: "Dean's Scholar. B.S. Computer Engineering, minor in AI, SJSU, May 2028.", href: "#education" },
+  { big: "Infineon", rest: "research intern and software lead", href: "/work/visionassist/" },
+  { big: "Hackathon winner", rest: "UC Berkeley AI Hackathon 2026", href: "/work/accordion/" },
+  { big: "3.8 GPA", rest: "Dean's Scholar", href: "#education" },
 ];
 
 // Front-page cards, in this order. All four have highlight reels.

@@ -148,9 +148,9 @@ export default function Chip({ activePin, selectedPin, onHoverPin, onSelectPin, 
             <text x="300" y="268" textAnchor="middle" style={{ fontFamily: "var(--sans)", fontStretch: "125%", fontWeight: 800, fontSize: 54, letterSpacing: "-1px" }} fill="#e2e2dc">AD2028</text>
             <text x="300" y="300" textAnchor="middle" fontSize="13" letterSpacing="4">{lit ?? "AADITYA DESAI"}</text>
             <line x1="200" x2="400" y1="318" y2="318" stroke="#3a3a38" />
-            <text x="300" y="342" textAnchor="middle" fontSize="11.5" letterSpacing="2" fill="#8f8f89">SJSU · CMPE · CLASS OF 2028</text>
-            <text x="300" y="362" textAnchor="middle" fontSize="11.5" letterSpacing="2" fill="#8f8f89">2643 · SANTA CLARA, CA</text>
-            <text x="300" y="400" textAnchor="middle" fontSize="10" letterSpacing="2.5" fill="#5f5f5b">{"FROM THE METAL UP"}</text>
+            <text x="300" y="342" textAnchor="middle" fontSize="11.5" letterSpacing="2" className="chip-fine" fill="#8f8f89">SJSU · CMPE · CLASS OF 2028</text>
+            <text x="300" y="362" textAnchor="middle" fontSize="11.5" letterSpacing="2" className="chip-fine" fill="#8f8f89">2643 · SANTA CLARA, CA</text>
+            <text x="300" y="400" textAnchor="middle" fontSize="10" letterSpacing="2.5" className="chip-fine" fill="#5f5f5b">{"FROM THE METAL UP"}</text>
           </g>
 
           {PLACED.map((pl, i) => {
