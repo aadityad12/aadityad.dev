@@ -4,8 +4,6 @@ import Masthead from "./components/Masthead";
 import Hero from "./components/brief/Hero";
 import Work from "./components/brief/Work";
 import Experience from "./components/brief/Experience";
-import Credentials from "./components/brief/Credentials";
-import About from "./components/brief/About";
 import Contact from "./components/brief/Contact";
 
 const title = "Aaditya Desai · Computer Engineering @ SJSU";
@@ -27,8 +25,6 @@ export default function Home() {
           <Hero />
           <Work />
           <Experience />
-          <Credentials />
-          <About />
         </main>
         <Contact />
       </div>
