@@ -8,7 +8,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "budget": "node scripts/check-budget.mjs",
+    "brief": "node scripts/check-brief.mjs",
+    "check": "npm run lint && npm run build && npm run budget && npm run brief"
   },
   "dependencies": {
     "next": "16.2.6",

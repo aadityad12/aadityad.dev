@@ -1,0 +1,63 @@
+.root { display: flex; flex-direction: column; gap: 10px; container-type: inline-size; }
+.head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; }
+.dim { color: var(--muted); }
+.live { min-height: 18px; }
+.hint { color: var(--accent); font-weight: 600; }
+.map { border: 1px solid var(--ink); background: var(--paper); }
+.map svg { display: block; width: 100%; height: auto; user-select: none; -webkit-user-select: none; }
+.ground { fill: #fbfaf5; stroke: none; }
+.street { stroke: var(--paper-3); stroke-width: 7; }
+.ave { stroke: var(--paper-3); stroke-width: 11; }
+
+.tower path { fill: none; stroke: var(--ink); stroke-width: 1.4; }
+.tower path.dead { stroke: var(--hot); stroke-dasharray: 2 2; }
+.badge { fill: var(--hot); }
+.badgeTxt { font-family: var(--mono); font-size: 9px; font-weight: 600; fill: #fff; text-anchor: middle; letter-spacing: 0.06em; }
+
+.range { fill: none; stroke: var(--accent); stroke-width: 1; stroke-dasharray: 4 3; }
+.tree { stroke: var(--ink); stroke-width: 0.75; opacity: 0.3; }
+.db { fill: var(--ok); }
+.scan { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 3; }
+.link { stroke: var(--ink); stroke-width: 1.25; }
+.pkt { fill: var(--accent); }
+.pktTxt { font-family: var(--mono); font-size: 9px; font-weight: 600; fill: var(--accent); text-anchor: middle; paint-order: stroke; stroke: #fbfaf5; stroke-width: 3px; }
+
+.phone { cursor: default; outline: none; }
+.phone.idle { cursor: pointer; }
+.hit { fill: transparent; }
+.body { fill: var(--paper); stroke: var(--ink); stroke-width: 1.25; transition: fill 0.2s; }
+.screen { fill: var(--paper-3); }
+.phone.idle:hover .body, .phone:focus-visible .body { stroke: var(--accent); stroke-width: 2; }
+.phone:focus-visible .hit { stroke: var(--accent); stroke-dasharray: 2 2; }
+.got .body { fill: var(--ink); }
+.got .screen { fill: #5a5954; }
+.src .body { fill: var(--accent); stroke: var(--accent); }
+.seg { fill: var(--paper-3); stroke: var(--ink); stroke-width: 0.4; }
+.segOn { fill: var(--accent); }
+.hop { font-family: var(--mono); font-size: 10px; font-weight: 600; fill: var(--ink); paint-order: stroke; stroke: #fbfaf5; stroke-width: 3px; }
+.stored { font-family: var(--mono); font-size: 7.5px; fill: var(--ok); text-transform: uppercase; paint-order: stroke; stroke: #fbfaf5; stroke-width: 3px; }
+.dup { font-family: var(--mono); font-size: 8.5px; fill: var(--muted); text-anchor: middle; paint-order: stroke; stroke: #fbfaf5; stroke-width: 3px; }
+.lost { font-family: var(--mono); font-size: 8px; fill: var(--hot); text-anchor: middle; text-transform: uppercase; paint-order: stroke; stroke: #fbfaf5; stroke-width: 3px; }
+.scale { stroke: var(--ink); stroke-width: 1; }
+.scaleTxt { font-family: var(--mono); font-size: 9px; fill: var(--ink-2); text-transform: uppercase; letter-spacing: 0.04em; }
+
+@container (max-width: 520px) {
+  .glyph { transform: scale(1.25); transform-box: fill-box; transform-origin: center; }
+  .hop { font-size: 12px; }
+  .stored { font-size: 9px; }
+  .pktTxt, .dup, .lost { font-size: 10.5px; }
+  .scaleTxt, .badgeTxt { font-size: 10.5px; }
+}
+
+.wire { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; }
+.box { border: 1px solid var(--ink); background: var(--paper); padding: 4px 7px; white-space: nowrap; }
+.arr { color: var(--muted); white-space: nowrap; }
+.chunks { display: inline-flex; }
+.chunk { border: 1px solid var(--ink); background: var(--paper); padding: 4px 6px; transition: background 0.12s, color 0.12s; }
+.chunk + .chunk { border-left: 0; }
+.chunk.fly { background: var(--accent); color: #fff; }
+.note { margin: -4px 0 0; }
+.speed { display: inline-flex; gap: 0; }
+.speed :global(.btn) + :global(.btn) { border-left: 0; }
+.status { margin-left: auto; color: var(--ink-2); }
+@container (max-width: 520px) { .status { margin-left: 0; width: 100%; } }

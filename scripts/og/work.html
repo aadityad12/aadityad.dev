@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>OG image: work</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="common.css">
+<style>
+  .body { flex: 1; display: flex; flex-direction: column; padding: 34px 34px 0; min-height: 0; }
+  .an { font-family: var(--mono); font-size: 18px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+  h1 { margin-top: 10px; font-stretch: 125%; font-weight: 800; font-size: 96px; line-height: 0.95; letter-spacing: -0.02em; }
+  .hook { margin-top: 22px; font-size: 31px; line-height: 1.28; max-width: 960px; color: var(--ink); }
+  .num { margin-top: auto; display: flex; align-items: baseline; gap: 18px; border-top: 1px solid var(--hair); padding: 20px 0 26px; }
+  .val { font-stretch: 112%; font-weight: 800; font-size: 76px; line-height: 1; letter-spacing: -0.02em; color: var(--accent); white-space: nowrap; }
+  .unit { font-family: var(--mono); font-size: 26px; color: var(--ink-2); white-space: nowrap; }
+  .label { font-size: 22px; line-height: 1.25; color: var(--ink-2); flex: 1; min-width: 0; }
+  .num .tag { align-self: center; font-size: 16px; padding: 3px 10px; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="bar"><b>Aaditya Desai</b><span>Computer Engineering · SJSU</span><span>aadityad.dev</span></div>
+  <div class="body">
+    <div class="an" id="an2"></div>
+    <h1 id="title"></h1>
+    <p class="hook" id="hook"></p>
+    <div class="num" id="num"><span class="val" id="val"></span><span class="unit" id="unit"></span><span class="label" id="label"></span><span class="tag" id="status"></span></div>
+  </div>
+</div>
+<script>
+  const slug = new URLSearchParams(location.search).get("slug");
+  fetch("notes.json").then((r) => r.json()).then((d) => {
+    const n = d.notes.find((x) => x.id === slug);
+    if (!n) throw new Error("unknown slug: " + slug);
+    const set = (id, t) => (document.getElementById(id).textContent = t);
+    set("an2", "Application note " + n.an);
+    set("title", n.title); set("hook", n.hook);
+    set("val", n.headline.value); set("unit", n.headline.unit ?? ""); set("label", n.headline.label);
+    const s = document.getElementById("status");
+    if (n.headline.status) { s.textContent = n.headline.status; s.dataset.s = n.headline.status; } else s.remove();
+    if (!n.headline.unit) document.getElementById("unit").remove();
+    document.fonts.ready.then(() => document.body.setAttribute("data-ready", ""));
+  });
+</script>
+</body>
+</html>
