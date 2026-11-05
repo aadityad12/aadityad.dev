@@ -20,8 +20,8 @@ Measured on the Fable1 build, 31 Oct 2026:
 | --- | --- | --- |
 | Stops for a scanning eye on `/` (the landmark read, below) | 87, of which 13 are status tags and 10 are bold numbers a recruiter cannot judge | Every stop answers one of the recruiter's six questions or names a section; **no tags, no benchmark or effort numbers** (checked by `scripts/check-brief.mjs`) |
 | Status tags (`Measured`, `Repo`, ...) on `/` | 13 | **0** |
-| Height of `/` at 1440 x 900 | 4,314 px (4.8 screens) | 3,600 px or less (four screens; round 2 raised this from 2,400, see "Round 2" below for why) |
-| Height of `/` at 390 x 844 | 7,795 px (9.2 screens) | 6,500 px or less (round 2 raised this from 4,400) |
+| Height of `/` at 1440 x 900 | 4,314 px (4.8 screens) | 4,800 px or less (round 3; one uncropped project per screen; see "Round 2" and "Round 3" below for why the ceiling moved from 2,400) |
+| Height of `/` at 390 x 844 | 7,795 px (9.2 screens) | 5,800 px or less (round 3) |
 | Links in the masthead on a project page | 5, different from every other route, in 11.5 px mono capitals; previous/next shrink to bare arrows under 1000 px | 4, the same on every route, 14.5 px sans |
 | Way off a project page, apart from the masthead | one mono line "Next: Alta" | previous and next cards, "All work", "Home" |
 
@@ -361,6 +361,184 @@ panel, `/work/`, the project pages apart from the shared `.button` style and the
 application-note number losing its blue, and the datasheet apart from the shared `.button`
 style.
 
+## Round 3: a portfolio on one page
+
+Round 2 was implemented as specified (merged 4 Nov 2026, `f22da91`). Every number in the
+round-2 table landed, and Aadi's reaction was that it is better and still not right:
+"there is something about it that when I look at it I feel like it's not right", the
+balance between density and readability is off, and the flow between places is confusing.
+He asked for a fresh look as a recruiter. This is that look, and the plan that follows
+from it. The project pages are not the problem; `/work/rung/` is the best page on the
+site and knows exactly what it is. The front page does not.
+
+### The recruiter's fifteen seconds, round-2 build, 1440 x 900
+
+- **0 to 2 s.** The eye goes to the chip: the darkest, largest object on the screen, with a
+  name on it, "AD2028". For a beat it reads as the person's handle. The name is found
+  second, to the left. The name lost the first glance to a decoration.
+- **2 to 5 s.** Top left, two lines of capitals before the name (availability, school).
+  They read as a form. The lead, "I build from the metal up: an ARM64 JIT compiler,
+  bare-metal firmware, on-device vision, and tools for AI agents", is four unrelated
+  things, two of which a recruiter cannot place. The blue "See the work ↓" is the one
+  element that says what to do, and it works.
+- **5 to 10 s.** Facts strip: Infineon, Hackathon winner, 3.8 GPA: understood. Then four
+  cards whose pictures are dense diagrams with 8 px labels, each cropped mid-row. Squinting
+  at them yields "74,257 / 100,000 budget", a `STATED` tag, "38.84×": the status tags and
+  benchmark numbers round 1 removed from the front page, back as pixels. The pictures read
+  as busy dashboards, not as products.
+- **10 to 15 s.** Experience, Education, Awards, Open source, Certifications, About,
+  Contact, each the same shape: bold line, grey sentence, capitals. "Infineon" has now
+  been read three times, "SJSU" four, "Summer 2027" four (masthead, pill, contact kicker,
+  contact line), "hackathon winner" three. It is the résumé, which the reader already has,
+  laid out wider. They stop.
+- **The person this suggests.** Technically serious and unusually deep for a student;
+  methodical; cares about craft (the chip, the figures, the datasheet conceit are all made
+  with care). Also: has not decided what the one story is, and is anxious to show
+  everything at once. Honest and thorough, and a résumé with a theme rather than a
+  website.
+
+### Why it still feels wrong, and why rounds 1 and 2 could not fix it
+
+1. **One rhythm, repeated fifteen times.** Three facts, four cards, four jobs, two schools,
+   awards, open source, certifications: fifteen instances of [bold line / grey sentence /
+   mono capitals] at the same weight. When everything is medium emphasis nothing is
+   emphasised, so the page is dense and unreadable at once. Round 2 made the small type
+   larger, which turned fine print into medium print and made the sameness worse: the
+   14 px capitals under each card wrap to two lines and shout as loud as the titles.
+2. **No figure and ground.** Fable1 had the sheet, a paper card on a darker background,
+   which gave the page an object to be. The brief removed it, so everything floats on one
+   beige plane separated by hairlines: hairline cards holding hairline frames holding
+   hairline grids.
+3. **The page has no reason to exist.** Its sections are the résumé's sections in the
+   résumé's order, and everything on it is in the PDF one click away. A personal site is
+   for the thing the PDF cannot do: show the work.
+4. **The two loudest things are the two densest.** The chip carries 28 pin labels and
+   three lines of micro text where the eye lands first; the card frames are figures built
+   to be read interactively at 600 px, shrunk to thumbnails. Both put dozens of
+   unreadable fragments on the first screens.
+5. **The flow is confusing because the first screen asks a question the page never
+   answers.** "I build from the metal up: four things" raises "show me"; what follows is
+   three résumé facts, pictures that cannot be read, then the résumé. Across routes, the
+   four masthead items do three different things: Work opens a list page that repeats the
+   front page, Skills opens a panel over the current page, Experience and Contact scroll.
+   A reader cannot predict what a click will do.
+
+Rounds 1 and 2 measured landmarks and type sizes. Both were real and both were fixed, and
+the feeling did not change, because the fault is editorial and structural: what the page
+is for, how many kinds of thing are on it, and whether it has a ground to stand on.
+
+### Decisions
+
+Aadi's constraints: keep the figure frames, add real photos and screenshots where a
+project has them, keep clicking around to a minimum; the rest is the plan's call.
+
+1. **One page for the recruiter.** Everything a recruiter needs is on `/`, in this order:
+   hero, Work (all ten projects: four in full, six in brief), Experience (jobs, education,
+   awards, open source, one line each), Contact with the About paragraph as the sign-off.
+   `/work/` is deleted; the front page is the index. Depth stays one click away on
+   `/work/<slug>/`, `/skills/` and `/datasheet/`.
+2. **One behaviour per link.** Every masthead item goes to a place: Work → `/#work`,
+   Experience → `/#experience`, Skills → `/skills/`, Contact → `/#contact`, Résumé → the
+   PDF. The skills dialog is removed; the chip's pins link to `/skills/#pin-N`. No
+   overlays anywhere.
+3. **The ground comes back.** The front page sits on one paper sheet (the Fable1 `.sheet`)
+   over the darker background. Sections open with a 2 px ink rule and a 40 px title, the
+   datasheet's own device.
+4. **The hero is the name, one sentence, three facts in one line, two buttons.** The two
+   capitals lines become one sans line above the name (school, year) and one quiet sans
+   line below the buttons (availability, with the green dot). The facts strip becomes a
+   single line: **Infineon**, research intern and software lead · **Hackathon winner**, UC
+   Berkeley AI Hackathon 2026 · **3.8 GPA**, Dean's Scholar. The hero's Email · GitHub ·
+   LinkedIn line goes (they are the footer's buttons), and so does the masthead's own
+   "Available Summer 2027" item; it was the fourth copy. The lead's wording does not
+   change: it is the one sentence on the page that is Aadi's own, and rewriting it is his
+   call, not the plan's.
+5. **The chip goes quiet.** It stays in the hero at 420 px as the signature, with its pin
+   labels, pin numbers and three fine centre lines hidden until the pointer is over it (or
+   it has focus). The labels live on `/skills/`. The tooltips still work.
+6. **Projects are rows, not cards.** Each of the four featured projects is one row: the
+   figure frame at its natural aspect (never cropped) on the left at about half the width,
+   and on the right the title with an accent arrow, the one-liner at 18 px, the venue line
+   in sans (not capitals), and a small gallery of up to three real photos or screenshots
+   from `PHOTOS`, each a link to the project page's "From the build". The six other
+   projects follow as compact one-line rows. The frames keep their figure numbers; at this
+   size they are a chart, not a claim, and the project page is one click away.
+7. **Experience is one line per item, no summaries.** Dates, role, employer, as one
+   three-column list; education, awards and open source follow in the same columns with
+   their label in the mono column. Awards start at the second one: the hero already states
+   the Sponsor Track win. Certifications leave the front page (they are in the datasheet
+   and the PDF). About loses its heading and becomes the sign-off paragraph in the contact
+   footer.
+8. **Mono capitals shrink to their job**: dates, indices, figure bars, and the three
+   sub-labels in Experience (Education, Awards, Open source). Venue lines, employers and
+   section intros are sans.
+
+### The landmark read, round 3
+
+```
+kicker  Computer Engineering · SJSU · Class of 2028                        *
+h1      Aaditya Desai                                                      *
+b       Infineon                                                           *
+b       Hackathon winner                                                   *
+b       3.8 GPA                                                            *
+button  Résumé PDF ↓                                                       *
+button  See the work ↓                                                     *
+kicker  Available for Summer 2027 internships · May to August 2027         *
+b       28 skills, one per pin.                        (the chip card, phones only)
+cta     Open the pin map →
+h2      Work                                                               *
+h3      VisionAssist                                                       *
+h3      Accordion                                                          *
+h3      Rung                                                               *
+h3      Alta                                                               *
+b       GazeBoard · OSS Scout · ApexTracker · Echo · Temper · Clear Dispatch (six stops)
+h2      Experience                                                         *
+cta     Full record in the datasheet ↗
+h3      Research Intern and Technical Lead, VisionAssist
+h3      Teaching Assistant, ENGR 10: Introduction to Engineering
+h3      Teaching Assistant and Computer Science Tutor
+h3      Co-Founder and Co-President
+h3      Education                                                          *
+b       San José State University                                          *
+b       De Anza College
+h3      Awards
+b       2nd place · Top 10 at site · Most Valuable Peer                    (three stops)
+h3      Open source
+b       Soup · fusioncore                                                  (two stops)
+h2      Get in touch.                                                      *
+button  aaditya.d.desai@gmail.com                                          *
+button  Résumé ↗ · GitHub ↗ · LinkedIn ↗
+```
+
+About 45 stops; the venue lines and employers are no longer stops because they are no
+longer capitals, and the Experience dates and the three labels are a mono column the eye
+uses but the script does not list. The six questions are answered by the eighth stop, as
+before.
+
+### Ceilings and instruments, round 3
+
+The rows are tall because the frames are not cropped, so the height ceilings move: `/` at
+1440 x 900 is **4,800 px or less** (about five screens, one project per screen) and at
+390 x 844 **5,800 px or less** (round 2 measured 5,930). Fine print stays at 15 % or less
+of the text. The accent audit still returns `[]`. Landmarks per screen at 390 becomes "1
+or more, and a screen with only one holds a figure frame" (a frame at natural aspect can
+fill most of a phone screen). Two new instruments, in issue 21: the **repeat count** (how
+many times "Infineon", "SJSU or San José State", "Summer 2027", "UC Berkeley AI
+Hackathon" and "winner" appear in the text of `/`; round 2: 4, 4, 3, 3, 3; target: 3, 3, 2,
+2, 2 or fewer, each remaining repeat with a reason) and the **shape count** (how many
+visually distinct kinds of block the page has; target: hero, project row, compact row,
+experience line, contact, and no others).
+
+### What round 3 removes
+
+`/work/` and its OG image; the skills dialog, `data-skills` and `skills:open`; the facts
+strip; the masthead availability item; the section intro lines in capitals; the card venue
+lines in capitals; Experience summaries; Certifications on `/`; the About heading; the
+hero's Email · GitHub ↗ · LinkedIn ↗ line (the three are buttons in the footer); the
+Sponsor Track line in Awards (the hero states the win); the city column and summaries in
+Experience; and the fields that only served them (`FACTS[].small`, `BRIEF.moreWork`,
+`EXPERIENCE[].summary`, `CERTS_BRIEF`).
+
 ## The one-paragraph version
 
 The front page becomes a brief a recruiter can finish: availability, name, one sentence,
@@ -401,24 +579,26 @@ below it.
 | Route | Content | Client JS budget (uncompressed, excluding Next runtime) | Issue |
 | --- | --- | --- | --- |
 | `/` | Hiring brief | 80 KB. `Chip` in the hero and the skills dialog shell are the only client code; the skills list loads on first open. | 04, 05, 07 |
-| `/work/` | All ten projects, one row each | 60 KB. | 06 |
+| `/work/` | Removed in round 3 (issue 17); `/` lists all ten projects | | 06, 17 |
 | `/work/<slug>/` | One project, 10 pages | 180 KB. One figure plus the `Reel`. | 08, 09 |
 | `/skills/` | The pin map: chip plus grouped list | 120 KB. | 02 |
 | `/datasheet/` | Full AD2028 datasheet, unchanged | 500 KB. | 03 (masthead only) |
 | `/404` | Not found | | 11 |
 
-`scripts/check-budget.mjs` (extended in issue 10) enforces the first five rows in CI.
+`scripts/check-budget.mjs` (extended in issue 10) enforces the budgeted rows in CI.
 
 ## Rules that apply to every issue
 
 Fable1's ten rules still apply. They are repeated here with the Fable2 changes marked.
+Where a rule names `/work/`, that route was removed in round 3 (issue 17): `/` is the
+index, and the rule applies to `/`.
 
 1. **Content is visible without JavaScript.** Nothing ships hidden waiting for a script to
    reveal it. Motion is layered on top of visible content. No `opacity: 0` plus
    IntersectionObserver reveals. No scroll-position-driven interpolation. No scroll-jacking.
-   **Fable2 addition**: an overlay (the skills `<dialog>`) is allowed only when the same
-   content has its own URL that renders it statically (`/skills/`), and every control that
-   opens the overlay is a real link to that URL. Without JavaScript the link just navigates.
+   **Fable2 addition**: no overlays. Rounds 1 and 2 allowed one (the skills `<dialog>`,
+   with `/skills/` as its static twin); round 3 removed it (rule 17), and `/skills/` is the
+   only skills surface.
 2. **`prefers-reduced-motion: reduce` turns off every transition and animation**, and the
    page is still complete. Use `useReducedMotion()` from `app/figures/hooks.ts`.
 3. **Status tags and benchmark numbers stay on `/work/<slug>/` and `/datasheet/`, and
@@ -492,7 +672,21 @@ Fable1's ten rules still apply. They are repeated here with the Fable2 changes m
     the masthead, the hero with the chip at 460 px, and the facts strip at the fold; the
     type scale in "Round 2" is the target for `/`; fine print (13 px or smaller) is 15 %
     or less of the text on `/`; `/` is 3,600 px or less at 1440 x 900 and 6,500 px or less
-    at 390 x 844; every screen at 390 has at least two landmarks on it.
+    at 390 x 844; every screen at 390 has at least two landmarks on it. **Round 3 moves
+    the height ceilings to 4,800 and 5,800 px and asks for one or more landmarks per
+    screen at 390, where a screen with only one holds a figure frame**; the other
+    instruments stand.
+17. **Round 3: one page, one behaviour.** Everything a recruiter needs is on `/`. There
+    are no index pages besides `/` and no overlays; a masthead item or a link goes to a
+    place and does the same thing on every route. The destinations are `/`, `/skills/`,
+    `/datasheet/` and `/work/<slug>/`.
+18. **Round 3: one rhythm per section, not per item.** A section may repeat one block
+    shape (a project row, an experience line), and the page has at most five block shapes
+    in total. Venue lines, employers and intros are sans body text. Mono capitals are for
+    dates, indices, figure bars and the three sub-labels in Experience.
+19. **Round 3: pictures are pictures.** A figure frame is shown at its natural aspect,
+    never cropped. Real photos and screenshots appear as thumbnails that link to the
+    project page's photos. No picture is smaller than 96 px on its short side.
 
 ## Where things come from
 
@@ -517,6 +711,11 @@ Phase G  round 2            13 voice: sans actions, accent means clickable    (n
                             14 first screen and scale                         (needs 13)
                             15 a picture on each work card                    (needs 14)
                             16 QA, round 2, then the pull request to main      (needs 13, 14, 15; the manager runs it)
+Phase H  round 3            17 one behaviour per link: no dialog, no index page (needs 16 merged)
+                            18 ground and hero: the sheet, the quiet chip, one facts line (needs 17)
+                            19 one page for the work: rows, galleries, compact rows; /work/ deleted (needs 18)
+                            20 experience in brief, and the sign-off (needs 19)
+                            21 QA, round 3, then the pull request to main (needs 17 to 20; the manager runs it)
 ```
 
 Dependencies: 02 and 03 need 01. 04 needs 01, 02, 03. 05 needs 01, 03 (and links to `/work/`
@@ -529,14 +728,15 @@ after their dependencies.
 
 Round 2 is sequential: 13, then 14, then 15, then 16. All three touch `app/globals.css`
 in the same sections and 14 and 15 both touch the card styles; running them in parallel
-would mean resolving conflicts in CSS by hand. Issue 12's launch step (the pull request
-to `main`) moves to the end of 16.
+would mean resolving conflicts in CSS by hand. Round 3 is sequential for the same reason:
+17, 18, 19, 20, then 21. The pull request to `main` is opened at the end of 21.
 
 ## Definition of done, every issue
 
 - `npm run lint`, `npm run build` and `npm run budget` are clean. From issue 10 onward,
   `npm run brief` too. From issue 13 onward, the accent audit and the fine-print share
-  snippets in issue 16, run on `/` at 1440 x 900, with the results pasted in the PR. For issues 04, 05 and 07, paste the landmark read of `/` into the
+  snippets in issue 16, run on `/` at 1440 x 900, with the results pasted in the PR. From
+  issue 17 onward, the heights and the repeat count from issue 21 too. For issues 04, 05 and 07, paste the landmark read of `/` into the
   PR (the script prints it; before issue 10, the regex in that issue's spec does).
 - Checked at 390, 768 and 1440 px: `npm run build && npx serve out` and open the route.
   If `agent-browser` is available, take screenshots at those widths and attach them.

@@ -12,7 +12,7 @@ export (output: "export", trailingSlash: true) deployed to GitHub Pages.
 **Rules**: read the "Rules that apply to every issue" and "Definition of done" sections
 of `docs/fable2/README.md`. They are not optional. Rule 1 (content visible without JS),
 rule 3 (no status tags, benchmark numbers, team sizes or effort counts on the front page,
-`/work/`, `/skills/` or a project page header), rule 4 (no invented facts or sentences) and
+`/skills/` or a project page header), rule 4 (no invented facts or sentences) and
 rule 11 (facts live in landmarks; body copy is one sentence with nothing bold in it) are
 the ones most often broken.
 
