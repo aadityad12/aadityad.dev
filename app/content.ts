@@ -590,7 +590,6 @@ export const EXPERIENCE = [
       "Characterized Infineon's 60 GHz radar, root-caused its phantom close-range readings to antenna leakage and floor reflections, and delivered the analysis to Infineon.",
       "Demoed the finished device to the sponsors at Infineon.",
     ],
-    summary: "Led the software for an offline navigation aid for blind users on a Raspberry Pi 5; delivered the radar analysis and the demo to Infineon.",
     link: { label: "VisionAssist", href: "#visionassist" },
   },
   {
@@ -603,7 +602,6 @@ export const EXPERIENCE = [
       "Run two weekly lab sections of 30 students each, 6 contact hours a week, who solder IR receiver boards and build and program VEX robots in C++ and RobotC depending on the section.",
       "Debug student circuits and code live at the bench, and support CAD, fabrication, and power testing for the wind turbine project.",
     ],
-    summary: "Run the ENGR 10 labs (soldering, VEX robots in C++); invited back to TA the course one semester after taking it.",
   },
   {
     when: "Jan 2025 to Dec 2025",
@@ -614,7 +612,6 @@ export const EXPERIENCE = [
       "TA for x86 assembly and computer architecture, and for both introductory C++ courses.",
       "Tutored C++, x86 assembly, Python, and data structures in the CS lab, tracing each bug back to its root cause with the student.",
     ],
-    summary: "TA for x86 assembly, computer architecture and introductory C++; tutored C++, Python and data structures in the CS lab.",
   },
   {
     when: "Apr 2025 to Dec 2025",
@@ -624,7 +621,6 @@ export const EXPERIENCE = [
     points: [
       "Started the campus's first applied-ML student group, grew it to 54 members, and built its workshop program on model evaluation and Python data pipelines from scratch.",
     ],
-    summary: "Started the campus's first applied-ML student group and built its workshop program from scratch.",
   },
 ];
 
@@ -653,8 +649,8 @@ export const AWARDS = [
   { t: "Dean's Scholar", d: "San José State University" },
 ];
 
-// The front page shows three. The datasheet shows all.
-export const AWARDS_BRIEF = AWARDS.slice(0, 3);
+// The front page shows three. The Sponsor Track win is already the hero's second fact, so the list starts at the second award. The datasheet shows all.
+export const AWARDS_BRIEF = AWARDS.slice(1, 4);
 
 export const CERTS = [
   "AWS Certified Cloud Practitioner",
@@ -664,9 +660,6 @@ export const CERTS = [
   "Anthropic: Claude Code in Action",
   "AWS Certified AI Practitioner (in progress)",
 ];
-
-// The front page lists finished certifications only. The datasheet shows all, including in progress.
-export const CERTS_BRIEF = CERTS.filter((c) => !c.endsWith("(in progress)"));
 
 export const OPEN_SOURCE = [
   {

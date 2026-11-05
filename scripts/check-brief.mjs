@@ -18,7 +18,7 @@ const REQUIRED = [
   "Rung",
   "Alta",
   "Experience",
-  "Infineon Technologies, with De Anza College",
+  "Research Intern and Technical Lead, VisionAssist",
   "Education",
   "San José State University",
   "Get in touch.",
