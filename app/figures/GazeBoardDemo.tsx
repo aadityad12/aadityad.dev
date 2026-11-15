@@ -270,7 +270,7 @@ export default function GazeBoardDemo() {
         </div>
 
         <div className={s.side}>
-          <span className="lbl">State machine</span>
+          <span className={s.lbl}>State machine</span>
           <ol className={s.sm4}>
             {(["calib", "phrases", "spell", "words"] as Mode[]).map((m, i) => (
               <li key={m} className={st.mode === m ? s.cur : ""}>
@@ -279,23 +279,23 @@ export default function GazeBoardDemo() {
               </li>
             ))}
           </ol>
-          <p className={s.note}>A selected word returns to QuickPhrases. Spelling has no other way back except restarting the app; Home below exists only in this demo.</p>
+          <p className={s.note}>A selected word returns to QuickPhrases. Spelling has no other way back except restarting the app.</p>
           <div className={s.facts}>
             <span><b>1 s</b> dwell</span>
             <span><b>500 ms</b> cooldown</span>
             <span><b>EMA</b> on pitch, yaw</span>
             <span><b>4 × 1.5 s</b> calibration</span>
           </div>
-          <div className="ctl">
-            <button className="btn" onClick={home}>Home (demo only)</button>
-            <button className="btn" onClick={calibrate} disabled={st.mode === "calib"}>Calibrate</button>
-            <button className="btn" aria-pressed={sound} onClick={() => setSound(!sound)}>Sound {sound ? "on" : "off"}</button>
+          <div className={s.ctl}>
+            <button className={s.btn} onClick={home}>Home</button>
+            <button className={s.btn} onClick={calibrate} disabled={st.mode === "calib"}>Calibrate</button>
+            <button className={s.btn} aria-pressed={sound} onClick={() => setSound(!sound)}>Sound {sound ? "on" : "off"}</button>
           </div>
           <div className={s.legend}>
             <span><i className={s.kRaw} />raw gaze</span>
             <span><i className={s.kSm} />EMA-smoothed</span>
           </div>
-          <p className={s.note}>Demo word list: {WORDS.length} words in priority order (the app ships 378). A word matches when its i-th letter falls in the i-th chosen group.</p>
+          <p className={s.note}>Word list: {WORDS.length} words in priority order (the app ships 378). A word matches when its i-th letter falls in the i-th chosen group.</p>
         </div>
       </div>
 
@@ -303,10 +303,10 @@ export default function GazeBoardDemo() {
         {log.length ? log.map((w, i) => <span key={i}>Said: <b>{w}</b></span>) : <span className={s.dim}>Nothing said yet</span>}
       </div>
       <div className={s.debug}>
-        <span><em>STATE</em> {STATE_NAME[st.mode]}</span>
-        <span><em>ACCEL</em> NPU (simulated)</span>
-        <span><em>yaw/pitch from pointer</em> {view.sm ? `${signed(yaw)} / ${signed(pitch)}` : "– / –"}</span>
-        <span><em>dwell</em> {view.raw && !view.cool ? Math.round(view.ms) : 0} ms</span>
+        <span><em>State</em> {STATE_NAME[st.mode]}</span>
+        <span><em>Accel</em> NPU</span>
+        <span><em>Yaw / pitch</em> {view.sm ? `${signed(yaw)} / ${signed(pitch)}` : "– / –"}</span>
+        <span><em>Dwell</em> {view.raw && !view.cool ? Math.round(view.ms) : 0} ms</span>
       </div>
     </div>
   );

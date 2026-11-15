@@ -190,9 +190,9 @@ export default function VisionScene({ beat }: FigureProps) {
 
   const readout = (
     <>
-      <span className="lbl">d = H · f / h</span>
-      {bm && <span className="readout">f = 900 px</span>}
-      <span className="readout">
+      <span className={s.lbl}>d = H · f / h</span>
+      {bm && <span className={s.readout}>f = 900 px</span>}
+      <span className={s.readout}>
         <b>{act.o.cls}</b> {act.o.H.toFixed(2)} m × 900 px / {act.detected ? `${Math.round(actVis)} px` : "–"} ={" "}
         <b>{!act.detected ? "not in frame" : act.suppressed ? "suppressed (edge clip)" : `${act.estFt.toFixed(1)} ft`}</b>
         {act.detected && act.clipped && (
@@ -207,8 +207,8 @@ export default function VisionScene({ beat }: FigureProps) {
     <div ref={root} className={`${s.root} ${bm ? s.beat : ""}`}>
       <div className={s.panels}>
         <div className={s.panel}>
-          <div className={s.head}><span>{bm ? "A · Top view" : "A · Top view, hallway"}</span>{!bm && <span>ft</span>}</div>
-          <svg ref={svg} viewBox="0 0 232 300" className={s.plan} role="img" aria-label="Top-down floor plan with the wearer at the bottom, distance zones, and draggable obstacles">
+          <div className={s.head}><span>{bm ? "Top view" : "Top view, hallway"}</span>{!bm && <span>Feet</span>}</div>
+          <svg ref={svg} viewBox="0 0 268 300" className={s.plan} role="img" aria-label="Top-down floor plan with the wearer at the bottom, distance zones, and draggable obstacles">
             <defs>
               <clipPath id={ids.plan}><rect x="20" y="0" width="160" height="300" /></clipPath>
               <pattern id={ids.hatch} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
@@ -232,7 +232,7 @@ export default function VisionScene({ beat }: FigureProps) {
               <polyline points={fov(1)} className={s.fov} />
             </g>
             {lay(L0.zones, <>
-              {([["SAFE", "> 9 FT", 10.2, ""], ["CAUTION", "6–9 FT", 7.2, ""], ["WARNING", "< 6 FT", 5.2, s.zlHot]] as const).map(([a, b, y, c]) => (
+              {([["Safe", "> 9 ft", 10.2, ""], ["Caution", "6–9 ft", 7.2, ""], ["Warning", "< 6 ft", 5.2, s.zlHot]] as const).map(([a, b, y, c]) => (
                 <text key={a} x="190" y={PY(y)} className={`${s.zl} ${c}`}>
                   <tspan x="190">{a}</tspan>
                   <tspan x="190" dy="8" className={s.zs}>{b}</tspan>
@@ -241,8 +241,8 @@ export default function VisionScene({ beat }: FigureProps) {
             </>, "zl")}
             {!bm && (
               <text x="190" y={PY(2.6)} className={s.zl}>
-                <tspan x="190">EDGE CLIP</tspan>
-                <tspan x="190" dy="8" className={s.zs}>{`≈${CLIP_FT.toFixed(1)} FT`}</tspan>
+                <tspan x="190">Edge clip</tspan>
+                <tspan x="190" dy="10" className={s.zs}>{`≈${CLIP_FT.toFixed(1)} ft`}</tspan>
               </text>
             )}
             {[2, 4, 6, 8, 10, 12, 14].map((f) => (
@@ -256,7 +256,7 @@ export default function VisionScene({ beat }: FigureProps) {
               <ellipse rx="9" ry="10.5" />
               <path d="M -3 -10 L 0 -15 L 3 -10" />
               <rect x="-3.5" y="-12" width="7" height="3" className={s.cam} />
-              <text y="22" textAnchor="middle" className={s.zs}>WEARER</text>
+              <text y="16" textAnchor="middle" className={s.zs}>Wearer</text>
             </g>
             {rows.map((r) => {
               const o = r.o;
@@ -285,7 +285,7 @@ export default function VisionScene({ beat }: FigureProps) {
                   <circle r="20" className={s.hit} />
                   {(focus === o.id || sub) && <rect x="-21" y="-21" width="42" height="42" className={focus === o.id ? s.focus : s.subBox} />}
                   <Glyph cls={o.cls} />
-                  {lay(L0.boxes, <text x={lx} y="-3" textAnchor={left ? "end" : "start"} className={s.ol}>{o.cls.toUpperCase()}</text>, "ol")}
+                  {lay(L0.boxes, <text x={lx} y="-3" textAnchor={left ? "end" : "start"} className={s.ol}>{o.cls[0].toUpperCase() + o.cls.slice(1)}</text>, "ol")}
                   {lay(L0.distances, <text x={lx} y="7" textAnchor={left ? "end" : "start"} className={s.zs}>{r.detected ? `${r.trueFt.toFixed(1)} ft` : "out of view"}</text>, "ft")}
                 </g>
               );
@@ -293,13 +293,13 @@ export default function VisionScene({ beat }: FigureProps) {
             <g transform="translate(130 292)" className={s.scale}>
               <line x1="0" x2="40" y1="0" y2="0" />
               {[0, 20, 40].map((x) => <line key={x} x1={x} x2={x} y1="-3" y2="0" />)}
-              <text x="20" y="-5" textAnchor="middle" className={s.zs}>2 FT</text>
+              <text x="20" y="-6" textAnchor="middle" className={s.zs}>2 ft</text>
             </g>
           </svg>
         </div>
 
         <div className={s.panel}>
-          <div className={s.head}><span>B · Camera frame</span>{!bm && <span>720×1280 · simulated</span>}</div>
+          <div className={s.head}><span>Camera frame</span>{!bm && <span>720×1280</span>}</div>
           <svg viewBox={bm ? "-30 -60 900 1560" : "-30 -60 780 1560"} className={s.frame} role="img" aria-label="Simulated portrait camera frame with bounding boxes. Boxes that run off the frame edge are clipped.">
             <defs>
               <clipPath id={ids.frame}><rect x="0" y="0" width={FW} height={FH} /></clipPath>
@@ -315,7 +315,7 @@ export default function VisionScene({ beat }: FigureProps) {
               ))}
             </>, "bands")}
             <line x1="0" x2={FW} y1={HZ} y2={HZ} className={s.hz} />
-            <text x="10" y={HZ - 10} className={s.ft}>HORIZON</text>
+            <text x="12" y={HZ - 12} className={s.ft}>Horizon</text>
             <g clipPath={`url(#${ids.margin})`}>
               {rows.filter((r) => r.detected && r.clipped).map((r) => (
                 <g key={r.o.id}>
@@ -326,7 +326,7 @@ export default function VisionScene({ beat }: FigureProps) {
             <g clipPath={`url(#${ids.frame})`}>
               {rows.filter((r) => r.detected).map((r) => {
                 const sub = subId === r.o.id;
-                const c = bm ? (L0.risk ? (sub ? "var(--hot)" : TIER_C[r.o.tier]) : "var(--ink)") : sub ? "var(--accent)" : TIER_C[r.o.tier];
+                const c = bm ? (L0.risk ? (sub ? "var(--red)" : TIER_C[r.o.tier]) : "var(--ink)") : sub ? "var(--red)" : TIER_C[r.o.tier];
                 const x = n2(Math.max(2, r.cx - r.w / 2));
                 const t = n2(visTop(r));
                 const tagH = 44 * k;
@@ -392,7 +392,7 @@ export default function VisionScene({ beat }: FigureProps) {
           ) : (
             <span className={s.tagChip}>{TAGS[beat] ?? TAGS[0]}</span>
           )}
-          <span className={s.simBm}>Simulated scene</span>
+
         </div>
       ) : (
         <div className={s.formula} aria-live="polite">{readout}</div>
@@ -415,7 +415,7 @@ export default function VisionScene({ beat }: FigureProps) {
                   )}
                 </td>
                 <td className={r.detected ? s[r.zone] : s.dim}>
-                  {r.detected ? r.zone : "–"}
+                  {r.detected ? (r.zone === "WARNING" ? "Warning" : r.zone === "CAUTION" ? "Caution" : "Safe") : "–"}
                   {r.detected && !r.speaks && r.zone !== "SAFE" && <span className={s.dim}> · low risk, silent</span>}
                 </td>
               </tr>
@@ -426,7 +426,7 @@ export default function VisionScene({ beat }: FigureProps) {
 
       {!bm && (
         <div className={s.say}>
-          <span className="lbl">Announcement · one per frame · wording illustrative</span>
+          <span className={s.lbl}>One announcement per frame</span>
           <output className={`${s.msg} ${subject?.zone === "WARNING" ? s.msgHot : ""}`} aria-live="polite">
             {msgLine}
           </output>
@@ -435,14 +435,14 @@ export default function VisionScene({ beat }: FigureProps) {
       )}
 
       {!bm && (
-        <div className="ctl">
-          <button className="btn" aria-pressed={fix} onClick={() => setFix(!fix)}>Edge-clip fix (not shipped)</button>
-          <button className="btn" aria-pressed={speak} onClick={toggleSpeak}>Speak {speak ? "on" : "off"}</button>
-          <button className="btn" onClick={reset}>Reset</button>
-          {noTts && <span className="lbl">Speech is not available in this browser.</span>}
+        <div className={s.ctl}>
+          <button className={s.btn} aria-pressed={fix} onClick={() => setFix(!fix)}>Edge-clip fix</button>
+          <button className={s.btn} aria-pressed={speak} onClick={toggleSpeak}>Speak {speak ? "on" : "off"}</button>
+          <button className={s.btn} onClick={reset}>Reset</button>
+          {noTts && <span className={s.lbl}>Speech is not available in this browser.</span>}
         </div>
       )}
-      <p className={`${s.note} ${bm ? s.noteBm : ""}`}>Drag an obstacle inside {CLIP_FT.toFixed(0)} ft: its box runs off the frame, the visible part is shorter, and the estimate goes up. Camera mount, widths and confidences are simulated; heights are the project&apos;s typical-height lookup.</p>
+      <p className={`${s.note} ${bm ? s.noteBm : ""}`}>Drag an obstacle inside {CLIP_FT.toFixed(0)} ft: its box runs off the frame, the visible part is shorter, and the estimate goes up.</p>
     </div>
   );
 }

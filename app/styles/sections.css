@@ -1,0 +1,40 @@
+.exp-row { display: grid; grid-template-columns: minmax(150px, 0.8fr) minmax(200px, 1.1fr) minmax(0, 1.7fr); gap: 24px 36px; padding: 26px 0; border-top: 1px solid var(--hair); }
+.exp-meta { color: var(--muted); font-size: 15px; }
+.exp-role h3, .cred-block h3, .cred-tools h3 { font-size: 20px; line-height: 1.2; }
+.exp-role p { margin-top: 8px; color: var(--ink-2); }
+.exp-detail p + p { margin-top: 12px; }
+.exp-detail .arrow-link { margin-top: 16px; }
+.cred-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px; }
+.cred-block h3 { margin-bottom: 22px; }
+.cred-block h4 { font-size: 17px; margin: 28px 0 14px; }
+.cred-list { display: grid; gap: 20px; }
+.cred-list p + p { margin-top: 4px; }
+.cred-list .cred-quiet { color: var(--muted); }
+.cred-certs { gap: 10px; }
+.cred-more { margin-top: 22px; }
+.cred-tools { margin-top: 56px; }
+.cred-tools h3 { margin-bottom: 20px; }
+.cred-tool-row { display: grid; grid-template-columns: minmax(180px, 1fr) minmax(0, 3fr); gap: 24px; padding: 14px 0; border-top: 1px solid var(--hair); }
+.cred-tool-row dt { font-weight: 700; }
+.cred-tool-row dd { color: var(--ink-2); }
+.about-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 0.7fr); gap: 40px; align-items: center; }
+.about-copy { max-width: 34em; font-size: 19px; }
+.about-copy p + p { margin-top: 20px; }
+.about-drawing { width: min(100%, 340px); justify-self: center; }
+.about-mascot { width: 220px; margin: 0 auto -8px; }
+.about-line { display: block; width: 100%; height: 12px; overflow: visible; }
+.about-line path { fill: none; stroke: var(--ink); stroke-width: 3.4px; stroke-linecap: round; }
+.about-drawing figcaption { font-size: 22px; line-height: 1.2; margin-top: 18px; }
+.contact-email { display: inline-block; max-width: 100%; margin-top: 22px; font-size: clamp(28px, 5vw, 64px); font-weight: 800; letter-spacing: -0.04em; line-height: 1.1; overflow-wrap: anywhere; text-decoration-color: var(--hair-strong); text-decoration-thickness: 2px; text-underline-offset: 6px; }
+.contact-email:hover { text-decoration-color: var(--red); }
+.contact-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+@media (max-width: 799px) {
+  .exp-row { grid-template-columns: 1fr; gap: 12px; }
+  .cred-grid { grid-template-columns: 1fr; gap: 40px; }
+  .about-grid { grid-template-columns: 1fr; }
+  .about-drawing { justify-self: start; }
+  .about-mascot { width: 160px; }
+}
+@media (max-width: 560px) {
+  .cred-tool-row { grid-template-columns: 1fr; gap: 4px; }
+}

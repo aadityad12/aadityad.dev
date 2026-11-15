@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type ComponentType } from "react";
 import type { Beat } from "../../content";
 import type { FigureProps } from "../../figures";
+import { Fig } from "../parts";
 
 type ReelProps = {
   beats: Beat[];
@@ -16,12 +17,23 @@ const TRIGGER_LINE = 0.4;
 
 export default function Reel({ beats, figure: F, title, caption }: ReelProps) {
   const [active, setActive] = useState<number | null>(0);
+  const [wide, setWide] = useState(false);
   const list = useRef<HTMLOListElement>(null);
   const end = useRef<HTMLLIElement>(null);
-  const frame = useRef<HTMLElement>(null);
+  const stage = useRef<HTMLDivElement>(null);
+
+  // Sticky storytelling only on wide screens; narrow screens get the figure once, free.
+  useEffect(() => {
+    const mq = matchMedia("(min-width: 900px)");
+    const sync = () => setWide(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   useEffect(() => {
-    const items = list.current?.querySelectorAll<HTMLElement>(".beat, .reel-end");
+    if (!wide) return;
+    const items = list.current?.querySelectorAll<HTMLElement>(".reel-beat, .reel-end");
     if (!items?.length) return;
     let io: IntersectionObserver;
     const observe = () => {
@@ -38,8 +50,7 @@ export default function Reel({ beats, figure: F, title, caption }: ReelProps) {
             if (e.isIntersecting) {
               setActive(i === undefined ? null : Number(i));
             } else if (Number(i) === beats.length - 1 && e.boundingClientRect.bottom < (e.rootBounds?.top ?? top)) {
-              // A wheel step can cross the one-pixel sentinel between frames.
-              // Leaving the final beat above the line also releases the figure.
+              // A wheel step can cross the sentinel between frames: leaving the final beat releases the figure.
               setActive(null);
             }
           }
@@ -54,45 +65,43 @@ export default function Reel({ beats, figure: F, title, caption }: ReelProps) {
       io.disconnect();
       window.removeEventListener("resize", observe);
     };
-  }, [beats.length]);
+  }, [beats.length, wide]);
 
   const play = () => {
     setActive(null);
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     end.current?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
-    frame.current?.focus({ preventScroll: true });
+    stage.current?.focus({ preventScroll: true });
   };
 
+  const beat = wide ? active : null;
+
   return (
-    <section className="reel" aria-labelledby="reel-h" data-active-beat={active ?? "free"}>
+    <section className="reel" aria-labelledby="reel-h" data-mode={beat === null ? "free" : "beat"}>
       <h2 id="reel-h" className="visually-hidden">{title} highlights</h2>
-      <div className="reel-figure" id="figure" data-mode={active === null ? "free" : "beat"}>
-        <figure className="fig" role="group" aria-label={caption} tabIndex={-1} ref={frame}>
-          <div className="fig-frame">
-            <div className="fig-bar">
-              <span>Figure 1</span>
-              <span>{title}</span>
-            </div>
-            <div className="fig-body" tabIndex={active === null ? 0 : undefined}>
-              <F beat={active} />
-            </div>
-          </div>
-          <figcaption className="reel-cap">Figure 1. {caption}</figcaption>
-        </figure>
+      <div className="reel-figure">
+        <div className="reel-stage" ref={stage} tabIndex={-1}>
+          <Fig caption={caption}>
+            <F beat={beat} />
+          </Fig>
+        </div>
+        {wide && (
+          <p className="reel-try">
+            <button type="button" className="btn quiet small" onClick={play}>Try it yourself</button>
+          </p>
+        )}
       </div>
       <ol className="reel-beats" ref={list}>
         {beats.map((b, i) => (
-          <li key={i} className="beat" data-i={i} aria-current={active === i ? "step" : undefined}>
-            <span className="beat-n">{String(i + 1).padStart(2, "0")}</span>
-            <h3>{b.title}</h3>
-            <p>{b.body}</p>
+          <li key={i} className="reel-beat" data-i={i} data-on={beat === i ? "true" : undefined} aria-current={beat === i ? "step" : undefined}>
+            <div>
+              <h3>{b.title}</h3>
+              <p>{b.body}</p>
+            </div>
           </li>
         ))}
         <li className="reel-end" aria-hidden="true" ref={end} />
       </ol>
-      <p className="reel-free">
-        <button type="button" onClick={play}>Play with the figure</button>
-      </p>
     </section>
   );
 }

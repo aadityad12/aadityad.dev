@@ -127,8 +127,8 @@ export default function EchoMesh() {
   return (
     <div ref={ref} className={s.root}>
       <div className={s.head}>
-        <span className="readout"><b>Alert 7f3a</b> · Severe Thunderstorm Warning · {CHUNKS} chunks <span className={s.dim}>(sizes illustrative)</span></span>
-        <span className={`readout ${s.live}`} aria-live="polite">
+        <span className={s.readout}><b>Alert 7f3a</b> · Severe Thunderstorm Warning · {CHUNKS} chunks</span>
+        <span className={`${s.readout} ${s.live}`} aria-live="polite">
           {src === null ? <span className={s.hint}>Click a phone to give it the alert</span> : <>Reached <b>{reached} / {N}</b> phones · max <b>{maxHop}</b> {maxHop === 1 ? "hop" : "hops"} · <b>0</b> bytes over the internet</>}
         </span>
       </div>
@@ -143,7 +143,7 @@ export default function EchoMesh() {
             <path d={`M${TOWER.x - 11} ${TOWER.y + 24}L${TOWER.x} ${TOWER.y - 12}L${TOWER.x + 11} ${TOWER.y + 24}M${TOWER.x - 7} ${TOWER.y + 12}H${TOWER.x + 7}M${TOWER.x - 4} ${TOWER.y}H${TOWER.x + 4}M${TOWER.x - 7} ${TOWER.y + 12}L${TOWER.x + 4} ${TOWER.y}M${TOWER.x - 11} ${TOWER.y + 24}L${TOWER.x + 7} ${TOWER.y + 12}`} />
             <path d={`M${TOWER.x - 10} ${TOWER.y - 20}A14 14 0 0 1 ${TOWER.x + 10} ${TOWER.y - 20}`} className={s.dead} />
             <rect x={TOWER.x - 30} y={TOWER.y + 29} width="60" height="14" className={s.badge} />
-            <text x={TOWER.x} y={TOWER.y + 39.5} className={s.badgeTxt}>✕ OFFLINE</text>
+            <text x={TOWER.x} y={TOWER.y + 39.5} className={s.badgeTxt}>Offline</text>
           </g>
 
           {p && PHONES.map((ph, j) => (p.par[j] >= 0 && p.T[j] <= t ? <line key={`t${j}`} x1={PHONES[p.par[j]].x} y1={PHONES[p.par[j]].y} x2={ph.x} y2={ph.y} className={s.tree} /> : null))}
@@ -195,7 +195,7 @@ export default function EchoMesh() {
             <line x1="12" x2={12 + R} y1={H - 12} y2={H - 12} className={s.scale} />
             <line x1="12" x2="12" y1={H - 16} y2={H - 8} className={s.scale} />
             <line x1={12 + R} x2={12 + R} y1={H - 16} y2={H - 8} className={s.scale} />
-            <text x={18 + R} y={H - 9} className={s.scaleTxt}>R · BLE range (illustrative)</text>
+            <text x={18 + R} y={H - 9} className={s.scaleTxt}>BLE range</text>
             <rect x={W - 118} y={H - 16} width="5" height="5" className={s.db} />
             <text x={W - 108} y={H - 11} className={s.scaleTxt}>stored in SQLite</text>
           </g>
@@ -213,15 +213,15 @@ export default function EchoMesh() {
           ))}
         </span>
       </div>
-      <p className={`lbl ${s.note}`}>GATT: write a chunk index, read that chunk · ≈{Math.round(SIZES.gz / CHUNKS)} B each · intended relay path · simulated</p>
+      <p className={s.note}>GATT: write a chunk index, read that chunk · ≈{Math.round(SIZES.gz / CHUNKS)} B each</p>
 
-      <div className="ctl">
-        <button className="btn go" onClick={() => start(0)} disabled={src !== null}>Start ▶</button>
-        <button className="btn" onClick={restart} disabled={src === null}>Restart</button>
+      <div className={s.ctl}>
+        <button className={s.btn} onClick={() => start(0)} disabled={src !== null}>Start ▶</button>
+        <button className={s.btn} onClick={restart} disabled={src === null}>Restart</button>
         <span className={s.speed} role="group" aria-label="Speed">
-          {[1, 3].map((v) => <button key={v} className="btn" aria-pressed={speed === v} onClick={() => setSpeed(v)}>{v}×</button>)}
+          {[1, 3].map((v) => <button key={v} className={s.btn} aria-pressed={speed === v} onClick={() => setSpeed(v)}>{v}×</button>)}
         </span>
-        <span className={`readout ${s.status}`}>
+        <span className={`${s.readout} ${s.status}`}>
           {src === null
             ? "Tower down · 0 phones have the alert"
             : finished

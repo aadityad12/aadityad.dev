@@ -78,14 +78,14 @@ export default function RungLadder({ beat }: FigureProps) {
 
   return (
     <div ref={ref} className={`${s.root} ${isBeat ? s.beat : ""} ${reduced ? s.still : ""}`}>
-      {!isBeat && <div className="ctl" role="group" aria-label="Benchmark">
+      {!isBeat && <div className={s.ctl} role="group" aria-label="Benchmark">
         {BENCHES.map((b) => (
-          <button key={b} className="btn" aria-pressed={bench === b && view === "chart"} onClick={() => { setBench(b); setView("chart"); runClimb(); }}>
+          <button key={b} className={s.btn} aria-pressed={bench === b && view === "chart"} onClick={() => { setBench(b); setView("chart"); runClimb(); }}>
             {b}
           </button>
         ))}
         <span className={s.spacer} />
-        <button className="btn" aria-pressed={view === "term"} onClick={() => setView(view === "term" ? "chart" : "term")}>
+        <button className={s.btn} aria-pressed={view === "term"} onClick={() => setView(view === "term" ? "chart" : "term")}>
           {view === "term" ? "Chart" : "Watch it run"}
         </button>
       </div>}
@@ -125,8 +125,8 @@ export default function RungLadder({ beat }: FigureProps) {
           </ol>
           <div className={s.read}>
             {(!isBeat || beat >= 4) && (
-              <span className="readout">
-                <b>{bench}</b>: tree-walker → {d.fallback ? "JIT build" : "ARM64 JIT"} = <b>{top.toFixed(2)}×</b>
+              <span className={s.readout}>
+                <b>{bench}</b>: tree-walker → {d.fallback ? "JIT build" : "ARM64 JIT"} = <b className={s.emph}>{top.toFixed(2)}×</b>
               </span>
             )}
             <span className={s.legend}>
@@ -135,12 +135,12 @@ export default function RungLadder({ beat }: FigureProps) {
               {(!isBeat || beat >= 3) && <><i className={s.kloss} /> slower than the rung below</>}
             </span>
           </div>
-          {!isBeat && <button className="btn" onClick={runClimb} style={{ marginTop: 10 }}>Climb again ↑</button>}
+          {!isBeat && <button className={s.btn} onClick={runClimb}>Climb again ↑</button>}
         </div>
       ) : (
         <div className={s.term}>
           <Image src="/projects/rung-jit.gif" alt="Terminal: Rung compiles a hot function to ARM64, then a float fails the integer type guard and the VM finishes the call" width={1000} height={550} unoptimized />
-          <p className="lbl" style={{ marginTop: 8 }}>Real command output from the repo, paced for reading.</p>
+          <p className={s.cap}>Real command output from the repo, paced for reading.</p>
         </div>
       )}
     </div>

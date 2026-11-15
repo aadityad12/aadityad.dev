@@ -18,7 +18,7 @@ const NB = (id: string, ref: string, name: string, sub: string, y: number): Box 
 
 const WIDE: Layout = {
   key: "wide", vb: "0 0 680 262",
-  boxes: [WB("u1", "U1", "SCAN", "9 PM · GHA", 10), WB("u2", "U2", "ROUTINE", "CLAUDE", 116), WB("u3", "U3", "DATA REPO", "PRIVATE", 222), WB("u4", "U4", "WORKER", "+ CF ACCESS", 328), { id: "u5", ref: "U5", name: "act.yml", sub: "ONLY WRITER", x: 506, y: 58, w: 80, h: 44 }],
+  boxes: [WB("u1", "U1", "Scan", "9 pm · GHA", 10), WB("u2", "U2", "Routine", "Claude", 116), WB("u3", "U3", "Data repo", "Private", 222), WB("u4", "U4", "Worker", "+ CF Access", 328), { id: "u5", ref: "U5", name: "act.yml", sub: "Only writer", x: 506, y: 58, w: 80, h: 44 }],
   gh: { x: 612, y: 40, w: 60, h: 190 },
   night: [[[90, 80], [116, 80]], [[196, 80], [222, 80]], [[302, 80], [328, 80]]],
   junction: [209, 80], pre: [[209, 80], [209, 200], [364, 200]], post: [[396, 200], [612, 200]],
@@ -29,7 +29,7 @@ const WIDE: Layout = {
 };
 const NARROW: Layout = {
   key: "narrow", vb: "0 0 340 560",
-  boxes: [NB("u1", "U1", "SCAN", "9 PM · GH ACTIONS", 20), NB("u2", "U2", "ROUTINE", "CLAUDE · DRAFTS", 92), NB("u3", "U3", "DATA REPO", "PRIVATE", 164), NB("u4", "U4", "WORKER", "+ CF ACCESS", 236), { id: "u5", ref: "U5", name: "act.yml", sub: "ONLY WRITER", x: 25, y: 380, w: 110, h: 40 }],
+  boxes: [NB("u1", "U1", "Scan", "9 pm · GH Actions", 20), NB("u2", "U2", "Routine", "Claude · drafts", 92), NB("u3", "U3", "Data repo", "Private", 164), NB("u4", "U4", "Worker", "+ CF Access", 236), { id: "u5", ref: "U5", name: "act.yml", sub: "Only writer", x: 25, y: 380, w: 110, h: 40 }],
   gh: { x: 20, y: 478, w: 300, h: 56 },
   night: [[[80, 60], [80, 92]], [[80, 132], [80, 164]], [[80, 204], [80, 236]]],
   junction: [80, 148], pre: [[80, 148], [280, 148], [280, 262]], post: [[280, 294], [280, 478]],
@@ -78,11 +78,11 @@ function Schematic({ L, pressed, attempt, merged }: { L: Layout; pressed: boolea
 
       <rect x={gh.x} y={gh.y} width={gh.w} height={gh.h} className={`${s.box} ${merged ? s.okBox : ""}`} />
       <text x={gh.x + 2} y={gh.y - 5} className={s.ref}>J1</text>
-      <text x={gh.x + gh.w / 2} y={L.key === "wide" ? gh.y + 100 : gh.y + 24} className={s.name}>GITHUB</text>
+      <text x={gh.x + gh.w / 2} y={L.key === "wide" ? gh.y + 100 : gh.y + 24} className={s.name}>GitHub</text>
       {merged && L.key === "wide" ? (
-        <text x={gh.x + gh.w / 2} y={gh.y + 118} className={s.okTxt}>PR<tspan x={gh.x + gh.w / 2} dy="12">OPENED</tspan></text>
+        <text x={gh.x + gh.w / 2} y={gh.y + 118} className={s.okTxt}>PR<tspan x={gh.x + gh.w / 2} dy="14">opened</tspan></text>
       ) : (
-        <text x={gh.x + gh.w / 2} y={L.key === "wide" ? gh.y + 116 : gh.y + 40} className={merged ? s.okTxt : s.sub}>{merged ? "PR OPENED" : "PUBLIC"}</text>
+        <text x={gh.x + gh.w / 2} y={L.key === "wide" ? gh.y + 116 : gh.y + 40} className={merged ? s.okTxt : s.sub}>{merged ? "PR opened" : "Public"}</text>
       )}
 
       <g transform={L.diode} className={attempt === "blocked" ? s.hotSym : ""}>
@@ -91,7 +91,7 @@ function Schematic({ L, pressed, attempt, merged }: { L: Layout; pressed: boolea
         <polygon points="24,-9 24,9 8,0" className={s.sym} />
         <line x1="8" y1="-9" x2="8" y2="9" className={s.sym} />
       </g>
-      <text x={L.guardLbl.x} y={L.guardLbl.y} textAnchor={L.guardLbl.anchor} className={s.ref}>D1 GUARD</text>
+      <text x={L.guardLbl.x} y={L.guardLbl.y} textAnchor={L.guardLbl.anchor} className={s.ref}>D1 Guard</text>
       <text x={L.guardLbl.x} y={L.guardLbl.y + 13} textAnchor={L.guardLbl.anchor} className={s.sub2}>guard.py · PreToolUse</text>
       <text x={L.guardLbl.x} y={L.guardLbl.y + 25} textAnchor={L.guardLbl.anchor} className={s.sub2}>37 tests · blocks writes</text>
       {attempt === "blocked" && (
@@ -110,8 +110,8 @@ function Schematic({ L, pressed, attempt, merged }: { L: Layout; pressed: boolea
           <line x1="15" y1="-30" x2="33" y2="-30" className={s.sym} />
         </g>
       </g>
-      <text x={L.swLbl[0]} y={L.swLbl[1]} textAnchor={L.swAnchor} className={s.swRef}>S1 · YOUR TAP</text>
-      <text x={L.swLbl[0]} y={L.swLbl[1] + 12} textAnchor={L.swAnchor} className={s.sub2}>{pressed ? "CLOSED" : "NORMALLY OPEN"}</text>
+      <text x={L.swLbl[0]} y={L.swLbl[1]} textAnchor={L.swAnchor} className={s.swRef}>Your tap</text>
+      <text x={L.swLbl[0]} y={L.swLbl[1] + 14} textAnchor={L.swAnchor} className={s.sub2}>{pressed ? "Closed" : "Normally open"}</text>
 
       <polyline points={pts(tok.stub)} className={s.wire} />
       <g transform={`translate(${tok.g[0]} ${tok.g[1]})`} className={s.sym}>
@@ -190,9 +190,9 @@ export default function ScoutInterlock() {
         ))}
       </div>
 
-      <div className="ctl">
-        <button className="btn" onClick={tryPost} disabled={attempt === "flow"}>Agent tries to post</button>
-        <button className={`btn go ${s.tap}`} data-keys aria-pressed={pressed}
+      <div className={s.ctl}>
+        <button className={s.btn} onClick={tryPost} disabled={attempt === "flow"}>Agent tries to post</button>
+        <button className={`${s.btn} ${s.tap}`} data-keys aria-pressed={pressed}
           onPointerDown={(e) => { e.currentTarget.setPointerCapture(e.pointerId); press(); }}
           onPointerUp={release} onPointerCancel={release} onContextMenu={(e) => e.preventDefault()}
           onKeyDown={(e) => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); if (!e.repeat) press(); } }}
@@ -201,14 +201,13 @@ export default function ScoutInterlock() {
           onClick={(e) => { if (e.detail === 0 && !pressed) { press(); later(() => setPressed(false), 500); } }}>
           Hold S1 · your tap
         </button>
-        <button className="btn" onClick={() => { timers.current.forEach(clearTimeout); timers.current = []; setPressed(false); setAttempt("idle"); setMerged(false); setLog(NIGHT); minute.current = 12; tries.current = 0; setStatus("Reset. Switch open."); }}>Reset</button>
+        <button className={s.btn} onClick={() => { timers.current.forEach(clearTimeout); timers.current = []; setPressed(false); setAttempt("idle"); setMerged(false); setLog(NIGHT); minute.current = 12; tries.current = 0; setStatus("Reset. Switch open."); }}>Reset</button>
       </div>
 
-      <div className={s.log} role="log" aria-label="Run log (illustrative times)">
+      <div className={s.log} role="log" aria-label="Run log">
         {log.map((l, i) => (
           <div key={`${l.t}-${i}`} className={l.kind ? s[l.kind] : ""}><span>{l.t}</span><span>{l.who}</span><span>{l.msg}</span></div>
         ))}
-        <span className={s.logLbl}>log · times illustrative</span>
       </div>
       <p className="visually-hidden" aria-live="polite">{status}</p>
 

@@ -188,9 +188,9 @@ export default function DispatchTiming() {
   return (
     <div ref={ref} className={s.root}>
       <div className={s.read} aria-live="polite" aria-atomic="true">
-        <span className={`${s.mode} ${surge ? s.surge : ""}`}>MODE <b>{surge ? "SURGE" : "ASSISTED"}</b></span>
-        <span>WINDOW_60s <b>{lastN}</b> calls {lastN > TH ? "> 10" : "≤ 10"}</span>
-        <span>SINCE SURGE <b>{age === null ? "–" : `${age} s`}</b>{age !== null && age <= MIN_SURGE ? " · min 120" : ""}</span>
+        <span className={`${s.mode} ${surge ? s.surge : ""}`}>Mode <b>{surge ? "Surge" : "Assisted"}</b></span>
+        <span>60 s window <b>{lastN}</b> calls {lastN > TH ? "> 10" : "≤ 10"}</span>
+        <span>Since surge <b>{age === null ? "–" : `${age} s`}</b>{age !== null && age <= MIN_SURGE ? " · min 120 s" : ""}</span>
       </div>
 
       <div ref={plotRef} className={s.plot}>
@@ -203,49 +203,49 @@ export default function DispatchTiming() {
             </g>
           ))}
           <line x1={L} x2={W - R} y1={Y.axis} y2={Y.axis} className={s.ink} />
-          <text x={4} y={Y.axis + 15} className={s.tick}>t (sim s)</text>
+          <text x={4} y={Y.axis + 15} className={s.tick}>t (s)</text>
 
-          <text x={4} y={Y.calls + CH - 4} className={s.row}>CALLS</text>
+          <text x={4} y={Y.calls + CH - 4} className={s.row}>Calls</text>
           <line x1={L} x2={W - R} y1={Y.calls + CH} y2={Y.calls + CH} className={s.base} />
           {sim.calls.filter((c) => c.t >= t0).map((c, i) => (
             <line key={i} x1={fx(x(c.t))} x2={fx(x(c.t))} y1={Y.calls + CH} y2={Y.calls + (c.k === 2 ? 0 : 8)} className={c.k === 0 ? s.ink : c.k === 1 ? s.inj : s.hv} />
           ))}
 
-          <text x={4} y={Y.win + 12} className={s.row}>WINDOW_60s</text>
+          <text x={4} y={Y.win + 12} className={s.row}>Count</text>
           <text x={L - 6} y={fx(yN(0) + 3)} textAnchor="end" className={s.tick}>0</text>
           <text x={L - 6} y={fx(yN(TH) + 3)} textAnchor="end" className={s.tick}>10</text>
           <line x1={L} x2={W - R} y1={Y.win + WH} y2={Y.win + WH} className={s.base} />
           <line x1={L} x2={W - R} y1={fx(yN(TH))} y2={fx(yN(TH))} className={s.th} />
-          <text x={W - R - 2} y={fx(yN(TH) - 4)} textAnchor="end" className={s.thl}>{"> 10 → SURGE"}</text>
+          <text x={W - R - 2} y={fx(yN(TH) - 4)} textAnchor="end" className={s.thl}>Over 10, surge</text>
           <path d={win} className={s.step} />
           {samples.filter((p) => p.t >= t0).map((p) => (
             <circle key={p.t} cx={fx(x(p.t))} cy={fx(yN(p.n))} r={2.2} className={p.n > TH ? s.dotHot : s.dot} />
           ))}
 
-          <text x={4} y={Y.mode + 20} className={s.row}>MODE</text>
+          <text x={4} y={Y.mode + 20} className={s.row}>Mode</text>
           {segs.filter((g) => g.on).map((g) => <rect key={g.at} x={fx(x(g.a))} y={yHi} width={fx(x(g.b) - x(g.a))} height={MH} className={s.surgeFill} />)}
           <path d={mode} className={s.wave} />
           {segs.map((g) => x(g.b) - x(g.a) > 70 && (
-            <text key={`l${g.at}`} x={fx(x(g.a) + 6)} y={g.on ? yHi + 13 : yLo - 5} className={g.on ? s.stHot : s.st}>{g.on ? "SURGE" : "ASSISTED"}</text>
+            <text key={`l${g.at}`} x={fx(x(g.a) + 6)} y={g.on ? yHi + 13 : yLo - 5} className={g.on ? s.stHot : s.st}>{g.on ? "Surge" : "Assisted"}</text>
           ))}
           {sim.modes.filter((md) => md.on && md.t + MIN_SURGE > t0).map((md) => {
             const a = x(md.t), b = x(md.t + MIN_SURGE), yb = yLo + 12, done = sim.t >= md.t + MIN_SURGE;
             return (
               <g key={`b${md.t}`} className={s.dim}>
                 <path d={`M${fx(a)} ${yb - 4}V${yb + 4}M${fx(a)} ${yb}H${fx(b)}${done ? `M${fx(b)} ${yb - 4}V${yb + 4}` : ""}`} />
-                {b - a > 70 && <text x={fx((a + b) / 2)} y={yb + 13} textAnchor="middle">{done ? "120 s min surge" : "min 120 s …"}</text>}
+                {b - a > 70 && <text x={fx((a + b) / 2)} y={yb + 14} textAnchor="middle">{done ? "120 s minimum met" : "120 s minimum"}</text>}
               </g>
             );
           })}
 
-          <text x={4} y={Y.hold + HH - 4} className={s.row}>HOLD</text>
+          <text x={4} y={Y.hold + HH - 4} className={s.row}>Hold</text>
           <line x1={L} x2={W - R} y1={Y.hold + HH} y2={Y.hold + HH} className={s.base} />
           {holds.map((h) => {
             const a = x(h.t0), b = x(h.t1 ?? sim.t);
             return (
               <g key={h.t0}>
                 <path d={`M${fx(a)} ${Y.hold + HH}V${Y.hold}H${fx(b)}${h.t1 !== null ? `V${Y.hold + HH}` : ""}`} className={h.t1 === null ? s.holdOn : s.holdW} />
-                {h.end && <text x={fx(b + 4)} y={Y.hold + 9} className={h.end === "CONF" ? s.endOk : s.endHot}>{h.end}</text>}
+                {h.end && <text x={fx(b + 4)} y={Y.hold + 9} className={h.end === "CONF" ? s.endOk : s.endHot}>{h.end === "CONF" ? "ok" : h.end === "CANC" ? "cancel" : "time"}</text>}
               </g>
             );
           })}
@@ -254,23 +254,23 @@ export default function DispatchTiming() {
         </svg>
       </div>
 
-      <div className="ctl">
-        <button className="btn go" onClick={() => act((m) => burst(m, 1))}>Inject call</button>
-        <button className="btn go" onClick={() => act((m) => burst(m, 8))}>Inject burst ×8</button>
-        <button className="btn" onClick={() => act(heavy)} disabled={!!pend}>Heavy-asset call</button>
+      <div className={s.ctl}>
+        <button className={s.btn} onClick={() => act((m) => burst(m, 1))}>Inject call</button>
+        <button className={s.btn} onClick={() => act((m) => burst(m, 8))}>Inject burst ×8</button>
+        <button className={s.btn} onClick={() => act(heavy)} disabled={!!pend}>Heavy-asset call</button>
         <span className={s.spacer} />
         {reduced ? (
-          <button className="btn" onClick={() => act((m) => advance(m, m.t + 5))}>+5 s</button>
+          <button className={s.btn} onClick={() => act((m) => advance(m, m.t + 5))}>+5 s</button>
         ) : (
-          <button className="btn" aria-pressed={!playing} onClick={() => setPlaying((p) => !p)}>{playing ? "Pause" : "Play"}</button>
+          <button className={s.btn} aria-pressed={!playing} onClick={() => setPlaying((p) => !p)}>{playing ? "Pause" : "Play"}</button>
         )}
-        {!reduced && !playing && <button className="btn" onClick={() => act((m) => advance(m, m.t + 5))}>+5 s</button>}
-        <button className="btn" onClick={() => setSim(INITIAL)}>Reset</button>
+        {!reduced && !playing && <button className={s.btn} onClick={() => act((m) => advance(m, m.t + 5))}>+5 s</button>}
+        <button className={s.btn} onClick={() => setSim(INITIAL)}>Reset</button>
       </div>
 
       <div className={s.lower}>
         <div className={s.log}>
-          <div className={s.head}>Event log <span>names illustrative, except HOLD_REQUIRED</span></div>
+          <div className={s.head}>Event log</div>
           <ol>
             {sim.log.slice().reverse().map((e, i) => (
               <li key={`${e.t}-${e.type}-${i}`}>
@@ -288,9 +288,9 @@ export default function DispatchTiming() {
               <p>RESOURCE has reserved the unit. It will not move without a dispatcher.</p>
               <div className={s.count}><b>{Math.max(0, Math.ceil(pend.t0 + HOLD_S - sim.t))} s</b> left (sim time)</div>
               <div className={s.bar}><i style={{ width: `${fx(Math.max(0, 100 - ((sim.t - pend.t0) / HOLD_S) * 100))}%` }} /></div>
-              <div className="ctl">
-                <button className="btn go" onClick={() => act((m) => resolve(m, true))}>Confirm</button>
-                <button className="btn" onClick={() => act((m) => resolve(m, false))}>Cancel</button>
+              <div className={s.ctl}>
+                <button className={s.btn} onClick={() => act((m) => resolve(m, true))}>Confirm</button>
+                <button className={s.btn} onClick={() => act((m) => resolve(m, false))}>Cancel</button>
               </div>
             </>
           ) : (
@@ -301,7 +301,7 @@ export default function DispatchTiming() {
           )}
         </div>
       </div>
-      <p className="lbl">Simulated clock, {SPEED}× real time. Background calls: seeded exponential arrivals. MONITOR samples every 5 s.</p>
+      <p className={s.note}>Clock runs at {SPEED}×. Background calls follow seeded exponential arrivals. The monitor samples every 5 s.</p>
     </div>
   );
 }

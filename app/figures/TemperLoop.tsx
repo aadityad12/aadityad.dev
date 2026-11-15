@@ -72,8 +72,8 @@ export default function TemperLoop() {
   return (
     <div ref={ref} className={s.root}>
       <div className={s.top}>
-        <span className={s.badge}>fixture: villain agent · deterministic · offline</span>
-        <span className="lbl">make test-integration</span>
+        <span className={s.badge}>Villain agent, deterministic, offline</span>
+        <span className={s.cmd}>make test-integration</span>
       </div>
 
       <ol className={s.rail} aria-label="Protocol steps">
@@ -115,8 +115,7 @@ export default function TemperLoop() {
               </li>
             ))}
           </ul>
-          <div className={`${s.schema} ${step === 1 ? s.schemaOn : ""}`}>schema ✓ Draft 7</div>
-          <div className={`lbl ${s.ill}`}>file names illustrative</div>
+          <div className={`${s.schema} ${step === 1 ? s.schemaOn : ""}`}>Schema matches Draft 7</div>
           {step >= 4 && <div className={s.repl}>complete replacement files, applied by the client</div>}
         </div>
 
@@ -160,16 +159,15 @@ export default function TemperLoop() {
           })}
           <div className={s.legend}>
             <span>▲ better</span><span>▼ worse</span><span>= same</span>
-            <span>marks qualitative · illustrative</span>
           </div>
         </div>
       </div>
 
-      <div className="ctl">
-        <button className="btn" onClick={() => go(step - 1)} disabled={step === 1}>◀ Back</button>
-        <button className="btn go" onClick={() => go(step === 5 ? 1 : step + 1)}>{step === 5 ? "Restart ↺" : "Step ▶"}</button>
+      <div className={s.ctl}>
+        <button className={s.btn} onClick={() => go(step - 1)} disabled={step === 1}>◀ Back</button>
+        <button className={s.btn} onClick={() => go(step === 5 ? 1 : step + 1)}>{step === 5 ? "Restart ↺" : "Step ▶"}</button>
         <button
-          className="btn"
+          className={s.btn}
           aria-pressed={auto}
           disabled={reduced}
           title={reduced ? "Disabled: reduced motion is on" : undefined}
@@ -177,9 +175,9 @@ export default function TemperLoop() {
         >
           {auto ? "Stop auto-play" : "Auto-play"}
         </button>
-        <button className="btn" onClick={() => go(1)}>Reset</button>
+        <button className={s.btn} onClick={() => go(1)}>Reset</button>
         <span className={s.spacer} />
-        <span className="lbl">Step {step} / 5</span>
+        <span className={s.lbl}>Step {step} / 5</span>
       </div>
     </div>
   );

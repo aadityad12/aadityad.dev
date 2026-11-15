@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
-import { HERO, RESUME } from "./content";
-import Masthead from "./components/Masthead";
-import Hero from "./components/brief/Hero";
-import Work from "./components/brief/Work";
-import Experience from "./components/brief/Experience";
-import Contact from "./components/brief/Contact";
+import { HERO } from "./content";
+import SiteHeader from "./components/SiteHeader";
+import Hero from "./components/home/Hero";
+import Work from "./components/home/Work";
+import Experience from "./components/home/Experience";
+import Credentials from "./components/home/Credentials";
+import About from "./components/home/About";
+import Contact from "./components/home/Contact";
+import SiteFooter from "./components/SiteFooter";
 
 const title = "Aaditya Desai · Computer Engineering @ SJSU";
-const description = `${HERO.lead} Available for Summer 2027 internships.`;
-const image = { url: "/og/home.png", width: 1200, height: 630, alt: "Aaditya Desai, computer engineering at SJSU: an ARM64 JIT, bare-metal firmware, on-device vision, tools for AI agents" };
+const description = `${HERO.lead} Looking for a Summer 2027 internship.`;
+const image = { url: "/og/home.png", width: 1200, height: 630, alt: "Aaditya Desai, computer engineering at San José State: a JIT compiler, bare-metal firmware, on-device vision, tools for AI agents" };
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -19,15 +22,16 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
-      <Masthead variant="brief" resume={RESUME} />
-      <div className="sheet brief-sheet">
-        <main className="brief" id="main">
-          <Hero />
-          <Work />
-          <Experience />
-        </main>
+      <SiteHeader />
+      <main id="main">
+        <Hero />
+        <Work />
+        <Experience />
+        <Credentials />
+        <About />
         <Contact />
-      </div>
+      </main>
+      <SiteFooter />
     </>
   );
 }

@@ -1,0 +1,66 @@
+/* Work: the stage and the list under it. See docs/fable3/DESIGN.md */
+.wk-roles { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 16px; color: var(--muted); }
+.wk-roles span { margin-right: 6px; }
+.wk-roles button { min-height: 40px; padding: 0 16px; border-radius: 999px; font-weight: 650; color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--hair-strong); cursor: pointer; transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease; }
+.wk-roles button:hover { box-shadow: inset 0 0 0 1.5px var(--ink); }
+.wk-roles button[aria-pressed="true"] { background: var(--ink); color: var(--paper); box-shadow: none; }
+
+.wk-stage { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: clamp(24px, 3.4vw, 48px); align-items: start; }
+
+.wk-tabs { display: grid; }
+.wk-tab { position: relative; display: grid; gap: 4px; text-align: left; padding: 16px 0 17px; border-top: 1.5px solid var(--hair); cursor: pointer; color: var(--muted); transition: color 0.15s ease; }
+.wk-tab b { font-size: 25px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; color: var(--ink-2); }
+.wk-tab:hover b { color: var(--ink); }
+.wk-tab-hook { display: none; font-size: 17px; line-height: 1.4; color: var(--ink); }
+.wk-tab-k { font-size: 15px; line-height: 1.35; color: var(--muted); }
+.wk-tab[aria-selected="true"] { border-top-color: var(--ink); padding-bottom: 20px; }
+.wk-tab[aria-selected="true"] b { color: var(--ink); font-size: 30px; }
+.wk-tab[aria-selected="true"] .wk-tab-hook { display: block; }
+.wk-progress { position: absolute; left: 0; top: -1.5px; height: 3px; width: 100%; background: var(--red); transform-origin: left; transform: scaleX(0); }
+.wk-progress[data-running="true"] { animation: wk-fill linear forwards; }
+@keyframes wk-fill { to { transform: scaleX(1); } }
+.wk-pause { justify-self: start; margin-top: 4px; padding: 10px 0; font-size: 15px; font-weight: 650; color: var(--muted); border-top: 1.5px solid var(--hair); width: 100%; text-align: left; cursor: pointer; }
+.wk-pause:hover { color: var(--ink); }
+
+.wk-panel-head { display: none; }
+.wk-visual { padding: clamp(10px, 1.6vw, 22px); }
+.wk-visual-in { min-height: 220px; }
+.wk-visual img { display: block; width: 100%; height: auto; border-radius: var(--r); }
+.wk-foot { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 10px 28px; margin-top: 16px; }
+.wk-foot p { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; color: var(--muted); }
+.wk-foot p b { font-size: 30px; font-weight: 800; letter-spacing: -0.03em; color: var(--ink); }
+
+/* With scripts and a wide screen, only the chosen project is on the stage. */
+@media (min-width: 1000px) {
+  .js .wk-panel[data-active="false"] { display: none; }
+}
+/* Without scripts, or on a narrow screen, there are no tabs: every project is shown in turn. */
+html:not(.js) .wk-tabs, html:not(.js) .wk-roles { display: none; }
+html:not(.js) .wk-stage { grid-template-columns: minmax(0, 1fr); }
+html:not(.js) .wk-panel-head, html:not(.js) .wk-panel + .wk-panel { display: block; }
+html:not(.js) .wk-panel + .wk-panel { margin-top: 56px; }
+@media (max-width: 999px) {
+  .wk-stage { grid-template-columns: minmax(0, 1fr); }
+  .wk-tabs { display: none; }
+  .wk-panel + .wk-panel { margin-top: 56px; }
+  .wk-panel-head { display: grid; gap: 6px; margin-bottom: 16px; }
+  .wk-panel-head h3 { font-size: 34px; }
+  .wk-panel-head p:first-of-type { font-size: 18px; }
+}
+html:not(.js) .wk-panel-head { display: grid; gap: 6px; margin-bottom: 16px; }
+html:not(.js) .wk-panel-head h3 { font-size: 34px; }
+
+/* More work: a name and one sentence each. */
+.wk-more-h { margin-top: clamp(56px, 7vw, 88px); font-size: 28px; margin-bottom: 8px; }
+.wk-row { display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr) minmax(0, 300px) 24px; gap: 6px 28px; align-items: baseline; padding: 18px 0; border-top: 1px solid var(--hair); text-decoration: none; }
+.wk-rows li:last-child .wk-row { border-bottom: 1px solid var(--hair); }
+.wk-row b { font-size: 21px; font-weight: 750; letter-spacing: -0.02em; }
+.wk-row-k { font-size: 15px; color: var(--muted); }
+.wk-row-go { justify-self: end; font-weight: 700; transition: transform 0.15s ease, color 0.15s ease; }
+.wk-row:hover .wk-row-go { transform: translateX(4px); color: var(--red-ink); }
+.wk-row:hover b { text-decoration: underline; text-decoration-color: var(--red); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+@media (max-width: 900px) {
+  .wk-row { grid-template-columns: minmax(0, 1fr) 24px; }
+  .wk-row span:not(.wk-row-go), .wk-row b { grid-column: 1; }
+  .wk-row-go { grid-column: 2; grid-row: 1; }
+}

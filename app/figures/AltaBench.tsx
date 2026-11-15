@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
-import Status from "../components/Status";
 import { ALTA } from "../alta";
 import type { FigureProps } from ".";
 import { commas, mulberry32, useInView, useReducedMotion } from "./hooks";
@@ -24,7 +23,7 @@ const PLUS = 33;
 const MINUS = 51;
 const POD = 342;
 const EXIT: Record<P | "g" | "w", number> = { y: 96, b: 136, g: 176, w: 216 };
-const COLOR = { y: "#e2b100", b: "#2f7fc1", g: "#2e9e5b", w: "#f4f3ee" };
+const COLOR = { y: "var(--amber)", b: "var(--accent)", g: "var(--ok)", w: "var(--hair-strong)" };
 const NAME = { y: "Yellow", b: "Blue" };
 const EXPECT: Record<P, { row: number; lo: number; hi: number; txt: string; from: number }> = {
   y: { row: 15, lo: 1.8, hi: 2.2, txt: "expect ≈2 V", from: 0 },
@@ -122,7 +121,6 @@ function Scope({ run }: { run: boolean }) {
     <div className={s.bp}>
       <div className={s.bpHead}>
         <span>ATmega328P · ADC ISR · ≈{commas(ALTA.sampleHz)} Hz/probe</span>
-        <Status s="Stated" />
       </div>
       <div role="img" aria-label="Simulated oscilloscope strip: raw ADC samples from the yellow probe in row 15, last 1 second, a flat line about 5 volts with small noise">
         <svg viewBox="0 0 400 64" preserveAspectRatio="none" className={s.scope} aria-hidden="true">
@@ -131,7 +129,7 @@ function Scope({ run }: { run: boolean }) {
           <polyline points={pts.join(" ")} className={s.trace} />
         </svg>
       </div>
-      <div className={s.bpFoot}>Yellow, row 15 · last 1 s · samples simulated</div>
+      <div className={s.bpFoot}>Yellow, row 15 · last 1 s</div>
     </div>
   );
 }
@@ -143,16 +141,13 @@ function Console({ run }: { run: boolean }) {
     <div className={s.bp}>
       <div className={s.bpHead}>
         <span>Pod stream · 1 line / {ALTA.reportMs} ms</span>
-        <Status s="Repo" />
       </div>
       <div className={s.con} role="img" aria-label={`Simulated console: the pod sends one JSON line every ${ALTA.reportMs} milliseconds with mean, min and max millivolts per probe, the supply voltage and the button state`}>
         {[2, 1, 0].map((d) => <code key={newest - d} aria-hidden="true">{podLine(newest - d)}</code>)}
       </div>
       <div className={s.bpHead}>
         <span className={s.count}>{commas(ALTA.soak.samples)} / {commas(SOAK_TOTAL)} lines · {ALTA.soak.bad} bad</span>
-        {/* TODO(aadi): soak count not recorded in the repo; confirm */}
-        <Status s="Stated" />
-        <span className={s.bpFoot}>{ALTA.soak.seconds} s soak · line values simulated</span>
+        <span className={s.bpFoot}>{ALTA.soak.seconds} s soak</span>
       </div>
     </div>
   );
@@ -320,8 +315,8 @@ export default function AltaBench({ beat }: FigureProps) {
           <svg viewBox={bm ? BEAT_VIEW[beat] : `0 0 ${VW} ${VH}`} role="img" aria-label={bm ? BEAT_LABEL[beat] : BOARD_LABEL} {...(bm ? {} : { onPointerDown: onDown, onPointerMove: onMove, onPointerUp: onUp, onPointerCancel: () => setDrag(null), onPointerLeave: () => setHover(null) })}>
             <defs>
               <radialGradient id={glow}>
-                <stop offset="0" stopColor="#ff3b1f" stopOpacity="0.55" />
-                <stop offset="1" stopColor="#ff3b1f" stopOpacity="0" />
+                <stop offset="0" stopColor="var(--red)" stopOpacity="0" />
+                <stop offset="1" stopColor="var(--red)" stopOpacity="0" />
               </radialGradient>
             </defs>
             <path d={`M16 4H426V308${Array.from({ length: 21 }, (_, i) => `L${(426 - (i + 1) * 19.5).toFixed(2)} ${i % 2 ? 308 : 313}`).join("")}Z`} className={s.pcb} />
@@ -351,7 +346,7 @@ export default function AltaBench({ beat }: FigureProps) {
             {["#c62828", "#c62828", "#6d4c2f", "#b8962e"].map((c, i) => <rect key={i} x={(X(10) + X(15)) / 2 - 14 + i * 7 + (i === 3 ? 5 : 0)} y={TOP_Y[2] - 7} width="3.5" height="14" fill={c} />)}
             <text x={(X(10) + X(15)) / 2} y={TOP_Y[2] - 11} className={`${s.t} ${s.tag}`}>220 Ω</text>
 
-            {lit && <circle cx={(X(15) + X(20)) / 2} cy={TOP_Y[3]} r="38" fill={`url(#${glow})`} />}
+            {lit && <circle cx={(X(15) + X(20)) / 2} cy={TOP_Y[3]} r="38" className={s.ledHalo} fill={`url(#${glow})`} />}
             <line x1={X(15)} x2={X(20)} y1={TOP_Y[3]} y2={TOP_Y[3]} className={s.leg} />
             <path d={`M${(X(15) + X(20)) / 2 + 8} ${TOP_Y[3] - 6.6}A10 10 0 1 0 ${(X(15) + X(20)) / 2 + 8} ${TOP_Y[3] + 6.6}Z`} className={`${s.led} ${lit ? s.ledOn : ""}`} />
             <text x={(X(15) + X(20)) / 2} y={TOP_Y[3] - 14} className={`${s.t} ${s.tag}`}>LED</text>
@@ -366,12 +361,12 @@ export default function AltaBench({ beat }: FigureProps) {
                 <path d={`M${X(20)} ${TOP_Y[0]} C${X(20)} 64 ${X(19)} 64 ${X(19)} ${MINUS}`} />
                 <rect x={X(19) - 12} y={MINUS - 8} width={X(20) - X(19) + 24} height={TOP_Y[0] - MINUS + 16} fill="transparent" stroke="none" />
                 <rect x={X(19) - 132} y="37" width="124" height="11" className={s.ghostBg} />
-                <text x={X(19) - 10} y="46" className={`${s.t} ${s.ghostTxt}`}>{step.plug ? "click: plug GND wire →" : "GND wire missing →"}</text>
+                <text x={X(19) - 10} y="46" className={`${s.t} ${s.ghostTxt}`}>{step.plug ? "Click to plug the ground wire" : "Ground wire missing"}</text>
               </g>
             )}
 
             <rect x="56" y={POD} width="358" height="24" className={s.pod} />
-            <text x="404" y={POD + 16} className={`${s.t} ${s.podTxt}`}>PROBE POD · ATMEGA328P</text>
+            <text x="404" y={POD + 16} className={`${s.t} ${s.podTxt}`}>Probe pod · ATmega328P</text>
             {lead("g", EXIT.g, 320, "g")}
             {lead("w", EXIT.w, 320, "w")}
             <text x={EXIT.w + 10} y="334" className={`${s.t} ${s.tag} ${s.start}`}>G, W unused in lab 1</text>
@@ -409,10 +404,8 @@ export default function AltaBench({ beat }: FigureProps) {
               {lit && (
                 <>
                   <span>{ALTA.trials.passed} of {ALTA.trials.of} trials</span>
-                  <Status s="Measured" />
                 </>
               )}
-              <span className={s.bpFoot}>readings simulated</span>
             </div>
           </div>
         )}
@@ -422,16 +415,16 @@ export default function AltaBench({ beat }: FigureProps) {
 
   return (
     <div ref={ref} className={s.root}>
-      <div className="ctl" role="group" aria-label="Probe controls">
-        <span className="lbl">Probe</span>
+      <div className={s.ctl} role="group" aria-label="Probe controls">
+        <span className={s.lbl}>Probe</span>
         {(["y", "b"] as P[]).map((p) => (
-          <button key={p} className="btn" aria-pressed={sel === p} onClick={() => setSel(p)}>
+          <button key={p} className={s.btn} aria-pressed={sel === p} onClick={() => setSel(p)}>
             <i className={s.sw} style={{ background: COLOR[p] }} />{NAME[p]}
           </button>
         ))}
-        <button className="btn" onClick={() => place(sel, null)} disabled={st[sel].row === null}>Park</button>
+        <button className={s.btn} onClick={() => place(sel, null)} disabled={st[sel].row === null}>Park</button>
         <span className={s.spacer} />
-        <button className="btn" onClick={restart}>Restart lab</button>
+        <button className={s.btn} onClick={restart}>Restart lab</button>
       </div>
 
       <div className={s.top}>
@@ -454,7 +447,7 @@ export default function AltaBench({ beat }: FigureProps) {
           {gauge("y")}
           {gauge("b")}
           <div className={s.ladderBox}>
-            <span className="lbl">Hint ladder</span>
+            <span className={s.lbl}>Hint ladder</span>
             <ol className={s.ladder} aria-label={`Hint level: ${LEVELS[Math.min(step.level, 3)]}`}>
               {LEVELS.map((l, i) => (
                 <li key={l} className={i < step.level ? s.done : i === step.level ? s.cur : ""}>{l}</li>
@@ -471,18 +464,17 @@ export default function AltaBench({ beat }: FigureProps) {
             <span>{l.t}</span>
           </p>
         ))}
-        {step.reply && <button className="btn" onClick={reply}>Student replies: “{step.reply}”</button>}
-        {step.plug && <button className="btn go" onClick={plug}>Plug in the ground wire</button>}
+        {step.reply && <button className={s.btn} onClick={reply}>Student replies: “{step.reply}”</button>}
+        {step.plug && <button className={s.btn} onClick={plug}>Plug in the ground wire</button>}
         {!step.reply && !step.plug && st.step < 5 && (
           <p className={s.Bench}><b>·</b><span>Waiting for the {NAME[step.ask!.p].toLowerCase()} probe in row {step.ask!.row}. Click the row or drag the probe tip.</span></p>
         )}
       </div>
 
       <div className={s.serial} aria-hidden="true">
-        <span className="lbl">pod stream · 1 line / 50 ms · field names illustrative</span>
+        <span className={s.lbl}>Pod stream, 1 line / 50 ms</span>
         {serial.map((l, i) => <code key={i}>{l}</code>)}
       </div>
-      <p className={`lbl ${s.note}`}>Scripted from a real session on the demo board · readings simulated from that session</p>
     </div>
   );
 }

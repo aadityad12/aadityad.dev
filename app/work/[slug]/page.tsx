@@ -2,17 +2,13 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import Masthead from "../../components/Masthead";
+import SiteHeader from "../../components/SiteHeader";
 import { Fig, Rich } from "../../components/parts";
-import Status from "../../components/Status";
 import Reel from "../../components/work/Reel";
 import { FIGURES } from "../../figures";
-import { NOTES, PHOTOS, RESUME } from "../../content";
+import { NOTES, PHOTOS } from "../../content";
 
 export const dynamicParams = false;
-
-// Figures that were drawn for a wide frame; the rest are centred at 720px.
-const WIDE = new Set(["accordion", "visionassist", "rung", "clear-dispatch"]);
 
 const BY_ORDER = [...NOTES].sort((a, b) => a.order - b.order);
 
@@ -41,133 +37,109 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
   if (!note) notFound();
   const photos = PHOTOS[note.id] ?? [];
   const F = FIGURES[note.id];
-  const hasReel = !!F && (note.beats?.length ?? 0) >= 3;
+  const beats = note.beats ?? [];
+  const hasReel = !!F && beats.length >= 3;
   const next = BY_ORDER[note.order % BY_ORDER.length];
   const prev = BY_ORDER[(note.order - 2 + BY_ORDER.length) % BY_ORDER.length];
+  const award = "award" in note ? note.award : undefined;
+  const facts = [note.context, note.role, note.team, note.when].filter(Boolean).join(" · ");
 
   return (
     <>
-    <Masthead
-      variant="work"
-      resume={RESUME}
-      id={note.id}
-      title={note.title}
-      prev={{ id: prev.id, title: prev.title }}
-      next={{ id: next.id, title: next.title }}
-    />
-    <main className="work" id="main">
-      <header className="work-head">
-        <nav className="work-crumbs" aria-label="Breadcrumb">
-          <Link href="/#work">← All work</Link>
-          <span>Project {String(note.order).padStart(2, "0")} of {NOTES.length}</span>
-        </nav>
-        <p className="work-meta">
-          <span>{note.an}</span>
-          <span>{note.domain}</span>
-          <span>{note.where}</span>
-        </p>
-        <h1>{note.title}</h1>
-        <p className="hook">{note.hook}</p>
-        <div className="work-links">
-          {note.links.map((l) => (
-            <a key={l.href} className="button" href={l.href} target="_blank" rel="noreferrer">
-              {l.label} ↗
-            </a>
-          ))}
-        </div>
-      </header>
-
-      <div className="work-figure" data-slot="reel">
-        {hasReel && (
-          <Reel beats={note.beats!} figure={F!} title={note.title} caption={note.figure} />
-        )}
-        <div className={`${hasReel ? "work-fig-mobile " : ""}${WIDE.has(note.id) ? "work-fig-wide" : "work-fig-narrow"}`}>
-          {F ? (
-            <Fig num="1" label={note.title} caption={note.figure}>
-              <F />
-            </Fig>
-          ) : photos[0] ? (
-            <Fig num="1" label={note.title} caption={note.figure} live={false}>
-              <Image src={photos[0].src} width={photos[0].w} height={photos[0].h} alt={photos[0].alt} sizes="(max-width: 760px) 90vw, 720px" style={{ width: "100%", height: "auto" }} />
-            </Fig>
-          ) : null}
-        </div>
-      </div>
-
-      <section className="work-sec" id="overview">
-        <h2>Overview</h2>
-        <p className="work-prose">{note.problem}</p>
-      </section>
-
-      <div className="work-cols">
-        <section className="work-sec" id="built">
-          <h2>What I built</h2>
-          <ol className="built">
-            {note.built.map((b, i) => (
-              <li key={i}><Rich text={b} /></li>
-            ))}
-          </ol>
-        </section>
-        <section className="work-sec" id="specs">
-          <h2>Key characteristics</h2>
-          <table className="kspec">
-            <tbody>
-              {note.specs.map((s) => (
-                <tr key={s.param}>
-                  <td>
-                    {s.param}
-                    {s.note && <small>{s.note}</small>}
-                  </td>
-                  <td>{s.value}</td>
-                  <td>{s.status && <Status s={s.status} />}</td>
-                </tr>
+      <SiteHeader />
+      <main id="main">
+        <article className="wrap pj">
+          <Link className="arrow-link pj-back" href="/#work"><span aria-hidden="true">←</span> All work</Link>
+          <h1>{note.title}</h1>
+          <p className="pj-lede">{note.hook}</p>
+          {award && <p className="pj-award">{award}</p>}
+          <p className="pj-facts">{facts}</p>
+          {note.links.length > 0 && (
+            <div className="pj-links">
+              {note.links.map((l) => (
+                <a key={l.href} className="btn quiet small" href={l.href} target="_blank" rel="noreferrer">{l.label} ↗</a>
               ))}
-            </tbody>
-          </table>
-          <h3>Stack</h3>
-          <ul className="stack">
-            {note.stack.map((s) => (
-              <li key={s}>{s}</li>
-            ))}
-          </ul>
-        </section>
-      </div>
+            </div>
+          )}
 
-      {photos.length > 0 && (
-        <section className="work-sec" id="photos">
-          <h2>From the build</h2>
-          <div className="an-photo-row">
-            {photos.map((p, i) => (
-              <figure key={p.src} style={{ "--ar": (p.w / p.h).toFixed(3) } as React.CSSProperties}>
-                <Image src={p.src} width={p.w} height={p.h} alt={p.alt} sizes="(max-width: 760px) 80vw, 420px" />
-                <figcaption><b>Plate {String.fromCharCode(65 + i)}.</b> {p.cap}</figcaption>
-              </figure>
-            ))}
+          {F && (
+            <div className="pj-lead">
+              {hasReel ? (
+                <Reel beats={beats} figure={F} title={note.title} caption={note.figure} />
+              ) : (
+                <Fig caption={note.figure}><F /></Fig>
+              )}
+            </div>
+          )}
+          {!F && photos[0] && (
+            <div className="pj-lead pj-lead-photo">
+              <Fig flush caption={photos[0].cap || note.figure}>
+                <Image src={photos[0].src} width={photos[0].w} height={photos[0].h} alt={photos[0].alt} sizes="(max-width: 900px) 100vw, 900px" priority />
+              </Fig>
+            </div>
+          )}
+
+          <section className="pj-sec" aria-labelledby="pj-why">
+            <h2 id="pj-why">Why</h2>
+            <p className="pj-why">{note.problem}</p>
+          </section>
+
+          <div className="pj-cols">
+            <section className="pj-col" aria-labelledby="pj-built">
+              <h2 id="pj-built">What I built</h2>
+              {note.focus && <p className="pj-focus">{note.focus}</p>}
+              <ul className="pj-built">
+                {note.built.map((b, i) => (
+                  <li key={i}><Rich text={b} /></li>
+                ))}
+              </ul>
+            </section>
+            <div className="pj-col">
+              <h2>Results</h2>
+              <ul className="pj-specs">
+                {note.specs.map((s) => (
+                  <li key={s.param}>
+                    <span className="pj-spec-v">{s.value}</span>
+                    <span className="pj-spec-p">{s.param}</span>
+                    {s.note && <span className="pj-spec-n">{s.note}</span>}
+                  </li>
+                ))}
+              </ul>
+              <div className="pj-stack">
+                <h2>Built with</h2>
+                <p>{note.stack.join(", ")}</p>
+              </div>
+            </div>
           </div>
-        </section>
-      )}
 
-      <nav className="work-foot" aria-label="More work">
-        <div className="work-foot-cards">
-          <a className="work-card prev" href={`/work/${prev.id}/`}>
-            <span className="work-card-k">← Previous</span>
-            <b>{prev.title}</b>
-            <span className="work-card-d">{prev.oneLiner}</span>
-          </a>
-          <a className="work-card next" href={`/work/${next.id}/`}>
-            <span className="work-card-k">Next →</span>
-            <b>{next.title}</b>
-            <span className="work-card-d">{next.oneLiner}</span>
-          </a>
-        </div>
-        <p className="work-foot-links">
-          <Link href="/#work">All work</Link> · <Link href="/">Home</Link> ·{" "}
-          <a href={`/datasheet/#${note.id}`}>This project in the datasheet ↗</a>
-          {note.id === "visionassist" && <> · <Link href="/#experience">Experience: Infineon →</Link></>}
-          <span className="work-keys" aria-hidden="true">Keyboard: J next · K previous</span>
-        </p>
-      </nav>
-    </main>
+          {photos.length > 0 && (
+            <section className="pj-sec" aria-labelledby="pj-photos">
+              <h2 id="pj-photos">From the build</h2>
+              <div className="pj-photos" data-n={Math.min(photos.length, 3)}>
+                {photos.map((p) => (
+                  <Fig key={p.src} flush caption={p.cap}>
+                    <Image className={p.w >= p.h ? "land" : undefined} src={p.src} width={p.w} height={p.h} alt={p.alt} sizes="(max-width: 900px) 100vw, 400px" />
+                  </Fig>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <nav className="pj-next" aria-label="More work">
+            <Link className="pj-nl" href={`/work/${prev.id}/`}>
+              <span className="pj-nk">Previous</span>
+              <b>{prev.title}</b>
+              <span className="pj-nd">{prev.oneLiner}</span>
+            </Link>
+            <Link className="pj-nl" href={`/work/${next.id}/`}>
+              <span className="pj-nk">Next</span>
+              <b>{next.title}</b>
+              <span className="pj-nd">{next.oneLiner}</span>
+            </Link>
+          </nav>
+          <p className="pj-all"><Link className="arrow-link" href="/#work"><span aria-hidden="true">←</span> All work</Link></p>
+        </article>
+      </main>
     </>
   );
 }

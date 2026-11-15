@@ -1,70 +1,81 @@
-.root { container-type: inline-size; display: flex; flex-direction: column; gap: 12px; }
+.root { container-type: inline-size; display: flex; flex-direction: column; gap: 14px; }
+.ctl { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 0 16px; border: 0; border-radius: 999px;
+  background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink);
+  font-family: var(--sans); font-size: 15px; font-weight: 650; cursor: pointer; white-space: nowrap;
+}
+.btn:hover { background: var(--ink); color: var(--card); }
+.btn[aria-pressed="true"] { background: var(--red); color: var(--card); box-shadow: none; }
+.btn:disabled { opacity: 0.4; cursor: default; }
+.btn:disabled:hover { background: transparent; color: var(--ink); }
 
-.night { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); position: relative; font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-2); }
-.night::before { content: ""; position: absolute; left: 4px; right: 4px; top: 4px; border-top: 1px solid var(--ink); }
-.night li { position: relative; padding-top: 12px; }
-.night li::before { content: ""; position: absolute; left: 0; top: 0; width: 9px; height: 9px; background: var(--paper); border: 1.5px solid var(--ink); }
-.night b { font-weight: 600; color: var(--ink); margin-right: 4px; }
-.night .nowOn { color: var(--accent); }
-.night .nowOn b { color: var(--accent); }
-.night .nowOn::before { background: var(--accent); border-color: var(--accent); }
+.night { list-style: none; margin: 0; padding: 8px 0 0; display: grid; grid-template-columns: repeat(4, 1fr); position: relative; font-family: var(--sans); font-size: 14px; color: var(--ink-2); }
+.night::before { content: ""; position: absolute; left: 4px; right: 4px; top: 4px; border-top: 1.5px solid var(--hair-strong); }
+.night li { position: relative; padding-top: 14px; }
+.night li::before { content: ""; position: absolute; left: 0; top: 0; width: 10px; height: 10px; background: var(--card); border: 1.5px solid var(--ink); border-radius: 50%; }
+.night b { font-weight: 700; color: var(--ink); margin-right: 4px; }
+.night .nowOn { color: var(--red-ink); }
+.night .nowOn b { color: var(--red-ink); }
+.night .nowOn::before { background: var(--red); border-color: var(--red); }
 
-.board { border: 1px solid var(--ink); background: var(--paper); padding: 8px; }
+.board { background: var(--paper); border-radius: var(--r); padding: 10px 8px 4px; }
 .wrap { position: relative; }
 .wrap.narrow { display: none; }
 .svg { display: block; width: 100%; height: auto; overflow: visible; }
 .hit { position: absolute; cursor: pointer; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
 
-.wire { fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-linejoin: miter; }
-.dead { stroke: var(--muted); stroke-dasharray: 3 3; stroke-width: 1; }
-.hotWire { stroke: var(--hot); }
+.wire { fill: none; stroke: var(--ink); stroke-width: 1.75; stroke-linejoin: round; stroke-linecap: round; }
+.dead { stroke: var(--muted); stroke-dasharray: 4 4; stroke-width: 1.5; }
+.hotWire { stroke: var(--red); }
 .dot { fill: var(--ink); }
-.box { fill: var(--paper); stroke: var(--ink); stroke-width: 1.5; }
+.box { fill: var(--card); stroke: var(--ink); stroke-width: 1.5; }
 .okBox { fill: var(--ok-wash); stroke: var(--ok); }
-.sym { fill: var(--paper); stroke: var(--ink); stroke-width: 1.5; }
-.hotSym .sym { stroke: var(--hot); fill: var(--hot-wash); }
-.contact { fill: var(--paper); stroke: var(--ink); stroke-width: 1.5; }
+.sym { fill: var(--card); stroke: var(--ink); stroke-width: 1.5; }
+.hotSym .sym { stroke: var(--red); fill: var(--red-wash); }
+.contact { fill: var(--card); stroke: var(--ink); stroke-width: 1.5; }
 .plunger { transition: transform 0.09s ease-out; }
-.plunger .sym { stroke: var(--accent); stroke-width: 2; }
+.plunger .sym { stroke: var(--red); stroke-width: 2; }
 .closed .plunger { transform: translateY(11px); }
-.closed .contact { fill: var(--accent); stroke: var(--accent); }
+.closed .contact { fill: var(--red); stroke: var(--red); }
 
-.ref { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.05em; fill: var(--accent); font-weight: 600; }
-.name { font-family: var(--mono); font-size: 12.5px; font-weight: 600; text-anchor: middle; fill: var(--ink); }
-.sub { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.04em; text-anchor: middle; fill: var(--muted); }
-.sub2 { font-family: var(--mono); font-size: 10px; fill: var(--ink-2); }
-.swRef { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.05em; fill: var(--accent); }
-.okTxt { font-family: var(--mono); font-size: 10px; font-weight: 600; text-anchor: middle; fill: var(--ok); letter-spacing: 0.03em; }
+.ref { font-family: var(--mono); font-size: 12px; fill: var(--muted); font-weight: 600; }
+.name { font-family: var(--sans); font-size: 14px; font-weight: 700; text-anchor: middle; fill: var(--ink); }
+.sub { font-family: var(--sans); font-size: 12px; text-anchor: middle; fill: var(--muted); }
+.sub2 { font-family: var(--sans); font-size: 13px; fill: var(--ink-2); }
+.swRef { font-family: var(--sans); font-size: 14px; font-weight: 750; fill: var(--red-ink); }
+.okTxt { font-family: var(--sans); font-size: 13px; font-weight: 700; text-anchor: middle; fill: var(--ok); }
 
 .flow, .flowHot { fill: none; stroke-width: 2.5; stroke-dasharray: 5 7; animation: run 0.45s linear infinite; }
-.flow { stroke: var(--accent); }
+.flow { stroke: var(--red); }
 .flowHot { stroke: var(--ink); }
 @keyframes run { to { stroke-dashoffset: -24; } }
 
-.xmark rect { fill: var(--paper); stroke: var(--hot); stroke-width: 1.5; }
-.xmark path { stroke: var(--hot); stroke-width: 2.2; fill: none; }
+.xmark rect { fill: var(--card); stroke: var(--red); stroke-width: 1.5; }
+.xmark path { stroke: var(--red); stroke-width: 2.2; fill: none; }
 
 .tap { touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
 
-.log { position: relative; background: #0d0d0c; color: #c9c7bf; border: 1px solid var(--ink); padding: 8px 10px 20px; font-family: var(--mono); font-size: 11px; line-height: 1.6; min-height: calc(7 * 1.6em + 28px); }
-.log > div { display: grid; grid-template-columns: 44px 26px 1fr; gap: 6px; }
-.log > div > span:first-child { color: #74726b; }
-.log > div > span:nth-child(2) { color: #9fb0ff; }
-.log .ok span:last-child { color: #4fd18f; }
-.log .bad span:last-child { color: #ff7a5c; white-space: pre-wrap; }
-.log .wait span:last-child { color: var(--paper); }
+.log { position: relative; background: var(--night); color: var(--night-ink); border-radius: var(--r); padding: 12px 14px 16px; font-family: var(--mono); font-size: 13px; line-height: 1.55; min-height: calc(7 * 1.55em + 28px); }
+.log > div { display: grid; grid-template-columns: 48px 28px minmax(0, 1fr); gap: 8px; }
+.log > div > span:first-child { color: var(--night-muted); }
+.log > div > span:nth-child(2) { color: var(--night-ink); font-weight: 650; }
+.log .ok span:last-child { color: var(--ok); }
+.log .bad span:last-child { color: var(--red); white-space: pre-wrap; }
+.log .wait span:last-child { color: var(--night-ink); }
 .log .wait span:last-child::after { content: "▌"; margin-left: 4px; animation: blink 1.1s steps(2, start) infinite; }
 @keyframes blink { 50% { opacity: 0; } }
-.logLbl { position: absolute; right: 8px; bottom: 4px; font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.05em; color: #74726b; }
 
-.chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.chips span { font-family: var(--mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.04em; border: 1px solid var(--ink); background: var(--paper); padding: 5px 8px; }
-.chips b { font-weight: 600; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px 18px; font-family: var(--sans); font-size: 14px; color: var(--ink-2); }
+.chips b { font-weight: 750; color: var(--ink); font-variant-numeric: tabular-nums; }
 
 @container (max-width: 520px) {
   .wrap.wide { display: none; }
   .wrap.narrow { display: block; }
-  .night { font-size: 9.5px; }
-  .log { font-size: 10px; }
-  .log > div { grid-template-columns: 38px 22px 1fr; gap: 4px; }
+  .night { font-size: 13px; }
+  .log { font-size: 13px; }
+  .log > div { grid-template-columns: 42px 26px minmax(0, 1fr); gap: 6px; }
+  .name { font-size: 15px; }
+  .sub, .sub2 { font-size: 13px; }
 }

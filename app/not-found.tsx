@@ -1,20 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Masthead from "./components/Masthead";
-import { RESUME } from "./content";
+import SiteHeader from "./components/SiteHeader";
+import { StaticMascot } from "./components/mascot/StaticMascot";
 
 export const metadata: Metadata = { title: "Not found" };
 
 export default function NotFound() {
   return (
     <>
-      <Masthead variant="plain" resume={RESUME} />
-      <main className="brief" id="main">
-        <h1>Aaditya Desai</h1>
-        <p>Not found.</p>
-        <p>
-          <Link href="/">Front page</Link> · <Link href="/#work" prefetch={false}>Work</Link> · <Link href="/skills/" prefetch={false}>Skills</Link> · <a href="/datasheet/">Full datasheet</a>
-        </p>
+      <SiteHeader />
+      <main id="main" className="wrap nf">
+        <h1>This page does not exist.</h1>
+        <p>The work is on the front page.</p>
+        <Link className="btn" href="/">Go to the front page</Link>
+        <div className="nf-pf">
+          <StaticMascot pose="peer-down" label="Pathfinder looking down, puzzled" />
+        </div>
       </main>
     </>
   );

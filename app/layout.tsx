@@ -1,16 +1,20 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, IBM_Plex_Mono } from "next/font/google";
+import { IBM_Plex_Mono, Schibsted_Grotesk, Shantell_Sans } from "next/font/google";
 import "./globals.css";
+import "./styles/figures.css";
+import "./styles/work.css";
+import "./styles/sections.css";
+import "./styles/project.css";
 import { EMAIL, GITHUB, HERO, LINKEDIN } from "./content";
 
-const archivo = Archivo({
+const sans = Schibsted_Grotesk({
   variable: "--font-sans",
   subsets: ["latin"],
-  axes: ["wdth"],
   display: "swap",
 });
 
-const plexMono = IBM_Plex_Mono({
+// Mono is for code and for data inside figures, nowhere else.
+const mono = IBM_Plex_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
@@ -18,7 +22,7 @@ const plexMono = IBM_Plex_Mono({
 });
 
 const title = "Aaditya Desai · Computer Engineering @ SJSU";
-const description = `${HERO.lead} Available for Summer 2027 internships.`;
+const description = `${HERO.lead} Looking for a Summer 2027 internship.`;
 
 export const metadata: Metadata = {
   title: { default: title, template: "%s · Aaditya Desai" },
@@ -28,7 +32,15 @@ export const metadata: Metadata = {
   openGraph: { siteName: "Aaditya Desai", type: "website", locale: "en_US" },
 };
 
-export const viewport: Viewport = { themeColor: "#e9e7e0" };
+// Pathfinder's handwriting. Used only inside his drawings (the signpost, his notes).
+const hand = Shantell_Sans({
+  variable: "--font-hand",
+  subsets: ["latin"],
+  weight: ["700"],
+  display: "swap",
+});
+
+export const viewport: Viewport = { themeColor: "#f7f8f5" };
 
 const person = {
   "@context": "https://schema.org",
@@ -45,11 +57,16 @@ const person = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${archivo.variable} ${plexMono.variable}`}>
+    <html lang="en" className={`${sans.variable} ${mono.variable} ${hand.variable}`} suppressHydrationWarning>
       <head>
+        {/* Motion is added on top of visible content, and only once scripts are known to run. */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(person) }} />
       </head>
-      <body>{children}</body>
+      <body>
+        <a className="skip-link" href="#main">Skip to content</a>
+        {children}
+      </body>
     </html>
   );
 }

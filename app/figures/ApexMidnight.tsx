@@ -120,16 +120,16 @@ export default function ApexMidnight() {
   return (
     <div ref={ref} className={s.root}>
       <div className={s.ctlRow}>
-        <div className="ctl" role="group" aria-label="Code version">
-          <button className="btn" aria-pressed={fix === "before"} onClick={() => setFix("before")}>Before fix</button>
-          <button className="btn" aria-pressed={fix === "after"} onClick={() => setFix("after")}>After fix</button>
+        <div className={s.ctl} role="group" aria-label="Code version">
+          <button className={s.btn} aria-pressed={fix === "before"} onClick={() => setFix("before")}>Before fix</button>
+          <button className={s.btn} aria-pressed={fix === "after"} onClick={() => setFix("after")}>After fix</button>
         </div>
-        <div className="ctl" role="group" aria-label="Stop the timer from">
-          <span className="lbl">Stop from</span>
-          <button className="btn" aria-pressed={path === "widget"} onClick={() => setPath("widget")}>Widget</button>
-          <button className="btn" aria-pressed={path === "app"} onClick={() => setPath("app")}>App</button>
+        <div className={s.ctl} role="group" aria-label="Stop the timer from">
+          <span className={s.lbl}>Stop from</span>
+          <button className={s.btn} aria-pressed={path === "widget"} onClick={() => setPath("widget")}>Widget</button>
+          <button className={s.btn} aria-pressed={path === "app"} onClick={() => setPath("app")}>App</button>
         </div>
-        <button className="btn" onClick={play} aria-label="Replay the session">Replay ▶</button>
+        <button className={s.btn} onClick={play} aria-label="Replay the session">Replay ▶</button>
       </div>
 
       <div className={s.diagram} role="img" aria-label={`Timing diagram, 22:00 to 02:00. A study session runs from 23:10 to 00:50, across the midnight day boundary. ${summary}`}>
@@ -137,15 +137,15 @@ export default function ApexMidnight() {
           <span className={s.headSp} />
           <span>Session</span>
           <span>Stop</span>
-          <span>Banked<b>→ MON</b></span>
-          <span>Banked<b>→ TUE</b></span>
+          <span>Banked<b>Monday</b></span>
+          <span>Banked<b>Tuesday</b></span>
           <span className={s.footSp} />
         </div>
         <div className={s.plot} aria-hidden="true">
           <div className={s.days}>
-            <span>◀ MON</span>
-            <span className={s.bLbl}>00:00 · day boundary</span>
-            <span>TUE ▶</span>
+            <span>Monday</span>
+            <span className={s.bLbl}>Midnight</span>
+            <span>Tuesday</span>
           </div>
           <div className={s.axis}>
             {[0, 60, 120, 180, 240].map((m) => (
@@ -154,7 +154,7 @@ export default function ApexMidnight() {
           </div>
           <Track segs={session} upTo={Math.min(t, SPAN)} />
           <Track segs={stopped ? strobe : []} upTo={t}>
-            {stopped && <span className={s.who} style={{ left: `${pct(STOP)}%` }}>{who.toUpperCase()}</span>}
+            {stopped && <span className={s.who} style={{ left: `${pct(STOP)}%` }}>{who}</span>}
           </Track>
           <Track segs={stopped ? b.mon : []} upTo={SPAN}>{label(b.mon, monAdd)}{wrongTag(b.mon)}</Track>
           <Track segs={stopped ? b.tue : []} upTo={SPAN}>{label(b.tue, tueAdd)}{wrongTag(b.tue)}</Track>
@@ -171,7 +171,7 @@ export default function ApexMidnight() {
 
       <div className={s.result}>
         <div className={s.graph} aria-label="Call graph">
-          <span className="lbl">{fix === "before" ? "Two copies of the logic" : "One shared file"}</span>
+          <span className={s.lbl}>{fix === "before" ? "Two copies of the logic" : "One shared file"}</span>
           <svg viewBox="0 0 280 46" className={s.cg} role="img"
             aria-label={fix === "before" ? "WidgetPath calls bank with the start day; AppPath calls bank with the stop day" : "WidgetPath and AppPath both call StudyTimer.bank()"}>
             <text x="0" y="14" className={path === "widget" ? s.on : s.off}>WidgetPath</text>
@@ -192,22 +192,19 @@ export default function ApexMidnight() {
         </div>
         <div className={s.chips}>
           <div className={s.chip}>
-            <span className="lbl">MON total</span>
+            <span className={s.lbl}>Monday</span>
             <b>{hm(mon)}</b>
             <span className={`${s.goal} ${met ? s.met : s.miss}`}>Study 2h · {met ? "met" : "missed"}</span>
           </div>
           <div className={s.chip}>
-            <span className="lbl">TUE total</span>
+            <span className={s.lbl}>Tuesday</span>
             <b>{hm(tueAdd)}</b>
-            <span className={s.goal}>day open</span>
+            <span className={s.goal}>Day open</span>
           </div>
         </div>
       </div>
 
-      <p className={`readout ${s.live}`} aria-live="polite">{summary}</p>
-      <p className={s.note}>
-        Illustrative: the before-fix rules, the {hm(EARLIER)} studied earlier on Monday, the split at midnight, and the function names. Documented: the widget and the in-app button now bank time through one shared file.
-      </p>
+      <p className={s.live} aria-live="polite">{summary}</p>
 
       <div className={s.shots}>
         {SHOTS.map((sh) => (

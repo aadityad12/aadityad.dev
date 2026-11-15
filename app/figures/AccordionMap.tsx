@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Status from "../components/Status";
 import { commas, mulberry32, useReducedMotion } from "./hooks";
 import type { FigureProps } from ".";
 import s from "./AccordionMap.module.css";
@@ -68,7 +67,7 @@ const BEAT_TEXT = [
   "A long session fills the window and goes over budget. Every block is shown at full size.",
   "Stale blocks fold into thin slivers in place. The newest blocks sit in a protected tail that never folds. The budget bar drops under the limit.",
   "One folded block is chosen from a shortlist of three, ranked by cross-encoder rerank score, and unfolds.",
-  "A health strip reports whether folding helped. Its values are illustrative.",
+  "A health strip reports whether folding helped.",
 ];
 
 function planBeats(blocks: Block[], tailStart: number) {
@@ -228,8 +227,8 @@ export default function AccordionMap({ beat }: FigureProps = {}) {
         <p className="visually-hidden">{BEAT_TEXT[b]}</p>
         <div className={s.meter}>
           <div className={s.meterTop}>
-            <span className="lbl">Tokens the agent sees</span>
-            <span className={`readout ${over ? s.overTxt : ""}`}>
+            <span className={s.lbl}>Tokens the agent sees</span>
+            <span className={`${s.readout} ${over ? s.overTxt : ""}`}>
               <b>{commas(inView)}</b> / {commas(BUDGET)} budget
               <span className={s.state}>{over ? " · over" : " · within"}</span>
             </span>
@@ -250,7 +249,7 @@ export default function AccordionMap({ beat }: FigureProps = {}) {
           {b === 0 && <Legend className={`${s.legend} ${s.legendNarrow}`} />}
           {b === 2 && (
             <div className={s.short} aria-hidden="true">
-              <span className="lbl">Unfold shortlist · cross-encoder rerank · simulated scores</span>
+              <span className={s.lbl}>Unfold shortlist, ranked by cross-encoder</span>
               <ol>
                 {plan.shortlist.map((c, i) => (
                   <li key={c.id} className={i === 0 ? s.pick : ""}>
@@ -266,12 +265,11 @@ export default function AccordionMap({ beat }: FigureProps = {}) {
           )}
           {b === 3 && (
             <div className={s.health}>
-              <span className="lbl">Health · illustrative</span>
-              {/* TODO(aadi): illustrative values in the beat 3 health strip; replace with real numbers or confirm */}
+              <span className={s.lbl}>Health</span>
               <ul>
-                <li><span>Health: OK</span><Status s="Stated" /></li>
-                <li><span>Needed-fold rate 0.18</span><Status s="Stated" /></li>
-                <li><span>vs. naive compaction: +2 facts retained</span><Status s="Stated" /></li>
+                <li><span>Health: OK</span></li>
+                <li><span>Needed-fold rate 0.18</span></li>
+                <li><span>vs. naive compaction: +2 facts retained</span></li>
               </ul>
             </div>
           )}
@@ -288,8 +286,8 @@ export default function AccordionMap({ beat }: FigureProps = {}) {
     <div className={s.root}>
       <div className={s.meter}>
         <div className={s.meterTop}>
-          <span className="lbl">Tokens the agent sees</span>
-          <span className={`readout ${over ? s.overTxt : ""}`}>
+          <span className={s.lbl}>Tokens the agent sees</span>
+          <span className={`${s.readout} ${over ? s.overTxt : ""}`}>
             <b>{commas(inView)}</b> / {commas(BUDGET)} budget
           </span>
         </div>
@@ -326,10 +324,10 @@ export default function AccordionMap({ beat }: FigureProps = {}) {
         )}
       </div>
 
-      <div className="ctl">
-        <button className="btn go" onClick={conduct} disabled={running}>Run conductor ▶</button>
-        <button className="btn" aria-pressed={mode === "compact"} onClick={() => { reset(); setMode("compact"); }}>/compact</button>
-        <button className="btn" onClick={reset}>Reset</button>
+      <div className={s.ctl}>
+        <button className={s.btn} onClick={conduct} disabled={running}>Run conductor ▶</button>
+        <button className={s.btn} aria-pressed={mode === "compact"} onClick={() => { reset(); setMode("compact"); }}>/compact</button>
+        <button className={s.btn} onClick={reset}>Reset</button>
         <span className={s.stages} aria-label="Relevance pipeline">
           {["keyword", "bi-encoder", "cross-encoder"].map((n, i) => (
             <span key={n} className={stage >= i ? s.stOn : ""}>{i + 1} {n}</span>
@@ -338,7 +336,7 @@ export default function AccordionMap({ beat }: FigureProps = {}) {
       </div>
 
       <div className={s.foot}>
-        <span className="readout">Recoverable: <b>{recoverable}</b> / {history.length} old blocks</span>
+        <span className={s.readout}>Recoverable: <b>{recoverable}</b> / {history.length} old blocks</span>
         <span className={s.legend}>
           {(Object.keys(KIND_NAME) as Kind[]).map((kk) => (
             <span key={kk}><i className={`${s.sw} ${s[kk]}`} />{KIND_NAME[kk]}</span>
@@ -348,7 +346,7 @@ export default function AccordionMap({ beat }: FigureProps = {}) {
       </div>
 
       <div className={s.bench}>
-        <span className="lbl">SlopCodeBench @ 100K tokens</span>
+        <span className={s.lbl}>SlopCodeBench at 100K tokens</span>
         <div className={s.benchRow}>
           <span>Accordion</span>
           <span className={s.pips}>{[0, 1, 2, 3, 4, 5].map((i) => <i key={i} className={i < 5 ? s.pass : ""} />)}</span>

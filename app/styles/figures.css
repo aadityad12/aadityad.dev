@@ -1,0 +1,28 @@
+/* The frame around every figure, photo and video. Figure internals live in app/figures/*.module.css. */
+.fig { margin: 0; }
+.fig-body { background: var(--card); border: 1px solid var(--hair); border-radius: var(--r-lg); padding: clamp(14px, 2.4vw, 28px); overflow: hidden; }
+.fig-body.flush { padding: 0; }
+.fig-body.flush img, .fig-body.flush video { display: block; width: 100%; height: auto; }
+.fig-cap { margin-top: 12px; font-size: 15px; line-height: 1.45; color: var(--muted); max-width: 46em; }
+
+/* ---------- project scenes: hand-drawn stories starring Pathfinder ---------- */
+.scene-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.sc-ink { stroke: var(--ink); fill: none; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.sc-ink.sc-fill { fill: var(--card); }
+.sc-ink.sc-thin { stroke-width: 1.8; stroke: var(--hair-strong); }
+.sc-ink.sc-red { stroke: var(--red); }
+.sc-ink.sc-probe { stroke: var(--amber); stroke-width: 4.5; }
+.sc-holes circle { fill: var(--hair-strong); }
+.sc-led .sc-led-body { fill: var(--card); }
+.sc-led.lit .sc-led-body { fill: var(--red); }
+.sc-say { font-size: 22px; }
+.sc-ink.sc-band { stroke-width: 2.4; }
+.sc-note { font-size: 17px; fill: var(--muted); }
+.sc-num { font-family: var(--mono); font-weight: 600; font-size: 24px; fill: var(--ink); }
+.sc-pf { --pf-fill: var(--card); }
+.sc-pf path { stroke-width: 3.6; }
+.sc-ink.sc-dash { stroke: var(--muted); stroke-width: 2; stroke-dasharray: 7 9; }
+.sc-lens { fill: var(--ink); }
+.sc-tag { font-size: 22px; fill: var(--red-ink); }
+.sc-count { font-size: 26px; fill: var(--muted); }
+.sc-count.hot { fill: var(--red-ink); }
