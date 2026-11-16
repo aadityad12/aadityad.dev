@@ -146,7 +146,7 @@ export default function ScoutScene({ step: forced = null, paused }: SceneProps) 
   const night = step < 3;
 
   const pose = step === 0 ? "walk-a" : step === 1 ? "work" : step === 2 ? "point-stand" : "wave-b";
-  const pfx = step === 0 ? 708 : step === 1 ? 668 : step === 2 ? 148 : 132;
+  const pfx = step === 0 ? 708 : step === 1 ? 636 : step === 2 ? 156 : 128;
   const pfs = step === 1 ? 220 : 214;
   const flip = step === 2;
   const sc = pfs / 175;
@@ -184,10 +184,10 @@ export default function ScoutScene({ step: forced = null, paused }: SceneProps) 
               { x: 314, y: 236, r: -3, w: BUGS[7] },
             ]}
           />
-          <Ink k="bench" className="sc-fill" d="M 470 392 C 560 386 700 388 772 394 C 780 398 782 408 772 416 C 640 424 540 422 478 414 C 460 410 458 400 470 392 Z" />
-          <Ink k="blegL" d="M 508 414 C 502 434 508 448 498 458" />
-          <Ink k="blegR" d="M 736 414 C 742 434 734 448 746 458" />
-          <FixSheet k="fix1" x={478} y={292} />
+          <Ink k="bench" className="sc-fill" d="M 430 400 C 540 394 680 396 772 402 C 780 406 782 416 772 424 C 620 432 500 430 438 422 C 418 418 416 408 430 400 Z" />
+          <Ink k="blegL" d="M 468 422 C 462 440 468 452 458 458" />
+          <Ink k="blegR" d="M 740 422 C 746 440 738 452 750 458" />
+          <FixSheet k="fix1" x={400} y={296} />
         </g>
       )}
 
@@ -195,15 +195,21 @@ export default function ScoutScene({ step: forced = null, paused }: SceneProps) 
         <g>
           <House />
           <Gate open={step === 3} />
-          <FixSheet k={step === 2 ? "fix2" : "fix3"} x={step === 2 ? 248 : 620} y={step === 2 ? 348 : 312} />
+          <FixSheet k={step === 2 ? "fix2" : "fix3"} x={step === 2 ? 262 : 618} y={step === 2 ? 366 : 310} />
         </g>
       )}
 
-      <g className={step === 0 ? "sc-hide-l" : undefined}>
+      <g className={step === 0 ? "sc-hide-l" : step === 1 ? "sc-hide-r" : undefined}>
         <Pf pose={pose} x={pfx} y={GROUND} size={pfs} flip={flip} />
       </g>
       {step === 0 && (
         <Ink k="holdL" d={`M ${shoulder.x} ${shoulder.y} C ${shoulder.x - 30} ${shoulder.y - 20} ${grip.x + 30} ${grip.y + 24} ${grip.x} ${grip.y}`} />
+      )}
+      {step === 1 && (
+        <g>
+          <Ink k="wrenArm" d={`M ${pfx + 52} ${GROUND - 100} C ${pfx + 78} ${GROUND - 78} ${pfx + 96} ${GROUND - 52} ${pfx + 112} ${GROUND - 36}`} />
+          <Ink k="wrench" d={`M ${pfx + 106} ${GROUND - 42} C ${pfx + 122} ${GROUND - 58} ${pfx + 140} ${GROUND - 52} ${pfx + 134} ${GROUND - 36} C ${pfx + 144} ${GROUND - 30} ${pfx + 132} ${GROUND - 16} ${pfx + 118} ${GROUND - 24} M ${pfx + 134} ${GROUND - 36} C ${pfx + 148} ${GROUND - 44} ${pfx + 154} ${GROUND - 30} ${pfx + 140} ${GROUND - 22}`} />
+        </g>
       )}
 
       <Bubble k={`say${step}`} cx={step === 0 ? 590 : step === 1 ? 640 : step === 2 ? 250 : 230} y={16} lines={say} tx={pfx + (flip ? 30 : -10)} ty={GROUND - pfs + 30} />

@@ -38,6 +38,7 @@
 
 /* ApexTracker and OSS Scout scenes */
 .sc-hide-l [data-slot="armL"] { display: none; }
+.sc-hide-r [data-slot="armR"], .sc-hide-r [data-slot="armRHand"] { display: none; }
 .sc-word { font-size: 20px; fill: var(--ink); }
 .sc-app { font-size: 18px; fill: var(--ink); }
 .sc-day { fill: var(--ink); stroke: none; }
