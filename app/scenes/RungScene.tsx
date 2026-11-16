@@ -15,7 +15,6 @@ const W = 150; // distance between the rails
 const T = 0.45; // how far the ladder leans: units right per unit up
 const TOP = 112; // where the rails end
 const SIZE = 184;
-const S = SIZE / 175;
 
 const RUNG_Y = [440, 386, 332, 278, 224];
 const SPEED = ["1×", "3.8×", "5.7×", "8.6×", "38.8×"];

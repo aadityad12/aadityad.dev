@@ -71,7 +71,6 @@ export default function AccordionScene({ step: forced = null, paused }: ScenePro
 
   // the accordion, held in front of Pathfinder at belly height
   const bx0 = PX - spread - 46;
-  const bx1 = PX + spread;
   const BT = 390;
   const BB = 452;
   const folds = spread > 100 ? 8 : spread > 60 ? 7 : 6;
