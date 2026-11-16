@@ -23,17 +23,14 @@ export type StageItem = {
   photo?: { src: string; w: number; h: number; alt: string };
 };
 
-// A project's picture: its hand-drawn scene if it has one, otherwise its working figure.
+// A project's picture: its hand-drawn story.
 const SCENES: Record<string, ComponentType<SceneProps>> = {
-  alta: dynamic(() => import("../../scenes/AltaScene")),
   visionassist: dynamic(() => import("../../scenes/VisionScene")),
-};
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- the figures take slightly different optional props
-const FIGS: Record<string, ComponentType<any>> = {
-  accordion: dynamic(() => import("../../figures/AccordionMap")),
-  rung: dynamic(() => import("../../figures/RungLadder")),
-  apextracker: dynamic(() => import("../../figures/ApexMidnight")),
-  "oss-scout": dynamic(() => import("../../figures/ScoutInterlock")),
+  accordion: dynamic(() => import("../../scenes/AccordionScene")),
+  rung: dynamic(() => import("../../scenes/RungScene")),
+  alta: dynamic(() => import("../../scenes/AltaScene")),
+  apextracker: dynamic(() => import("../../scenes/ApexScene")),
+  "oss-scout": dynamic(() => import("../../scenes/ScoutScene")),
 };
 
 const DWELL = 14000;
@@ -59,8 +56,6 @@ function Lazy({ children }: { children: React.ReactNode }) {
 function Visual({ item, playing }: { item: StageItem; playing: boolean }) {
   const Scene = SCENES[item.id];
   if (Scene) return <Scene paused={!playing} />;
-  const F = FIGS[item.id];
-  if (F) return <F />;
   if (item.photo) return <Image src={item.photo.src} width={item.photo.w} height={item.photo.h} alt={item.photo.alt} sizes="(max-width: 1000px) 90vw, 760px" />;
   return null;
 }

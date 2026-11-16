@@ -26,3 +26,19 @@
 .sc-tag { font-size: 22px; fill: var(--red-ink); }
 .sc-count { font-size: 26px; fill: var(--muted); }
 .sc-count.hot { fill: var(--red-ink); }
+
+/* Accordion and Rung scenes */
+.sc-noarms [data-slot="armL"], .sc-noarms [data-slot="armR"], .sc-noarms [data-slot="armRHand"] { display: none; }
+.sc-key { fill: var(--ink); }
+.sc-shelf-text { font-size: 18px; fill: var(--ink-2); }
+.sc-need { font-size: 24px; fill: var(--red-ink); }
+.sc-rung { font-size: 28px; fill: var(--muted); }
+.sc-rung.on { fill: var(--ink); }
+.sc-big { font-size: 64px; fill: var(--red-ink); }
+
+/* ApexTracker and OSS Scout scenes */
+.sc-hide-l [data-slot="armL"] { display: none; }
+.sc-word { font-size: 20px; fill: var(--ink); }
+.sc-app { font-size: 18px; fill: var(--ink); }
+.sc-day { fill: var(--ink); stroke: none; }
+.sc-today { fill: var(--red); stroke: none; }
