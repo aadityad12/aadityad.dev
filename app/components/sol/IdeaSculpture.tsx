@@ -3,10 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import type { Quaternion, Vector3 } from "three";
 import { heroForms, heroStore, useHero, type FormId, type Shown } from "./heroStore";
-import { useVariant } from "./variants";
 
 const COUNT = 150;
-const SEGMENT = COUNT / heroForms.length;
 type ShapeId = "knot" | "question" | FormId;
 type Pose = { p: Vector3; q: Quaternion; s: Vector3; t: number };
 type View = { pitch: number; yaw: number; roll: number; spin: boolean; size: number };
@@ -23,24 +21,9 @@ const views: Record<ShapeId, View> = {
 
 export default function IdeaSculpture() {
   const host = useRef<HTMLDivElement>(null);
-  const labels = useRef<(HTMLButtonElement | null)[]>([]);
-  const variant = useVariant("hero");
-  const mode = useRef(variant);
-  const expanded = useRef(false);
-  const step = useRef(-1);
-  const [pulled, setPulled] = useState(false);
-  const [built, setBuilt] = useState(-1);
   const [ready, setReady] = useState(false);
   const [found, setFound] = useState(false);
   const { shown, requested, locked } = useHero();
-  const open = pulled && variant === "knot";
-
-  useEffect(() => {
-    mode.current = variant;
-    expanded.current = open;
-    step.current = variant === "wonder" ? built : -1;
-    heroStore.release();
-  }, [variant, open, built]);
 
   useEffect(() => {
     const element = host.current;
@@ -108,7 +91,7 @@ export default function IdeaSculpture() {
         const from = Array.from({ length: COUNT }, pose);
         const current = Array.from({ length: COUNT }, pose);
         const target = pose();
-        let pointerX = 0, pointerY = 0, hoverSegment = -1, pointed = -1, spread = 0, time = 0;
+        let pointerX = 0, pointerY = 0, time = 0;
 
         const knotPoint = (u: number, out: Vector3) => out.set(
           (2 + Math.cos(3 * u)) * Math.cos(2 * u) * .57,
@@ -117,7 +100,6 @@ export default function IdeaSculpture() {
         );
         const knotPositions = Array.from({ length: COUNT }, (_, i) => knotPoint(i / COUNT * Math.PI * 2, new T.Vector3()));
         const knotTangents = knotPositions.map((p, i) => knotPoint(i / COUNT * Math.PI * 2 + .001, new T.Vector3()).sub(p).normalize());
-        const segmentCentres = heroForms.map((_, k) => knotPositions.slice(k * SEGMENT, (k + 1) * SEGMENT).reduce((sum, p) => sum.add(p), new T.Vector3()).multiplyScalar(1 / SEGMENT));
 
         // Evenly spaced points and directions along any curve.
         function along(curve: (v: number, out: Vector3) => Vector3, count: number) {
@@ -146,14 +128,10 @@ export default function IdeaSculpture() {
 
         const shapes: Record<ShapeId, { prepare?: () => void; place: (i: number, out: Pose) => void }> = {
           knot: { place(i, out) {
-            const u = i / COUNT * Math.PI * 2, segment = Math.floor(i / SEGMENT), labelled = mode.current === "knot";
-            out.p.copy(knotPositions[i]).multiplyScalar(1 + spread * .26);
-            out.p.z += Math.sin(u * 4 + time * .4) * spread * .3;
-            if (labelled) out.p.addScaledVector(segmentCentres[segment], spread * .5);
-            out.q.setFromUnitVectors(Z, knotTangents[i]).multiply(q1.setFromAxisAngle(Z, u * .5 + spread * Math.sin(u) * .7));
-            const lifted = labelled && segment === hoverSegment;
-            out.s.setScalar((1 - spread * .17) * (lifted ? 1.12 : 1));
-            out.t = labelled && hoverSegment >= 0 ? (lifted ? 1 : 0) : (i > 18 && i < 43 || i > 88 && i < 103 ? 1 : 0);
+            out.p.copy(knotPositions[i]);
+            out.q.setFromUnitVectors(Z, knotTangents[i]).multiply(q1.setFromAxisAngle(Z, i / COUNT * Math.PI));
+            out.s.setScalar(1);
+            out.t = i > 18 && i < 43 || i > 88 && i < 103 ? 1 : 0;
           } },
           question: { place(i, out) {
             if (i < HOOK) {
@@ -240,19 +218,16 @@ export default function IdeaSculpture() {
 
         // ---------- which shape, and the flight between two of them ----------
         const reduced = matchMedia("(prefers-reduced-motion: reduce)");
-        let shape: ShapeId = mode.current === "wonder" ? "question" : "knot";
+        let shape: ShapeId = "knot";
         let morph = 1, yaw = 0, tiltX = 0, tiltY = 0, size = 1, pitch = views[shape].pitch, roll = views[shape].roll;
         let paused = false, visible = true, frame = 0, last = 0, idle = 0, tour = -1, ripple = -10, rippleAt = 0;
         let dragging = false, dragX = 0, spin = 0, typed = "", egg = 0;
 
         function choose(): ShapeId {
           const { requested } = heroStore.get();
-          const rest: ShapeId = mode.current === "wonder" ? "question" : "knot";
           if (egg > 0) return "question";
-          if (mode.current === "knot") return "knot";
           if (requested) return requested;
-          if (mode.current === "wonder") return step.current >= 0 ? heroForms[step.current].id : rest;
-          return tour >= 0 ? heroForms[tour].id : rest;
+          return tour >= 0 ? heroForms[tour].id : "knot";
         }
         function go(next: ShapeId) {
           if (next === shape) return;
@@ -276,21 +251,15 @@ export default function IdeaSculpture() {
           pointerX = ((event.clientX - rect.left) / rect.width - .5) * .7;
           pointerY = ((event.clientY - rect.top) / rect.height - .5) * .5;
           if (dragging) { spin += (event.clientX - dragX) * .0009; dragX = event.clientX; }
-          if (mode.current === "knot") {
-            const plate = plateAt(event);
-            pointed = plate < 0 ? -1 : Math.floor(plate / SEGMENT);
-            element.style.cursor = pointed >= 0 ? "pointer" : "";
-          }
           idle = 0;
         };
-        const leave = () => { pointerX = 0; pointerY = 0; pointed = -1; dragging = false; };
+        const leave = () => { pointerX = 0; pointerY = 0; dragging = false; };
         const down = (event: PointerEvent) => { dragging = true; dragX = event.clientX; };
         const up = (event: PointerEvent) => {
           dragging = false;
           const plate = plateAt(event);
           if (plate < 0) return;
           ripple = time; rippleAt = plate;
-          if (mode.current === "knot" && Math.abs(spin) < .004) document.getElementById(heroForms[Math.floor(plate / SEGMENT)].id)?.scrollIntoView();
         };
         // Type "why" anywhere on the page and the object asks it back.
         const key = (event: KeyboardEvent) => {
@@ -317,7 +286,7 @@ export default function IdeaSculpture() {
         addEventListener("sol-motion", motion);
         resize();
 
-        const dummy = new T.Object3D(), world = new T.Vector3();
+        const dummy = new T.Object3D();
         const ease = (x: number) => x * x * x * (x * (x * 6 - 15) + 10);
         const animate = (now: number) => {
           frame = requestAnimationFrame(animate);
@@ -328,19 +297,15 @@ export default function IdeaSculpture() {
           if (!still) time += delta;
           if (egg > 0) { egg -= delta; if (egg <= 0) setFound(false); }
 
-          // The tour: left alone, the shape-shifter walks through the five projects.
-          if (mode.current === "shift" && !still && !heroStore.get().requested) {
+          // The tour: left alone, the object walks through the five projects.
+          if (!still && !heroStore.get().requested) {
             idle += delta;
             const beat = Math.floor((idle - 3.5) / 5.2);
             tour = idle < 3.5 ? -1 : beat % 6 === 5 ? -1 : beat % 6;
           } else if (heroStore.get().requested) { idle = 0; tour = -1; }
           go(choose());
-          // In the labelled knot, a phrase in the headline points at its stretch too.
-          const asked = heroStore.get().requested;
-          hoverSegment = mode.current !== "knot" ? -1 : pointed >= 0 ? pointed : heroForms.findIndex(item => item.id === asked);
 
           const smooth = still ? 1 : .055;
-          spread += ((expanded.current ? 1 : 0) - spread) * smooth;
           morph = Math.min(1, morph + (still ? 1 : delta / 1.5));
           const view = views[shape];
           tiltX += (pointerY - tiltX) * smooth;
@@ -385,19 +350,6 @@ export default function IdeaSculpture() {
           plates.instanceMatrix.needsUpdate = true;
           tint.needsUpdate = true;
           renderer.render(scene, camera);
-
-          // Name each stretch of the knot, where it currently is on screen.
-          const { width, height } = renderer.domElement.getBoundingClientRect();
-          labels.current.forEach((label, k) => {
-            if (!label) return;
-            const on = mode.current === "knot" && shape === "knot" && (spread > .5 || hoverSegment === k);
-            label.classList.toggle("is-on", on);
-            if (!on) return;
-            world.set(0, 0, 0);
-            for (let i = k * SEGMENT; i < (k + 1) * SEGMENT; i++) world.add(current[i].p);
-            world.multiplyScalar(1 / SEGMENT * 1.18).applyMatrix4(group.matrixWorld).project(camera);
-            label.style.transform = `translate(-50%, -50%) translate(${((world.x + 1) / 2 * width).toFixed(1)}px, ${((1 - world.y) / 2 * height).toFixed(1)}px)`;
-          });
         };
         frame = requestAnimationFrame(animate);
         setReady(true);
@@ -427,20 +379,16 @@ export default function IdeaSculpture() {
   }, []);
 
   const form = heroForms.find(item => item.id === shown);
-  const note = found ? "GOOD QUESTION. THAT’S HOW ALL OF THIS STARTED." : shown === "question" ? "EVERY ONE OF THESE STARTED AS A QUESTION." : null;
   const active = (id: Shown) => locked && requested === id;
 
-  return <div className={`idea-sculpture hero-${variant} ${ready ? "is-ready" : ""} ${open ? "is-open" : ""}`}>
+  return <div className={`idea-sculpture ${ready ? "is-ready" : ""}`}>
     <div className="sculpture-halo" />
     <div className="sculpture-fallback" aria-hidden="true">{Array.from({ length: 12 }, (_, i) => <i key={i} style={{ "--i": i } as React.CSSProperties} />)}</div>
     <div className="sculpture-canvas" ref={host} role="img" aria-label="A slowly turning loop of silver and orange plates. The same plates rebuild themselves into a shape for each project." />
-    {variant === "knot" && <div className="sculpture-labels">{heroForms.map((item, k) => <button key={item.id} ref={node => { labels.current[k] = node; }} tabIndex={open ? 0 : -1} onClick={() => document.getElementById(item.id)?.scrollIntoView()}><span>{item.number}</span>{item.name}<small>{item.line}</small></button>)}</div>}
     <div className="sculpture-foot">
       {form ? <a className="sculpture-note is-link" href={`#${form.id}`}><span>{form.number} / {form.name.toUpperCase()}</span>{form.line.toUpperCase()}. <b>SEE IT ↓</b></a>
-        : <span className="sculpture-note">{note ?? (variant === "knot" ? "FIVE STRETCHES. FIVE THINGS I BUILT." : "A LITTLE CURIOSITY GOES A LONG WAY.")}</span>}
-      {variant === "shift" && <div className="sculpture-chips" role="group" aria-label="Rebuild the object as a project" onPointerLeave={() => heroStore.preview(null)}>{heroForms.map(item => <button key={item.id} aria-pressed={active(item.id)} className={shown === item.id ? "is-shown" : ""} aria-label={`${item.name}: ${item.line}`} onPointerEnter={event => { if (event.pointerType === "mouse") heroStore.preview(item.id); }} onFocus={() => heroStore.preview(item.id)} onBlur={() => heroStore.preview(null)} onClick={() => heroStore.toggle(item.id)}>{item.number}</button>)}</div>}
-      {variant === "knot" && <button className="sculpture-control" aria-pressed={open} onClick={() => setPulled(!open)}><span>{open ? "Put it together" : "Pull it apart"}</span><span aria-hidden="true">{open ? "−" : "+"}</span></button>}
-      {variant === "wonder" && <button className="sculpture-control" onClick={() => setBuilt(built >= heroForms.length - 1 ? -1 : built + 1)}><span>{built < 0 ? "Then I build" : built >= heroForms.length - 1 ? "Back to the question" : "And then"}</span><span aria-hidden="true">→</span></button>}
+        : <span className="sculpture-note">{found ? "GOOD QUESTION. THAT’S HOW ALL OF THIS STARTED." : "A LITTLE CURIOSITY GOES A LONG WAY."}</span>}
+      <div className="sculpture-chips" role="group" aria-label="Rebuild the object as a project" onPointerLeave={() => heroStore.preview(null)}>{heroForms.map(item => <button key={item.id} aria-pressed={active(item.id)} className={shown === item.id ? "is-shown" : ""} aria-label={`${item.name}: ${item.line}`} onPointerEnter={event => { if (event.pointerType === "mouse") heroStore.preview(item.id); }} onFocus={() => heroStore.preview(item.id)} onBlur={() => heroStore.preview(null)} onClick={() => heroStore.toggle(item.id)}>{item.number}</button>)}</div>
     </div>
   </div>;
 }

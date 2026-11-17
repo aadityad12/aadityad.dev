@@ -1,4 +1,4 @@
-export type ProjectId = "accordion" | "rung" | "gazeboard" | "visionassist" | "apextracker";
+export type ProjectId = "accordion" | "rung" | "gazeboard" | "alta" | "visionassist" | "apextracker";
 
 export type Project = {
   id: ProjectId;
@@ -113,8 +113,38 @@ export const projects: Project[] = [
     flow: ["CameraX", "Eye crop", "LiteRT / NPU", "Calibration", "Dwell → speech"],
   },
   {
-    id: "visionassist",
+    id: "alta",
     number: "04",
+    name: "Alta",
+    category: "AI LAB ASSISTANT",
+    headline: "Measure first.\nThen teach.",
+    description: "A voice-driven lab TA for intro electronics. A probe pod measures the student’s breadboard, and an AI agent walks them to the fault with measurements and hints instead of handing over the answer.",
+    role: "Probe pod, bare-metal firmware & probe monitor · team of four",
+    period: "Cal Hacks 13.0 · October 2026",
+    stack: ["C", "ATmega328P", "Python", "FastAPI", "React", "Cartesia"],
+    repo: "https://github.com/aadityad12/Alta",
+    proof: { value: "3/3", label: "real-board faults found and fixed, unassisted" },
+    approachTitle: "The bench is the interface.",
+    decisionsTitle: "Measure before you say anything.",
+    constraint: "In an intro electronics lab, one TA covers thirty students, and most of them are stuck on the same few mistakes: an LED in backwards, a resistor with the wrong bands, a ground wire that never reached the rail. A student waits ten minutes for a fix that takes thirty seconds, and learns nothing from it.",
+    approach: "Put a TA at every bench. A probe pod measures the student’s actual circuit and reports real voltages twenty times a second. An agent talks with the student by voice, and a four-step hint ladder keeps the answer out of reach until the student has had a real try.",
+    ownership: [
+      "Built the probe pod: an Arduino Uno in a 3D-printed dock that powers the student’s board and reads four colour-coded probe wires.",
+      "Wrote the bare-metal firmware in C: an interrupt-driven ADC sampling each probe about 1,200 times a second, ring-buffer UART, and a documented serial protocol.",
+      "Tested the firmware in a simulator against the real serial bridge: 25 checks plus a 60-second soak, down to a bouncy button press producing exactly one event.",
+      "Built the probe monitor, so the agent speaks up the moment a reading moves into the expected range, with no button press.",
+    ],
+    decisions: [
+      { title: "Measure before diagnosing.", body: "The agent’s core rule: take a probe reading before saying what is wrong. When the camera and the probes disagree, the probes win." },
+      { title: "Hints are a ladder, not an answer.", body: "Nudge, question, point at the spot, then the fix. The fix comes only after the student asks twice, fails three times, or stays stuck through four questions." },
+      { title: "Labs are data, not code.", body: "Each lab is one file: parts, expected voltages at each point, and every known fault with its readings and hint ladder. Adding a lab means writing a file, and a validator checks every one." },
+    ],
+    outcome: "On the real board at the venue, Alta found and fixed all three timed faults with no errors: an LED in backwards in 205 seconds, a missing ground wire in 110, and a wrong resistor in 322. Its first words land about two seconds after the student lets go of the talk button.",
+    flow: ["Probe pod", "Bare-metal C", "Serial bridge", "Agent & tools", "Voice"],
+  },
+  {
+    id: "visionassist",
+    number: "05",
     name: "VisionAssist",
     category: "EMBEDDED VISION",
     headline: "Small computer.\nA little more awareness.",
@@ -143,7 +173,7 @@ export const projects: Project[] = [
   },
   {
     id: "apextracker",
-    number: "05",
+    number: "06",
     name: "ApexTracker",
     category: "ANDROID & LOCAL-FIRST",
     headline: "Built for a user\nI can’t ignore. Me.",
@@ -173,6 +203,7 @@ export const projects: Project[] = [
 ];
 
 export const archive = [
+  { name: "Sisyphus", category: "SELF-IMPROVING AGENTS", description: "A video-editing system whose failures become versioned changes to its own agents, kept only if they prove themselves on held-out work.", detail: "A four-person project at the AIE Code Summit 2026 hackathon, selected as a top 6 finalist. I built the Reviewer and Auditor agents.", stack: "Python · React · Tauri", repo: "https://github.com/aadityad12/Sisyphus" },
   { name: "Echo", category: "OFFLINE COMMUNICATION", description: "Emergency alerts between nearby phones over Bluetooth. Native GATT servers in Kotlin and Swift, bridged into Flutter.", detail: "Built the BLE transport and chunking protocol, the native GATT servers, storage, and the background relay. Alerts are spoken and translated on the device into 22 languages.", stack: "Flutter · Kotlin · Swift · BLE", repo: "https://github.com/aadityad12/Echo" },
   { name: "Temper", category: "AGENT EVALUATION", description: "Find where an agent’s prompts, tools, and skills make it worse, then patch and retest the affected dimensions.", detail: "Built the specification, API contract, JSON Schemas, local client, pi extension, and FastAPI evaluation service with Sheel Shah and Oak Soe Khant. A patch loop rewrites the failing files and retests only the dimensions they affect.", stack: "Python · FastAPI · JSON Schema", repo: "https://github.com/aadityad12/Temper" },
   { name: "Clear Dispatch", category: "REAL-TIME SYSTEMS", description: "A dispatch simulation that keeps a human’s approval between an automated recommendation and a heavy asset moving.", detail: "A three-person HackDavis project. Typed WebSocket events drive a React reducer, with reservations, cancellation, and a 60-second approval timeout.", stack: "FastAPI · WebSockets · React", repo: "https://github.com/aadityad12/Clear-Dispatch" },

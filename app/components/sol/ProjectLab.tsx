@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { ProjectId } from "../../lib/portfolio";
 import { gazeGroups, matches } from "../../lib/gazeWords";
+import AltaLab from "./AltaLab";
 
 type Css = React.CSSProperties;
 const say = (text: string) => {
@@ -265,6 +266,7 @@ export default function ProjectLab({ id }: { id: ProjectId }) {
     case "accordion": return <AccordionLab />;
     case "rung": return <RungLab />;
     case "gazeboard": return <GazeLab />;
+    case "alta": return <AltaLab />;
     case "visionassist": return <VisionLab />;
     case "apextracker": return <ApexLab />;
   }

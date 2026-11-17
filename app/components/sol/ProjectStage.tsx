@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import type { ProjectId } from "../../lib/portfolio";
+import AltaStage from "./AltaStage";
 import { Beats, Count, Waves, useBeats, useSteps } from "./stageKit";
 
 type Css = React.CSSProperties;
@@ -166,7 +167,7 @@ function Vision() {
   const { beat } = state;
   const line = ["A camera on the headset spots what’s ahead.", "It works out how far away each thing is.", "Then it says the one that matters most, out loud."][beat];
   return <div ref={host} className={`stage stage-vision beat-${beat}`} data-scene>
-    <div className="stage-caption"><span>04 / VISIONASSIST</span><span>SMALL DEVICE. REAL WORLD.</span></div>
+    <div className="stage-caption"><span>05 / VISIONASSIST</span><span>SMALL DEVICE. REAL WORLD.</span></div>
     <div className="va-side">
       <figure className="va-photo"><Image src="/projects/visionassist-device.jpg" alt="The VisionAssist prototype: a Raspberry Pi 5 in a red case with a small camera module" fill sizes="(max-width: 650px) 45vw, 300px" /><figcaption>THE ACTUAL PROTOTYPE / PI 5 + CAMERA</figcaption></figure>
       <div className={`said va-said ${beat === 2 ? "is-on" : ""}`} aria-live="polite"><Waves /><b>{beat === 2 ? "“Stop. Chair, 2 steps ahead.”" : "…"}</b><span>WHAT THE WEARER HEARS</span></div>
@@ -186,7 +187,7 @@ function Vision() {
 /* 05 ApexTracker. Left as it was: a real screenshot and a plain promise. */
 function Apex() {
   return <div className="stage stage-apex" data-scene>
-    <div className="stage-caption"><span>05 / APEXTRACKER</span><span>THE APP I ACTUALLY USE.</span></div>
+    <div className="stage-caption"><span>06 / APEXTRACKER</span><span>THE APP I ACTUALLY USE.</span></div>
     <div className="apex-statement" aria-hidden="true">A little<br />better.<br /><span>Every day.</span></div>
     <div className="apex-phone"><div className="apex-phone-camera" /><Image src="/projects/apextracker-dashboard.png" alt="ApexTracker’s actual Android interface, with daily goals and an eight-week consistency grid" width={1080} height={2340} sizes="(max-width: 650px) 200px, 310px" /></div>
     <div className="apex-orbit"><span>OFFLINE</span><span>BY DEFAULT</span><i /></div>
@@ -199,6 +200,7 @@ export default function ProjectStage({ id }: { id: ProjectId }) {
     case "accordion": return <Accordion />;
     case "rung": return <Rung />;
     case "gazeboard": return <Gaze />;
+    case "alta": return <AltaStage number="04" />;
     case "visionassist": return <Vision />;
     case "apextracker": return <Apex />;
   }
