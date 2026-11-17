@@ -1,0 +1,133 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>Direction 3: Ridgelines</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;700&family=DM+Mono:wght@400;500&display=block" rel="stylesheet">
+<style>
+:root{--bg:#EEECF7;--ink:#211946;--muted:#615A82;--accent:#FF5A47;--soft:#C9C3E6}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.6 Manrope,sans-serif}
+.mono{font-family:"DM Mono",monospace;font-size:12px;letter-spacing:.07em;text-transform:uppercase}
+header{display:flex;justify-content:space-between;align-items:center;max-width:1360px;margin:0 auto;padding:22px 40px}
+.mark{font:italic 400 26px "Instrument Serif"}
+.mark span{color:var(--accent)}
+nav{display:flex;gap:26px;align-items:center}
+nav a{color:var(--ink);text-decoration:none;font:500 14px Manrope}
+nav a.cta{border:1.5px solid var(--ink);padding:5px 14px;border-radius:999px}
+.top{display:grid;grid-template-columns:1.15fr 1fr;gap:56px;align-items:end;max-width:1360px;margin:0 auto;padding:36px 40px 0}
+.eyebrow{color:var(--muted);margin:0 0 6px}
+h1{font:400 112px/0.9 "Instrument Serif";letter-spacing:-.02em;margin:0}
+h1 em{color:var(--accent)}
+.intro{font-size:18px;margin:0 0 10px}
+.avail{color:var(--muted);font-size:15px;margin:0 0 18px}
+.btns{display:flex;gap:10px}
+.btn{border:1.5px solid var(--ink);border-radius:999px;padding:8px 18px;font:500 15px Manrope;color:var(--ink);text-decoration:none}
+.btn.primary{background:var(--ink);color:var(--bg)}
+.field{position:relative;height:52vh;min-height:380px;margin-top:8px}
+canvas{position:absolute;inset:0;width:100%;height:100%}
+.pin{position:absolute;transform:translate(-50%,-100%);text-align:center;pointer-events:auto;cursor:pointer}
+.pin b{display:block;font:500 11px "DM Mono";letter-spacing:.06em;text-transform:uppercase;background:var(--bg);padding:1px 6px;border-radius:4px;white-space:nowrap}
+.pin i{display:block;width:1.5px;height:var(--h,40px);background:var(--ink);margin:2px auto 0}
+.pin s{display:block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin:-3px auto 0;text-decoration:none}
+.pf{position:absolute;transform:translate(-50%,-100%)}
+.pf svg{display:block;animation:bob .5s ease-in-out infinite alternate}
+@keyframes bob{to{transform:translateY(-2px)}}
+.section{max-width:1360px;margin:0 auto;padding:60px 40px}
+.section h2{font:400 64px "Instrument Serif";margin:0 0 24px}
+.card{display:grid;grid-template-columns:1.1fr 1fr;gap:0;border-top:1.5px solid var(--ink);padding-top:28px}
+.card .art{background:#E2DFF2;border-radius:18px;min-height:340px;display:grid;place-items:center;color:var(--muted)}
+.card .txt{padding:0 0 0 40px}
+.card h3{font:400 48px/1 "Instrument Serif";margin:10px 0 10px}
+.tag{display:inline-block;background:#fff;border-radius:999px;padding:3px 11px;margin:0 6px 6px 0}
+</style></head><body>
+<header><div class="mark">aadi<span>.</span>dev</div><nav><a href="#">Experience</a><a href="#">Projects</a><a href="#">GitHub</a><a class="cta" href="#">Résumé</a></nav></header>
+<section>
+  <div class="top">
+    <div><p class="eyebrow mono" id="eyebrow"></p><h1>Aaditya<br>Desai<em>.</em></h1></div>
+    <div><p class="intro"><b>Hi, I'm Aadi.</b> <span id="intro"></span></p><p class="avail" id="avail"></p>
+      <div class="btns"><a class="btn primary" href="#">See the projects</a><a class="btn" href="#">Résumé</a></div></div>
+  </div>
+  <div class="field" id="field"><canvas id="cv"></canvas></div>
+</section>
+<section class="section">
+  <h2>Projects</h2>
+  <article class="card"><div class="art mono">project artifact goes here</div>
+    <div class="txt"><p class="mono" style="color:var(--accent)">01 · With Infineon · De Anza</p><h3>VisionAssist</h3>
+    <p>A head-mounted obstacle detector. A camera finds objects, a radar measures how far they are, and the device speaks only the one that matters most.</p>
+    <span class="tag mono">C++</span><span class="tag mono">Radar</span><span class="tag mono">On-device ML</span></div></article>
+</section>
+<script type="module">
+import { COPY, PLACES, heightmap, pathfinder } from "../../lab/shared.js";
+document.getElementById("eyebrow").textContent = COPY.eyebrow;
+document.getElementById("intro").textContent = COPY.intro.replace(/^I'm/, "I'm");
+document.getElementById("avail").textContent = COPY.avail;
+const hm = await heightmap();
+// looking north from the South Bay: near rows are the places, Berkeley is far away
+const X0 = 270, X1 = 637, Y0 = 30, Y1 = 345, ROW = 3;
+const field = document.getElementById("field"), cv = document.getElementById("cv"), ctx = cv.getContext("2d");
+const elev = (x, y) => Math.max(0, hm.values[Math.round(y) * hm.w + Math.round(x)]);
+let geo;
+function layout() {
+  const r = field.getBoundingClientRect(), dpr = devicePixelRatio || 1;
+  cv.width = r.width * dpr; cv.height = r.height * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const top = 60, bottom = r.height - 20;
+  // row y (north..south) -> depth t (0 far .. 1 near)
+  const proj = (x, y, h) => {
+    const t = (y - Y0) / (Y1 - Y0), k = 0.55 + 0.45 * t;
+    const sx = r.width / 2 + ((x - (X0 + X1) / 2) / (X1 - X0)) * r.width * 1.05 * k;
+    const sy = top + Math.pow(t, 1.25) * (bottom - top) - h * 0.075 * k;
+    return [sx, sy];
+  };
+  geo = { r, proj, bottom };
+}
+function frame(now) {
+  const { r, proj, bottom } = geo;
+  ctx.clearRect(0, 0, r.width, r.height);
+  // the scan band sweeps from far to near, like Pathfinder's sensor
+  const scan = ((now / 5200) % 1.3) * (Y1 - Y0) + Y0;
+  for (let y = Y0; y <= Y1; y += ROW) {
+    const t = (y - Y0) / (Y1 - Y0);
+    const pts = [];
+    for (let x = X0; x <= X1; x += 1) pts.push([...proj(x, y, elev(x, y)), elev(x, y)]);
+    ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+    for (const p of pts) ctx.lineTo(p[0], p[1]);
+    ctx.lineTo(pts[pts.length - 1][0], bottom + 30); ctx.lineTo(pts[0][0], bottom + 30); ctx.closePath();
+    ctx.fillStyle = "#EEECF7"; ctx.fill();
+    const near = Math.abs(y - scan) < 7 ? 1 - Math.abs(y - scan) / 7 : 0;
+    ctx.lineWidth = 0.6 + t * 0.9 + near * 1.2;
+    // land in ink, water as a pale dotted line
+    let water = null;
+    for (let i = 1; i < pts.length; i++) {
+      const w = pts[i][2] < 3;
+      if (w !== water) {
+        if (water !== null) ctx.stroke();
+        water = w; ctx.beginPath(); ctx.moveTo(pts[i - 1][0], pts[i - 1][1]);
+        ctx.setLineDash(w ? [1.5, 4] : []);
+        ctx.strokeStyle = near ? `rgba(255,90,71,${0.4 + near * 0.6})` : w ? "#B5AED6" : `rgba(33,25,70,${0.35 + t * 0.6})`;
+      }
+      ctx.lineTo(pts[i][0], pts[i][1]);
+    }
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+  requestAnimationFrame(frame);
+}
+layout(); requestAnimationFrame(frame);
+const pins = PLACES.map((p) => {
+  const el = document.createElement("div"); el.className = "pin";
+  el.innerHTML = `<b>${p.name}</b><i></i><s></s>`; field.appendChild(el); return { ...p, el };
+});
+const pf = document.createElement("div"); pf.className = "pf";
+pf.innerHTML = pathfinder({ ink: "#211946", eye: "#FF5A47", fill: "#EEECF7", width: 6, size: 46 });
+field.appendChild(pf);
+function place() {
+  const stems = { deanza: 70, sunnyvale: 110, scu: 54, sjsu: 92, berkeley: 34 };
+  for (const p of pins) {
+    const [x, y] = hm.places[p.id]; const [sx, sy] = geo.proj(x, y, elev(x, y));
+    p.el.style.left = `${sx}px`; p.el.style.top = `${sy + 3}px`; p.el.style.setProperty("--h", `${stems[p.id]}px`);
+  }
+  const [x, y] = hm.places.home; const [sx, sy] = geo.proj(x + 6, y + 10, elev(x + 6, y + 10));
+  pf.style.left = `${sx}px`; pf.style.top = `${sy + 2}px`;
+}
+place();
+addEventListener("resize", () => { layout(); place(); });
+</script>
+</body></html>

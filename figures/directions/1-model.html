@@ -1,0 +1,179 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>Direction 1: Desk model</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;600&display=block" rel="stylesheet">
+<style>
+:root{--bg:#ECEFF1;--ink:#16191D;--muted:#5D6670;--accent:#2E4FE0;--mat:#C9D6CC;--matline:#B3C4B7;--card:#FFFFFF}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.6 Geist,sans-serif}
+.mono{font-family:"Geist Mono",monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+header{display:flex;justify-content:space-between;align-items:center;max-width:1320px;margin:0 auto;padding:22px 40px}
+.mark{font:800 20px "Bricolage Grotesque";letter-spacing:-.02em}
+.mark span{color:var(--accent)}
+nav{display:flex;gap:26px}
+nav a{color:var(--ink);text-decoration:none;font:500 14px Geist}
+nav a.cta{background:var(--ink);color:#fff;padding:7px 14px;border-radius:999px}
+.hero{display:grid;grid-template-columns:minmax(0,520px) minmax(0,1fr);gap:24px;align-items:center;max-width:1320px;margin:0 auto;padding:10px 40px 40px;min-height:calc(100vh - 80px)}
+.eyebrow{color:var(--muted)}
+h1{font:800 84px/0.95 "Bricolage Grotesque";letter-spacing:-.035em;margin:18px 0 8px}
+.hi{font:600 30px/1.2 "Bricolage Grotesque";color:var(--accent);margin:0 0 18px}
+.intro{font-size:18px;margin:0 0 12px}
+.avail{color:var(--muted);font-size:15px;margin:0 0 22px}
+.btns{display:flex;gap:10px}
+.btn{border:1.5px solid var(--ink);border-radius:999px;padding:9px 18px;font:500 15px Geist;color:var(--ink);text-decoration:none}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+/* the model sits on a cutting mat */
+.bench{position:relative;aspect-ratio:1.18;border-radius:22px;background:
+  linear-gradient(var(--matline) 1px,transparent 1px) 0 0/28px 28px,
+  linear-gradient(90deg,var(--matline) 1px,transparent 1px) 0 0/28px 28px,var(--mat);
+  box-shadow:inset 0 0 0 1px #b7c6ba;perspective:1400px;overflow:hidden}
+.bench::before{content:"0    1    2    3    4    5    6    7    8    9    10";position:absolute;left:14px;top:8px;font:500 10px "Geist Mono";color:#7E9283;white-space:pre;letter-spacing:.02em}
+.stage{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .4s ease-out}
+canvas{position:absolute;inset:0;width:100%;height:100%}
+.pin{position:absolute;transform:translate(-2px,-100%);pointer-events:auto;cursor:pointer}
+.pin .stick{width:2px;height:34px;background:var(--ink);margin-left:1px}
+.pin .flag{position:absolute;left:3px;top:0;width:18px;height:12px;background:var(--accent);clip-path:polygon(0 0,100% 50%,0 100%);transform-origin:0 50%;animation:wave 2.4s ease-in-out infinite}
+.pin .label{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);white-space:nowrap;background:#fff;border:1px solid var(--ink);border-radius:6px;padding:2px 7px;font:600 11px "Geist Mono";letter-spacing:.03em;opacity:0;transition:opacity .2s}
+.pin:hover .label,.pin.on .label{opacity:1}
+@keyframes wave{50%{transform:scaleX(.8) skewY(6deg)}}
+.pf{position:absolute;transform:translate(-50%,-100%);transition:left 1.1s cubic-bezier(.5,0,.3,1),top 1.1s cubic-bezier(.5,0,.3,1);filter:drop-shadow(0 3px 0 rgba(0,0,0,.12))}
+.pf svg{display:block;animation:bob .5s ease-in-out infinite alternate}
+.pf.walking svg{animation:hop .28s ease-in-out infinite alternate}
+@keyframes bob{to{transform:translateY(-2px)}}
+@keyframes hop{to{transform:translateY(-7px) rotate(4deg)}}
+.caption{position:absolute;left:18px;bottom:14px;color:#536657}
+/* below the fold: a project card in this direction */
+.section{max-width:1320px;margin:0 auto;padding:60px 40px}
+.section h2{font:800 48px "Bricolage Grotesque";letter-spacing:-.03em;margin:0 0 24px}
+.card{display:grid;grid-template-columns:1.1fr 1fr;background:var(--card);border-radius:22px;overflow:hidden;box-shadow:0 1px 0 #d5dbe0,0 20px 40px -24px rgba(20,30,40,.25)}
+.card .art{background:#DCE6EA;min-height:340px;display:grid;place-items:center;color:var(--muted)}
+.card .txt{padding:34px 36px}
+.tag{display:inline-block;border:1px solid var(--ink);border-radius:999px;padding:2px 10px;margin:0 6px 6px 0}
+.card h3{font:800 34px "Bricolage Grotesque";margin:10px 0 6px;letter-spacing:-.02em}
+.label-no{color:var(--accent)}
+</style></head><body>
+<header><div class="mark">aadi<span>.</span>dev</div><nav><a href="#">Experience</a><a href="#">Projects</a><a href="#">GitHub</a><a class="cta" href="#">Résumé</a></nav></header>
+<section class="hero">
+  <div>
+    <p class="eyebrow mono" id="eyebrow"></p>
+    <h1 id="name"></h1>
+    <p class="hi" id="hi"></p>
+    <p class="intro" id="intro"></p>
+    <p class="avail" id="avail"></p>
+    <div class="btns"><a class="btn primary" href="#">See the projects</a><a class="btn" href="#">Résumé</a></div>
+  </div>
+  <div class="bench" id="bench"><div class="stage" id="stage"><canvas id="cv"></canvas></div><p class="caption mono">The Bay, 1 : 400,000 · where the work happened</p></div>
+</section>
+<section class="section">
+  <h2>Projects</h2>
+  <article class="card"><div class="art mono">project artifact goes here</div>
+    <div class="txt"><p class="mono label-no">No. 01 · Infineon · De Anza</p><h3>VisionAssist</h3>
+    <p>A head-mounted obstacle detector. A camera finds objects, a radar measures how far they are, and the device speaks only the one that matters most.</p>
+    <span class="tag mono">C++</span><span class="tag mono">Radar</span><span class="tag mono">On-device ML</span></div></article>
+</section>
+<script type="module">
+import { contours } from "https://cdn.jsdelivr.net/npm/d3-contour@4/+esm";
+import { COPY, PLACES, heightmap, pathfinder } from "../../lab/shared.js";
+for (const k of Object.keys(COPY)) { const el = document.getElementById(k); if (el) el.textContent = COPY[k]; }
+
+const hm = await heightmap();
+// crop: SF peninsula, the Bay, East Bay hills, South Bay
+const X0 = 300, Y0 = 30, W = 330, H = 320;
+const vals = new Float64Array(W * H);
+for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) vals[y * W + x] = hm.values[(y + Y0) * hm.w + x + X0];
+// soften cell noise so the layers read as chunky, hand-cut pieces
+for (let pass = 0; pass < 3; pass++) {
+  const src = vals.slice();
+  for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) {
+    let sum = 0; for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) sum += src[(y + dy) * W + x + dx];
+    vals[y * W + x] = src[y * W + x] <= 3 ? Math.min(src[y * W + x], sum / 9) : sum / 9;
+  }
+}
+const levels = [3, 120, 260, 420, 600, 800, 1000];
+const gen = contours().size([W, H]).smooth(true);
+const paths = levels.map((t) => {
+  const p = new Path2D();
+  for (const poly of gen.contour(vals, t).coordinates) for (const ring of poly) {
+    ring.forEach(([x, y], i) => (i ? p.lineTo(x, y) : p.moveTo(x, y)));
+    p.closePath();
+  }
+  return p;
+});
+
+const bench = document.getElementById("bench"), cv = document.getElementById("cv"), ctx = cv.getContext("2d");
+const ROT = -0.42, TILT = 0.56, SLAB = 16, STEP = 9;
+let M; // plane -> screen
+function project(x, y, z) {
+  const [a, b, c, d, e, f] = M;
+  return [a * x + c * y + e, b * x + d * y + f - z];
+}
+function draw() {
+  const r = bench.getBoundingClientRect(), dpr = devicePixelRatio || 1;
+  cv.width = r.width * dpr; cv.height = r.height * dpr;
+  const s = (r.width / W) * 0.64;
+  const a = s * Math.cos(ROT), b = s * Math.sin(ROT) * TILT, c = -s * Math.sin(ROT), d = s * Math.cos(ROT) * TILT;
+  const ox = r.width * 0.5, oy = r.height * 0.56;
+  M = [a, b, c, d, ox - (a * W / 2 + c * H / 2), oy - (b * W / 2 + d * H / 2)];
+  const at = (z) => ctx.setTransform(dpr * M[0], dpr * M[1], dpr * M[2], dpr * M[3], dpr * M[4], dpr * (M[5] - z));
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  // soft shadow under the slab
+  at(-10); ctx.fillStyle = "rgba(40,60,45,.18)"; ctx.filter = "blur(10px)"; ctx.fillRect(8, 8, W, H); ctx.filter = "none";
+  // base slab: painted water
+  for (let z = 0; z <= SLAB; z++) { at(z); ctx.fillStyle = z < SLAB ? "#8FA9B3" : "#BBD0D8"; ctx.fillRect(0, 0, W, H); }
+  at(SLAB); ctx.strokeStyle = "rgba(255,255,255,.55)"; ctx.lineWidth = 0.5;
+  for (let i = 12; i < H; i += 14) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(W, i); ctx.stroke(); }
+  // stacked plywood layers
+  let z = SLAB;
+  paths.forEach((p, i) => {
+    const th = i === 0 ? 4 : STEP;
+    for (let k = 1; k < th; k++) { at(z + k); ctx.fillStyle = i % 2 ? "#B8935F" : "#C9A473"; ctx.fill(p, "evenodd"); }
+    z += th; at(z);
+    ctx.fillStyle = i % 2 ? "#EBD6B3" : "#F2E2C4"; ctx.fill(p, "evenodd");
+    ctx.lineWidth = 0.35; ctx.strokeStyle = "#7A5B35"; ctx.stroke(p);
+  });
+  placePins();
+}
+const zAt = (x, y) => {
+  const h = vals[Math.round(y) * W + Math.round(x)] ?? 0;
+  let z = SLAB; levels.forEach((t, i) => { if (h > t) z += i === 0 ? 4 : STEP; });
+  return z;
+};
+const stage = document.getElementById("stage");
+const pins = PLACES.map((p) => {
+  const el = document.createElement("div");
+  el.className = "pin";
+  el.innerHTML = `<div class="stick"></div><div class="flag"></div><div class="label">${p.name} · ${p.what}</div>`;
+  stage.appendChild(el);
+  return { ...p, el };
+});
+const pf = document.createElement("div");
+pf.className = "pf"; pf.innerHTML = pathfinder({ ink: "#16191D", eye: "#2E4FE0", fill: "#fff", width: 6, size: 44 });
+stage.appendChild(pf);
+function placePins() {
+  for (const p of pins) {
+    const [gx, gy] = hm.places[p.id]; const x = gx - X0, y = gy - Y0;
+    const [sx, sy] = project(x, y, zAt(x, y));
+    p.el.style.left = `${sx}px`; p.el.style.top = `${sy}px`; p.sx = sx; p.sy = sy;
+  }
+}
+// Pathfinder hops between the places on a timer (the "tour")
+let i = 0;
+function tour() {
+  pins.forEach((p) => p.el.classList.remove("on"));
+  const p = pins[i % pins.length]; i++;
+  pf.classList.add("walking");
+  pf.style.left = `${p.sx + 14}px`; pf.style.top = `${p.sy + 2}px`;
+  setTimeout(() => { pf.classList.remove("walking"); p.el.classList.add("on"); }, 1100);
+}
+draw(); tour(); setInterval(tour, 3200);
+addEventListener("resize", draw);
+// small tilt toward the pointer: it's an object you can look around
+bench.addEventListener("pointermove", (e) => {
+  const r = bench.getBoundingClientRect();
+  const px = (e.clientX - r.left) / r.width - 0.5, py = (e.clientY - r.top) / r.height - 0.5;
+  stage.style.transform = `rotateY(${px * 6}deg) rotateX(${-py * 5}deg)`;
+});
+bench.addEventListener("pointerleave", () => (stage.style.transform = ""));
+</script>
+</body></html>

@@ -1,0 +1,30 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,700&family=Instrument+Sans:wght@400;600&family=Martian+Mono:wght@400;700&display=block" rel="stylesheet">
+<style>
+:root{--paper:#FAF5EC;--ink:#221F1A;--accent:#E4572E;--muted:#6F6A5F;--line:#E3DBCC}
+html,body{margin:0;background:var(--paper);color:var(--ink);font-family:"Instrument Sans",sans-serif}
+.backdrop{position:fixed;inset:0;z-index:0;pointer-events:none;background:#E6ECEA}
+.backdrop svg{width:100%;height:100%;display:block}
+.backdrop .land{fill:#F4ECDD}
+.backdrop .depth{fill:none;stroke:#C9D3D2;stroke-width:1}
+.backdrop .c{fill:none;stroke:#D6CAB4;stroke-width:.6;vector-effect:non-scaling-stroke}
+.backdrop .ci{stroke:#C4B497;stroke-width:1.1}
+.backdrop .shore{fill:none;stroke:#9FB2B0;stroke-width:1.4;vector-effect:non-scaling-stroke}
+/* readability: paper glow behind the copy */
+.backdrop::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 50% 62% at 26% 40%,rgba(250,245,236,.9) 0 38%,rgba(250,245,236,0) 72%)}
+.hero{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:90px 56px}
+.eyebrow{font:700 12px "Martian Mono",monospace;color:var(--muted);letter-spacing:.04em}
+h1{font:400 112px/1 Fraunces,serif;margin:22px 0 10px}
+.tag{font:italic 700 50px/1.1 Fraunces,serif;color:var(--accent);margin:0}
+.intro{font-size:20px;line-height:1.55;max-width:740px}
+.avail{color:var(--muted);max-width:740px}
+</style></head><body>
+<div class="backdrop" id="bd"></div>
+<section class="hero">
+<p class="eyebrow">COMPUTER ENGINEERING @ SJSU · EXPECTED MAY 2028</p>
+<h1>Aaditya Desai</h1><p class="tag">Hi, I'm Aadi.</p>
+<p class="intro">I'm a computer engineering student at San José State. I've built a head-mounted obstacle detector with Infineon, a small programming language with a hand-written ARM64 JIT, an Android app I use every day, and tools for AI coding agents.</p>
+<p class="avail">Looking for a Summer 2027 internship or Winter 2027 co-op in software, AI/ML, embedded and hardware, DevOps, or security.</p>
+</section>
+<script>fetch('../../public/maps/bay-contours.svg').then(r=>r.text()).then(t=>{bd.innerHTML=t})</script>
+</body></html>

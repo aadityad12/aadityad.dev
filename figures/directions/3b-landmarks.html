@@ -1,0 +1,354 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>Direction 3b: Ridgelines with landmarks</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;700&family=DM+Mono:wght@400;500&display=block" rel="stylesheet">
+<style>
+:root{--bg:#EEECF7;--ink:#211946;--muted:#5A5280;--accent:#FF5A47;--soft:#C9C3E6}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.6 Manrope,sans-serif}
+.mono{font-family:"DM Mono",monospace;font-size:12px;letter-spacing:.07em;text-transform:uppercase}
+header{display:flex;justify-content:space-between;align-items:center;max-width:1360px;margin:0 auto;padding:22px 40px}
+.mark{font:italic 400 26px "Instrument Serif"}
+.mark span{color:var(--accent)}
+nav{display:flex;gap:26px;align-items:center}
+nav a{color:var(--ink);text-decoration:none;font:500 14px Manrope}
+nav a.cta{border:1.5px solid var(--ink);padding:5px 14px;border-radius:999px}
+.top{display:grid;grid-template-columns:1.15fr 1fr;gap:56px;align-items:end;max-width:1360px;margin:0 auto;padding:28px 40px 0}
+.eyebrow{color:var(--muted);margin:0 0 6px}
+h1{font:400 104px/0.9 "Instrument Serif";letter-spacing:-.02em;margin:0}
+h1 em{color:var(--accent)}
+.intro{font-size:18px;margin:0 0 10px}
+.avail{color:var(--muted);font-size:15px;margin:0 0 18px}
+.btns{display:flex;gap:10px}
+.btn{border:1.5px solid var(--ink);border-radius:999px;padding:8px 18px;font:500 15px Manrope;color:var(--ink);text-decoration:none}
+.btn.primary{background:var(--ink);color:var(--bg)}
+.field{position:relative;height:74vh;min-height:560px;margin-top:4px;overflow:hidden}
+canvas{position:absolute;inset:0;width:100%;height:100%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent)}
+/* project pins: small, label on hover, click goes to the project */
+.pin{position:absolute;transform:translate(-50%,-100%);z-index:4;display:block;padding:4px;color:inherit;text-decoration:none}
+.pin svg{display:block;transition:transform .2s;transform-origin:50% 100%;animation:pinbob 2.4s ease-in-out infinite}
+.pin:hover svg,.pin:focus-visible svg{transform:scale(1.25)}
+@keyframes pinbob{50%{translate:0 -2px}}
+.pin::after{content:"";position:absolute;left:50%;bottom:2px;width:10px;height:4px;margin-left:-5px;border-radius:50%;background:rgba(33,25,70,.25)}
+.pin .lab{position:absolute;bottom:100%;left:50%;transform:translate(-50%,4px);width:max-content;background:var(--ink);color:var(--bg);padding:3px 9px 4px;border-radius:7px;line-height:1.25;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s}
+.pin:hover .lab,.pin:focus-visible .lab{opacity:1;transform:translate(-50%,-2px)}
+.pin .lab b{display:block;font:500 11px "DM Mono";letter-spacing:.07em;text-transform:uppercase}
+.pin .lab span{display:block;font:500 12.5px Manrope;color:#CFC9EC}
+.pin .lab em{display:block;font:500 10.5px "DM Mono";color:var(--accent);font-style:normal;letter-spacing:.05em;margin-top:2px}
+/* landmark names: shown on hover, or when the scan passes */
+.lm{position:absolute;transform:translate(-50%,-100%);font:500 10.5px "DM Mono";letter-spacing:.07em;text-transform:uppercase;
+  white-space:nowrap;background:var(--bg);border:1px solid var(--soft);padding:1px 6px;border-radius:4px;opacity:0;transition:opacity .35s;pointer-events:none;z-index:2}
+.lm.on{opacity:1}
+.pf{position:absolute;transform:translate(-50%,-100%);z-index:3;pointer-events:none}
+.pf svg{display:block;animation:bob .5s ease-in-out infinite alternate}
+@keyframes bob{to{transform:translateY(-2px)}}
+.cap{position:absolute;left:40px;bottom:14px;color:var(--muted)}
+.section{max-width:1360px;margin:0 auto;padding:60px 40px}
+.section h2{font:400 64px "Instrument Serif";margin:0 0 24px}
+</style></head><body>
+<header><div class="mark">aadi<span>.</span>dev</div><nav><a href="#">Experience</a><a href="#">Projects</a><a href="#">GitHub</a><a class="cta" href="#">Résumé</a></nav></header>
+<section>
+  <div class="top">
+    <div><p class="eyebrow mono" id="eyebrow"></p><h1>Aaditya<br>Desai<em>.</em></h1></div>
+    <div><p class="intro"><b>Hi, I'm Aadi.</b> <span id="intro"></span></p><p class="avail" id="avail"></p>
+      <div class="btns"><a class="btn primary" href="#">See the projects</a><a class="btn" href="#">Résumé</a></div></div>
+  </div>
+  <div class="field" id="field"><canvas id="cv"></canvas><p class="cap mono">The Bay, looking north · hover a pin or a landmark</p></div>
+</section>
+<section class="section"><h2>Projects</h2></section>
+<script type="module">
+import { COPY, PLACES, heightmap, pathfinder } from "../../lab/shared.js";
+import { Pen, bird } from "./pen.js";
+import { goldenGate, ferryBuilding, campanile, towerHall } from "./landmarks2.js";
+document.getElementById("eyebrow").textContent = COPY.eyebrow;
+document.getElementById("intro").textContent = COPY.intro;
+document.getElementById("avail").textContent = COPY.avail;
+
+const INK = "#211946", BG = "#EEECF7", CORAL = "#FF5A47", WATER = "#D8D3EF", DOT = "#A59DD0";
+const hm = await heightmap();
+
+// one light blur so the magnified city areas are not noisy
+const H0 = Float32Array.from(hm.values, (v) => Math.max(0, v)), HB = new Float32Array(H0.length);
+for (let y = 0; y < hm.h; y++) for (let x = 0; x < hm.w; x++) {
+  let s = 0, n = 0;
+  for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+    const xx = x + dx, yy = y + dy;
+    if (xx >= 0 && yy >= 0 && xx < hm.w && yy < hm.h) { s += H0[yy * hm.w + xx]; n++; }
+  }
+  HB[y * hm.w + x] = H0[y * hm.w + x] < 1 ? 0 : s / n;
+}
+const elev = (x, y) => {
+  const x0 = Math.floor(x), y0 = Math.floor(y), fx = x - x0, fy = y - y0, at = (a, b) => HB[b * hm.w + a] || 0;
+  return (at(x0, y0) * (1 - fx) + at(x0 + 1, y0) * fx) * (1 - fy) + (at(x0, y0 + 1) * (1 - fx) + at(x0 + 1, y0 + 1) * fx) * fy;
+};
+
+// same Web Mercator grid as heightmap.mjs, so landmarks land on the right cell
+const Z = 2 ** 11, PER = 64;
+const lon2x = (lon) => ((lon + 180) / 360) * Z;
+const lat2y = (lat) => { const r = (lat * Math.PI) / 180; return ((1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2) * Z; };
+const cell = (lon, lat) => [(lon2x(lon) - lon2x(-123.3)) * PER, (lat2y(lat) - lat2y(38.0)) * PER];
+
+// Tourist-map stretch: San Francisco gets far more room than it has in reality,
+// the empty middle of the Peninsula gets less. Knots are [cell, 0..1].
+const XK = [[268, 0], [282, 0.03], [364, 0.47], [402, 0.55], [450, 0.64], [528, 0.88], [637, 1]];
+const YK = [[30, 0], [70, 0.1], [126, 0.43], [200, 0.56], [255, 0.66], [342, 1]];
+const lerpK = (K, v, a = 0, b = 1) => {
+  for (let i = 1; i < K.length; i++) if (v <= K[i][a] || i === K.length - 1) {
+    const [p, q] = [K[i - 1], K[i]], f = (v - p[a]) / (q[a] - p[a]);
+    return p[b] + (q[b] - p[b]) * f;
+  }
+};
+const gx = (x) => lerpK(XK, x), gxInv = (u) => lerpK(XK, u, 1, 0);
+const gy = (y) => lerpK(YK, y), gyInv = (t) => lerpK(YK, t, 1, 0);
+
+// ---------- landmarks: one pen, bg fill so they sit in front of the ridges ----------
+const cache = new Map();
+const P = (d) => { if (!cache.has(d)) cache.set(d, new Path2D(d)); return cache.get(d); };
+const shape = (c, d, fill = BG) => { const p = P(d); if (fill) { c.fillStyle = fill; c.fill(p); } c.stroke(p); };
+const dot = (c, x, y, r, col, a = 1) => { c.globalAlpha = a; c.fillStyle = col; c.beginPath(); c.arc(x, y, r, 0, 7); c.fill(); c.globalAlpha = 1; };
+const wave = (T, period, off = 0) => 0.5 + 0.5 * Math.sin((T / period) * 2 * Math.PI + off);
+const flag = (c, x, y, T) => { // little waving flag on a pole top
+  const w = Math.sin(T / 160) * 1.2;
+  c.fillStyle = CORAL; c.beginPath(); c.moveTo(x, y); c.quadraticCurveTo(x + 4, y - 1 + w, x + 8, y + w * 0.6);
+  c.lineTo(x + 8, y + 4 + w * 0.6); c.quadraticCurveTo(x + 4, y + 3 + w, x, y + 4); c.closePath(); c.fill();
+};
+const quad = (x0, y0, cx, cy, x1, y1, x) => { const t = (x - x0) / (x1 - x0); return (1 - t) ** 2 * y0 + 2 * t * (1 - t) * cy + t * t * y1; };
+
+const LANDMARKS = [
+  { id: "gg", name: "Golden Gate Bridge", at: [-122.4783, 37.8199], onWater: true, k: 0.86, ...goldenGate, v2: true },
+  { id: "pfa", name: "Palace of Fine Arts", at: [-122.4484, 37.8029], w: 76, h: 34,
+    draw(c, T) {
+      c.fillStyle = WATER; c.beginPath(); c.ellipse(0, 3, 36, 3.6, 0, 0, 7); c.fill();
+      for (const s of [-1, 1]) shape(c, `M${s * 15} 0 V-10 M${s * 20} 0 V-10 M${s * 25} 0 V-10 M${s * 30} 0 V-10 M${s * 34} 0 V-9 M${s * 13} -10 H${s * 35}`, null);
+      shape(c, "M-12 0 V-16 H12 V0 M-8 0 V-16 M-4 0 V-16 M0 0 V-16 M4 0 V-16 M8 0 V-16", null);
+      shape(c, "M-13 -16 C-13 -33 13 -33 13 -16 Z M0 -29 V-34");
+      const sx = 26 * Math.sin(T / 5000), dir = Math.cos(T / 5000) > 0 ? 1 : -1;
+      c.save(); c.translate(sx, 3); c.scale(dir, 1); shape(c, "M-3 0 Q0 1.5 3 0 Q2 -2 2 -4.5 Q3 -5 3.6 -4.2", BG); c.restore();
+    } },
+  { id: "al", name: "Alcatraz", at: [-122.4229, 37.8267], w: 44, h: 28, onWater: true,
+    draw(c, T) {
+      const a = (T / 2600) % (2 * Math.PI), reach = Math.cos(a) * 48;
+      c.globalAlpha = 0.28 * Math.abs(Math.cos(a)); c.fillStyle = CORAL; c.beginPath();
+      c.moveTo(11, -24); c.lineTo(11 + reach, -28); c.lineTo(11 + reach, -20); c.closePath(); c.fill(); c.globalAlpha = 1;
+      shape(c, "M-20 0 Q-14 -8 -5 -9 L14 -8 Q19 -4 21 0 Z");
+      shape(c, "M-8 -9 V-14 H7 V-9 M-5 -14 V-9 M-2 -14 V-9 M1 -14 V-9 M4 -14 V-9", null);
+      shape(c, "M9.5 -8 L10 -22 H12 L12.5 -8 Z M9.4 -22 H12.6 V-25.5 H9.4 Z");
+      dot(c, 11, -24, 1.3, CORAL);
+    } },
+  { id: "fb", name: "Ferry Building", at: [-122.3937, 37.7955], k: 0.66, ...ferryBuilding, v2: true },
+  { id: "bb", name: "Bay Bridge", at: [-122.336, 37.812], w: 200, h: 70, onWater: true,
+    draw(c, T) {
+      c.fillStyle = BG; c.fillRect(-98, -14, 196, 4);
+      shape(c, "M-98 -14 H98 M-98 -10 H98", null);
+      // west span: two suspension spans meeting at a centre anchorage
+      const towers = [-86, -68, -40, -22];
+      for (const x of towers) shape(c, `M${x - 2} 0 V-46 M${x + 2} 0 V-46 M${x - 2.5} -46 H${x + 2.5} M${x - 2} -30 H${x + 2}`, null);
+      shape(c, "M-54 0 V-20 H-50 V0", BG);
+      const segs = [[-98, -14, -92, -30, -86, -46], [-86, -46, -77, -18, -68, -46], [-68, -46, -60, -30, -52, -20],
+        [-52, -20, -46, -30, -40, -46], [-40, -46, -31, -18, -22, -46], [-22, -46, -16, -30, -10, -14]];
+      c.beginPath(); for (const [a, b, cx, cy, d, e] of segs) { c.moveTo(a, b); c.quadraticCurveTo(cx, cy, d, e); } c.stroke();
+      // Yerba Buena Island
+      shape(c, "M-6 0 Q2 -26 22 -8 Q27 -4 30 0 Z");
+      // east span: one tower, cables fanning to the deck
+      shape(c, "M56 0 L57.5 -66 L59 0", null);
+      c.beginPath(); for (const x of [34, 42, 50, 66, 74, 82]) { c.moveTo(57.5, -64); c.lineTo(x, -14); } c.stroke();
+      // The Bay Lights: a wave running along the west span
+      for (const [a, b, cx, cy, d, e] of segs) for (let x = a + 2; x < d; x += 2.6) {
+        const y = quad(a, b, cx, cy, d, e, x) + 1.5, s = Math.sin(x * 0.35 - T / 260);
+        if (s > 0.55 && y < -15) dot(c, x, y, 1, CORAL, (s - 0.55) * 2.2);
+      }
+    } },
+  { id: "wm", name: "Dutch Windmill, Golden Gate Park", at: [-122.5088, 37.7705], w: 38, h: 46,
+    draw(c, T) {
+      shape(c, "M-6 0 L-3.5 -22 H3.5 L6 0 Z M-4 -22 Q0 -28 4 -22");
+      c.save(); c.translate(0, -24); c.rotate(T / 1400);
+      for (let i = 0; i < 4; i++) { c.rotate(Math.PI / 2); shape(c, "M0 -2 V-17 M0 -6 H3.5 V-17 H0 M0 -11.5 H3.5", null); }
+      c.restore(); dot(c, 0, -24, 1.4, INK);
+    } },
+  { id: "sfo", name: "SFO", at: [-122.379, 37.6213], w: 120, h: 50,
+    draw(c, T) {
+      shape(c, "M-2 0 V-26 M2 0 V-26 M-7 -26 L-5 -33 H5 L7 -26 Z M-4 -33 V-36 H4 V-33", null);
+      c.fillStyle = BG; c.beginPath(); c.moveTo(-7, -26); c.lineTo(-5, -33); c.lineTo(5, -33); c.lineTo(7, -26); c.fill(); c.stroke();
+      c.save(); c.setLineDash([3, 3]); c.beginPath(); c.moveTo(12, 0); c.lineTo(70, 0); c.stroke(); c.restore();
+      // a plane rolls, rotates and climbs out over the Bay
+      const p = (T % 11000) / 11000; let x, y, ang = 0, a = 1;
+      if (p < 0.4) { x = 14 + 42 * (p / 0.4) ** 2; y = -2; } else {
+        const q = (p - 0.4) / 0.6; x = 56 + q * 70; y = -2 - q * q * 60; ang = -Math.atan2(2 * q * 60, 70) * 0.9; a = 1 - q * q;
+      }
+      c.save(); c.globalAlpha = a; c.translate(x, y); c.rotate(ang);
+      shape(c, "M-6 0 Q-6 -1.6 -4 -1.6 H5 Q7.5 -1.4 8 0 Q5 1 -4 1 Z M0 -1 L-3 -5 H-1.4 L2 -1 M-5.5 -1 L-7 -4.5 H-5.6 L-3.6 -1", BG);
+      c.restore();
+    } },
+  { id: "dish", name: "Stanford Dish", at: [-122.1797, 37.4086], w: 34, h: 40,
+    draw(c, T) {
+      shape(c, "M-9 0 L0 -13 L9 0 M-5 -6 H5", null);
+      const ang = -0.5 + 0.35 * Math.sin(T / 3400);
+      c.save(); c.translate(0, -14); c.rotate(ang);
+      shape(c, "M-15 -4 Q0 8 15 -4 Z"); shape(c, "M-15 -4 L0 -15 L15 -4 M0 -15 V2", null);
+      const p = (T % 2600) / 2600;
+      c.strokeStyle = CORAL; c.globalAlpha = 1 - p; c.beginPath(); c.arc(0, -15, 4 + p * 16, -2.4, -0.74); c.stroke(); c.globalAlpha = 1;
+      c.restore();
+    } },
+  { id: "hoover", name: "Hoover Tower, Stanford", at: [-122.1660, 37.4275], w: 22, h: 70,
+    draw(c, T) {
+      shape(c, "M-9 0 V-8 H9 V0 Z");
+      shape(c, "M-5.5 -8 V-54 H5.5 V-8 Z M-2 -50 V-43 M2 -50 V-43 M-7 -54 H7 V-56 H-7 Z");
+      shape(c, "M-4.5 -56 Q0 -67 4.5 -56 Z M0 -64 V-69");
+      dot(c, 0, -46.5, 1.3, CORAL, wave(T, 2200));
+    } },
+  { id: "campanile", name: "Sather Tower, UC Berkeley", at: [-122.2578, 37.8721], k: 0.62, ...campanile, v2: true },
+  { id: "towerhall", name: "Tower Hall, SJSU", at: [-121.8838, 37.3352], k: 0.7, ...towerHall, v2: true },
+  { id: "lick", name: "Lick Observatory, Mt Hamilton", at: [-121.6429, 37.3414], w: 44, h: 34,
+    draw(c, T) {
+      shape(c, "M-16 0 V-6 H6 V0 Z M-14 -6 C-14 -20 4 -20 4 -6 Z");
+      const s = 4 * Math.sin(T / 4200) - 5; shape(c, `M${s - 1.4} -6.5 V-17.5 M${s + 1.4} -6.5 V-17 `, null);
+      shape(c, "M9 0 V-4 H19 V0 Z M10 -4 C10 -11 18 -11 18 -4 Z");
+      const a = wave(T, 1700); c.save(); c.globalAlpha = a; c.strokeStyle = CORAL;
+      c.beginPath(); c.moveTo(10, -32); c.lineTo(10, -24); c.moveTo(6, -28); c.lineTo(14, -28); c.stroke(); c.restore();
+    } },
+];
+for (const l of LANDMARKS) l.cell = cell(...l.at);
+
+// ---------- layout ----------
+const field = document.getElementById("field"), cv = document.getElementById("cv"), ctx = cv.getContext("2d");
+let G, rows, route;
+// Caltrain, 4th & King to Diridon
+const CALTRAIN = [[-122.3947, 37.7766], [-122.3866, 37.6003], [-122.3237, 37.5679], [-122.2316, 37.4854], [-122.1645, 37.443],
+  [-122.0764, 37.3943], [-122.0307, 37.3784], [-121.9366, 37.3532], [-121.9025, 37.3297]].map((a) => cell(...a));
+const along = (d) => { let i = 1; while (i < route.length - 1 && route[i].d < d) i++; const a = route[i - 1], b = route[i], f = Math.min(1, Math.max(0, (d - a.d) / (b.d - a.d || 1)));
+  return { x: a.x + (b.x - a.x) * f, y: a.y + (b.y - a.y) * f, t: a.t + (b.t - a.t) * f, k: a.k }; };
+function trainCars(T) {
+  // down the Peninsula and back, with a pause at each end
+  const L = route[route.length - 1].d, per = 26000, ph = (T % (2 * per)) / per, go = ph < 1 ? ph : 2 - ph;
+  const head = Math.min(1, Math.max(0, (go - 0.06) / 0.88)) * L, dir = ph < 1 ? 1 : -1, len = 9 * G.S;
+  return [0, 1, 2, 3].map((j) => {
+    const a = along(head - dir * j * (len + 1.5)), b = along(head - dir * (j * (len + 1.5) + len));
+    return { t: (a.t + b.t) / 2, draw() {
+      ctx.lineCap = "round"; ctx.beginPath(); ctx.moveTo(a.x, a.y - 2); ctx.lineTo(b.x, b.y - 2);
+      ctx.strokeStyle = INK; ctx.lineWidth = 5.2; ctx.stroke(); ctx.strokeStyle = j === 0 ? CORAL : "#F7F5FC"; ctx.lineWidth = 3.4; ctx.stroke();
+    } };
+  });
+}
+function layout() {
+  const r = field.getBoundingClientRect(), dpr = devicePixelRatio || 1;
+  cv.width = r.width * dpr; cv.height = r.height * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const top = 120, bottom = r.height - 26, S = Math.min(1.35, r.width / 1300) * 1.25;
+  const proj = (x, y, h) => {
+    const t = gy(y), k = 0.7 + 0.3 * t;
+    return [r.width / 2 + (gx(x) - 0.5) * r.width * 1.08 * k, top + t * (bottom - top) - h * 0.075 * k * Math.min(1.35, r.width / 1300), k];
+  };
+  // sample rows evenly on screen, columns evenly across the stretched width
+  rows = [];
+  const N = Math.round((bottom - top) / 4.2), M = Math.round(r.width / 2.2);
+  for (let i = 0; i <= N; i++) {
+    const t = i / N, y = gyInv(t), pts = [];
+    for (let j = 0; j <= M; j++) { const x = gxInv(j / M), h = elev(x, y); const [sx, sy] = proj(x, y, h); pts.push([sx, sy, h]); }
+    rows.push({ t, y, pts, gap: (bottom - top) / N });
+  }
+  for (const l of LANDMARKS) {
+    const [x, y] = l.cell, [sx, sy, k] = proj(x, y, l.onWater ? 0 : elev(x, y));
+    Object.assign(l, { t: gy(y), sx, sy, s: k * S * 0.85 * (l.k ?? 1) });
+  }
+  route = [];
+  for (let i = 1; i < CALTRAIN.length; i++) for (let j = 0; j < 24; j++) {
+    const f = j / 24, x = CALTRAIN[i - 1][0] * (1 - f) + CALTRAIN[i][0] * f, y = CALTRAIN[i - 1][1] * (1 - f) + CALTRAIN[i][1] * f;
+    const [sx, sy, k] = proj(x, y, Math.min(elev(x, y), 15)); route.push({ x: sx, y: sy, t: gy(y), k, d: 0 });
+  }
+  for (let i = 1; i < route.length; i++) route[i].d = route[i - 1].d + Math.hypot(route[i].x - route[i - 1].x, route[i].y - route[i - 1].y);
+  G = { r, proj, bottom, S, top };
+}
+
+function frame(T) {
+  const { r, bottom } = G;
+  ctx.clearRect(0, 0, r.width, r.height);
+  const scan = ((T / 6500) % 1.25) - 0.1; // 0 far .. 1 near
+  let li = 0;
+  const now = new Date();
+  const order = [...LANDMARKS, ...trainCars(T)].sort((a, b) => a.t - b.t);
+  for (const row of rows) {
+    const { pts, t, gap } = row;
+    ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+    for (const p of pts) ctx.lineTo(p[0], p[1]);
+    ctx.lineTo(pts[pts.length - 1][0], bottom + 40); ctx.lineTo(pts[0][0], bottom + 40); ctx.closePath();
+    ctx.fillStyle = BG; ctx.fill();
+    const near = Math.max(0, 1 - Math.abs(t - scan) / 0.025);
+    // water: a tinted band plus a dotted line, so the Bay reads as one shape
+    ctx.lineCap = "butt";
+    const segs = [];
+    let cur = null;
+    for (let i = 1; i < pts.length; i++) {
+      const w = pts[i][2] < 2;
+      if (!cur || cur.w !== w) { cur = { w, pts: [pts[i - 1]] }; segs.push(cur); }
+      cur.pts.push(pts[i]);
+    }
+    for (const s of segs) if (s.w) {
+      ctx.beginPath(); s.pts.forEach((p, k) => (k ? ctx.lineTo(p[0], p[1] + gap / 2) : ctx.moveTo(p[0], p[1] + gap / 2)));
+      ctx.lineWidth = gap + 0.6; ctx.strokeStyle = WATER; ctx.stroke();
+    }
+    for (const s of segs) {
+      ctx.beginPath(); s.pts.forEach((p, k) => (k ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])));
+      ctx.setLineDash(s.w ? [1.5, 5] : []);
+      ctx.lineWidth = s.w ? 1 : 0.8 + t * 1.1 + near * 1.3;
+      ctx.strokeStyle = near ? `rgba(255,90,71,${0.45 + near * 0.55})` : s.w ? DOT : `rgba(33,25,70,${0.5 + t * 0.5})`;
+      ctx.stroke();
+    }
+    ctx.setLineDash([]);
+    // landmarks are drawn right after their own row, so nearer hills overlap them
+    while (li < order.length && order[li].t <= t) {
+      const l = order[li++];
+      if (!l.name) { l.draw(); continue; }
+      const hot = l.hover || Math.abs(l.t - scan) < 0.03;
+      if (Math.abs(l.t - scan) < 0.03) l.pinged = T;
+      ctx.save(); ctx.translate(l.sx, l.sy); ctx.scale(l.s, l.s);
+      ctx.lineWidth = 1.5 / l.s; ctx.lineJoin = "round"; ctx.lineCap = "round"; ctx.strokeStyle = hot ? CORAL : INK;
+      if (l.v2) l.draw(new Pen(ctx, l.s, T, { boil: 0.45, ink: hot ? CORAL : INK }), T, now); else l.draw(ctx, T);
+      ctx.restore();
+      l.label.classList.toggle("on", !!l.hover || T - (l.pinged ?? -1e9) < 1600);
+    }
+  }
+  // gulls drifting across the Bay
+  const gp = new Pen(ctx, 1, T);
+  for (let i = 0; i < 5; i++) {
+    const q = ((T / 70000 + i * 0.021) % 1), x = r.width * (0.62 - q * 0.42) + Math.sin(i * 2.1) * 14, y = G.top + (bottom - G.top) * 0.36 + Math.sin(T / 1800 + i) * 6 + (i % 3) * 9;
+    ctx.globalAlpha = Math.sin(q * Math.PI); bird(gp, x, y, T, i, 2.3); ctx.globalAlpha = 1;
+  }
+  requestAnimationFrame(frame);
+}
+
+// ---------- DOM: labels, project pins, Pathfinder ----------
+for (const l of LANDMARKS) { l.label = document.createElement("div"); l.label.className = "lm"; l.label.textContent = l.name; field.appendChild(l.label); }
+const pins = [...PLACES, { id: "temper", name: "Ferry Building", what: "Temper" }].map((p) => {
+  const el = document.createElement("a"); el.className = "pin"; el.href = `#project-${p.id}`; el.setAttribute("aria-label", `${p.what}, ${p.name}`);
+  el.innerHTML = `<svg width="15" height="20" viewBox="0 0 15 20" aria-hidden="true"><path d="M7.5 19 C5 14 1 11 1 7 A6.5 6.5 0 0 1 14 7 C14 11 10 14 7.5 19 Z" fill="#FF5A47" stroke="#211946" stroke-width="1.4"/><circle cx="7.5" cy="7" r="2.3" fill="#F7F5FC"/></svg>`
+    + `<span class="lab"><b>${p.name}</b><span>${p.what}</span><em>See the project ↓</em></span>`;
+  field.appendChild(el); return { ...p, el };
+});
+const pf = document.createElement("div"); pf.className = "pf";
+pf.innerHTML = pathfinder({ ink: "#211946", eye: "#FF5A47", fill: "#EEECF7", width: 6, size: 50 });
+field.appendChild(pf);
+function place() {
+  for (const l of LANDMARKS) { l.label.style.left = `${l.sx}px`; l.label.style.top = `${l.sy - l.h * l.s - 6}px`; }
+  const sits = { berkeley: "campanile", sjsu: "towerhall", temper: "fb" }; // pins that rise out of a landmark
+  for (const p of pins) {
+    const lm = LANDMARKS.find((l) => l.id === sits[p.id]); let sx, sy;
+    if (lm) { sx = lm.sx; sy = lm.sy - lm.h * lm.s + 4; } else { const [x, y] = hm.places[p.id]; [sx, sy] = G.proj(x, y, elev(x, y)); }
+    p.el.style.left = `${sx}px`; p.el.style.top = `${sy + 4}px`;
+  }
+  const [hx, hy] = [470, 326]; const [sx, sy] = G.proj(hx, hy, elev(hx, hy));
+  pf.style.left = `${sx}px`; pf.style.top = `${sy + 2}px`;
+}
+field.addEventListener("pointermove", (e) => {
+  const b = field.getBoundingClientRect(), mx = e.clientX - b.left, my = e.clientY - b.top;
+  let best = null;
+  for (const l of LANDMARKS) {
+    l.hover = false;
+    const hw = (l.w / 2) * l.s + 4;
+    if (mx > l.sx - hw && mx < l.sx + hw && my > l.sy - l.h * l.s - 4 && my < l.sy + 6) if (!best || l.t > best.t) best = l;
+  }
+  if (best) best.hover = true;
+});
+field.addEventListener("pointerleave", () => LANDMARKS.forEach((l) => (l.hover = false)));
+layout(); place(); requestAnimationFrame(frame);
+addEventListener("resize", () => { layout(); place(); });
+</script>
+</body></html>

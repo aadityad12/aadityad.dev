@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import Navigation from "../../components/sol/Navigation";
-import ProjectExhibit from "../../components/sol/ProjectExhibit";
+import ProjectStage from "../../components/sol/ProjectStage";
 import Contact from "../../components/sol/Contact";
 import { Arrow } from "../../components/sol/Icons";
 import { projects } from "../../lib/portfolio";
@@ -31,7 +31,7 @@ export default async function CaseStudy({ params }: { params: Promise<{slug: str
     <Navigation />
     <main className={`case-study case-${project.id}`} id="main">
       <section className="case-hero wrap" id="top"><Link className="back-link" href={`/#${project.id}`}>← All selected work</Link><div className="case-eyebrow"><span className="eyebrow">{project.number} / {project.category}</span><span className="eyebrow">INSIDE THE BUILD</span></div><h1>{project.name}<span>.</span></h1><p className="case-headline">{project.headline}</p><p className="case-description">{project.description}</p><div className="case-meta"><div><span className="eyebrow">MY ROLE</span><p>{project.role}</p></div><div><span className="eyebrow">WHEN / WHERE</span><p>{project.period}</p></div><div className="case-source-links"><a className="button blue" href={project.repo} target="_blank" rel="noreferrer">Explore the source <Arrow diagonal /></a>{project.live && <a className="text-link" href={project.live} target="_blank" rel="noreferrer">Project site <Arrow diagonal /></a>}</div></div></section>
-      <div className="case-exhibit wrap"><ProjectExhibit id={project.id} /><p className="case-exhibit-caption">AN INTERACTIVE EXPLANATION, NOT A LIVE DEPLOYMENT. {project.id === "rung" ? "NUMBERS COME FROM THE PROJECT’S COMMITTED RESULTS." : "SEE THE SOURCE FOR THE ACTUAL IMPLEMENTATION."}</p></div>
+      <div className="case-exhibit wrap"><ProjectStage id={project.id} /><p className="case-exhibit-caption">AN INTERACTIVE EXPLANATION, NOT A LIVE DEPLOYMENT. {project.id === "rung" ? "NUMBERS COME FROM THE PROJECT’S COMMITTED RESULTS." : "SEE THE SOURCE FOR THE ACTUAL IMPLEMENTATION."}</p></div>
       <div className="case-body wrap"><aside className="case-sidebar"><span className="eyebrow">FIELD NOTES</span><a href="#problem">01 The constraint</a><a href="#approach">02 The approach</a><a href="#ownership">03 My contribution</a><a href="#decisions">04 The decisions</a><a href="#outcome">05 What came out of it</a><div className="case-sidebar-stack"><span className="eyebrow">BUILT WITH</span>{project.stack.map(tech => <span key={tech}>{tech}</span>)}</div></aside><div className="case-narrative">
         <section id="problem"><span className="eyebrow">01 / THE CONSTRAINT</span><h2>The part that<br />made it interesting.</h2><p>{project.constraint}</p></section>
         <section id="approach"><span className="eyebrow">02 / THE APPROACH</span><h2>A system, not a shortcut.</h2><p>{project.approach}</p><div className="architecture-flow" role="group" aria-label="System architecture">{project.flow.map((stage, i) => <div key={stage}><span>0{i+1}</span><b>{stage}</b>{i < project.flow.length - 1 && <Arrow />}</div>)}</div></section>

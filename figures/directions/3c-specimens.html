@@ -1,0 +1,55 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>Landmark style test</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Manrope:wght@400;500;700&family=DM+Mono:wght@400;500&display=block" rel="stylesheet">
+<style>
+body{margin:0;background:#EEECF7;color:#211946;font:400 16px/1.55 Manrope,sans-serif}
+main{max-width:1360px;margin:0 auto;padding:34px 40px 60px}
+h1{font:400 56px/1 "Instrument Serif";margin:0 0 6px}
+p.lede{margin:0 0 26px;color:#5A5280;max-width:760px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+figure{margin:0;background:#E6E3F3;border-radius:18px;overflow:hidden}
+canvas{display:block;width:100%;height:440px}
+figcaption{padding:12px 18px 16px;font-size:14.5px}
+figcaption b{font:500 11.5px "DM Mono";letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:2px}
+</style></head><body><main>
+<h1>Landmark style test</h1>
+<p class="lede">Four landmarks redrawn: one hand-drawn pen that wobbles like Pathfinder, real colour, light from the left, and small life around each place. The clocks show the real time.</p>
+<div class="grid" id="grid"></div>
+</main>
+<script type="module">
+import { Pen, C } from "./pen.js";
+import { goldenGate, ferryBuilding, campanile, towerHall } from "./landmarks2.js";
+const ITEMS = [
+  [goldenGate, "Golden Gate Bridge", "Fog rolls in from the ocean, swallows the legs and pulls back. Traffic both ways, tower lights, gulls.", true],
+  [ferryBuilding, "Ferry Building · Temper", "Clock on real time, flag, pigeons that lift off the roof and circle back, market stalls, people on the Embarcadero, palms.", true],
+  [campanile, "Sather Tower · Berkeley · Accordion", "The bells swing and ring out, the birds on the balcony scatter. Clock on real time, oaks sway.", false],
+  [towerHall, "Tower Hall · SJSU", "Terracotta roof, arcades, students crossing the lawn, palms, gold flag.", false],
+];
+const grid = document.getElementById("grid"), views = [];
+for (const [lm, name, what, water] of ITEMS) {
+  const f = document.createElement("figure"); f.innerHTML = `<canvas></canvas><figcaption><b>${name}</b>${what}</figcaption>`;
+  grid.appendChild(f); views.push({ lm, cv: f.querySelector("canvas"), water });
+}
+function frame(T) {
+  const now = new Date();
+  for (const v of views) {
+    const r = v.cv.getBoundingClientRect(), dpr = devicePixelRatio || 1;
+    if (v.cv.width !== Math.round(r.width * dpr)) { v.cv.width = r.width * dpr; v.cv.height = r.height * dpr; }
+    const c = v.cv.getContext("2d"); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, r.width, r.height);
+    const s = Math.min((r.width * 0.86) / v.lm.w, (r.height * 0.8) / v.lm.h), gy = r.height * 0.86;
+    // a few ridge lines behind, and water if the landmark stands on it
+    for (let i = 0; i < 9; i++) {
+      const y = gy - 120 + i * 13; c.beginPath();
+      for (let x = 0; x <= r.width; x += 6) c.lineTo(x, y - Math.max(0, Math.sin(x / 90 + i) * 14 + Math.sin(x / 37 + i * 2) * 6) * (1 - i / 10));
+      c.strokeStyle = `rgba(33,25,70,${0.12 + i * 0.03})`; c.lineWidth = 1; c.stroke();
+    }
+    c.fillStyle = v.water ? C.water : "#E6E3F3"; c.fillRect(0, gy, r.width, r.height - gy);
+    if (v.water) for (let y = gy + 6; y < r.height; y += 7) { c.setLineDash([2, 6]); c.strokeStyle = "#A59DD0"; c.beginPath(); c.moveTo(((T / 60) % 8) - 8, y); c.lineTo(r.width, y); c.stroke(); c.setLineDash([]); }
+    c.save(); c.translate(r.width / 2, gy); c.scale(s, s);
+    v.lm.draw(new Pen(c, s, T), T, now); c.restore();
+  }
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script></body></html>
