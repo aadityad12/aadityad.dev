@@ -19,6 +19,10 @@ export default function Motion() {
       });
       const max = document.documentElement.scrollHeight - innerHeight;
       root.style.setProperty("--reading", String(max ? scrollY / max : 0));
+      // 0 at the top of the page, 1 once the hero name has reached the nav.
+      const rail = document.querySelector<HTMLElement>(".name-rail");
+      const travel = rail && rail.offsetHeight ? rail.offsetTop : 110;
+      root.style.setProperty("--dock", Math.min(1, Math.max(0, scrollY / (travel || 110))).toFixed(3));
     };
     const scroll = () => { if (!frame) frame = requestAnimationFrame(update); };
     const observer = new IntersectionObserver(entries => entries.forEach(entry => {

@@ -3,6 +3,8 @@ import Navigation from "./components/sol/Navigation";
 import IdeaSculpture from "./components/sol/IdeaSculpture";
 import ProjectStage from "./components/sol/ProjectStage";
 import Contact from "./components/sol/Contact";
+import HeroClaims from "./components/sol/HeroClaims";
+import { NameMorph } from "./components/sol/Brand";
 import { Arrow } from "./components/sol/Icons";
 import { archive, contact, projects } from "./lib/portfolio";
 
@@ -17,11 +19,13 @@ const summaries: Record<string, { description: string; ownership: string }> = {
 export default function Home() {
   return <>
     <Navigation home />
+    <div className="page-shell">
+    <div className="name-rail"><div className="wrap"><a className="hero-name" href="#top"><span className="sr-only">Hi, I’m Aaditya Desai.</span><NameMorph greeting /></a><span className="hero-role">COMPUTER ENGINEER. CHRONICALLY CURIOUS.</span></div></div>
     <main id="main">
       <section className="hero wrap" id="top">
         <div className="hero-overline"><span className="hello"><span className="orange-dot" /> HI, I’M AADITYA DESAI.</span><span>COMPUTER ENGINEER. CHRONICALLY CURIOUS.</span></div>
         <div className="hero-main">
-          <div className="hero-copy"><h1>I wonder.<br />Then I <span>build.</span></h1><p>AI that remembers. A phone that speaks with a glance. A language that becomes machine code.</p><p className="hero-intro">I’m a computer engineering student at San José State.<br />I like finding out how far an idea can go.</p><a className="pill-link" href="#work"><span>See what I mean</span><span className="pill-arrow"><Arrow /></span></a></div>
+          <div className="hero-copy"><h1>I wonder.<br />Then I <span>build.</span></h1><HeroClaims /><p className="hero-intro">I’m a computer engineering student at San José State.<br />I like finding out how far an idea can go.</p><a className="pill-link" href="#work"><span>See what I mean</span><span className="pill-arrow"><Arrow /></span></a></div>
           <IdeaSculpture />
         </div>
         <div className="hero-foot"><div className="hero-proof"><span className="proof-star" aria-hidden="true">✳</span><p>Berkeley AI Hackathon<span>2026 sponsor-track winner</span></p></div><div className="hero-proof"><span className="proof-symbol" aria-hidden="true">↗</span><p>Infineon × De Anza<span>Research & technical leadership</span></p></div><a href={`mailto:${contact.email}`} className="hero-open"><span className="orange-dot" /><span>Open to 2027 internships<br /><small>Let’s build something together.</small></span><Arrow diagonal /></a></div>
@@ -40,5 +44,6 @@ export default function Home() {
       <section className="about-section" id="about"><div className="wrap"><span className="eyebrow">02 / THE HUMAN PART</span><div className="about-layout"><div className="about-copy" data-entrance><h2>One more<br /><span>“why?”</span></h2><p className="about-lead">That’s usually how it starts.</p><p>Why did a radar measure the wrong object? What actually makes an interpreter faster? Could looking at a phone be enough to make it speak?</p><p>I’m Aaditya, a computer engineering student at San José State with an AI minor. I build across the stack because the interesting part is usually between the layers.</p><p>I also teach introductory engineering. Helping someone turn “it doesn’t work” into “now I get it” is a pretty good use of an afternoon.</p><div className="education"><b>SJSU · Computer Engineering + AI</b><span>Class of 2028 · 3.8 GPA · Dean’s Scholar</span></div></div><div className="experience-list"><span className="eyebrow">BUILDING & HELPING OTHERS BUILD</span><article><span className="experience-date">APR — JUN 2026</span><h3>Infineon Technologies</h3><p className="experience-position">Research Intern & Technical Lead</p><p>With De Anza College. Led a five-person group to a working wearable vision prototype. Owned the on-device software.</p></article><article><span className="experience-date">AUG 2026 — PRESENT</span><h3>San José State</h3><p className="experience-position">Teaching Assistant · Engineering</p><p>Two weekly labs. CAD, circuits, programming, and a lot of live debugging at the bench.</p></article><article><span className="experience-date">JAN — DEC 2025</span><h3>De Anza College</h3><p className="experience-position">Teaching Assistant & CS Tutor</p><p>C++, x86 assembly, Python, and data structures. Finding the cause, not just handing over the fix.</p></article><a href={contact.resume} target="_blank" rel="noreferrer" className="about-resume">The full résumé <Arrow diagonal /></a></div></div></div></section>
     </main>
     <Contact />
+    </div>
   </>;
 }

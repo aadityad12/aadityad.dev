@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, DM_Mono, Manrope } from "next/font/google";
 import "./globals.css";
+import "./stages.css";
+import "./labs.css";
 
 const sans = Manrope({ variable: "--font-body", subsets: ["latin"], display: "swap" });
 const display = Bricolage_Grotesque({ variable: "--font-display", subsets: ["latin"], display: "swap" });
@@ -11,11 +13,11 @@ export const metadata: Metadata = {
   description: "Computer engineering at SJSU. AI agents, handwritten ARM64, embedded vision, and local-first Android. Explore the builds. Available for Summer 2027 internships.",
   metadataBase: new URL("https://aadityad.dev"),
   alternates: { canonical: "/" },
-  icons: { icon: [{ url: "/favicon.svg", type: "image/svg+xml" }] },
+  icons: { icon: [{ url: "/favicon.svg?v=2", type: "image/svg+xml" }] },
   openGraph: { title: "Aaditya Desai — I wonder. Then I build.", description: "A few answers to what if. AI tools, language runtimes, embedded vision, and Android builds.", type: "website", url: "/", images: [{ url: "/og-sol.png", width: 1200, height: 630, alt: "Aaditya Desai — I wonder. Then I build." }] },
   twitter: { card: "summary_large_image", title: "Aaditya Desai — I wonder. Then I build.", description: "Computer engineer & builder. Explore the work.", images: ["/og-sol.png"] },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en" className={`${sans.variable} ${display.variable} ${mono.variable}`}><body>{children}</body></html>;
+  return <html lang="en" data-name="dock" data-mark="star" data-hero="shift" className={`${sans.variable} ${display.variable} ${mono.variable}`}><body>{children}</body></html>;
 }
