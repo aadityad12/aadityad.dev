@@ -9,7 +9,7 @@ import { Arrow } from "./components/sol/Icons";
 import { archive, contact, projects } from "./lib/portfolio";
 
 const summaries: Record<string, { description: string; ownership: string }> = {
-  accordion: { description: "AI agents shouldn’t have to lose their train of thought. A visual, reversible memory layer for long coding sessions.", ownership: "I built the three-stage relevance pipeline and per-actor attribution view. Our team won The Token Company’s track at the Berkeley AI Hackathon." },
+  accordion: { description: "AI agents shouldn’t have to lose their train of thought. A visual, reversible memory layer for long coding sessions.", ownership: "I built the conductor, the policy that decides what to fold, along with its evaluation layer and activity dashboard. Our team won The Token Company’s track at the Berkeley AI Hackathon." },
   rung: { description: "How fast can a small language go? I built the same language five ways, all the way down to handwritten ARM64.", ownership: "Solo-built the runtime, bytecode engines, native compiler, and benchmark ladder. Even the optimizations that made it slower are in the results." },
   gazeboard: { description: "For someone who can’t speak or use their hands, a glance can be a whole sentence. An on-device Android research prototype.", ownership: "I integrated Qualcomm’s NPU, built the debug and recalibration flows, and helped turn camera frames into four directional selections." },
   visionassist: { description: "A small computer with a little more awareness. A wearable, entirely local vision-to-speech prototype.", ownership: "Technical lead in a five-person group with Infineon and De Anza. I wrote the device software, from perception to offline speech." },

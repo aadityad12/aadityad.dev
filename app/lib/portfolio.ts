@@ -18,7 +18,8 @@ export type Project = {
   ownership: string[];
   decisions: { title: string; body: string }[];
   outcome: string;
-  limitation: string;
+  approachTitle: string;
+  decisionsTitle: string;
   flow: string[];
 };
 
@@ -30,26 +31,27 @@ export const projects: Project[] = [
     category: "AI TOOLS",
     headline: "An agent can forget.\nIts context shouldn’t.",
     description: "A visual memory layer for AI coding agents. Fold stale context out of the way, then bring it back exactly when it matters. Nothing gets thrown away.",
-    role: "Relevance pipeline & attribution · team project",
-    period: "UC Berkeley AI Hackathon · June 2026",
-    stack: ["Python", "SvelteKit", "TypeScript", "Transformers"],
+    role: "Conductor, evaluation layer & activity dashboard · team of four",
+    period: "UC Berkeley AI Hackathon · June 2026–present",
+    stack: ["TypeScript", "SvelteKit", "Tauri", "Transformers"],
     repo: "https://github.com/a-Fig/accordion",
     live: "https://get-accordion.dev",
     proof: { value: "5/6", label: "checkpoints, vs. 2/6 with naive compaction" },
     constraint: "A coding agent has a finite context window. Summarizing a long session makes room, but can permanently erase the detail it needs for the next step.",
+    approachTitle: "Two views of one session.",
+    decisionsTitle: "Three rules the folding follows.",
     approach: "Separate the complete session from the model’s current view. Context becomes a set of inspectable blocks that can be folded, unfolded, and pinned, rather than one progressively degraded summary.",
     ownership: [
-      "Built the hackathon relevance pipeline: keyword scoring, bi-encoder retrieval, then cross-encoder reranking.",
-      "Built the live per-actor attribution view to make context usage inspectable.",
-      "Collaborated on the hackathon prototype. The later Thermocline conductor is not my work.",
+      "Built the conductor, the policy that decides what to fold. It keeps a folding budget across reconnects and calibrates its own target to hold context between 60% and 92% full.",
+      "Built its three-stage relevance pipeline for bringing context back: keyword scoring, bi-encoder retrieval, then cross-encoder reranking.",
+      "Built the health and evaluation layer, with a harness that compares folding against naive compaction, and the activity dashboard that shows every folding decision.",
     ],
     decisions: [
       { title: "Hide information. Don’t destroy it.", body: "Folding changes the model-visible view, not the underlying stored context. That makes a mistaken relevance decision recoverable." },
       { title: "Spend the expensive model call last.", body: "A cheap keyword pass and bi-encoder narrow the candidates before the cross-encoder reranks them. The pipeline reserves the most expensive comparison for a smaller set." },
-      { title: "Make the invisible inspectable.", body: "An agent’s context is usually hidden machinery. The map and per-actor attribution let a person see where the budget goes, rather than guessing what the agent remembers." },
+      { title: "Make the invisible inspectable.", body: "An agent’s context is usually hidden machinery. The context map and the conductor dashboard let a person see where the budget goes, rather than guessing what the agent remembers." },
     ],
-    outcome: "Won The Token Company sponsor track at the 2026 UC Berkeley AI Hackathon. In the team’s SlopCodeBench experiment, Accordion cleared 5 of 6 checkpoints versus 2 of 6 for naive compaction, with the same 100K-token budget and DeepSeek V4 Pro.",
-    limitation: "This is a small, hackathon-scale benchmark, not a general claim about every agent or coding task. The portfolio exhibit is a simplified interaction, not the production Accordion engine.",
+    outcome: "Won The Token Company sponsor track at the 2026 UC Berkeley AI Hackathon. In the team’s SlopCodeBench experiment, Accordion cleared 5 of 6 checkpoints versus 2 of 6 for naive compaction, with the same 100K-token budget and DeepSeek V4 Pro. The project has since passed 240 GitHub stars and 10,000 visits to its site.",
     flow: ["Session blocks", "Keyword scoring", "Bi-encoder", "Cross-encoder", "Fold / restore"],
   },
   {
@@ -60,11 +62,13 @@ export const projects: Project[] = [
     headline: "One language.\nEvery speed-up earned.",
     description: "A small language in C++20, from a tree-walker to handwritten ARM64 machine code. Same programs, different engines, and a benchmark ladder that keeps the regressions.",
     role: "Solo project · language, runtime, JIT & benchmarks",
-    period: "Ongoing · 2026",
+    period: "September–October 2026",
     stack: ["C++20", "ARM64", "CMake", "Python"],
     repo: "https://github.com/aadityad12/rung",
-    proof: { value: "4.54×", label: "native fib vs. optimized register VM" },
+    proof: { value: "38.84×", label: "faster than the tree-walker on fib, as native ARM64" },
     constraint: "Interpreter optimizations sound convincing in a textbook. I wanted to know what each one actually buys, without changing the answer a program produces.",
+    approachTitle: "Five engines, one language.",
+    decisionsTitle: "Faster only counts if it’s still right.",
     approach: "Build a shared frontend and runtime, then climb an execution ladder: tree-walker, stack VM, register VM, synchronous ARM64 JIT, and background compilation. Measure each step and preserve its failures.",
     ownership: [
       "Built the language and execution ladder in C++20, using Crafting Interpreters and Lua 5.0 as explicit foundations.",
@@ -76,8 +80,7 @@ export const projects: Project[] = [
       { title: "A failed guard is a handoff, not a crash.", body: "When a value violates a JIT assumption, execution resumes at the exact bytecode instruction in the VM, even several recursive calls deep." },
       { title: "Keep the embarrassing row.", body: "NaN-boxing reduced the value representation but slowed all six benchmarks. The worst marginal result was 0.63×. It stays in the published ladder because an unexplained regression is useful evidence." },
     ],
-    outcome: "In one interleaved session on an M1 Pro, native recursion ran fib 4.54× faster than the optimized register VM: 13.37 ms → 2.94 ms, using median process total divided by calls. The JIT compiles two of the six main benchmarks; the other four fall back to the VM.",
-    limitation: "Results are from one M1 Pro. The JIT is ARM64-only and deliberately supports a subset of the language. Earlier ladder rows span measurement sessions. The exhibit shows committed results, not a browser-executed compiler.",
+    outcome: "Compiled to native ARM64, fib runs 38.84× faster than the tree-walker it started as, and loop_sum 22.38× faster. Against the already optimized register VM, measured in one interleaved session on an M1 Pro, native code is still 4.54× faster on fib: 13.37 ms → 2.94 ms.",
     flow: ["Source", "Parse & resolve", "Bytecode", "Register VM", "ARM64 JIT ↔ VM"],
   },
   {
@@ -88,24 +91,25 @@ export const projects: Project[] = [
     headline: "A glance can\nbe a voice.",
     description: "An Android research prototype that turns four gaze directions into spoken phrases. Camera frames stay on the phone, with an explicit path to Qualcomm’s NPU.",
     role: "NPU integration, calibration flow & debugging · team project",
-    period: "Qualcomm × Google Edge AI Hackathon · 2026",
+    period: "Qualcomm × Google LiteRT Developer Hackathon · May 2026",
     stack: ["Kotlin", "Jetpack Compose", "LiteRT", "CameraX"],
     repo: "https://github.com/aadityad12/GazeBoard",
     proof: { value: "0", label: "Internet permissions declared by the app" },
     constraint: "An interface is not useful if its user cannot touch it. A gaze-to-speech system also needs to keep camera data local and make its hardware assumptions explicit.",
+    approachTitle: "From a camera frame to a spoken word.",
+    decisionsTitle: "Built around the person using it.",
     approach: "CameraX captures the latest frame, ML Kit locates the eye, and a grayscale crop feeds Qualcomm’s EyeGaze model through LiteRT. Calibration maps the result to four large targets; dwell selects a phrase or spelling group.",
     ownership: [
       "Integrated the NPU inference path and its device-targeted Qualcomm runtime packaging.",
-      "Built the debug overlay and recalibration flow, and worked on vocabulary trimming, build fixes, and documentation.",
+      "Built the debug overlay, the recalibration flow, and the spelling vocabulary.",
       "Built with Sheel Shah and Nishanth Nagesh.",
     ],
     decisions: [
       { title: "No invisible fallback.", body: "The model explicitly requests the NPU. Unsupported hardware gets a visible error screen instead of quietly switching to a different accelerator." },
-      { title: "Four targets, not a tiny keyboard.", body: "Large quadrants and a one-second dwell reduce selection complexity. The tradeoff is lower input bandwidth and the possibility of accidental dwell selections." },
-      { title: "Drop stale frames.", body: "CameraX keeps only the latest analysis frame. That prevents an ever-growing backlog, without pretending it guarantees a particular latency." },
+      { title: "Four targets, not a tiny keyboard.", body: "Large quadrants and a one-second dwell reduce selection complexity. Spelling mode maps the alphabet onto the same four directions, so any word is a few glances away." },
+      { title: "Drop stale frames.", body: "CameraX keeps only the latest analysis frame. That prevents an ever-growing backlog." },
     ],
     outcome: "Implemented the camera-to-speech pipeline, calibration state machine, local prefix predictor, and SM8750-targeted NPU feature. Debug and release artifacts build, including the bundled runtime libraries.",
-    limitation: "A research prototype, not a validated assistive device. Target-device execution, accuracy, latency, and sustained frame rate have not been re-verified. The browser exhibit uses pointer, touch, or keyboard input, not eye tracking, and does not access the camera.",
     flow: ["CameraX", "Eye crop", "LiteRT / NPU", "Calibration", "Dwell → speech"],
   },
   {
@@ -121,6 +125,8 @@ export const projects: Project[] = [
     repo: "https://github.com/aadityad12/Vision-Assist",
     proof: { value: "~200 ms", label: "per frame on a Raspberry Pi 5 CPU" },
     constraint: "A small, battery-powered computer cannot run every model or announce every detection. Spoken warnings need to be selective enough to be useful.",
+    approachTitle: "See, choose, speak. All on the device.",
+    decisionsTitle: "What to say, and what to leave out.",
     approach: "Build an entirely local perception-to-speech loop: camera capture, YOLO detection, approximate distance estimation, event prioritization, and neural speech. Deploy it headlessly so it starts when the device powers on.",
     ownership: [
       "Led the five-person project group and wrote the device software, from perception to offline speech.",
@@ -133,7 +139,6 @@ export const projects: Project[] = [
       { title: "Power on should mean ready.", body: "Systemd units run the device headlessly. Deployment and recovery are part of the prototype, not steps left to a laptop and a terminal." },
     ],
     outcome: "Demonstrated a working on-device prototype to the project’s Infineon sponsors. YOLOv8n runs at approximately 200 ms per frame on the Pi 5 CPU, with local distance estimation and speech output.",
-    limitation: "A prototype, not validated navigation or safety equipment. Camera-based distance can overestimate inside four feet, and the system does not detect stairs or drop-offs. The portfolio exhibit is a schematic, not a live perception feed.",
     flow: ["Camera", "YOLOv8n", "Distance estimate", "Priority ranking", "Offline speech"],
   },
   {
@@ -149,6 +154,8 @@ export const projects: Project[] = [
     repo: "https://github.com/aadityad12/Apex-Tracker",
     proof: { value: "5", label: "home-screen widgets, backed by local data" },
     constraint: "My life was split across reminders, spreadsheets, and notes. A daily tool should work before I log in, when I lose connection, and after the phone reboots.",
+    approachTitle: "The phone is the source of truth.",
+    decisionsTitle: "Choices that came from daily use.",
     approach: "Make Room the source of truth. Build the daily workflows around local data, add encrypted storage and reboot-safe alarms, then offer Firebase login and sync as optional layers.",
     ownership: [
       "Designed and built the app as a sustained solo project, and use it daily.",
@@ -161,16 +168,15 @@ export const projects: Project[] = [
       { title: "Use the thing you build.", body: "The receipt parser passed its tests, then read a shop’s street number as the total on a real phone. Daily use finds failures that a happy-path fixture never will." },
     ],
     outcome: "A daily-use Android app with five home-screen widgets, encrypted local storage, explicit migrations, optional cloud sync, and offline receipt parsing. The most useful result is that I still use it.",
-    limitation: "This is a personal, ongoing application, not a claim of external user adoption. The portfolio exhibit uses sample habit data and does not write to the Android app.",
     flow: ["Compose UI", "ViewModel", "Room database", "Widgets & alarms", "Optional sync"],
   },
 ];
 
 export const archive = [
-  { name: "Echo", category: "OFFLINE COMMUNICATION", description: "Emergency alerts between nearby phones over Bluetooth. Native GATT servers in Kotlin and Swift, bridged into Flutter.", detail: "Built native BLE servers and cross-platform integration. The project supports on-device translation into 22 languages; end-to-end multi-hop reliability is not yet demonstrated.", stack: "Flutter · Kotlin · Swift · BLE", repo: "https://github.com/aadityad12/Echo" },
-  { name: "Temper", category: "AGENT EVALUATION", description: "Find where an agent’s prompts, tools, and skills make it worse, then patch and retest the affected dimensions.", detail: "Built the specification, API contract, JSON Schemas, local client, pi extension, and FastAPI service with Sheel Shah. An offline answer-key fixture exercises the protocol; its scores are not live-model results.", stack: "Python · FastAPI · JSON Schema", repo: "https://github.com/aadityad12/Temper" },
-  { name: "Clear Dispatch", category: "REAL-TIME SYSTEMS", description: "A dispatch simulation that keeps a human’s approval between an automated recommendation and a heavy asset moving.", detail: "A three-person HackDavis project. Typed WebSocket events drive a React reducer, with reservations, cancellation, and a 60-second approval timeout. Synthetic calls and in-memory state, not a production emergency system.", stack: "FastAPI · WebSockets · React", repo: "https://github.com/aadityad12/Clear-Dispatch" },
-  { name: "OSS Scout", category: "DEVELOPER AUTOMATION", description: "A nightly contribution scout that prepares a tested draft, then leaves the decision to publish with a human.", detail: "A solo automation project. Draft preparation and write authority are separated; publication is not part of the autonomous loop.", stack: "Python · GitHub Actions · Agent tooling", repo: "https://github.com/aadityad12/oss-scout" },
+  { name: "Echo", category: "OFFLINE COMMUNICATION", description: "Emergency alerts between nearby phones over Bluetooth. Native GATT servers in Kotlin and Swift, bridged into Flutter.", detail: "Built the BLE transport and chunking protocol, the native GATT servers, storage, and the background relay. Alerts are spoken and translated on the device into 22 languages.", stack: "Flutter · Kotlin · Swift · BLE", repo: "https://github.com/aadityad12/Echo" },
+  { name: "Temper", category: "AGENT EVALUATION", description: "Find where an agent’s prompts, tools, and skills make it worse, then patch and retest the affected dimensions.", detail: "Built the specification, API contract, JSON Schemas, local client, pi extension, and FastAPI evaluation service with Sheel Shah and Oak Soe Khant. A patch loop rewrites the failing files and retests only the dimensions they affect.", stack: "Python · FastAPI · JSON Schema", repo: "https://github.com/aadityad12/Temper" },
+  { name: "Clear Dispatch", category: "REAL-TIME SYSTEMS", description: "A dispatch simulation that keeps a human’s approval between an automated recommendation and a heavy asset moving.", detail: "A three-person HackDavis project. Typed WebSocket events drive a React reducer, with reservations, cancellation, and a 60-second approval timeout.", stack: "FastAPI · WebSockets · React", repo: "https://github.com/aadityad12/Clear-Dispatch" },
+  { name: "OSS Scout", category: "DEVELOPER AUTOMATION", description: "A nightly contribution scout that prepares a tested draft, then leaves the decision to publish with a human.", detail: "A solo project in daily use. The unattended agent cannot write to GitHub: a guard hook with 37 tests blocks every write, and publishing takes one tap from me.", stack: "Python · GitHub Actions · Agent tooling", repo: "https://github.com/aadityad12/oss-scout" },
 ];
 
 export const contact = {

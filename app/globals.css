@@ -282,9 +282,6 @@ kbd { font: 10px var(--font-code); color: var(--muted); border: 1px solid var(--
 .case-result { display: flex; align-items: center; gap: 30px; margin-block: 35px; }
 .case-result > b { font: 500 clamp(65px, 7vw, 105px)/1 var(--font-title); letter-spacing: -.06em; color: var(--orange); white-space: nowrap; }
 .case-result > span { max-width: 240px; font-size: 15px; color: #c4c8bb; }
-.honesty-note { background: #262e23; padding: 24px 28px; border-left: 2px solid #a3b88a; margin-block: 30px; border-radius: 0 8px 8px 0; }
-.honesty-note .eyebrow { font-size: 9px; color: #c3d4af; }
-.honesty-note p { font-size: 14px; margin-top: 12px; line-height: 1.9; }
 .next-project { padding-bottom: 90px; }
 .next-project > .eyebrow { color: var(--muted); }
 .next-project > a { display: flex; justify-content: space-between; align-items: center; gap: 30px; border-top: 1px solid var(--line); margin-top: 20px; padding-top: 15px; font: 500 clamp(55px, 7vw, 105px)/1.2 var(--font-title); letter-spacing: -.055em; }
@@ -566,9 +563,6 @@ kbd { font: 10px var(--font-code); color: var(--muted); border: 1px solid var(--
   .case-result { gap: 20px; margin-block: 28px; }
   .case-result > b { font-size: 60px; }
   .case-result > span { font-size: 12px; }
-  .honesty-note { padding: 20px; margin-block: 25px; }
-  .honesty-note .eyebrow { font-size: 8px; }
-  .honesty-note p { font-size: 13px; }
   .case-narrative .text-link { font-size: 11px; gap: 8px; }
   .case-narrative .text-link .arrow { width: 14px; height: 14px; }
   .next-project { padding-bottom: 60px; }
