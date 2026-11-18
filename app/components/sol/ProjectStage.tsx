@@ -140,7 +140,7 @@ function Gaze() {
   const [host, state] = useBeats(gazeBeats);
   const line = ["Look at one of the four corners.", "Hold your gaze for a second. The phone says it for you.", "Need another word? Three glances narrow 378 words to three.", "One more look, and it’s said."][state.beat];
   return <div ref={host} className={`stage stage-gaze beat-${state.beat}`} data-scene>
-    <div className="stage-caption"><span>03 / GAZEBOARD</span><span>A GLANCE. A VOICE.</span></div>
+    <div className="stage-caption"><span>04 / GAZEBOARD</span><span>A GLANCE. A VOICE.</span></div>
     <GazePhone key={state.beat} beat={state.beat} />
     <div className="gz-statement" aria-hidden="true">A glance<br />can be<br /><span>a voice.</span></div>
     <div className="stage-bottom"><p>{line}<small>For someone who can’t speak or use their hands. Everything stays on the phone.</small></p><Beats state={state} labels={["Look", "Hold", "Spell", "Say it"]} /></div>
@@ -200,7 +200,7 @@ export default function ProjectStage({ id }: { id: ProjectId }) {
     case "accordion": return <Accordion />;
     case "rung": return <Rung />;
     case "gazeboard": return <Gaze />;
-    case "alta": return <AltaStage number="04" />;
+    case "alta": return <AltaStage number="03" />;
     case "visionassist": return <Vision />;
     case "apextracker": return <Apex />;
   }

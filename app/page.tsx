@@ -2,6 +2,7 @@ import Link from "next/link";
 import Navigation from "./components/sol/Navigation";
 import IdeaSculpture from "./components/sol/IdeaSculpture";
 import ProjectStage from "./components/sol/ProjectStage";
+import WorkRail from "./components/sol/WorkRail";
 import Contact from "./components/sol/Contact";
 import HeroClaims from "./components/sol/HeroClaims";
 import { NameMorph } from "./components/sol/Brand";
@@ -9,14 +10,16 @@ import HeroMascot from "./components/mascot/HeroMascot";
 import { Arrow } from "./components/sol/Icons";
 import { archive, contact, projects } from "./lib/portfolio";
 
-const summaries: Record<string, { description: string; ownership: string }> = {
-  accordion: { description: "AI agents shouldn’t have to lose their train of thought. A visual, reversible memory layer for long coding sessions.", ownership: "I built the conductor, the policy that decides what to fold, along with its evaluation layer and activity dashboard. Our team won The Token Company’s track at the Berkeley AI Hackathon." },
-  rung: { description: "How fast can a small language go? I built the same language five ways, all the way down to handwritten ARM64.", ownership: "Solo-built the runtime, bytecode engines, native compiler, and benchmark ladder. Even the optimizations that made it slower are in the results." },
-  gazeboard: { description: "For someone who can’t speak or use their hands, a glance can be a whole sentence. An on-device Android research prototype.", ownership: "I integrated Qualcomm’s NPU, built the debug and recalibration flows, and helped turn camera frames into four directional selections." },
-  alta: { description: "A TA for the electronics bench. A probe pod measures the student’s circuit, and a voice agent walks them to the fault with hints instead of answers.", ownership: "I built the probe pod and its bare-metal firmware: an interrupt-driven ADC reading each probe 1,200 times a second, ring-buffer UART, and firmware tests that run the real binary in a simulator." },
-  visionassist: { description: "A small computer with a little more awareness. A wearable, entirely local vision-to-speech prototype.", ownership: "Technical lead in a five-person group with Infineon and De Anza. I wrote the device software, from perception to offline speech." },
-  apextracker: { description: "I wanted less life admin. So I built the local-first Android app I now use every day.", ownership: "Solo-built and continuously used. Room owns the data; login and sync are optional. Five widgets keep the useful parts on the home screen." },
+const summaries: Record<string, string> = {
+  accordion: "AI agents shouldn’t have to lose their train of thought. A visual, reversible memory layer for long coding sessions.",
+  rung: "How fast can a small language go? I built the same language five ways, all the way down to handwritten ARM64.",
+  alta: "A TA for the electronics bench. A probe pod measures the student’s circuit, and a voice agent walks them to the fault with hints instead of answers.",
+  gazeboard: "For someone who can’t speak or use their hands, a glance can be a whole sentence.",
+  visionassist: "A wearable that spots what’s ahead and says how far away it is, entirely on the device.",
+  apextracker: "I wanted less life admin. So I built the local-first Android app I now use every day.",
 };
+const featured = projects.slice(0, 3);
+const compact = projects.slice(3);
 
 export default function Home() {
   return <>
@@ -34,11 +37,13 @@ export default function Home() {
       <div className="curiosity-ticker" aria-hidden="true"><div>{[0,1].map(i => <span key={i}>WONDER <b>✳</b> BUILD <b>✳</b> BREAK <b>✳</b> LEARN <b>✳</b> REPEAT <b>✳</b> </span>)}</div></div>
 
       <section className="work-section wrap" id="work"><div className="work-heading" data-entrance><span className="eyebrow">01 / A FEW ANSWERS TO “WHAT IF?”</span><h2>Not just ideas.<br /><span>Things I’ve built.</span></h2><p>Go on. Pull them apart.</p></div>
-        {projects.map(project => <article className={`project project-${project.id}`} id={project.id} key={project.id}>
-          <div className="project-heading" data-entrance><div><span className="project-number">{project.number}</span><span className="eyebrow">{project.category}</span></div><div className="project-intro"><h3>{project.name}</h3><p>{summaries[project.id].description}</p></div></div>
+        <WorkRail items={projects.map(({ id, number, name }) => ({ id, number, name }))} />
+        {featured.map(project => <article className={`project project-${project.id}`} id={project.id} key={project.id}>
+          <div className="project-heading" data-entrance><div><span className="project-number">{project.number}</span><span className="eyebrow">{project.category}</span></div><div className="project-intro"><h3>{project.name}</h3><p>{summaries[project.id]}</p></div></div>
           <ProjectStage id={project.id} />
-          <div className="project-after"><div className="project-ownership"><span className="eyebrow">WHAT I BUILT</span><p>{summaries[project.id].ownership}</p><div className="project-stack">{project.stack.map(item => <span key={item}>{item}</span>)}</div></div><div className="project-result"><b>{project.proof.value}</b><p>{project.proof.label}</p></div><div className="project-actions"><Link href={`/work/${project.id}/`} className="pill-link"><span>The story & the code</span><span className="pill-arrow"><Arrow diagonal /></span></Link><a className="source-link" href={project.repo} target="_blank" rel="noreferrer">Straight to GitHub <Arrow diagonal /></a></div></div>
+          <div className="project-foot"><div className="project-proof"><b>{project.proof.value}</b><p>{project.proof.label}</p></div><Link href={`/work/${project.id}/`} className="pill-link"><span>The story & the code</span><span className="pill-arrow"><Arrow diagonal /></span></Link></div>
         </article>)}
+        <div className="more-work"><div className="archive-heading"><h3>And three more.</h3><p>Each one opens into its full story.</p></div>{compact.map(project => <Link className="project-row" id={project.id} key={project.id} href={`/work/${project.id}/`}><span className="archive-number">{project.number}</span><span className="project-row-name">{project.name}</span><span className="project-row-line">{summaries[project.id]}</span><span className="project-row-proof"><b>{project.proof.value}</b>{project.proof.label}</span><Arrow diagonal /></Link>)}</div>
         <div className="archive"><div className="archive-heading"><h3>Still curious?</h3><p>A few more things I couldn’t leave alone.</p></div>{archive.map((project, i) => <details className="archive-row" key={project.name}><summary><span className="archive-number">{String(i + 7).padStart(2, "0")}</span><span className="archive-name">{project.name}</span><span className="archive-description">{project.category.toLowerCase()}</span><span className="archive-plus" aria-hidden="true">+</span></summary><div className="archive-content"><p>{project.description} {project.detail}</p><a href={project.repo} target="_blank" rel="noreferrer">Explore the source <Arrow diagonal /></a></div></details>)}</div>
       </section>
 
