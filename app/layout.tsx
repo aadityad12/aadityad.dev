@@ -15,8 +15,8 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://aadityad.dev"),
   alternates: { canonical: "/" },
   icons: { icon: [{ url: "/favicon.svg?v=3", type: "image/svg+xml" }] },
-  openGraph: { title: "Aaditya Desai — I wonder. Then I build.", description: "A few answers to what if. AI tools, language runtimes, embedded vision, and Android builds.", type: "website", url: "/", images: [{ url: "/og-sol.png", width: 1200, height: 630, alt: "Aaditya Desai — I wonder. Then I build." }] },
-  twitter: { card: "summary_large_image", title: "Aaditya Desai — I wonder. Then I build.", description: "Computer engineer & builder. Explore the work.", images: ["/og-sol.png"] },
+  openGraph: { title: "Aaditya Desai — I wonder. Then I build.", description: "A few answers to what if. AI tools, language runtimes, embedded vision, and Android builds.", type: "website", url: "/", images: [{ url: "/og-noir.png", width: 1200, height: 630, alt: "Aaditya Desai — I wonder. Then I build." }] },
+  twitter: { card: "summary_large_image", title: "Aaditya Desai — I wonder. Then I build.", description: "Computer engineer & builder. Explore the work.", images: ["/og-noir.png"] },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

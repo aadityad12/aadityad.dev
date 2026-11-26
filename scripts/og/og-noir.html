@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1200">
+  <title>Aaditya Desai — I wonder. Then I build.</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600&amp;family=Manrope:wght@500&amp;display=swap">
+  <style>
+    :root {
+      --ink: #171917;
+      --paper: #f1f0e9;
+      --orange: #ff713f;
+      --secondary: #c9cbc1;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--ink); color: var(--paper); }
+    main {
+      width: 1200px;
+      height: 630px;
+      position: relative;
+      overflow: hidden;
+      font-family: "Bricolage Grotesque", sans-serif;
+      font-weight: 600;
+    }
+    p, h1 { margin: 0; }
+    .name {
+      position: absolute;
+      top: 46px;
+      left: 58px;
+      font-size: 42px;
+      line-height: 1;
+      letter-spacing: -.055em;
+    }
+    .accent { color: var(--orange); }
+    h1 {
+      position: absolute;
+      left: 54px;
+      top: 181px;
+      font-size: 120px;
+      line-height: .98;
+      font-weight: 600;
+      letter-spacing: -.055em;
+    }
+    .sculpture {
+      position: absolute;
+      right: 59px;
+      top: 85px;
+      width: 402px;
+      height: auto;
+    }
+    footer {
+      position: absolute;
+      left: 60px;
+      right: 60px;
+      bottom: 47px;
+      padding-top: 18px;
+      border-top: 1px solid #ffffff24;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font: 500 30px/1.25 "Manrope", sans-serif;
+      letter-spacing: -.02em;
+      color: var(--secondary);
+    }
+    .availability { display: flex; align-items: center; gap: 13px; }
+    .availability::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      background: var(--orange);
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="name">Aaditya Desai<span class="accent">.</span></p>
+    <h1>I wonder.<br>Then I <span class="accent">build.</span></h1>
+    <img class="sculpture" src="./sculpture.png" alt="An open knot of silver and orange fins">
+    <footer>
+      <span>Computer engineering · SJSU</span>
+      <span class="availability">Open to 2027 internships</span>
+    </footer>
+  </main>
+</body>
+</html>

@@ -6,9 +6,9 @@ import { useSyncExternalStore } from "react";
 export const heroForms = [
   { id: "accordion", number: "01", name: "Accordion", line: "AI that remembers" },
   { id: "rung", number: "02", name: "Rung", line: "A language that becomes machine code" },
-  { id: "gazeboard", number: "03", name: "GazeBoard", line: "A phone that speaks with a glance" },
-  { id: "visionassist", number: "04", name: "VisionAssist", line: "A wearable that says what’s ahead" },
-  { id: "apextracker", number: "05", name: "ApexTracker", line: "The app I open every day" },
+  { id: "gazeboard", number: "04", name: "GazeBoard", line: "A phone that speaks with a glance" },
+  { id: "visionassist", number: "05", name: "VisionAssist", line: "A wearable that says what’s ahead" },
+  { id: "apextracker", number: "06", name: "ApexTracker", line: "The app I open every day" },
 ] as const;
 
 export type FormId = (typeof heroForms)[number]["id"];

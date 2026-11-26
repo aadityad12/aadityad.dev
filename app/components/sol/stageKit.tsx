@@ -18,7 +18,7 @@ export function useBeats(seconds: number[]) {
     let inView = false;
     let paused = document.documentElement.classList.contains("motion-paused");
     const update = () => setLive(inView && !paused && !media.matches);
-    const observer = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; update(); }, { threshold: .4 });
+    const observer = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; update(); }, { threshold: .75 });
     observer.observe(element);
     const motion = (event: Event) => { paused = (event as CustomEvent).detail.paused; update(); };
     addEventListener("sol-motion", motion);

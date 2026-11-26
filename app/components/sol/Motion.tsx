@@ -15,7 +15,7 @@ export default function Motion() {
         const rect = element.getBoundingClientRect();
         if (rect.bottom < -100 || rect.top > view + 100) return;
         const progress = (view / 2 - rect.top - rect.height / 2) / view;
-        element.style.setProperty("--scene-progress", String(media.matches ? 0 : progress));
+        element.style.setProperty("--scene-progress", String(media.matches || root.classList.contains("motion-paused") ? 0 : progress));
       });
       const max = document.documentElement.scrollHeight - innerHeight;
       root.style.setProperty("--reading", String(max ? scrollY / max : 0));
@@ -34,5 +34,5 @@ export default function Motion() {
     update();
     return () => { observer.disconnect(); cancelAnimationFrame(frame); removeEventListener("scroll", scroll); removeEventListener("resize", scroll); root.classList.remove("motion-paused"); };
   }, []);
-  return <button className="motion-toggle" aria-pressed={paused} onClick={() => { document.documentElement.classList.toggle("motion-paused", !paused); window.dispatchEvent(new CustomEvent("sol-motion", { detail: { paused: !paused } })); setPaused(!paused); }} aria-label={paused ? "Resume ambient motion" : "Pause ambient motion"}><span aria-hidden="true">{paused ? "▷" : "Ⅱ"}</span><span>{paused ? "Motion off" : "Motion on"}</span></button>;
+  return <button className="motion-toggle" aria-pressed={paused} onClick={() => { document.documentElement.classList.toggle("motion-paused", !paused); window.dispatchEvent(new Event("scroll")); window.dispatchEvent(new CustomEvent("sol-motion", { detail: { paused: !paused } })); setPaused(!paused); }} aria-label={paused ? "Resume ambient motion" : "Pause ambient motion"}><span aria-hidden="true">{paused ? "▷" : "Ⅱ"}</span><span>{paused ? "Motion off" : "Motion on"}</span></button>;
 }

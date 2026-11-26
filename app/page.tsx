@@ -18,6 +18,7 @@ const summaries: Record<string, string> = {
   visionassist: "A wearable that spots what’s ahead and says how far away it is, entirely on the device.",
   apextracker: "I wanted less life admin. So I built the local-first Android app I now use every day.",
 };
+const toolbox = ["C / C++20", "ARM64 assembly", "Python", "TypeScript", "Kotlin", "React", "FastAPI", "OpenCV", "Raspberry Pi & AVR"];
 const featured = projects.slice(0, 3);
 const compact = projects.slice(3);
 
@@ -25,25 +26,28 @@ export default function Home() {
   return <>
     <Navigation home />
     <div className="page-shell">
-    <div className="name-rail"><div className="wrap"><a className="hero-name" href="#top"><span className="sr-only">Hi, I’m Aaditya Desai.</span><NameMorph greeting /></a><span className="hero-role">COMPUTER ENGINEER. CHRONICALLY CURIOUS.</span></div></div>
+    <div className="name-rail"><div className="wrap"><a className="hero-name" href="#top"><span className="sr-only">Hi, I’m Aaditya Desai.</span><NameMorph greeting /></a><span className="hero-role">COMPUTER ENGINEERING · SJSU · CLASS OF 2028</span></div></div>
     <main id="main">
       <section className="hero wrap" id="top">
         <div className="hero-main">
-          <div className="hero-copy"><h1>I wonder.<br />Then I <span>build.</span></h1><HeroClaims /><p className="hero-intro">I’m a computer engineering student at San José State.<br />I like finding out how far an idea can go.</p><a className="pill-link" href="#work"><span>See what I mean</span><span className="pill-arrow"><Arrow /></span></a></div>
+          <div className="hero-copy"><h1>I wonder.<br />Then I <span>build.</span></h1><HeroClaims /><p className="hero-intro">I’m a computer engineering student at San José State,<br />looking for a Summer 2027 internship.</p><a className="pill-link" href="#work"><span>See what I mean</span><span className="pill-arrow"><Arrow /></span></a></div>
           <IdeaSculpture />
         </div>
         <div className="hero-foot"><div className="hero-proof"><span className="proof-star" aria-hidden="true">✳</span><p>Berkeley AI Hackathon<span>2026 sponsor-track winner</span></p></div><div className="hero-proof"><span className="proof-symbol" aria-hidden="true">↗</span><p>Infineon × De Anza<span>Research & technical leadership</span></p></div><a href={`mailto:${contact.email}`} className="hero-open"><span className="orange-dot" /><span>Open to 2027 internships<br /><small>Let’s build something together.</small></span><Arrow diagonal /></a></div>
       </section>
-      <div className="curiosity-ticker" aria-hidden="true"><div>{[0,1].map(i => <span key={i}>WONDER <b>✳</b> BUILD <b>✳</b> BREAK <b>✳</b> LEARN <b>✳</b> REPEAT <b>✳</b> </span>)}</div></div>
+      <div className="toolbox"><div className="wrap"><span className="eyebrow">WHAT I BUILD WITH</span><ul>{toolbox.map(tool => <li key={tool}>{tool}</li>)}</ul></div></div>
 
-      <section className="work-section wrap" id="work"><div className="work-heading" data-entrance><span className="eyebrow">01 / A FEW ANSWERS TO “WHAT IF?”</span><h2>Not just ideas.<br /><span>Things I’ve built.</span></h2><p>Go on. Pull them apart.</p></div>
-        <WorkRail items={projects.map(({ id, number, name }) => ({ id, number, name }))} />
+      <section className="work-section wrap" id="work"><div className="work-heading" data-entrance><div><span className="eyebrow">01 / SELECTED WORK</span><h2>Not just ideas. <span>Things I’ve built.</span></h2></div><p>Go on. Pull them apart.</p></div>
+        <div className="work-index"><WorkRail items={projects.map(({ id, number, name }) => ({ id, number, name }))} />
         {featured.map(project => <article className={`project project-${project.id}`} id={project.id} key={project.id}>
-          <div className="project-heading" data-entrance><div><span className="project-number">{project.number}</span><span className="eyebrow">{project.category}</span></div><div className="project-intro"><h3>{project.name}</h3><p>{summaries[project.id]}</p></div></div>
+          <div className="project-heading" data-entrance>
+            <div className="project-title"><span className="eyebrow"><b>{project.number}</b>{project.category}</span><h3>{project.name}</h3></div>
+            <div className="project-intro"><p>{summaries[project.id]}</p><p className="project-proof"><b>{project.proof.value}</b>{project.proof.label}</p></div>
+            <Link href={`/work/${project.id}/`} className="pill-link"><span>The story & the code</span><span className="pill-arrow"><Arrow diagonal /></span></Link>
+          </div>
           <ProjectStage id={project.id} />
-          <div className="project-foot"><div className="project-proof"><b>{project.proof.value}</b><p>{project.proof.label}</p></div><Link href={`/work/${project.id}/`} className="pill-link"><span>The story & the code</span><span className="pill-arrow"><Arrow diagonal /></span></Link></div>
         </article>)}
-        <div className="more-work"><div className="archive-heading"><h3>And three more.</h3><p>Each one opens into its full story.</p></div>{compact.map(project => <Link className="project-row" id={project.id} key={project.id} href={`/work/${project.id}/`}><span className="archive-number">{project.number}</span><span className="project-row-name">{project.name}</span><span className="project-row-line">{summaries[project.id]}</span><span className="project-row-proof"><b>{project.proof.value}</b>{project.proof.label}</span><Arrow diagonal /></Link>)}</div>
+        <div className="more-work"><div className="archive-heading"><h3>And three more.</h3><p>Each one opens into its full story.</p></div>{compact.map(project => <Link className="project-row" id={project.id} key={project.id} href={`/work/${project.id}/`}><span className="archive-number">{project.number}</span><span className="project-row-name">{project.name}</span><span className="project-row-line">{summaries[project.id]}</span><span className="project-row-proof"><b>{project.proof.value}</b>{project.proof.label}</span><Arrow diagonal /></Link>)}</div></div>
         <div className="archive"><div className="archive-heading"><h3>Still curious?</h3><p>A few more things I couldn’t leave alone.</p></div>{archive.map((project, i) => <details className="archive-row" key={project.name}><summary><span className="archive-number">{String(i + 7).padStart(2, "0")}</span><span className="archive-name">{project.name}</span><span className="archive-description">{project.category.toLowerCase()}</span><span className="archive-plus" aria-hidden="true">+</span></summary><div className="archive-content"><p>{project.description} {project.detail}</p><a href={project.repo} target="_blank" rel="noreferrer">Explore the source <Arrow diagonal /></a></div></details>)}</div>
       </section>
 

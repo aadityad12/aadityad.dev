@@ -1,6 +1,6 @@
 /* Alta: a breadboard on the same tilted table as the Accordion strip. --h is
    the hole pitch; every part is placed in holes so the board scales as one. */
-.stage-alta { background: #e6dfb6; color: #2f2b17; --h: 24px; --turn: -24deg; }
+.stage-alta { background: #e2ddc8; color: #2f2b17; --h: 24px; --turn: -24deg; }
 .alta-hud { position: absolute; left: 32px; top: 100px; width: 320px; display: flex; flex-direction: column; z-index: 4; }
 .alta-hud > b { font: 500 clamp(92px, 8.4vw, 124px)/1 var(--font-title); letter-spacing: -.065em; margin-top: 8px; animation: alta-in .5s cubic-bezier(.2,.8,.2,1) both; }
 .alta-hud > b > small { font-size: .42em; letter-spacing: -.02em; margin-left: .12em; }
