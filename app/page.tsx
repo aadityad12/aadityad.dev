@@ -13,7 +13,7 @@ import { archive, contact, projects } from "./lib/portfolio";
 const summaries: Record<string, string> = {
   accordion: "AI agents shouldn’t have to lose their train of thought. A visual, reversible memory layer for long coding sessions.",
   rung: "How fast can a small language go? I built the same language five ways, all the way down to handwritten ARM64.",
-  alta: "A TA for the electronics bench. A probe pod measures the student’s circuit, and a voice agent walks them to the fault with hints instead of answers.",
+  alta: "A TA for the electronics bench. A probe pod measures the student’s circuit, and a voice agent walks them to the fault with hints, not answers.",
   gazeboard: "For someone who can’t speak or use their hands, a glance can be a whole sentence.",
   visionassist: "A wearable that spots what’s ahead and says how far away it is, entirely on the device.",
   apextracker: "I wanted less life admin. So I built the local-first Android app I now use every day.",
