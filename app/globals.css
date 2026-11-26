@@ -65,13 +65,13 @@ kbd { font: 10px var(--font-code); color: var(--muted); border: 1px solid var(--
 .quick-top { display: flex; align-items: center; justify-content: space-between; gap: 15px; }
 .quick-top .eyebrow { color: var(--orange); }
 .dialog-close { background: none; width: 44px; height: 44px; font-size: 34px; }
-.quick-dialog h2 { font-size: 56px; line-height: 1; margin: 20px 0; }
+.quick-dialog h2 { font-size: 52px; line-height: 1; margin: 16px 0 14px; }
 .quick-dialog > p { font-size: 15px; color: #c4c7bb; line-height: 1.8; }
-.quick-projects { list-style: none; padding: 0; margin: 25px 0; border-top: 1px solid var(--line); }
-.quick-projects a { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 13px 0; border-bottom: 1px solid var(--line); font-size: 19px; }
+.quick-projects { list-style: none; padding: 0; margin: 20px 0; border-top: 1px solid var(--line); }
+.quick-projects a { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 18px; line-height: 1.4; }
 .quick-projects small { display: block; font-size: 12px; color: var(--muted); }
 .quick-projects a:hover { color: var(--orange); }
-.quick-proof { margin-bottom: 24px; }
+.quick-proof { margin-bottom: 20px; line-height: 1.6; }
 .quick-links { display: flex; align-items: center; gap: 28px; font-size: 14px; }
 .quick-links a { display: inline-flex; align-items: center; gap: 18px; }
 
@@ -365,7 +365,7 @@ kbd { font: 10px var(--font-code); color: var(--muted); border: 1px solid var(--
   .motion-toggle { padding: 13px 2px; }
   .menu-button { display: flex; align-items: center; gap: 12px; background: none; padding: 12px 0; font-size: 13px; }
   .menu-button > span { color: var(--orange); font-size: 22px; line-height: 1; }
-  .mobile-menu { display: flex; flex-direction: column; position: fixed; top: 76px; left: 0; right: 0; z-index: 49; background: var(--ink); border-bottom: 1px solid #ffffff40; padding: 20px 23px 28px; box-shadow: 0 30px 40px #0005; }
+  .mobile-menu { display: flex; flex-direction: column; position: fixed; top: 76px; left: 0; right: 0; z-index: 70; background: var(--ink); border-bottom: 1px solid #ffffff40; padding: 20px 23px 28px; box-shadow: 0 30px 40px #0005; }
   .mobile-menu > a, .mobile-menu > button { display: flex; justify-content: space-between; align-items: center; padding-block: 18px; font: 500 27px var(--font-title); border-bottom: 1px solid var(--line); background: none; text-align: left; }
   .mobile-menu > button { font: 14px var(--font-sans); padding-top: 25px; border: 0; color: var(--orange); }
   .hero { overflow: hidden; }
