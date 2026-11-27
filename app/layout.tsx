@@ -20,5 +20,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en" suppressHydrationWarning className={`${sans.variable} ${display.variable} ${mono.variable}`}><head><script dangerouslySetInnerHTML={{ __html: 'document.documentElement.classList.add("js")' }} /></head><body>{children}</body></html>;
+  return <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning className={`${sans.variable} ${display.variable} ${mono.variable}`}><head><script dangerouslySetInnerHTML={{ __html: 'document.documentElement.classList.add("js")' }} /></head><body>{children}</body></html>;
 }

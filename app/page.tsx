@@ -10,14 +10,6 @@ import HeroMascot from "./components/mascot/HeroMascot";
 import { Arrow } from "./components/sol/Icons";
 import { archive, contact, projects } from "./lib/portfolio";
 
-const summaries: Record<string, string> = {
-  accordion: "AI agents shouldn’t have to lose their train of thought. A visual, reversible memory layer for long coding sessions.",
-  rung: "How fast can a small language go? I built the same language five ways, all the way down to handwritten ARM64.",
-  alta: "A TA for the electronics bench. A probe pod measures the student’s circuit, and a voice agent walks them to the fault with hints, not answers.",
-  gazeboard: "For someone who can’t speak or use their hands, a glance can be a whole sentence.",
-  visionassist: "A wearable that spots what’s ahead and says how far away it is, entirely on the device.",
-  apextracker: "I wanted less life admin. So I built the local-first Android app I now use every day.",
-};
 const toolbox = ["C / C++20", "ARM64 assembly", "Python", "TypeScript", "Kotlin", "React", "FastAPI", "OpenCV", "Raspberry Pi & AVR"];
 const featured = projects.slice(0, 3);
 const compact = projects.slice(3);
@@ -42,12 +34,12 @@ export default function Home() {
         {featured.map(project => <article className={`project project-${project.id}`} id={project.id} key={project.id}>
           <div className="project-heading" data-entrance>
             <div className="project-title"><span className="eyebrow"><b>{project.number}</b>{project.category}</span><h3>{project.name}</h3></div>
-            <div className="project-intro"><p>{summaries[project.id]}</p><p className="project-proof"><b>{project.proof.value}</b>{project.proof.label}</p></div>
-            <Link href={`/work/${project.id}/`} className="pill-link"><span>The story & the code</span><span className="pill-arrow"><Arrow diagonal /></span></Link>
+            <div className="project-intro"><p>{project.summary}</p><p className="project-proof"><b>{project.proof.value}</b>{project.proof.label}</p></div>
+            <Link href={`/work/${project.id}/`} className="pill-link"><span>The story & the code</span><span className="pill-arrow"><Arrow /></span></Link>
           </div>
           <ProjectStage id={project.id} />
         </article>)}
-        <div className="more-work"><div className="archive-heading"><h3>And three more.</h3><p>Each one opens into its full story.</p></div>{compact.map(project => <Link className="project-row" id={project.id} key={project.id} href={`/work/${project.id}/`}><span className="archive-number">{project.number}</span><span className="project-row-name">{project.name}</span><span className="project-row-line">{summaries[project.id]}</span><span className="project-row-proof"><b>{project.proof.value}</b>{project.proof.label}</span><Arrow diagonal /></Link>)}</div></div>
+        <div className="more-work"><div className="archive-heading"><h3>And three more.</h3><p>Each one opens into its full story.</p></div>{compact.map(project => <Link className="project-row" id={project.id} key={project.id} href={`/work/${project.id}/`}><span className="archive-number">{project.number}</span><span className="project-row-name">{project.name}</span><span className="project-row-line">{project.summary}</span><span className="project-row-proof"><b>{project.proof.value}</b>{project.proof.label}</span><Arrow /></Link>)}</div></div>
         <div className="archive"><div className="archive-heading"><h3>Still curious?</h3><p>A few more things I couldn’t leave alone.</p></div>{archive.map((project, i) => <details className="archive-row" key={project.name}><summary><span className="archive-number">{String(i + 7).padStart(2, "0")}</span><span className="archive-name">{project.name}</span><span className="archive-description">{project.category.toLowerCase()}</span><span className="archive-plus" aria-hidden="true">+</span></summary><div className="archive-content"><p>{project.description} {project.detail}</p><a href={project.repo} target="_blank" rel="noreferrer">Explore the source <Arrow diagonal /></a></div></details>)}</div>
       </section>
 

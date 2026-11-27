@@ -7,6 +7,8 @@ export type Project = {
   category: string;
   headline: string;
   description: string;
+  /** One line for cards and lists: what it is and why it matters. */
+  summary: string;
   role: string;
   period: string;
   stack: string[];
@@ -31,6 +33,7 @@ export const projects: Project[] = [
     category: "AI TOOLS",
     headline: "An agent can forget.\nIts context shouldn’t.",
     description: "A visual memory layer for AI coding agents. Fold stale context out of the way, then bring it back exactly when it matters. Nothing gets thrown away.",
+    summary: "AI agents shouldn’t have to lose their train of thought. A visual, reversible memory layer for long coding sessions.",
     role: "Conductor, evaluation layer & activity dashboard · team of four",
     period: "UC Berkeley AI Hackathon · June 2026–present",
     stack: ["TypeScript", "SvelteKit", "Tauri", "Transformers"],
@@ -61,6 +64,7 @@ export const projects: Project[] = [
     category: "LANGUAGES & SYSTEMS",
     headline: "One language.\nEvery speed-up earned.",
     description: "A small language in C++20, from a tree-walker to handwritten ARM64 machine code. Same programs, different engines, and a benchmark ladder that keeps the regressions.",
+    summary: "How fast can a small language go? I built the same language five ways, all the way down to handwritten ARM64.",
     role: "Solo project · language, runtime, JIT & benchmarks",
     period: "September–October 2026",
     stack: ["C++20", "ARM64", "CMake", "Python"],
@@ -90,6 +94,7 @@ export const projects: Project[] = [
     category: "AI LAB ASSISTANT",
     headline: "Measure first.\nThen teach.",
     description: "A voice-driven lab TA for intro electronics. A probe pod measures the student’s breadboard, and an AI agent walks them to the fault with measurements and hints instead of handing over the answer.",
+    summary: "A TA for the electronics bench. A probe pod measures the student’s circuit, and a voice agent walks them to the fault with hints, not answers.",
     role: "Probe pod, bare-metal firmware & probe monitor · team of four",
     period: "Cal Hacks 13.0 · October 2026",
     stack: ["C", "ATmega328P", "Python", "FastAPI", "React", "Cartesia"],
@@ -120,6 +125,7 @@ export const projects: Project[] = [
     category: "ON-DEVICE AI",
     headline: "A glance can\nbe a voice.",
     description: "An Android research prototype that turns four gaze directions into spoken phrases. Camera frames stay on the phone, with an explicit path to Qualcomm’s NPU.",
+    summary: "For someone who can’t speak or use their hands, a glance can be a whole sentence.",
     role: "NPU integration, calibration flow & debugging · team project",
     period: "Qualcomm × Google LiteRT Developer Hackathon · May 2026",
     stack: ["Kotlin", "Jetpack Compose", "LiteRT", "CameraX"],
@@ -149,6 +155,7 @@ export const projects: Project[] = [
     category: "EMBEDDED VISION",
     headline: "Small computer.\nA little more awareness.",
     description: "A head-mounted obstacle-warning prototype, built with Infineon and De Anza College. A Raspberry Pi sees, prioritizes, and speaks, without a cloud round trip.",
+    summary: "A wearable that spots what’s ahead and says how far away it is, entirely on the device.",
     role: "Research Intern & Technical Lead · five-person project group",
     period: "Infineon × De Anza College · April–June 2026",
     stack: ["Python", "YOLOv8n", "OpenCV", "Raspberry Pi 5"],
@@ -178,6 +185,7 @@ export const projects: Project[] = [
     category: "ANDROID & LOCAL-FIRST",
     headline: "Built for a user\nI can’t ignore. Me.",
     description: "My daily driver for habits, money, and the things I mean to do. A solo Android app that works offline, with encrypted storage and optional sync.",
+    summary: "I wanted less life admin. So I built the local-first Android app I now use every day.",
     role: "Solo project · product, Android engineering & testing",
     period: "January 2026–present",
     stack: ["Kotlin", "Compose", "Room", "Glance"],
