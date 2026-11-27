@@ -1,15 +1,22 @@
 "use client";
 
-import { useId } from "react";
-import { Hatch, PlateFrame } from "./PlateFrame";
+import { useId, useRef, useState } from "react";
+import { activateWithKey, Hatch, PlateFrame } from "./PlateFrame";
 
 const contactRows = [228, 240, 252, 264, 276, 318, 330, 342, 354, 366];
 
 export default function AltaPlate({ playing }: { playing: boolean }) {
   const id = `alta-${useId()}`;
   const hatch = `url(#${id}-cut)`;
+  const [mode, setMode] = useState<"open" | "seated">();
+  const open = mode === "open";
+  const led = useRef<SVGGElement>(null);
+  const toggle = () => {
+    const lit = led.current && Number(getComputedStyle(led.current).opacity) >= .5;
+    setMode(lit ? "open" : "seated");
+  };
   return (
-    <PlateFrame name="alta" playing={playing}>
+    <PlateFrame name="alta" playing={playing} mode={mode} interactive>
       <defs>
         <Hatch id={`${id}-cut`} />
       </defs>
@@ -30,33 +37,44 @@ export default function AltaPlate({ playing }: { playing: boolean }) {
       <path d="M85 214h400" strokeWidth="0.55" />
       <path d="M85 386h400" strokeWidth="0.55" />
       <path d="M85 407h400" strokeWidth="0.55" />
-      <path d="M117 240 v-6 q0 -9 10 -9 h44 q10 0 10 10 v17" strokeWidth="4.4" />
-      <path d="M117 240 v-6 q0 -9 10 -9 h44 q10 0 10 10 v17" stroke="var(--hair)" strokeWidth="1.5" />
-      <path d="M243 354 v8 q0 10 10 10 h50 q10 0 10 -10 v-32" strokeWidth="4.4" />
-      <path d="M243 354 v8 q0 10 10 10 h50 q10 0 10 -10 v-32" stroke="var(--hair)" strokeWidth="1.5" />
-      <g transform="translate(215 300) rotate(90)">
-        <path d="M-48 0 H46" strokeWidth="1.7" />
+      <path d="M201 209v18q0 12 12 12h60q12 0 12 13" strokeWidth="2.2" />
+      <g transform="translate(241 239)">
         <path d="M-21 -4 Q-19 -7 -14 -7 Q-7 -5 0 -5 Q7 -5 14 -7 Q19 -7 21 -4 V4 Q19 7 14 7 Q7 5 0 5 Q-7 5 -14 7 Q-19 7 -21 4Z" fill="var(--hair)" />
         <path d="M-13 -5 v10" strokeWidth="2.2" />
         <path d="M-6 -5 v10" strokeWidth="2.2" />
         <path d="M3 -5 v10" strokeWidth="2.2" />
         <path d="M12 -5 v10" strokeWidth="2.2" />
       </g>
-      <path d="M271 252v-9 l8 -6v-12 M299 252v-12l-8 -5v-10" strokeWidth="1.5" />
-      <path d="M274 226v-16 a11 11 0 0 1 22 0v16Z" fill="var(--paper)" />
-      <rect x="271.5" y="225" width="27" height="4" rx="1" fill="var(--paper)" strokeWidth="1.4" />
-      <path d="M280 210q0 -5 5 -6" strokeWidth="1" />
-      <path d="M691 250 V212 C691 151 653 97 600 97 C564 97 540 114 517 144 L506 155" strokeWidth="5" />
-      <path d="M691 250 V212 C691 151 653 97 600 97 C564 97 540 114 517 144 L506 155" stroke="var(--hair)" strokeWidth="1.3" />
-      <path data-part="cable-pulse" d="M506 155 L517 144 C540 114 564 97 600 97 C653 97 691 151 691 212 V250" pathLength="1" strokeDasharray=".16 1" stroke="var(--red)" strokeWidth="3" />
+      <path d="M285 264v-10l11-9v-22m17 41v-12l-9-8v-21" strokeWidth="2" />
+      <path d="M287 221v-16a13 13 0 0 1 26 0v16z" fill="var(--paper)" />
+      <g ref={led} data-part="led" fill="var(--red)" stroke="var(--red)">
+        <path d="M288 220v-15a12 12 0 0 1 24 0v15z" />
+        <path d="M300 182v-10m-18 16-6-8m42 8 6-8m-50 21-9-3m61 3 9-3" strokeWidth="2.3" />
+      </g>
+      <rect x="284" y="220" width="32" height="5" rx="1" fill="var(--paper)" />
+      <path d="M239 333h18l28-50" strokeWidth="1.2" />
+      <rect x="134" y="314" width="103" height="31" rx="2" fill="var(--paper)" strokeWidth="1" />
+      <text className="mono" x="185" y="337" textAnchor="middle">row 15</text>
+      <circle cx="369" cy="400" r="5.5" fill="var(--paper)" />
+      <g data-part="ground-wire">
+        <path d="M313 264c0-20 28-22 44-5 40 43 12 89 12 122" strokeWidth="6.2" />
+        <path d="M313 264c0-20 28-22 44-5 40 43 12 89 12 122" strokeWidth="2" stroke="var(--hair)" />
+        <path d="M369 381v19" strokeWidth="2.8" />
+        <rect x="365" y="372" width="8" height="17" rx="1.4" fill="var(--ink)" />
+      </g>
+      <path d="M369 412v15l12 10h10" strokeWidth="1.2" />
+      <text className="mono" x="398" y="447">GND</text>
+      <path d="M691 250V212C691 144 640 95 565 95 500 95 456 108 408 155" strokeWidth="5.6" />
+      <path d="M691 250V212C691 144 640 95 565 95 500 95 456 108 408 155" stroke="var(--hair)" strokeWidth="2.8" />
+      <path data-part="meter-pulse" d="M408 155C456 108 500 95 565 95 640 95 691 144 691 212v38" pathLength="1" strokeDasharray=".12 1" strokeWidth="3.2" />
       <rect x="667" y="241" width="44" height="19" rx="2" fill={hatch} strokeWidth="1.5" />
       <rect x="677" y="233" width="24" height="13" rx="2" fill="var(--ink)" strokeWidth="1.4" />
       <rect x="636" y="253" width="106" height="109" rx="7" fill="var(--hair)" />
       <rect x="631" y="249" width="106" height="108" rx="7" fill="var(--paper)" />
-      <rect x="644" y="261" width="80" height="47" rx="2" fill="var(--ink)" strokeWidth="1.4" />
-      <g data-part="readout" stroke="none">
-        <text x="684" y="292" textAnchor="middle" fontFamily="var(--mono)" fontSize="19" fill="var(--paper)">5.01 V</text>
-        <circle cx="716" cy="268" r="2" fill="var(--red)" />
+      <rect x="637" y="264" width="94" height="42" rx="2" fill="var(--ink)" strokeWidth="1.4" />
+      <g textAnchor="middle" className="meter">
+        <text data-part="high-voltage" className="mono" x="684" y="292">5.01 V</text>
+        <text data-part="low-voltage" className="mono" x="684" y="292">1.92 V</text>
       </g>
       <g data-part="speaker">
         <path d="M648 315 h3" strokeWidth="1" />
@@ -79,8 +97,8 @@ export default function AltaPlate({ playing }: { playing: boolean }) {
       <path d="M723.992 347.008l2.016 -2.016" strokeWidth="0.85" />
       <circle cx="689" cy="333" r="8" fill="var(--paper)" strokeWidth="1.3" />
       <circle cx="689" cy="333" r="3" fill="var(--ink)" strokeWidth="1" />
-      <g data-part="probe">
-        <g transform="translate(383 276) rotate(-44)">
+      <g data-part="meter-probe">
+        <g transform="translate(285 276) rotate(-44)">
           <path d="M0 0 L20 -3 L20 3 Z" fill="var(--ink)" strokeWidth="0.9" />
           <path d="M19 -3 L49 -7 V7 L19 3Z" fill="var(--hair)" strokeWidth="1.5" />
           <rect x="47" y="-10" width="9" height="20" rx="2" fill={hatch} strokeWidth="1.4" />
@@ -93,10 +111,16 @@ export default function AltaPlate({ playing }: { playing: boolean }) {
           <rect x="165" y="-4" width="20" height="8" rx="1" fill={hatch} strokeWidth="1.3" />
         </g>
       </g>
-      <circle data-part="contact" cx="383" cy="276" r="3" fill="var(--red)" stroke="none" />
-      <path data-part="ripple" data-beat="0" d="M371.8 267.6 A14 14 0 0 0 391.4 287.2" stroke="var(--red)" strokeWidth="3.8" />
-      <path data-part="ripple" data-beat="1" d="M362.2 260.4 A26 26 0 0 0 398.6 296.8" stroke="var(--red)" strokeWidth="3.8" />
-      <path data-part="ripple" data-beat="2" d="M352.6 253.2 A38 38 0 0 0 405.8 306.4" stroke="var(--red)" strokeWidth="3.8" />
+      <circle cx="285" cy="276" r="3" fill="var(--ink)" stroke="none" />
+      <path data-part="probe-ring" d="M273 268a14 14 0 0 0 21 19m-30-24a25 25 0 0 0 35 34" strokeWidth="2" />
+      <path d="M671 365q14 8 28 0m-32 6q18 12 37 0" data-part="voice-arcs" />
+      <path d="m655 380-11 13h-92" strokeWidth="1" />
+      <text data-part="diagnosis" x="542" y="425">no current flowing</text>
+      <text data-part="confirmed" x="542" y="425">that&apos;s it</text>
+      <g role="button" tabIndex={0} data-control="ground" aria-label="Toggle the ground jumper"
+        aria-pressed={mode ? !open : undefined} onClick={toggle} onKeyDown={event => activateWithKey(event, toggle)}>
+        <rect x="315" y="299" width="138" height="111" rx="7" fill="transparent" stroke="none" />
+      </g>
     </PlateFrame>
   );
 }

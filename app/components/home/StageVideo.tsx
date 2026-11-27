@@ -20,9 +20,8 @@ export default function StageVideo({ src, poster, alt }: { src: string; poster: 
     return () => io.disconnect();
   }, []);
   return (
-    // The recording has light padding around the app window; the frame shows only the window.
     <div className="art-vwrap">
-      <video ref={ref} className="art-video" poster={poster} muted loop playsInline preload="none" aria-label={alt} width={1280} height={720}>
+      <video ref={ref} className="art-video" poster={poster} muted loop playsInline preload="none" aria-label={alt} width={1280} height={870}>
         <source src={`${src}.webm`} type="video/webm" />
         <source src={`${src}.mp4`} type="video/mp4" />
       </video>

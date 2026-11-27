@@ -29,13 +29,13 @@
 .wk-foot-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 28px; }
 .wk-num { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; color: var(--muted); font-size: 15px; }
 .wk-num b { font-size: 24px; font-weight: 800; letter-spacing: -0.025em; color: var(--ink); }
-.wk-foot .arrow-link { padding-block: 10px; }
+.wk-open { flex: none; }
+#more-work { scroll-margin-top: 24px; }
 .wk-more-btn { display: none; }
 
 /* ---------- the artifacts ---------- */
-/* The app window sits at x 156-1124, y 30-688 of the 1280 x 720 recording. */
-.art-vwrap { position: relative; overflow: hidden; aspect-ratio: 968 / 658; width: min(100%, calc(var(--stage-h) * 968 / 658)); border-radius: var(--r); background: var(--night); }
-.art-video { position: absolute; left: -16.12%; top: -4.56%; width: 132.23%; max-width: none; height: auto; display: block; }
+.art-vwrap { overflow: hidden; width: 100%; border-radius: var(--r); background: var(--night); }
+.art-video { display: block; width: 100%; height: auto; }
 
 /* A plate: the drawing keeps its top-left corner empty for the label. */
 .plate { position: relative; margin: 0; aspect-ratio: 16 / 10; width: min(100%, calc(var(--stage-h) * 1.6)); }

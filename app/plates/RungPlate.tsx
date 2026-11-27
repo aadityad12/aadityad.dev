@@ -1,66 +1,67 @@
 "use client";
 
-import { useId } from "react";
+import { useId, type CSSProperties } from "react";
 import { Hatch, PlateFrame } from "./PlateFrame";
-import type { CSSProperties } from "react";
 
-const returnPath = "M574 202 C574 230 551 245 516 245 H329";
+const lanes = [
+  { label: "ARM64 JIT", y: 218, speed: 38.84, glyph: "M0 0h18v17H0zM4-4v4m6-4v4m6-4v4M4 17v4m6-4v4m6-4v4" },
+  { label: "reg VM", y: 282, speed: 5.71, glyph: "M0 1h20v6H0zM0 12h20v6H0z" },
+  { label: "stack VM", y: 346, speed: 3.8, glyph: "m0 4 10-4 11 4-11 5zM0 10l10 5 11-5M0 16l10 5 11-5" },
+  { label: "tree-walk", y: 410, speed: 1, glyph: "M9 0v9M2 16v-7h15v7M0 17h4m11 0h4M7 0h4" },
+];
+const start = 383;
+const finish = 720;
 
 export default function RungPlate({ playing }: { playing: boolean }) {
   const id = `rung-${useId()}`;
   const hatch = `url(#${id}-cut)`;
   return (
     <PlateFrame name="rung" playing={playing}>
-      <defs>
-        <Hatch id={`${id}-cut`} />
-        <clipPath id={`${id}-rails`}><rect x="190" y="130" width="560" height="310" /></clipPath>
-        <mask id={`${id}-return`} maskUnits="userSpaceOnUse" x="318" y="198" width="265" height="56"
-          style={{ maskType: "alpha" }}>
-          <path data-part="return-draw" d={returnPath} pathLength="1" strokeDasharray="1" strokeWidth="5" />
-        </mask>
-      </defs>
-      <g clipPath={`url(#${id}-rails)`}>
-        <g data-part="bar" data-beat="0" style={{ "--travel": "-21px" } as CSSProperties}>
-          <path d="M190 407 L196 402 L210.05 402 L204.05 407 Z" fill="var(--hair)" />
-          <rect x="190" y="407" width="14.05" height="18" fill="var(--ink)" />
-          <path d="M204.05 407 L210.05 402 L210.05 420 L204.05 425 Z" fill="var(--ink)" />
-        </g>
-        <g data-part="bar" data-beat="1" style={{ "--travel": "-60px" } as CSSProperties}>
-          <path d="M190 349 L196 344 L249.39 344 L243.39 349 Z" fill="var(--hair)" />
-          <rect x="190" y="349" width="53.39" height="18" fill={hatch} />
-          <path d="M243.39 349 L249.39 344 L249.39 362 L243.39 367 Z" fill="var(--ink)" />
-        </g>
-        <g data-part="bar" data-beat="2" style={{ "--travel": "-87px" } as CSSProperties}>
-          <path d="M190 291 L196 286 L276.09 286 L270.09 291 Z" fill="var(--hair)" />
-          <rect x="190" y="291" width="80.08500000000001" height="18" fill="var(--ink)" />
-          <path d="M270.09 291 L276.09 286 L276.09 304 L270.09 309 Z" fill="var(--ink)" />
-        </g>
-        <g data-part="bar" data-beat="3" style={{ "--travel": "-128px" } as CSSProperties}>
-          <path d="M190 233 L196 228 L316.83 228 L310.83 233 Z" fill="var(--hair)" />
-          <rect x="190" y="233" width="120.83" height="18" fill={hatch} />
-          <path d="M310.83 233 L316.83 228 L316.83 246 L310.83 251 Z" fill="var(--ink)" />
-        </g>
-        <g data-part="bar" data-beat="4" style={{ "--travel": "-552px" } as CSSProperties}>
-          <path d="M190 175 L196 170 L741.14 170 L735.14 175 Z" fill="var(--red)" />
-          <rect x="190" y="175" width="545.14" height="18" fill="var(--red)" />
-          <path d="M735.14 175 L741.14 170 L741.14 188 L735.14 193 Z" fill="var(--red)" />
-        </g>
+      <defs><Hatch id={`${id}-cut`} /></defs>
+      <path d="M138 297h38m0-143v256" strokeWidth="3" />
+      <path d="M176 154h18m-18 64h18m-18 64h18m-18 64h18m-18 64h18" />
+      <rect x="61" y="261" width="78" height="68" rx="3" fill="var(--paper)" />
+      <path d="M61 261l7-7h77v68l-6 7v-68z" fill={hatch} />
+      <text className="mono" x="100" y="304" textAnchor="middle">fib</text>
+      {[154, ...lanes.map(lane => lane.y)].map(y => (
+        <path key={y} data-part="split-pulse" d={`M146 297h30V${y}h19`} pathLength="1"
+          strokeDasharray=".14 1" strokeWidth="4.5" />
+      ))}
+      <circle data-part="source-pulse" cx="145" cy="297" r="4.5" fill="var(--ink)" stroke="none" />
+
+      <text x="740" y="113" textAnchor="end">same output</text>
+      <rect x="714" y="136" width="12" height="293" rx="2" fill={hatch} />
+      <rect x="697" y="126" width="46" height="29" rx="2" fill="var(--ink)" />
+      <path d="M711 137h18m-18 7h18" stroke="var(--paper)" strokeWidth="2.8" />
+      <path d="M194 154h230l38 64" strokeWidth="1.5" />
+      <path d="M201 147h17v6h-17zm5 10h17v6h-17z" fill="var(--hair)" />
+      <g className="secondary">
+        <rect x="236" y="140" width="99" height="28" fill="var(--paper)" stroke="none" />
+        <text className="mono" x="249" y="161">bg JIT</text>
       </g>
-      <rect x="167" y="145" width="23" height="301" rx="2" fill="var(--ink)" />
-      <path d="M190 145 L198 139 L198 439 L190 446 Z" fill={hatch} />
-      <circle cx="178" cy="155" r="3.4" fill="var(--paper)" strokeWidth="1" />
-      <path d="M176.368 156.632l3.264 -3.264" strokeWidth="0.85" />
-      <circle cx="178" cy="435" r="3.4" fill="var(--paper)" strokeWidth="1" />
-      <path d="M176.368 436.632l3.264 -3.264" strokeWidth="0.85" />
-      <rect x="185" y="404" width="8" height="25" rx="1.5" fill="var(--paper)" strokeWidth="1.6" />
-      <rect x="185" y="346" width="8" height="25" rx="1.5" fill="var(--paper)" strokeWidth="1.6" />
-      <rect x="185" y="288" width="8" height="25" rx="1.5" fill="var(--paper)" strokeWidth="1.6" />
-      <rect x="185" y="230" width="8" height="25" rx="1.5" fill="var(--paper)" strokeWidth="1.6" />
-      <rect x="185" y="172" width="8" height="25" rx="1.5" fill="var(--paper)" strokeWidth="1.6" />
-      <path data-part="collar-flash" d="M189 232v20" stroke="var(--red)" strokeWidth="3" />
-      <path d={returnPath} strokeDasharray="5 5" strokeWidth="1.5" mask={`url(#${id}-return)`} />
-      <path data-part="return-head" d="M333 241 L323 245 L333 249" fill="var(--ink)" strokeWidth="1" />
-      <rect data-part="cursor" x="194" y="181" width="4" height="4" fill="var(--ink)" stroke="none" />
+      <g data-part="background-code">
+        <rect x="378" y="149" width="10" height="10" fill="var(--ink)" />
+      </g>
+      {lanes.map(({ label, y, speed, glyph }, index) => {
+        const isJit = index === 0;
+        const ink = isJit ? "var(--red)" : "var(--ink)";
+        return <g key={label} transform={`translate(0 ${y})`}>
+          <rect x="194" y="-17" width="32" height="34" rx="2" fill={isJit ? hatch : "var(--paper)"} />
+          <path d={glyph} transform="translate(200 -9)" strokeWidth="1.6" />
+          <text className="mono" x="239" y="8">{label}</text>
+          <path d={`M${start} 0H${finish}`} stroke={ink} strokeWidth={isJit ? 3.5 : 1.6} />
+          <path d={`M${start} -6v12`} stroke={ink} />
+          <circle cx={finish} r="5.5" fill="var(--paper)" stroke={ink} />
+          <g data-part="runner" style={{ "--snapshot": `${(finish - start) * speed / 38.84}px`, "--distance": `${finish - start}px` } as CSSProperties}>
+            <rect x={start - 5} y="-7" width="10" height="14" rx="2" fill={ink} stroke={ink} />
+          </g>
+        </g>;
+      })}
+      <path d="M520 228v40l14 14" strokeDasharray="4 5" />
+      <path d="m525 281 10 2-1-10" />
+      <path d="m520 207 11 11-11 11-11-11z" stroke="var(--red)" fill="var(--paper)" strokeWidth="2.3" />
+      <circle data-part="bail-runner" cx={start} cy="218" r="5.5" fill="var(--ink)" stroke="var(--paper)" />
+      <text data-part="speedup" className="mono speed" x="700" y="196" textAnchor="end">38.84×</text>
     </PlateFrame>
   );
 }

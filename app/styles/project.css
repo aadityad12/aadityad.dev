@@ -1,7 +1,21 @@
 /* project pages, the Reel and the not-found page: see docs/fable3/DESIGN.md */
 
 .pj { padding-bottom: 8px; }
-.pj-back { display: inline-flex; margin-top: clamp(8px, 2vw, 24px); font-size: 16px; }
+/* The project bar: stays at the top of the screen while reading a case study. */
+.pj-bar { position: sticky; top: 0; z-index: 20; background: var(--paper); border-bottom: 1px solid var(--hair); }
+.pj-bar-in { display: flex; align-items: center; gap: 12px 24px; min-height: 52px; font-size: 15px; }
+.pj-bar a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-weight: 650; text-decoration: none; }
+.pj-bar a:hover { text-decoration: underline; text-decoration-color: var(--red); text-decoration-thickness: 2px; text-underline-offset: 5px; }
+.pj-bar-pos { display: inline-flex; gap: 10px; color: var(--muted); }
+.pj-bar-pos b { color: var(--ink); font-weight: 650; }
+.pj-bar-step { margin-left: auto; display: flex; gap: 22px; }
+.pj-bar-s { display: none; }
+.pj-head { margin-top: clamp(20px, 3vw, 40px); }
+@media (max-width: 640px) {
+  .pj-bar-in { gap: 10px 16px; }
+  .pj-bar-t { display: none; }
+  .pj-bar-s { display: inline; }
+}
 .pj h1 { font-size: clamp(42px, 12vw, 120px); letter-spacing: -0.048em; line-height: 0.92; margin: clamp(18px, 2.4vw, 28px) 0 0 -0.04em; }
 .pj-head.has-scene h1 { font-size: clamp(42px, 12vw, 104px); }
 /* The project's story sits beside its name on a wide screen, under the facts on a narrow one. */
@@ -74,7 +88,6 @@
 .pj-next b { display: block; font-size: 28px; letter-spacing: -0.025em; line-height: 1.1; margin: 6px 0 8px; font-weight: 800; }
 .pj-nd { display: block; color: var(--ink-2); max-width: 26em; }
 .pj-next a.pj-nl:last-child .pj-nd { margin-left: auto; }
-.pj-all { text-align: center; margin-top: 36px; }
 
 @media (max-width: 900px) {
   .pj-cols { grid-template-columns: minmax(0, 1fr); gap: 56px; }
@@ -98,9 +111,9 @@
 
 @media (min-width: 900px) {
   .reel { grid-template-columns: minmax(0, 58fr) minmax(0, 42fr); gap: clamp(32px, 4vw, 64px); align-items: start; }
-  .reel-figure { position: sticky; top: 24px; align-self: start; }
+  .reel-figure { position: sticky; top: 76px; align-self: start; }
   .reel[data-freed] .reel-figure { position: relative; top: auto; }
-  .reel-stage { scroll-margin-top: 24px; }
+  .reel-stage { scroll-margin-top: 76px; }
   .reel-stage:focus { outline: none; }
   .reel-beats { gap: 0; }
   .reel-beat { min-height: 38vh; display: flex; align-items: center; color: var(--muted); transition: color 0.25s ease; }

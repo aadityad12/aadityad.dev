@@ -7,6 +7,7 @@ import SiteFooter from "../../components/SiteFooter";
 import { Fig, Rich } from "../../components/parts";
 import Reel from "../../components/work/Reel";
 import ProjectScene from "../../components/work/ProjectScene";
+import RememberProject from "../../components/work/RememberProject";
 import { Artifact } from "../../components/home/Artifacts";
 import { FIGURES } from "../../figures";
 import { NOTES, PHOTOS, STAGE } from "../../content";
@@ -19,7 +20,13 @@ function breakAtSlash(v: string) {
   return parts.map((p, i) => (i < parts.length - 1 ? <span key={i}>{p}/<wbr /></span> : <span key={i}>{p}</span>));
 }
 
-const BY_ORDER = [...NOTES].sort((a, b) => a.order - b.order);
+// One order for the whole site, the same as the home page: the six featured projects as they stand on the stage,
+// then the rest as they are listed under "More work".
+const FEATURED = STAGE.map((s) => s.id);
+const SEQUENCE = [
+  ...FEATURED.flatMap((id) => NOTES.filter((n) => n.id === id)),
+  ...NOTES.filter((n) => !FEATURED.includes(n.id)).sort((a, b) => a.order - b.order),
+];
 
 export function generateStaticParams() {
   return NOTES.map((n) => ({ slug: n.id }));
@@ -48,8 +55,10 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
   const F = FIGURES[note.id];
   const beats = note.beats ?? [];
   const hasReel = !!F && beats.length >= 3;
-  const next = BY_ORDER[note.order % BY_ORDER.length];
-  const prev = BY_ORDER[(note.order - 2 + BY_ORDER.length) % BY_ORDER.length];
+  const at = SEQUENCE.findIndex((n) => n.id === note.id);
+  const prev = at > 0 ? SEQUENCE[at - 1] : null;
+  const next = at < SEQUENCE.length - 1 ? SEQUENCE[at + 1] : null;
+  const back = FEATURED.includes(note.id) ? "/#work" : "/#more-work";
   const award = "award" in note ? note.award : undefined;
   // The award already names the event, so the facts line does not repeat it.
   const facts = [award && award.includes(note.context) ? null : note.context, note.role, note.team, note.when].filter(Boolean).join(" · ");
@@ -60,10 +69,31 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
 
   return (
     <>
-      <SiteHeader />
+      <SiteHeader current="work" />
       <main id="main">
+        <RememberProject id={note.id} />
+        {/* Where you are among the projects, and the way on, wherever you are on the page. */}
+        <nav className="pj-bar" aria-label="Projects">
+          <div className="wrap pj-bar-in">
+            <Link className="pj-bar-back" href={back}><span aria-hidden="true">←</span> All work</Link>
+            <span className="pj-bar-pos"><b className="pj-bar-t">{note.title}</b><span className="num">{at + 1} of {SEQUENCE.length}</span></span>
+            <span className="pj-bar-step">
+              {prev && (
+                <Link href={`/work/${prev.id}/`} rel="prev" aria-label={`Previous project: ${prev.title}`}>
+                  <span aria-hidden="true">←</span><span className="pj-bar-t">{prev.title}</span><span className="pj-bar-s">Prev</span>
+                </Link>
+              )}
+              {next ? (
+                <Link href={`/work/${next.id}/`} rel="next" aria-label={`Next project: ${next.title}`}>
+                  <span className="pj-bar-t">{next.title}</span><span className="pj-bar-s">Next</span><span aria-hidden="true">→</span>
+                </Link>
+              ) : (
+                <Link href={back}>Back to work</Link>
+              )}
+            </span>
+          </div>
+        </nav>
         <article className="wrap pj">
-          <Link className="arrow-link pj-back" href="/#work"><span aria-hidden="true">←</span> All work</Link>
           <header className={hasScene ? "pj-head has-scene" : "pj-head"}>
             <div className="pj-head-text">
               <h1>{note.title}</h1>
@@ -153,19 +183,28 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
             </section>
           )}
 
-          <nav className="pj-next" aria-label="More work">
-            <Link className="pj-nl" href={`/work/${prev.id}/`}>
-              <span className="pj-nk">Previous</span>
-              <b>{prev.title}</b>
-              <span className="pj-nd">{prev.oneLiner}</span>
-            </Link>
-            <Link className="pj-nl" href={`/work/${next.id}/`}>
-              <span className="pj-nk">Next</span>
-              <b>{next.title}</b>
-              <span className="pj-nd">{next.oneLiner}</span>
-            </Link>
+          <nav className="pj-next" aria-label="Previous and next project">
+            {prev ? (
+              <Link className="pj-nl" href={`/work/${prev.id}/`}>
+                <span className="pj-nk">Previous project</span>
+                <b>{prev.title}</b>
+                <span className="pj-nd">{prev.oneLiner}</span>
+              </Link>
+            ) : <span />}
+            {next ? (
+              <Link className="pj-nl" href={`/work/${next.id}/`}>
+                <span className="pj-nk">Next project</span>
+                <b>{next.title}</b>
+                <span className="pj-nd">{next.oneLiner}</span>
+              </Link>
+            ) : (
+              <Link className="pj-nl" href={back}>
+                <span className="pj-nk">That was the last one</span>
+                <b>Back to all work</b>
+                <span className="pj-nd">Every project, sorted for the role you hire for.</span>
+              </Link>
+            )}
           </nav>
-          <p className="pj-all"><Link className="arrow-link" href="/#work"><span aria-hidden="true">←</span> All work</Link></p>
         </article>
       </main>
       <SiteFooter />

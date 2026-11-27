@@ -40,16 +40,16 @@ export type StageMedia =
   | { kind: "video"; src: string; poster: string; alt: string }
   | { kind: "guard" };
 
-// The plate is a two-ink drawing of the project's idea (public/projects/plates/<id>), with a short label set over its
+// The plate is a two-ink drawing of the project's idea that acts it out (app/plates/), with a short label set over its
 // empty top-left corner. The media, where there is one, is shown on the project page under "From the build".
 export type Plate = { big: string; line: string; alt: string };
 export const STAGE: { id: string; tag: string; plate: Plate; media?: StageMedia }[] = [
   { id: "accordion", tag: "Hackathon winner, UC Berkeley", plate: { big: "Fold it, don't delete it.", line: "5 / 6 benchmark checkpoints, against 2 / 6 for naive compaction", alt: "A ribbon of blocks: the ones not needed are folded into tight pleats, and one red block lifts back out whole" }, media: { kind: "video", src: "/projects/stage/accordion-loop", poster: "/projects/stage/accordion-loop-poster.jpg", alt: "Accordion's desktop app folding a real agent session: coloured blocks for each message, tool call and result, with the token count falling as blocks fold" } },
   { id: "rung", tag: "Personal project, C++ and ARM64", plate: { big: "One language, five engines.", line: "From a tree-walker up to a hand-written ARM64 JIT, every step measured", alt: "Five rungs of a ladder, each a faster engine, the top red rung almost the full width" } },
   { id: "alta", tag: "Cal Hacks 13.0, 36 hours", plate: { big: "Put the probe in row 15.", line: "It reads the real voltage, then walks the student to the fault", alt: "A breadboard seen from above, with a probe on one row sending out red signal arcs" } },
-  { id: "visionassist", tag: "Infineon, software lead", plate: { big: "Chair, two steps ahead.", line: "Spoken in steps, about 200 ms a frame, fully offline", alt: "A head wearing a small camera; dashed sight lines run over step marks to a chair held in a red bracket" } },
+  { id: "visionassist", tag: "Infineon, software lead", plate: { big: "The nearest risk, in steps.", line: "About 200 ms a frame, fully offline", alt: "A head wearing a small camera; dashed sight lines run over step marks to a chair held in a red bracket" } },
   { id: "oss-scout", tag: "Personal project, runs nightly", plate: { big: "Nothing posts without my tap.", line: "It drafts fixes overnight; one write path, behind a guard with 37 tests", alt: "A night machine pushes fix cards at a wall; the only way through is one red button under a fingertip" }, media: { kind: "guard" } },
-  { id: "apextracker", tag: "In daily use since Jan 2026", plate: { big: "Four tools, one app.", line: "Fully offline, in daily use since Jan 2026", alt: "A sticky note, an alarm card, a calendar and a budget sheet converge into one phone showing a habit grid with one red square" } },
+  { id: "apextracker", tag: "In daily use since Jan 2026", plate: { big: "My trackers score my day.", line: "One offline Android app, in daily use since Jan 2026", alt: "An Android phone running one app: study, screen-time and budget trackers tick off the day's goals, the result is written to an encrypted on-device store, and today's square on the consistency grid turns red" } },
 ];
 
 export type Headline = { value: string; unit?: string; label: string };

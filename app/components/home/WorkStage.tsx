@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { LAST_KEY } from "../work/RememberProject";
 import { ROLE_CHOICES, setRole, useRole, type RoleChoice } from "../role";
 
 /* The stage. On a wide screen it is a list of the flagship projects beside one picture of the real
@@ -49,14 +50,40 @@ export default function WorkStage({ items }: { items: StageItem[] }) {
     setLastRole(role);
     setPicked(null);
   }
+  // Coming back from a case study, the stage shows that project again (and opens the phone list if it was hidden).
+  useEffect(() => {
+    let last: string | null = null;
+    try {
+      last = sessionStorage.getItem(LAST_KEY);
+    } catch {
+      // Storage can be blocked; then the stage opens on its first project.
+    }
+    const i = last ? sorted.findIndex((s) => s.id === last) : -1;
+    if (i < 0) return;
+    // After hydration, so the server and first client render agree.
+    const t = window.setTimeout(() => {
+      setPicked(sorted[i].id);
+      if (i >= PHONE_FIRST) setAllOnPhone(true);
+    }, 0);
+    return () => window.clearTimeout(t);
+    // Only on arrival.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const showAll = () => {
+    setAllOnPhone(true);
+    requestAnimationFrame(() => document.querySelector<HTMLElement>(`#wk-panel-${sorted[PHONE_FIRST]?.id} .wk-panel-head a`)?.focus());
+  };
+
   const activeId = picked && sorted.some((s) => s.id === picked) ? picked : sorted[0]?.id;
   const activeIndex = sorted.findIndex((s) => s.id === activeId);
 
   const onKey = (e: React.KeyboardEvent) => {
-    const d = e.key === "ArrowDown" ? 1 : e.key === "ArrowUp" ? -1 : 0;
-    if (!d) return;
+    const last = sorted.length - 1;
+    const to = e.key === "ArrowDown" ? (activeIndex + 1) % sorted.length : e.key === "ArrowUp" ? (activeIndex + last) % sorted.length : e.key === "Home" ? 0 : e.key === "End" ? last : -1;
+    if (to < 0) return;
     e.preventDefault();
-    const next = sorted[(activeIndex + d + sorted.length) % sorted.length];
+    const next = sorted[to];
     setPicked(next.id);
     document.getElementById(`wk-tab-${next.id}`)?.focus();
   };
@@ -77,7 +104,7 @@ export default function WorkStage({ items }: { items: StageItem[] }) {
       </div>
 
       <div className="wk-stage">
-        <div className="wk-tabs" role="tablist" aria-orientation="vertical" aria-label="Featured projects">
+        <div className="wk-tabs" role="tablist" aria-orientation="vertical" aria-label="Preview featured projects">
           {sorted.map((it) => {
             const on = it.id === activeId;
             return (
@@ -127,8 +154,8 @@ export default function WorkStage({ items }: { items: StageItem[] }) {
                       <b>{it.value}</b>
                       <span>{it.label}</span>
                     </p>
-                    <Link className="arrow-link" href={`/work/${it.id}/`}>
-                      How {it.title} works <span aria-hidden="true">→</span>
+                    <Link className="btn wk-open" href={`/work/${it.id}/`}>
+                      Read the case study<span className="visually-hidden">: {it.title}</span> <span aria-hidden="true">→</span>
                     </Link>
                   </div>
                 </div>
@@ -136,7 +163,7 @@ export default function WorkStage({ items }: { items: StageItem[] }) {
             );
           })}
           {!allOnPhone && sorted.length > PHONE_FIRST && (
-            <button type="button" className="btn quiet wk-more-btn" onClick={() => setAllOnPhone(true)}>
+            <button type="button" className="btn quiet wk-more-btn" onClick={showAll}>
               Show {sorted.length - PHONE_FIRST} more projects
             </button>
           )}

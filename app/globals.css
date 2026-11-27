@@ -55,7 +55,6 @@
 html {
   background: var(--paper);
   color: var(--ink);
-  scroll-behavior: smooth;
   scroll-padding-top: 24px;
   -webkit-text-size-adjust: 100%;
 }
@@ -111,6 +110,7 @@ strong, b { font-weight: 700; }
 .site-head .me { grid-area: me; font-weight: 750; letter-spacing: -0.01em; text-decoration: none; padding-block: 10px; }
 .site-head nav { grid-area: nav; justify-self: end; display: flex; align-items: center; gap: clamp(14px, 2.4vw, 30px); }
 .site-head nav a { text-decoration: none; padding: 11px 0; }
+.site-head nav a[aria-current="page"] { text-decoration: underline; text-decoration-color: var(--red); text-decoration-thickness: 2px; text-underline-offset: 6px; }
 .site-head nav a:hover { text-decoration: underline; text-decoration-color: var(--red); text-decoration-thickness: 2px; text-underline-offset: 6px; }
 .site-head .btn.small { grid-area: cv; min-height: 44px; }
 @media (max-width: 640px) {
@@ -211,7 +211,6 @@ strong, b { font-weight: 700; }
 .site-foot nav { display: flex; flex-wrap: wrap; gap: 6px 22px; }
 
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
   .js .mascot.draw path { stroke-dasharray: none; stroke-dashoffset: 0; animation: none; }
   .js .mascot.draw [data-slot="body"], .js .mascot.draw [data-slot="eye"], .js .mascot.draw [data-slot="antLoop"] { fill-opacity: 1; animation: none; }

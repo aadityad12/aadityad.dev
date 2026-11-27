@@ -10,7 +10,7 @@ export default function MoreWork({ rows }: { rows: Row[] }) {
   const { sorted } = useSortedByRole(rows);
   return (
     <>
-      <h3 className="wk-more-h">More work</h3>
+      <h3 className="wk-more-h" id="more-work">More work</h3>
       <ul className="wk-rows">
         {sorted.map((r) => {
           const inner = (

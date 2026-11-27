@@ -34,302 +34,321 @@
 }
 .plate:not([data-playing="true"]) [data-part] { animation: none !important; }
 
-/* Accordion */
-.plate[data-plate="accordion"] { --period: 4.8s; }
-/* One source unit is 1/800 of the plate width. Keep the pen weight
-   proportional to the plate while the pleats or rays compress. */
-.plate [data-part="pleats"] path { vector-effect: non-scaling-stroke; stroke-width: .225cqw; }
-.plate [data-part="pleats"] path[stroke-width="0.8"] { stroke-width: .1cqw; }
-.plate [data-part="pleats"] { transform-origin: 450px 340px; }
-.plate [data-part="panel"] { transform-box: fill-box; transform-origin: center bottom; }
-.plate:not([data-mode]) [data-part="left-tail"] { animation-name: gatherTail; animation-timing-function: var(--settle); }
-.plate:not([data-mode]) [data-part="pleats"] { animation-name: gatherPleats; animation-timing-function: var(--settle); }
-.plate:not([data-mode]) [data-part="panel"] { animation-name: liftPanel; animation-timing-function: var(--settle); }
-.plate:not([data-mode]) [data-part="shaft"] { animation-name: drawFold; animation-timing-function: linear; }
-.plate:not([data-mode]) [data-part="arrow"] { animation-name: foldArrow; }
-.plate:not([data-mode]) [data-part="head"] { animation-name: foldHead; }
-
-@keyframes gatherTail {
-  0%, 100% { transform: translateX(-14px); }
-  16.67%, 75% { transform: translateX(0); }
-}
-@keyframes gatherPleats {
-  0%, 100% { transform: scaleX(1.08); }
-  16.67%, 75% { transform: scaleX(1); }
-}
-@keyframes liftPanel {
-  0%, 16.67%, 100% { opacity: 0; transform: translateY(68px) scale(.92); }
-  29%, 75% { opacity: 1; transform: none; }
-}
-@keyframes drawFold {
-  0%, 16.67% { stroke-dashoffset: 1; }
-  24%, 100% { stroke-dashoffset: 0; }
-}
-@keyframes foldArrow {
-  0%, 16%, 95%, 100% { opacity: 0; }
-  17%, 75% { opacity: 1; }
-}
-@keyframes foldHead {
-  0%, 23% { opacity: 0; }
-  26%, 100% { opacity: 1; }
-}
-.plate[data-mode="folded"] [data-part="left-tail"] { transform: translateX(-14px); }
-.plate[data-mode="folded"] [data-part="pleats"] { transform: scaleX(1.08); }
-.plate[data-mode="folded"] [data-part="panel"] { opacity: 0; transform: translateY(68px) scale(.92); }
-.plate[data-mode="folded"] [data-part="arrow"] { opacity: 0; }
-.plate[data-mode="folded"] [data-part="panel"] { animation-name: tuck; }
-.plate[data-mode="retrieved"] [data-part="panel"] { animation-name: retrieve; }
-.plate[data-mode] :is([data-part="panel"], [data-part="arrow"]) {
-  animation-duration: .5s;
-  animation-iteration-count: 1;
-  animation-timing-function: var(--settle);
-}
-.plate[data-mode="retrieved"] [data-part="arrow"] { animation-name: appear; }
-@keyframes tuck {
-  from { transform: none; opacity: 1; }
-  to { transform: translateY(68px) scale(.92); opacity: 0; }
-}
-@keyframes retrieve {
-  from { transform: translateY(68px) scale(.92); opacity: 0; }
-  to { transform: none; opacity: 1; }
-}
-@keyframes appear { from { opacity: 0; } to { opacity: 1; } }
-
-/* Rung */
-.plate[data-plate="rung"] { --period: 5.2s; }
-.plate [data-part="bar"] { animation-timing-function: var(--settle); }
-.plate [data-part="cursor"], .plate [data-part="collar-flash"] { opacity: 0; }
-.plate [data-part="cursor"] { animation-name: bailCursor; }
-.plate [data-part="return-draw"] { animation-name: traceReturn; }
-.plate [data-part="return-head"] { animation-name: returnHead; }
-.plate [data-part="collar-flash"] { animation-name: landed; }
-@keyframes bailCursor {
-  0%, 34% { opacity: 0; transform: none; }
-  35% { opacity: 1; transform: none; }
-  46% { transform: translate(378px, 0); }
-  48% { transform: translate(378px, 19px); }
-  50% { transform: translate(370px, 44px); }
-  52% { transform: translate(345px, 59px); }
-  54% { transform: translate(320px, 62px); }
-  59%, 60% { opacity: 1; transform: translate(127px, 62px); }
-  61.5%, 100% { opacity: 0; transform: translate(127px, 62px); }
-}
-@keyframes traceReturn {
-  0%, 46%, 100% { stroke-dashoffset: 1; }
-  56%, 94% { stroke-dashoffset: 0; }
-}
-@keyframes returnHead {
-  0%, 55%, 100% { opacity: 0; }
-  57%, 94% { opacity: 1; }
-}
-@keyframes landed {
-  0%, 57%, 63%, 100% { opacity: 0; }
-  59% { opacity: 1; }
-}
-
-.plate [data-part="bar"][data-beat="0"] { animation-name: rail1; }
-@keyframes rail1 {
-  0%, 100% { transform: translateX(var(--travel)); }
-  12.5%, 94.23% { transform: none; }
-}
-.plate [data-part="bar"][data-beat="1"] { animation-name: rail2; }
-@keyframes rail2 {
-  0%, 4.23%, 100% { transform: translateX(var(--travel)); }
-  16.73%, 94.23% { transform: none; }
-}
-.plate [data-part="bar"][data-beat="2"] { animation-name: rail3; }
-@keyframes rail3 {
-  0%, 8.46%, 100% { transform: translateX(var(--travel)); }
-  20.96%, 94.23% { transform: none; }
-}
-.plate [data-part="bar"][data-beat="3"] { animation-name: rail4; }
-@keyframes rail4 {
-  0%, 12.69%, 100% { transform: translateX(var(--travel)); }
-  25.19%, 94.23% { transform: none; }
-}
-.plate [data-part="bar"][data-beat="4"] { animation-name: rail5; }
-@keyframes rail5 {
-  0%, 16.92%, 100% { transform: translateX(var(--travel)); }
-  29.42%, 94.23% { transform: none; }
-}
-
-/* Alta */
-.plate [data-part="probe"] { animation-name: probe; animation-timing-function: var(--settle); }
-.plate [data-part="contact"] { animation-name: contact; }
-.plate [data-part="ripple"] { transform-origin: 383px 276px; animation-timing-function: var(--settle); }
-.plate [data-part="cable-pulse"] { opacity: 0; animation-name: cable; }
-.plate [data-part="readout"] { animation-name: readout; animation-timing-function: steps(1, end); }
-.plate [data-part="speaker"] { animation-name: speaker; transform-origin: 684px 315px; }
-@keyframes probe {
-  0% { transform: translate(10px, -10px); }
-  12%, 100% { transform: none; }
-}
-@keyframes contact {
-  0%, 9% { opacity: 0; }
-  12%, 100% { opacity: 1; }
-}
-@keyframes cable {
-  0%, 24% { opacity: 0; stroke-dashoffset: .16; }
-  25% { opacity: 1; stroke-dashoffset: .16; }
-  42% { opacity: 1; stroke-dashoffset: -1; }
-  43%, 100% { opacity: 0; stroke-dashoffset: -1; }
-}
-@keyframes readout {
-  0% { opacity: 0; }
-  43%, 100% { opacity: 1; }
-}
-@keyframes speaker {
-  0%, 42%, 47%, 53%, 100% { transform: none; opacity: 1; }
-  44%, 50% { transform: scale(1.06, 1.8); opacity: .4; }
-}
-
-.plate [data-part="ripple"][data-beat="0"] { animation-name: ripple1; }
-@keyframes ripple1 {
-  0%, 12% { transform: scale(.88); opacity: 0; }
-  23%, 100% { transform: none; opacity: 1; }
-}
-.plate [data-part="ripple"][data-beat="1"] { animation-name: ripple2; }
-@keyframes ripple2 {
-  0%, 14.4% { transform: scale(.88); opacity: 0; }
-  25.4%, 100% { transform: none; opacity: 1; }
-}
-.plate [data-part="ripple"][data-beat="2"] { animation-name: ripple3; }
-@keyframes ripple3 {
-  0%, 16.8% { transform: scale(.88); opacity: 0; }
-  27.8%, 100% { transform: none; opacity: 1; }
-}
-
-/* VisionAssist */
-.plate [data-part="rays"] path {
-  vector-effect: non-scaling-stroke;
-  stroke-width: .1cqw;
-  stroke-dasharray: .5cqw .625cqw;
-}
-.plate [data-part="rays"] { transform-origin: 303px 218px; animation-name: sight; }
-.plate [data-part="corner"] { animation-name: acquire; animation-timing-function: var(--snap); }
-.plate [data-part="target"] { animation-name: approach; }
-.plate [data-part="reticle"] { animation-name: warn; }
-.plate [data-part="warning-tick"] { opacity: 0; animation-name: danger; }
-.plate [data-part="inner-ear"] { animation-name: speak; }
-.plate [data-part="outer-ear"] { animation-name: speak; animation-delay: .16s; }
-@keyframes sight {
-  0% { stroke-dashoffset: 4.5cqw; transform: none; }
-  14%, 34%, 64%, 100% { stroke-dashoffset: 0; transform: none; }
-  45%, 58% { stroke-dashoffset: 0; transform: scaleX(.78); }
-}
-@keyframes acquire {
-  0% { transform: translate(var(--dx), var(--dy)); opacity: .25; }
-  4%, 100% { transform: none; opacity: 1; }
-}
-@keyframes approach {
-  0%, 34%, 64%, 100% { transform: none; }
-  45%, 58% { transform: translateX(-78px); }
-}
-@keyframes warn {
-  0%, 44%, 48%, 52%, 100% { opacity: 1; }
-  46%, 50% { opacity: .25; }
-}
-@keyframes danger {
-  0%, 43%, 62%, 100% { opacity: 0; }
-  45%, 58% { opacity: 1; }
-}
-@keyframes speak {
-  0%, 14% { opacity: .22; }
-  19% { opacity: 1; }
-  25% { opacity: .4; }
-  32%, 44%, 49%, 54%, 100% { opacity: 1; }
-  46%, 51% { opacity: .15; }
-}
-
-/* OSS Scout */
-.plate[data-plate="oss-scout"] { --period: 5.4s; }
-.plate [data-part="card"] { animation-name: sendCard; }
-.plate [data-part="stoppers"] { animation-name: deadStop; animation-timing-function: var(--snap); }
-.plate [data-part="finger"] { --press: 13px; animation-name: interlock; }
-.plate [data-part="button"] { --press: 7px; animation-name: interlock; }
-.plate [data-part="latch"] { --press: -26px; animation-name: interlock; }
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .plate[data-playing="true"]:has([data-control="post"]:hover) [data-part="finger-hover"] { transform: translateY(4px); }
-}
-@keyframes deadStop {
-  0% { transform: translateX(-18px); }
-  18.5%, 100% { transform: none; }
-}
-@keyframes sendCard {
-  0% { transform: translateX(-60px); }
-  18.5% { transform: none; }
-  35%, 48% { transform: translateX(158px); }
-  66.67% { transform: translateX(410px); opacity: 1; }
-  71% { transform: translateX(484px); opacity: 1; }
-  71.1%, 74% { transform: translateX(-60px); opacity: 0; }
-  80%, 100% { transform: none; opacity: 1; }
-}
-@keyframes interlock {
-  0%, 35%, 76%, 100% { transform: none; }
-  47%, 67% { transform: translateY(var(--press)); }
-}
-.plate[data-mode="post"] [data-part] { animation-iteration-count: 1; animation-duration: 3.6s; }
-.plate[data-mode="post"] [data-part="stoppers"] { animation-name: none; }
-.plate[data-mode="post"] [data-part="card"] { animation-name: postCard; }
-.plate[data-mode="post"] :is([data-part="finger"], [data-part="button"], [data-part="latch"]) { animation-name: press; }
-@keyframes press {
-  0%, 54%, 100% { transform: none; }
-  10%, 42% { transform: translateY(var(--press)); }
-}
-@keyframes postCard {
-  0%, 10% { opacity: 1; transform: translateX(158px); }
-  38% { transform: translateX(410px); }
-  44% { opacity: 1; transform: translateX(484px); }
-  44.1%, 49% { opacity: 0; transform: translateX(-60px); }
-  57%, 100% { opacity: 1; transform: none; }
-}
-
 /* ApexTracker */
-.plate [data-part="today"] { transform-box: fill-box; transform-origin: center; animation-name: today; animation-timing-function: var(--snap); }
-@keyframes today {
-  0%, 48% { transform: scale(.65); opacity: 0; }
-  53%, 100% { transform: none; opacity: 1; }
+.plate[data-plate="apextracker"] { --period: 6s; }
+.plate[data-plate="apextracker"] text {
+  font: 500 24px var(--mono);
+  fill: var(--ink);
+  stroke: none;
+}
+.plate[data-plate="apextracker"] text:global(.sans) { font: 650 24px var(--sans); }
+.plate[data-plate="apextracker"] text:global(.secondary) { font-size: 17px; }
+
+.plate [data-part="study-ring"] { animation-name: fillStudyRing; }
+@keyframes fillStudyRing {
+  0%, 10%, 100% { stroke-dashoffset: 89; }
+  19%, 97% { stroke-dashoffset: 0; }
+}
+.plate [data-part="screen-meter"] {
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation-name: settleScreenMeter;
+}
+@keyframes settleScreenMeter {
+  0%, 25%, 100% { transform: scaleX(1.42); }
+  33%, 97% { transform: scaleX(1); }
+}
+.plate [data-part="budget-shackle"] {
+  transform-origin: 5px 5px;
+  transform: rotate(-29deg);
+  animation-name: unlockBudget;
+}
+@keyframes unlockBudget {
+  0%, 38.3%, 100% { transform: rotate(0); }
+  42%, 97% { transform: rotate(-29deg); }
+}
+.plate [data-part="receipt-scan"] { opacity: 0; animation-name: scanBudgetReceipt; }
+@keyframes scanBudgetReceipt {
+  0%, 42%, 50%, 100% { opacity: 0; }
+  42% { transform: translateY(0); }
+  43%, 48% { opacity: 1; }
+  50%, 100% { transform: translateY(18px); }
 }
 
-/* The three animated properties share one clock per tool. A shaft starts
-   undrawn, a tool starts offset, and the head and cells wait for arrival. */
-.plate[data-plate="apextracker"] { --shift: 0px; --dash: 0; --visible: 1; }
-.plate [data-part="tool"] { --shift: 4px; }
-.plate [data-part="feed-line"] { --dash: 1; }
-.plate [data-part="feed-head"], .plate [data-part="cell"] { --visible: 0; }
-
-.plate [data-beat="0"]:is([data-part="tool"], [data-part="cell"]),
-.plate [data-part="feed"][data-beat="0"] [data-part] { animation-name: noteBeat; }
-@keyframes noteBeat {
-  0% { transform: translateX(var(--shift)); stroke-dashoffset: var(--dash); opacity: var(--visible); }
-  7% { transform: none; stroke-dashoffset: 0; opacity: var(--visible); }
-  10%, 100% { transform: none; stroke-dashoffset: 0; opacity: 1; }
+/* Each packet follows the corners of its bus and parks off-path between writes. */
+.plate :is([data-part="tracker-pulse"], [data-part="vault-write"]) {
+  opacity: 0;
+  animation-name: trackerPacket;
+  animation-timing-function: linear;
 }
-
-.plate [data-beat="1"]:is([data-part="tool"], [data-part="cell"]),
-.plate [data-part="feed"][data-beat="1"] [data-part] { animation-name: alarmBeat; }
-@keyframes alarmBeat {
-  0%, 12% { transform: translateX(var(--shift)); stroke-dashoffset: var(--dash); opacity: var(--visible); }
-  19% { transform: none; stroke-dashoffset: 0; opacity: var(--visible); }
-  22%, 100% { transform: none; stroke-dashoffset: 0; opacity: 1; }
+.plate [data-tracker="Study"] [data-part="tracker-pulse"] { animation-delay: 1.02s; }
+.plate [data-tracker="Screen"] [data-part="tracker-pulse"] { animation-delay: 1.85s; }
+.plate [data-tracker="Budget"] [data-part="tracker-pulse"] { animation-delay: 2.69s; }
+.plate [data-part="vault-write"] { animation-delay: 3.1s; }
+@keyframes trackerPacket {
+  0%, 7%, 100% { opacity: 0; }
+  0% { stroke-dashoffset: 15; }
+  1%, 6% { opacity: 1; }
+  7%, 100% { stroke-dashoffset: -102; }
 }
-
-.plate [data-beat="2"]:is([data-part="tool"], [data-part="cell"]),
-.plate [data-part="feed"][data-beat="2"] [data-part] { animation-name: calendarBeat; }
-@keyframes calendarBeat {
-  0%, 24% { transform: translateX(var(--shift)); stroke-dashoffset: var(--dash); opacity: var(--visible); }
-  31% { transform: none; stroke-dashoffset: 0; opacity: var(--visible); }
-  34%, 100% { transform: none; stroke-dashoffset: 0; opacity: 1; }
+.plate [data-tracker="Study"] [data-part="goal-check"] { animation-name: checkStudyGoal; }
+.plate [data-tracker="Screen"] [data-part="goal-check"] { animation-name: checkScreenGoal; }
+.plate [data-tracker="Budget"] [data-part="goal-check"] { animation-name: checkBudgetGoal; }
+@keyframes checkStudyGoal {
+  0%, 22%, 100% { opacity: 0; }
+  25%, 97% { opacity: 1; }
 }
-
-.plate [data-beat="3"]:is([data-part="tool"], [data-part="cell"]),
-.plate [data-part="feed"][data-beat="3"] [data-part] { animation-name: ledgerBeat; }
-@keyframes ledgerBeat {
-  0%, 36% { transform: translateX(var(--shift)); stroke-dashoffset: var(--dash); opacity: var(--visible); }
-  43% { transform: none; stroke-dashoffset: 0; opacity: var(--visible); }
-  46%, 100% { transform: none; stroke-dashoffset: 0; opacity: 1; }
+@keyframes checkScreenGoal {
+  0%, 36%, 100% { opacity: 0; }
+  38.3%, 97% { opacity: 1; }
+}
+@keyframes checkBudgetGoal {
+  0%, 49%, 100% { opacity: 0; }
+  51.6%, 97% { opacity: 1; }
+}
+.plate [data-part="vault-shackle"] { transform-origin: 671px 258px; animation-name: sealVault; }
+@keyframes sealVault {
+  0%, 58%, 100% { transform: rotate(-29deg); }
+  61.6%, 97% { transform: rotate(0); }
+}
+.plate [data-part="score-today"] {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation-name: stampScore;
+  animation-timing-function: var(--snap);
+}
+@keyframes stampScore {
+  0%, 62%, 100% { transform: scale(.8); opacity: 0; }
+  68%, 97% { transform: scale(1); opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce), (scripting: none) {
   .plate [data-part] { animation: none !important; }
 }
+
+/* Dimensions below use the 800 × 500 drawing coordinates inside PlateFrame. */
+.plate:not([data-plate="apextracker"]) { --period: 6s; color: var(--ink); }
+.plate:not([data-plate="apextracker"]) text {
+  fill: var(--ink);
+  stroke: none;
+  font: 520 25px var(--sans);
+}
+.plate:not([data-plate="apextracker"]) text:global(.mono) {
+  font: 500 23px var(--mono);
+}
+.plate:not([data-plate="apextracker"]) :global(.secondary) text,
+.plate:not([data-plate="apextracker"]) text:global(.secondary) { font-size: 18px; }
+@media (max-width: 640px) {
+  .plate :global(.secondary) { display: none; }
+}
+
+/* Accordion. The archive supplies the immutable positions for the leaders. */
+.plate [data-part="block-position"] { transform: translateX(var(--rest)); }
+.plate [data-part="block-leader"] { transform: skewX(var(--rest-angle)); }
+.plate [data-part="fold-width"] { transform: scaleX(.16); }
+.plate [data-part="recall-crease"] { opacity: 0; }
+.plate[data-plate="accordion"]:not([data-mode]) [data-part="block-position"] { animation-name: packBlocks; }
+.plate[data-plate="accordion"]:not([data-mode]) [data-part="block-leader"] { animation-name: followBlock; }
+.plate:not([data-mode]) [data-part="fold-width"] { animation-name: compress; }
+.plate:not([data-mode]) [data-part="recall-width"] { animation-name: unfold; }
+.plate:not([data-mode]) [data-part="crease"] { animation-name: foldedFace; }
+.plate:not([data-mode]) [data-part="recall-crease"] { animation-name: recalledFace; }
+.plate:not([data-mode]) :is([data-part="recall-ink"], [data-part="recall-leader"], [data-part="recall-pin"]) { animation-name: retrieved; }
+.plate:not([data-mode]) [data-part="recall-trace"] { animation-name: traceArc; }
+.plate:not([data-mode]) [data-part="append-first"] { animation-name: appendFirst; }
+.plate:not([data-mode]) [data-part="append-last"] { animation-name: appendLast; }
+.plate:not([data-mode]) [data-part="tail-caption"] { animation-name: tailLabel; }
+.plate[data-mode="folded"] [data-part="block-position"] { transform: translateX(var(--packed)); }
+.plate[data-mode="folded"] [data-part="block-leader"] { transform: skewX(var(--packed-angle)); }
+.plate[data-mode="folded"] [data-part="recall-width"] { transform: scaleX(.16); }
+.plate[data-mode="folded"] [data-part="recall-crease"] { opacity: 1; }
+.plate[data-mode="folded"] :is([data-part="recall-ink"], [data-part="recall-leader"], [data-part="recall-pin"], [data-part="recall-arc"]) { opacity: 0; }
+@keyframes packBlocks {
+  0%, 17%, 100% { transform: none; }
+  38%, 55% { transform: translateX(var(--packed)); }
+  70%, 97% { transform: translateX(var(--rest)); }
+}
+@keyframes followBlock {
+  0%, 17%, 100% { transform: none; }
+  38%, 55% { transform: skewX(var(--packed-angle)); }
+  70%, 97% { transform: skewX(var(--rest-angle)); }
+}
+@keyframes compress {
+  0%, 17%, 100% { transform: none; }
+  38%, 97% { transform: scaleX(.16); }
+}
+@keyframes unfold {
+  0%, 17%, 70%, 100% { transform: none; }
+  38%, 55% { transform: scaleX(.16); }
+}
+@keyframes foldedFace { 0%, 27%, 100% { opacity: 0; } 38%, 97% { opacity: 1; } }
+@keyframes recalledFace { 0%, 27%, 66%, 100% { opacity: 0; } 38%, 55% { opacity: 1; } }
+@keyframes retrieved { 0%, 56% { opacity: 0; transform: scaleX(.16); } 70%, 97% { opacity: 1; transform: none; } 100% { opacity: 0; transform: none; } }
+.plate:not([data-mode]) :is([data-part="recall-leader"], [data-part="recall-pin"]) { animation-name: tetherInk; }
+@keyframes tetherInk { 0%, 60%, 100% { opacity: 0; } 70%, 97% { opacity: 1; } }
+@keyframes traceArc {
+  0%, 38%, 100% { stroke-dashoffset: 1; opacity: 0; }
+  39% { opacity: 1; }
+  55%, 97% { stroke-dashoffset: 0; opacity: 1; }
+}
+@keyframes appendFirst { 0%, 2% { opacity: 0; transform: translateX(15px); } 9%, 97% { opacity: 1; transform: none; } 99%, 100% { opacity: 0; transform: none; } }
+@keyframes appendLast { 0%, 9% { opacity: 0; transform: translateX(15px); } 17%, 97% { opacity: 1; transform: none; } 99%, 100% { opacity: 0; transform: none; } }
+@keyframes tailLabel { 0%, 15%, 99%, 100% { opacity: 0; } 18%, 97% { opacity: 1; } }
+
+.plate [data-part="arc-span"] { transform-origin: 250px 230px; transform: scaleX(1.35); }
+.plate:not([data-mode]) [data-part="arc-span"] { animation-name: extendRecallArc; }
+.plate:not([data-mode]) [data-part="tail-leader"] { animation-name: tailLabel; }
+@keyframes extendRecallArc { 0%, 55%, 100% { transform: none; } 70%, 97% { transform: scaleX(1.35); } }
+
+/* Rung. Pause on the measured fib positions before and after the bailout. */
+.plate[data-plate="rung"] text:global(.speed) { fill: var(--red); font-size: 40px; font-weight: 600; }
+.plate [data-part="runner"] { animation-name: race; transform: translateX(var(--snapshot)); animation-timing-function: linear; }
+.plate [data-part="speedup"] { animation-name: finishFigure; animation-timing-function: var(--snap); }
+.plate [data-part="bail-runner"] { opacity: 0; animation-name: bailToVm; animation-timing-function: linear; }
+.plate [data-part="source-pulse"] { opacity: 0; animation-name: launch; }
+.plate [data-part="background-code"] { animation-name: handoff; }
+@keyframes race {
+  0%, 100% { transform: none; opacity: 0; }
+  8% { transform: none; opacity: 1; }
+  38.33%, 41% { transform: translateX(var(--snapshot)); }
+  60%, 62% { transform: translateX(var(--distance)); opacity: 1; }
+  64% { transform: translateX(var(--distance)); opacity: 0; }
+  65% { transform: translateX(var(--snapshot)); opacity: 0; }
+  69%, 95% { transform: translateX(var(--snapshot)); opacity: 1; }
+  99% { transform: translateX(var(--snapshot)); opacity: 0; }
+}
+@keyframes finishFigure { 0%, 38%, 99%, 100% { opacity: 0; } 38.33%, 95% { opacity: 1; } }
+@keyframes launch { 0% { opacity: 0; } 2% { opacity: 1; transform: none; } 7% { transform: translateX(31px); opacity: 1; } 8%, 100% { opacity: 0; } }
+@keyframes handoff {
+  0%, 8% { transform: none; opacity: 1; }
+  13% { transform: translateX(41px); }
+  21% { transform: translate(79px, 64px); opacity: 1; }
+  23%, 63% { opacity: 0; transform: translate(79px, 64px); }
+  64% { opacity: 0; transform: none; }
+  70%, 100% { transform: none; opacity: 1; }
+}
+@keyframes bailToVm {
+  0%, 38% { transform: none; opacity: 0; }
+  39% { transform: none; opacity: 1; }
+  47% { transform: translateX(137px); }
+  52% { transform: translate(137px, 50px); }
+  54% { transform: translate(151px, 64px); }
+  63% { transform: translate(337px, 64px); opacity: 1; }
+  64%, 100% { transform: translate(337px, 64px); opacity: 0; }
+}
+
+.plate [data-part="split-pulse"] { opacity: 0; animation-name: splitSource; animation-timing-function: linear; }
+@keyframes splitSource {
+  0%, 3% { opacity: 0; stroke-dashoffset: .14; }
+  4% { opacity: 1; stroke-dashoffset: 0; }
+  8% { opacity: 1; stroke-dashoffset: -.98; }
+  9%, 100% { opacity: 0; stroke-dashoffset: -1; }
+}
+
+/* OSS Scout. The blocked rail and the owner-operated bridge are independent. */
+.plate [data-part="issues"] { animation-name: issueFeed; }
+.plate [data-part="write-packet"] { animation-name: denied; opacity: 0; }
+.plate [data-part="guard-stop"] { animation-name: impact; }
+.plate [data-part="blocked"] { animation-name: refused; opacity: 0; }
+.plate [data-part="draft"] { --waiting: -48px; transform: translateX(var(--waiting)); animation-name: deliver; }
+.plate [data-part="bridge"] { transform-origin: 522px 313px; transform: rotate(75deg); animation-name: bridgeDeck; }
+.plate [data-part="fingertip"] { --travel: 17px; animation-name: authorize; }
+.plate [data-part="post-button"] { --travel: 5px; animation-name: authorize; }
+.plate [data-part="merge"] { animation-name: posted; }
+@keyframes issueFeed { 0%, 4% { opacity: 1; transform: none; } 18% { opacity: 0; transform: translateX(97px); } 21%, 100% { opacity: 1; transform: none; } }
+@keyframes denied {
+  0%, 20% { transform: none; opacity: 0; }
+  22% { opacity: 1; }
+  30% { transform: translateX(237px); opacity: 1; }
+  35% { transform: translateX(208px); opacity: .7; }
+  38%, 100% { transform: translateX(208px); opacity: 0; }
+}
+@keyframes impact { 0%, 29%, 36%, 100% { transform: none; } 31% { transform: translateX(3px); } }
+@keyframes refused { 0%, 29%, 41%, 100% { opacity: 0; } 31%, 36% { opacity: 1; } }
+@keyframes deliver {
+  0% { transform: translateX(var(--waiting)); } 20%, 56% { transform: none; }
+  70% { transform: translateX(317px); opacity: 1; }
+  71% { transform: translateX(317px); opacity: 0; }
+  71.1% { transform: translateX(var(--waiting)); opacity: 0; }
+  73.33%, 100% { transform: translateX(var(--waiting)); opacity: 1; }
+}
+@keyframes authorize { 0%, 37%, 73%, 100% { transform: none; } 50%, 62% { transform: translateY(var(--travel)); } }
+@keyframes bridgeDeck { 0%, 43%, 73.33%, 100% { transform: rotate(75deg); } 55%, 70% { transform: none; } }
+@keyframes posted { 0%, 73%, 100% { opacity: 1; } 4%, 69% { opacity: 0; } }
+.plate[data-mode="post"] [data-part] { animation-name: none; animation-duration: 1.9s; animation-iteration-count: 1; }
+.plate[data-mode="post"] [data-part="draft"] { animation-name: postDraft; }
+.plate[data-mode="post"] [data-part="bridge"] { animation-name: postBridge; }
+.plate[data-mode="post"] :is([data-part="fingertip"], [data-part="post-button"]) { animation-name: postPress; }
+.plate[data-mode="post"] [data-part="merge"] { animation-name: postMerge; }
+@keyframes postDraft {
+  0% { transform: translateX(var(--waiting)); } 25% { transform: none; }
+  78%, 79% { transform: translateX(317px); opacity: 1; }
+  80% { transform: translateX(317px); opacity: 0; } 81% { transform: translateX(var(--waiting)); opacity: 0; }
+  97%, 100% { transform: translateX(var(--waiting)); opacity: 1; }
+}
+@keyframes postBridge { 0%, 100% { transform: rotate(75deg); } 22%, 78% { transform: none; } }
+@keyframes postPress { 0%, 100% { transform: none; } 14%, 65% { transform: translateY(var(--travel)); } }
+@keyframes postMerge { 0%, 70% { opacity: 0; } 80%, 100% { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .plate[data-mode="post"] [data-part="bridge"] { transform: none; }
+  .plate[data-mode="post"] [data-part="draft"] { opacity: 0; }
+  .plate[data-mode="post"] [data-part="post-button"] { transform: translateY(5px); }
+}
+
+.plate [data-part="draft-title"] { animation-name: deliverTitle; }
+.plate[data-mode="post"] [data-part="draft-title"] { animation-name: postTitle; }
+@keyframes deliverTitle { 0%, 58%, 73.33%, 100% { opacity: 1; } 62%, 71% { opacity: 0; } }
+@keyframes postTitle { 0%, 31%, 97%, 100% { opacity: 1; } 49%, 81% { opacity: 0; } }
+
+/* Alta. Probe contact, sample, diagnosis, then the physical repair. */
+.plate[data-plate="alta"] :global(.meter) text { fill: var(--paper); font-size: 22px; }
+.plate [data-part="ground-wire"] { transform-origin: 313px 264px; }
+.plate :is([data-part="diagnosis"], [data-part="high-voltage"], [data-part="meter-pulse"], [data-part="probe-ring"]) { opacity: 0; }
+.plate:not([data-mode]) [data-part="ground-wire"] { animation-name: seatGround; }
+.plate:not([data-mode]) [data-part="meter-probe"] { animation-name: seatProbe; }
+.plate:not([data-mode]) [data-part="meter-pulse"] { animation-name: sampleCable; }
+.plate:not([data-mode]) [data-part="probe-ring"] { animation-name: probeContact; }
+.plate:not([data-mode]) [data-part="high-voltage"] { animation-name: highVoltage; }
+.plate:not([data-mode]) [data-part="diagnosis"] { animation-name: interpret; }
+.plate:not([data-mode]) [data-part="voice-arcs"] { animation-name: voice; }
+.plate:not([data-mode]) :is([data-part="confirmed"], [data-part="low-voltage"], [data-part="led"]) { animation-name: connected; }
+.plate[data-mode="open"] [data-part="ground-wire"] { transform: rotate(-19deg); }
+.plate[data-mode="open"] :is([data-part="high-voltage"], [data-part="diagnosis"]) { opacity: 1; }
+.plate[data-mode="open"] :is([data-part="confirmed"], [data-part="low-voltage"], [data-part="led"]) { opacity: 0; }
+@keyframes seatGround { 0%, 50%, 100% { transform: rotate(-19deg); } 65%, 95% { transform: none; } }
+@keyframes seatProbe { 0%, 100% { transform: translate(15px,-15px); } 16%, 95% { transform: none; } }
+@keyframes sampleCable {
+  0%, 16% { opacity: 0; stroke-dashoffset: .12; }
+  17% { opacity: 1; stroke-dashoffset: .12; }
+  32% { opacity: 1; stroke-dashoffset: -.98; }
+  33%, 100% { opacity: 0; stroke-dashoffset: -1; }
+}
+@keyframes probeContact { 0%, 14%, 28%, 100% { opacity: 0; } 18%, 23% { opacity: 1; } }
+@keyframes highVoltage { 0%, 24%, 66%, 100% { opacity: 0; } 29%, 65% { opacity: 1; } }
+@keyframes interpret { 0%, 33%, 66%, 100% { opacity: 0; } 37%, 65% { opacity: 1; } }
+@keyframes connected { 0%, 66%, 100% { opacity: 0; } 68%, 95% { opacity: 1; } }
+@keyframes voice { 0%, 33%, 100% { opacity: 0; } 37%, 50%, 66%, 95% { opacity: 1; } 42%, 61% { opacity: .2; } }
+
+/* VisionAssist. Both objects are detected before one is ranked and announced. */
+.plate[data-plate="visionassist"] text:global(.height-label) { fill: var(--red); }
+.plate[data-plate="visionassist"] text:global(.speech) { font-size: 26px; }
+.plate [data-part="sight-cone"] { transform-origin: 305px 212px; animation-name: scanScene; }
+.plate [data-part="step-ticks"] { animation-name: walk; animation-timing-function: linear; }
+.plate [data-part="bench-box"] { animation-name: benchDetection; opacity: .32; }
+.plate [data-part="chair"] { transform-origin: 646px 413px; animation-name: approachChair; }
+.plate [data-part="chair-lock"] { animation-name: measure; }
+.plate [data-part="warning"] { animation-name: announce; }
+.plate [data-part="ear-sound"] { animation-name: earAudio; }
+@keyframes walk { 0% { stroke-dashoffset: 0; } 24%, 100% { stroke-dashoffset: 78; } }
+@keyframes scanScene { 0%, 100% { transform: rotate(-6deg); } 13% { transform: rotate(4deg); } 24%, 97% { transform: none; } }
+@keyframes benchDetection { 0%, 100% { opacity: .15; } 12%, 25% { opacity: 1; } 43%, 97% { opacity: .32; } }
+@keyframes approachChair {
+  0% { transform: translate(45px,-30px) scale(.69); opacity: 0; }
+  3%, 23% { transform: translate(45px,-30px) scale(.69); opacity: 1; }
+  43%, 97% { transform: none; opacity: 1; }
+  100% { transform: none; opacity: 0; }
+}
+@keyframes measure { 0%, 32% { opacity: 0; } 37%, 100% { opacity: 1; } }
+@keyframes announce { 0%, 46% { opacity: 0; } 55%, 97% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes earAudio { 0%, 43%, 100% { opacity: 0; } 47%, 54%, 60%, 97% { opacity: 1; } 50%, 57% { opacity: .25; } }
