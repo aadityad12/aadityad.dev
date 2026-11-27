@@ -1,0 +1,335 @@
+.plate {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  container-type: inline-size;
+  --period: 5s;
+  --settle: cubic-bezier(.22, 1, .36, 1);
+  --drive: cubic-bezier(.4, 0, .2, 1);
+  --snap: cubic-bezier(.2, 0, 0, 1);
+}
+
+.lab {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 680px), 800px));
+  justify-content: center;
+  gap: 32px;
+  padding-block: 24px;
+}
+.lab figure { margin: 0; min-width: 0; }
+.lab figcaption { font-family: var(--mono); padding-inline: 12px; }
+@media (max-width: 999px) {
+  .plate { aspect-ratio: 16 / 8.6; }
+}
+
+.plate [data-control] { cursor: pointer; touch-action: pan-y; }
+.plate [data-control]:focus-visible { outline: 2.5px solid var(--ink); outline-offset: 3px; }
+.plate [data-part] {
+  animation-duration: var(--period);
+  animation-timing-function: var(--drive);
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
+}
+.plate:not([data-playing="true"]) [data-part] { animation: none !important; }
+
+/* Accordion */
+.plate[data-plate="accordion"] { --period: 4.8s; }
+/* One source unit is 1/800 of the plate width. Keep the pen weight
+   proportional to the plate while the pleats or rays compress. */
+.plate [data-part="pleats"] path { vector-effect: non-scaling-stroke; stroke-width: .225cqw; }
+.plate [data-part="pleats"] path[stroke-width="0.8"] { stroke-width: .1cqw; }
+.plate [data-part="pleats"] { transform-origin: 450px 340px; }
+.plate [data-part="panel"] { transform-box: fill-box; transform-origin: center bottom; }
+.plate:not([data-mode]) [data-part="left-tail"] { animation-name: gatherTail; animation-timing-function: var(--settle); }
+.plate:not([data-mode]) [data-part="pleats"] { animation-name: gatherPleats; animation-timing-function: var(--settle); }
+.plate:not([data-mode]) [data-part="panel"] { animation-name: liftPanel; animation-timing-function: var(--settle); }
+.plate:not([data-mode]) [data-part="shaft"] { animation-name: drawFold; animation-timing-function: linear; }
+.plate:not([data-mode]) [data-part="arrow"] { animation-name: foldArrow; }
+.plate:not([data-mode]) [data-part="head"] { animation-name: foldHead; }
+
+@keyframes gatherTail {
+  0%, 100% { transform: translateX(-14px); }
+  16.67%, 75% { transform: translateX(0); }
+}
+@keyframes gatherPleats {
+  0%, 100% { transform: scaleX(1.08); }
+  16.67%, 75% { transform: scaleX(1); }
+}
+@keyframes liftPanel {
+  0%, 16.67%, 100% { opacity: 0; transform: translateY(68px) scale(.92); }
+  29%, 75% { opacity: 1; transform: none; }
+}
+@keyframes drawFold {
+  0%, 16.67% { stroke-dashoffset: 1; }
+  24%, 100% { stroke-dashoffset: 0; }
+}
+@keyframes foldArrow {
+  0%, 16%, 95%, 100% { opacity: 0; }
+  17%, 75% { opacity: 1; }
+}
+@keyframes foldHead {
+  0%, 23% { opacity: 0; }
+  26%, 100% { opacity: 1; }
+}
+.plate[data-mode="folded"] [data-part="left-tail"] { transform: translateX(-14px); }
+.plate[data-mode="folded"] [data-part="pleats"] { transform: scaleX(1.08); }
+.plate[data-mode="folded"] [data-part="panel"] { opacity: 0; transform: translateY(68px) scale(.92); }
+.plate[data-mode="folded"] [data-part="arrow"] { opacity: 0; }
+.plate[data-mode="folded"] [data-part="panel"] { animation-name: tuck; }
+.plate[data-mode="retrieved"] [data-part="panel"] { animation-name: retrieve; }
+.plate[data-mode] :is([data-part="panel"], [data-part="arrow"]) {
+  animation-duration: .5s;
+  animation-iteration-count: 1;
+  animation-timing-function: var(--settle);
+}
+.plate[data-mode="retrieved"] [data-part="arrow"] { animation-name: appear; }
+@keyframes tuck {
+  from { transform: none; opacity: 1; }
+  to { transform: translateY(68px) scale(.92); opacity: 0; }
+}
+@keyframes retrieve {
+  from { transform: translateY(68px) scale(.92); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+@keyframes appear { from { opacity: 0; } to { opacity: 1; } }
+
+/* Rung */
+.plate[data-plate="rung"] { --period: 5.2s; }
+.plate [data-part="bar"] { animation-timing-function: var(--settle); }
+.plate [data-part="cursor"], .plate [data-part="collar-flash"] { opacity: 0; }
+.plate [data-part="cursor"] { animation-name: bailCursor; }
+.plate [data-part="return-draw"] { animation-name: traceReturn; }
+.plate [data-part="return-head"] { animation-name: returnHead; }
+.plate [data-part="collar-flash"] { animation-name: landed; }
+@keyframes bailCursor {
+  0%, 34% { opacity: 0; transform: none; }
+  35% { opacity: 1; transform: none; }
+  46% { transform: translate(378px, 0); }
+  48% { transform: translate(378px, 19px); }
+  50% { transform: translate(370px, 44px); }
+  52% { transform: translate(345px, 59px); }
+  54% { transform: translate(320px, 62px); }
+  59%, 60% { opacity: 1; transform: translate(127px, 62px); }
+  61.5%, 100% { opacity: 0; transform: translate(127px, 62px); }
+}
+@keyframes traceReturn {
+  0%, 46%, 100% { stroke-dashoffset: 1; }
+  56%, 94% { stroke-dashoffset: 0; }
+}
+@keyframes returnHead {
+  0%, 55%, 100% { opacity: 0; }
+  57%, 94% { opacity: 1; }
+}
+@keyframes landed {
+  0%, 57%, 63%, 100% { opacity: 0; }
+  59% { opacity: 1; }
+}
+
+.plate [data-part="bar"][data-beat="0"] { animation-name: rail1; }
+@keyframes rail1 {
+  0%, 100% { transform: translateX(var(--travel)); }
+  12.5%, 94.23% { transform: none; }
+}
+.plate [data-part="bar"][data-beat="1"] { animation-name: rail2; }
+@keyframes rail2 {
+  0%, 4.23%, 100% { transform: translateX(var(--travel)); }
+  16.73%, 94.23% { transform: none; }
+}
+.plate [data-part="bar"][data-beat="2"] { animation-name: rail3; }
+@keyframes rail3 {
+  0%, 8.46%, 100% { transform: translateX(var(--travel)); }
+  20.96%, 94.23% { transform: none; }
+}
+.plate [data-part="bar"][data-beat="3"] { animation-name: rail4; }
+@keyframes rail4 {
+  0%, 12.69%, 100% { transform: translateX(var(--travel)); }
+  25.19%, 94.23% { transform: none; }
+}
+.plate [data-part="bar"][data-beat="4"] { animation-name: rail5; }
+@keyframes rail5 {
+  0%, 16.92%, 100% { transform: translateX(var(--travel)); }
+  29.42%, 94.23% { transform: none; }
+}
+
+/* Alta */
+.plate [data-part="probe"] { animation-name: probe; animation-timing-function: var(--settle); }
+.plate [data-part="contact"] { animation-name: contact; }
+.plate [data-part="ripple"] { transform-origin: 383px 276px; animation-timing-function: var(--settle); }
+.plate [data-part="cable-pulse"] { opacity: 0; animation-name: cable; }
+.plate [data-part="readout"] { animation-name: readout; animation-timing-function: steps(1, end); }
+.plate [data-part="speaker"] { animation-name: speaker; transform-origin: 684px 315px; }
+@keyframes probe {
+  0% { transform: translate(10px, -10px); }
+  12%, 100% { transform: none; }
+}
+@keyframes contact {
+  0%, 9% { opacity: 0; }
+  12%, 100% { opacity: 1; }
+}
+@keyframes cable {
+  0%, 24% { opacity: 0; stroke-dashoffset: .16; }
+  25% { opacity: 1; stroke-dashoffset: .16; }
+  42% { opacity: 1; stroke-dashoffset: -1; }
+  43%, 100% { opacity: 0; stroke-dashoffset: -1; }
+}
+@keyframes readout {
+  0% { opacity: 0; }
+  43%, 100% { opacity: 1; }
+}
+@keyframes speaker {
+  0%, 42%, 47%, 53%, 100% { transform: none; opacity: 1; }
+  44%, 50% { transform: scale(1.06, 1.8); opacity: .4; }
+}
+
+.plate [data-part="ripple"][data-beat="0"] { animation-name: ripple1; }
+@keyframes ripple1 {
+  0%, 12% { transform: scale(.88); opacity: 0; }
+  23%, 100% { transform: none; opacity: 1; }
+}
+.plate [data-part="ripple"][data-beat="1"] { animation-name: ripple2; }
+@keyframes ripple2 {
+  0%, 14.4% { transform: scale(.88); opacity: 0; }
+  25.4%, 100% { transform: none; opacity: 1; }
+}
+.plate [data-part="ripple"][data-beat="2"] { animation-name: ripple3; }
+@keyframes ripple3 {
+  0%, 16.8% { transform: scale(.88); opacity: 0; }
+  27.8%, 100% { transform: none; opacity: 1; }
+}
+
+/* VisionAssist */
+.plate [data-part="rays"] path {
+  vector-effect: non-scaling-stroke;
+  stroke-width: .1cqw;
+  stroke-dasharray: .5cqw .625cqw;
+}
+.plate [data-part="rays"] { transform-origin: 303px 218px; animation-name: sight; }
+.plate [data-part="corner"] { animation-name: acquire; animation-timing-function: var(--snap); }
+.plate [data-part="target"] { animation-name: approach; }
+.plate [data-part="reticle"] { animation-name: warn; }
+.plate [data-part="warning-tick"] { opacity: 0; animation-name: danger; }
+.plate [data-part="inner-ear"] { animation-name: speak; }
+.plate [data-part="outer-ear"] { animation-name: speak; animation-delay: .16s; }
+@keyframes sight {
+  0% { stroke-dashoffset: 4.5cqw; transform: none; }
+  14%, 34%, 64%, 100% { stroke-dashoffset: 0; transform: none; }
+  45%, 58% { stroke-dashoffset: 0; transform: scaleX(.78); }
+}
+@keyframes acquire {
+  0% { transform: translate(var(--dx), var(--dy)); opacity: .25; }
+  4%, 100% { transform: none; opacity: 1; }
+}
+@keyframes approach {
+  0%, 34%, 64%, 100% { transform: none; }
+  45%, 58% { transform: translateX(-78px); }
+}
+@keyframes warn {
+  0%, 44%, 48%, 52%, 100% { opacity: 1; }
+  46%, 50% { opacity: .25; }
+}
+@keyframes danger {
+  0%, 43%, 62%, 100% { opacity: 0; }
+  45%, 58% { opacity: 1; }
+}
+@keyframes speak {
+  0%, 14% { opacity: .22; }
+  19% { opacity: 1; }
+  25% { opacity: .4; }
+  32%, 44%, 49%, 54%, 100% { opacity: 1; }
+  46%, 51% { opacity: .15; }
+}
+
+/* OSS Scout */
+.plate[data-plate="oss-scout"] { --period: 5.4s; }
+.plate [data-part="card"] { animation-name: sendCard; }
+.plate [data-part="stoppers"] { animation-name: deadStop; animation-timing-function: var(--snap); }
+.plate [data-part="finger"] { --press: 13px; animation-name: interlock; }
+.plate [data-part="button"] { --press: 7px; animation-name: interlock; }
+.plate [data-part="latch"] { --press: -26px; animation-name: interlock; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .plate[data-playing="true"]:has([data-control="post"]:hover) [data-part="finger-hover"] { transform: translateY(4px); }
+}
+@keyframes deadStop {
+  0% { transform: translateX(-18px); }
+  18.5%, 100% { transform: none; }
+}
+@keyframes sendCard {
+  0% { transform: translateX(-60px); }
+  18.5% { transform: none; }
+  35%, 48% { transform: translateX(158px); }
+  66.67% { transform: translateX(410px); opacity: 1; }
+  71% { transform: translateX(484px); opacity: 1; }
+  71.1%, 74% { transform: translateX(-60px); opacity: 0; }
+  80%, 100% { transform: none; opacity: 1; }
+}
+@keyframes interlock {
+  0%, 35%, 76%, 100% { transform: none; }
+  47%, 67% { transform: translateY(var(--press)); }
+}
+.plate[data-mode="post"] [data-part] { animation-iteration-count: 1; animation-duration: 3.6s; }
+.plate[data-mode="post"] [data-part="stoppers"] { animation-name: none; }
+.plate[data-mode="post"] [data-part="card"] { animation-name: postCard; }
+.plate[data-mode="post"] :is([data-part="finger"], [data-part="button"], [data-part="latch"]) { animation-name: press; }
+@keyframes press {
+  0%, 54%, 100% { transform: none; }
+  10%, 42% { transform: translateY(var(--press)); }
+}
+@keyframes postCard {
+  0%, 10% { opacity: 1; transform: translateX(158px); }
+  38% { transform: translateX(410px); }
+  44% { opacity: 1; transform: translateX(484px); }
+  44.1%, 49% { opacity: 0; transform: translateX(-60px); }
+  57%, 100% { opacity: 1; transform: none; }
+}
+
+/* ApexTracker */
+.plate [data-part="today"] { transform-box: fill-box; transform-origin: center; animation-name: today; animation-timing-function: var(--snap); }
+@keyframes today {
+  0%, 48% { transform: scale(.65); opacity: 0; }
+  53%, 100% { transform: none; opacity: 1; }
+}
+
+/* The three animated properties share one clock per tool. A shaft starts
+   undrawn, a tool starts offset, and the head and cells wait for arrival. */
+.plate[data-plate="apextracker"] { --shift: 0px; --dash: 0; --visible: 1; }
+.plate [data-part="tool"] { --shift: 4px; }
+.plate [data-part="feed-line"] { --dash: 1; }
+.plate [data-part="feed-head"], .plate [data-part="cell"] { --visible: 0; }
+
+.plate [data-beat="0"]:is([data-part="tool"], [data-part="cell"]),
+.plate [data-part="feed"][data-beat="0"] [data-part] { animation-name: noteBeat; }
+@keyframes noteBeat {
+  0% { transform: translateX(var(--shift)); stroke-dashoffset: var(--dash); opacity: var(--visible); }
+  7% { transform: none; stroke-dashoffset: 0; opacity: var(--visible); }
+  10%, 100% { transform: none; stroke-dashoffset: 0; opacity: 1; }
+}
+
+.plate [data-beat="1"]:is([data-part="tool"], [data-part="cell"]),
+.plate [data-part="feed"][data-beat="1"] [data-part] { animation-name: alarmBeat; }
+@keyframes alarmBeat {
+  0%, 12% { transform: translateX(var(--shift)); stroke-dashoffset: var(--dash); opacity: var(--visible); }
+  19% { transform: none; stroke-dashoffset: 0; opacity: var(--visible); }
+  22%, 100% { transform: none; stroke-dashoffset: 0; opacity: 1; }
+}
+
+.plate [data-beat="2"]:is([data-part="tool"], [data-part="cell"]),
+.plate [data-part="feed"][data-beat="2"] [data-part] { animation-name: calendarBeat; }
+@keyframes calendarBeat {
+  0%, 24% { transform: translateX(var(--shift)); stroke-dashoffset: var(--dash); opacity: var(--visible); }
+  31% { transform: none; stroke-dashoffset: 0; opacity: var(--visible); }
+  34%, 100% { transform: none; stroke-dashoffset: 0; opacity: 1; }
+}
+
+.plate [data-beat="3"]:is([data-part="tool"], [data-part="cell"]),
+.plate [data-part="feed"][data-beat="3"] [data-part] { animation-name: ledgerBeat; }
+@keyframes ledgerBeat {
+  0%, 36% { transform: translateX(var(--shift)); stroke-dashoffset: var(--dash); opacity: var(--visible); }
+  43% { transform: none; stroke-dashoffset: 0; opacity: var(--visible); }
+  46%, 100% { transform: none; stroke-dashoffset: 0; opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce), (scripting: none) {
+  .plate [data-part] { animation: none !important; }
+}

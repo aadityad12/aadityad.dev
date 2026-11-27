@@ -119,12 +119,12 @@ export default function WorkStage({ items }: { items: StageItem[] }) {
                   </h3>
                   <p className="wk-tab-k">{it.tag}</p>
                 </header>
-                <Link className="wk-media" href={`/work/${it.id}/`} tabIndex={-1}>{it.visual}</Link>
+                <div className="wk-media">{it.visual}</div>
                 <div className="wk-foot">
                   <p className="wk-hook">{it.hook}</p>
                   <div className="wk-foot-row">
                     <p className="wk-num">
-                      <b className="num">{it.value}</b>
+                      <b>{it.value}</b>
                       <span>{it.label}</span>
                     </p>
                     <Link className="arrow-link" href={`/work/${it.id}/`}>

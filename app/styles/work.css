@@ -22,8 +22,7 @@
 .wk-tab[aria-selected="true"]::before { background: var(--red); }
 
 .wk-panel-head { display: none; }
-.wk-media { height: var(--stage-h); display: grid; place-items: center; text-decoration: none; color: inherit; cursor: pointer; }
-.wk-media:hover ~ .wk-foot .arrow-link span { transform: translateX(3px); }
+.wk-media { height: var(--stage-h); display: grid; place-items: center; }
 .wk-media > * { max-width: 100%; max-height: 100%; }
 .wk-foot { display: grid; gap: 8px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--hair); }
 .wk-hook { font-size: 19px; line-height: 1.35; font-weight: 550; letter-spacing: -0.01em; max-width: 40em; }
@@ -40,7 +39,7 @@
 
 /* A plate: the drawing keeps its top-left corner empty for the label. */
 .plate { position: relative; margin: 0; aspect-ratio: 16 / 10; width: min(100%, calc(var(--stage-h) * 1.6)); }
-.plate img { display: block; width: 100%; height: 100%; }
+.plate-art, .plate-art svg { display: block; width: 100%; height: 100%; }
 .plate-label { position: absolute; left: 3.5%; top: 4.5%; width: 36%; display: grid; gap: 6px; }
 .plate-label b { font-size: clamp(22px, 2.4vw, 34px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; color: var(--ink); text-wrap: balance; }
 .plate-label span { font-size: 14px; line-height: 1.35; color: var(--muted); max-width: 22em; }
@@ -85,9 +84,9 @@ html:not(.js) .wk-panel-head a { text-decoration: none; }
   .wk-panel-head a { text-decoration: none; }
   .wk-media { height: auto; display: block; }
     .plate { width: 100%; aspect-ratio: auto; display: flex; flex-direction: column-reverse; gap: 8px; }
-  /* The drawing's empty label corner is cropped away; the label sits above it instead. */
-  .plate picture { display: block; aspect-ratio: 16 / 8.6; overflow: hidden; }
-  .plate img { height: 100%; object-fit: cover; object-position: 60% 100%; }
+  /* The drawing's empty label corner is cropped away (the svg slices from the bottom); the label sits above it instead. */
+  .plate-art { aspect-ratio: 16 / 8.6; height: auto; }
+  .plate-art svg { aspect-ratio: auto; }
   .plate-label { position: static; width: auto; }
   .plate-label b { font-size: 21px; }
   .plate-label span { display: none; }

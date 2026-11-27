@@ -1,5 +1,7 @@
 import type { Plate as PlateT, StageMedia } from "../../content";
 import StageVideo from "./StageVideo";
+import LivePlate from "../../plates/LivePlate";
+import type { Project } from "../../plates";
 
 /* Plates for the front-page stage, and real material for project pages that has no other home there:
    Accordion's screen recording and the code that keeps OSS Scout from writing to GitHub. */
@@ -43,14 +45,12 @@ function GuardCode() {
   );
 }
 
-/** A two-ink drawing of the project's idea, with its label set in the page's own type over the drawing's empty corner. */
-export function Plate({ id, plate }: { id: string; plate: PlateT }) {
+/** A two-ink drawing of the project's idea that acts it out while on screen, with its label set in the page's type over the
+    drawing's empty corner. */
+export function Plate({ id, plate }: { id: Project; plate: PlateT }) {
   return (
     <figure className="plate">
-      <picture>
-        <source type="image/webp" srcSet={`/projects/plates/${id}.webp`} />
-        <img src={`/projects/plates/${id}.png`} width={1600} height={1000} alt={plate.alt} loading="lazy" decoding="async" />
-      </picture>
+      <LivePlate id={id} alt={plate.alt} />
       <figcaption className="plate-label">
         <b>{plate.big}</b>
         <span>{plate.line}</span>

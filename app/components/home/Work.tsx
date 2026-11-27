@@ -1,5 +1,6 @@
 import { MORE, NOTES, STAGE } from "../../content";
 import { Plate } from "./Artifacts";
+import type { Project } from "../../plates";
 import MoreWork, { type Row } from "./MoreWork";
 import WorkStage, { type StageItem } from "./WorkStage";
 
@@ -17,7 +18,7 @@ export default function Work() {
         roles: n.roles ?? [],
         value: `${n.headline.value}${n.headline.unit ? ` ${n.headline.unit}` : ""}`,
         label: n.headline.label,
-        visual: <Plate id={id} plate={plate} />,
+        visual: <Plate id={id as Project} plate={plate} />,
       },
     ];
   });
