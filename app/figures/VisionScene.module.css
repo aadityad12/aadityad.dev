@@ -19,7 +19,9 @@
 .btn:disabled:hover { background: transparent; color: var(--ink); }
 
 .plan, .frame { width: 100%; height: auto; display: block; overflow: visible; }
-.plan { overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; }
+.plan { overflow: hidden; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+/* Labels inside stroked groups must not inherit the group's outline, or they smear into blobs. */
+.plan text, .frame text { stroke: none; }
 .wall { stroke: var(--ink); stroke-width: 2; }
 .ring { fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 3 2; }
 .ringHot { stroke: var(--red); }
@@ -32,7 +34,7 @@
 .ray { stroke: var(--red); stroke-width: 1.5; stroke-dasharray: 2 2; }
 .head0 { fill: var(--card); stroke: var(--ink); stroke-width: 1.5; }
 .cam { fill: var(--ink); stroke: none; }
-.obj { cursor: grab; fill: var(--card); stroke-width: 2; outline: none; }
+.obj { cursor: grab; fill: var(--card); stroke-width: 2; outline: none; touch-action: none; }
 .obj:active { cursor: grabbing; }
 .obj .hit { fill: transparent; stroke: none; }
 .obj.out { opacity: 0.4; }
@@ -68,17 +70,19 @@
 .note { font-family: var(--sans); font-size: 14px; color: var(--muted); line-height: 1.45; margin: 0; }
 @container (max-width: 520px) {
   .panels { grid-template-columns: 1fr; }
-  .frame, .cap { width: 78%; margin: 0 auto; }
+  .frame { width: 56%; margin: 0 auto; }
+  .cap { width: 100%; }
   .tbl { font-size: 14px; }
   .tbl td, .tbl th { padding: 6px 4px 6px 0; }
-  .zl { font-size: 13px; }
-  .zs, .ol { font-size: 12px; }
+  .zl { font-size: 11px; }
+  .zs { font-size: 9.5px; }
+  .ol { font-size: 9.5px; }
 }
 
 .beat { gap: 8px; }
 .beat .panels { --bh: calc(44vh - 134px); display: flex; justify-content: center; align-items: flex-start; gap: 14px; }
 .beat .panel { flex: 0 1 auto; }
-.beat .plan { height: min(var(--bh), calc((100cqi - 14px) / 1.35)); width: auto; aspect-ratio: 268 / 300; max-width: 100%; touch-action: pan-y; }
+.beat .plan { height: min(var(--bh), calc((100cqi - 14px) / 1.35)); width: auto; aspect-ratio: 268 / 308; max-width: 100%; touch-action: pan-y; }
 .beat .frame { height: min(var(--bh), calc((100cqi - 14px) / 1.35)); width: auto; aspect-ratio: 900 / 1560; max-width: 100%; margin: 0; }
 .beat .obj { touch-action: none; }
 .beat .obj.sub { stroke: var(--red) !important; }

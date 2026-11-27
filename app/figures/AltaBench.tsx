@@ -365,11 +365,11 @@ export default function AltaBench({ beat }: FigureProps) {
               </g>
             )}
 
-            <rect x="56" y={POD} width="358" height="24" className={s.pod} />
-            <text x="404" y={POD + 16} className={`${s.t} ${s.podTxt}`}>Probe pod · ATmega328P</text>
+            <rect x="56" y={POD} width="358" height="26" className={s.pod} />
+            <text x="398" y={POD + 17} className={`${s.t} ${s.podTxt}`}>Probe pod · ATmega328P</text>
             {lead("g", EXIT.g, 320, "g")}
             {lead("w", EXIT.w, 320, "w")}
-            <text x={EXIT.w + 10} y="334" className={`${s.t} ${s.tag} ${s.start}`}>G, W unused in lab 1</text>
+            <text x={EXIT.w + 10} y="333" className={`${s.t} ${s.tag} ${s.start}`}>G, W unused in lab 1</text>
             {(["b", "y"] as P[]).map((p) => {
               const r = rowOf(p);
               if (bm && beat === 0 && p === "y") return lead(p, X(15), 206, p);

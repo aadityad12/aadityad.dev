@@ -22,6 +22,7 @@
   --night: #101316; /* the stage and other dark surfaces */
   --night-ink: #f2f4ef;
   --night-muted: #a7b0b5;
+  --night-red: #ff8a70; /* the accent, lifted to read on --night */
 
   /* figures keep a small data palette of their own */
   --accent: #2447d8;
@@ -100,26 +101,29 @@ strong, b { font-weight: 700; }
 .btn:hover { background: #000; transform: translateY(-1px); }
 .btn.quiet { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); }
 .btn.quiet:hover { background: var(--ink); color: var(--paper); }
-.btn.small { min-height: 38px; padding: 0 16px; font-size: 15px; }
+.btn.small { min-height: 44px; padding: 0 16px; font-size: 15px; }
 .arrow-link { font-weight: 650; text-decoration: none; display: inline-flex; gap: 6px; align-items: baseline; }
 .arrow-link span { transition: transform 0.15s ease; }
 .arrow-link:hover span { transform: translateX(3px); }
 
 /* ---------- header ---------- */
-.site-head { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding-block: 20px; font-size: 16px; }
-.site-head .me { font-weight: 750; letter-spacing: -0.01em; text-decoration: none; }
-.site-head nav { display: flex; align-items: center; gap: clamp(14px, 2.4vw, 30px); }
-.site-head nav a:not(.btn) { text-decoration: none; padding: 8px 0; }
-.site-head nav a:not(.btn):hover { text-decoration: underline; text-decoration-color: var(--red); text-decoration-thickness: 2px; text-underline-offset: 6px; }
-@media (max-width: 560px) {
-  .site-head nav a.opt { display: none; }
+.site-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "me nav cv"; align-items: center; gap: 8px clamp(16px, 2.4vw, 30px); padding-block: 16px; font-size: 16px; }
+.site-head .me { grid-area: me; font-weight: 750; letter-spacing: -0.01em; text-decoration: none; padding-block: 10px; }
+.site-head nav { grid-area: nav; justify-self: end; display: flex; align-items: center; gap: clamp(14px, 2.4vw, 30px); }
+.site-head nav a { text-decoration: none; padding: 11px 0; }
+.site-head nav a:hover { text-decoration: underline; text-decoration-color: var(--red); text-decoration-thickness: 2px; text-underline-offset: 6px; }
+.site-head .btn.small { grid-area: cv; min-height: 44px; }
+@media (max-width: 640px) {
+  .site-head { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "me cv" "nav nav"; padding-block: 10px 4px; row-gap: 0; }
+  .site-head nav { justify-self: stretch; justify-content: space-between; gap: 0; border-top: 1px solid var(--hair); font-size: 15px; margin-inline: -10px; }
+  .site-head nav a { padding: 11px 10px; }
 }
 
 /* ---------- hero ---------- */
-.hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 470px); gap: clamp(24px, 4vw, 56px); align-items: end; padding-top: clamp(24px, 5vw, 60px); }
-.hero-who { font-size: 17px; color: var(--muted); margin-bottom: 14px; }
-.hero h1 { font-size: clamp(64px, 10.2vw, 140px); letter-spacing: -0.048em; line-height: 0.9; margin-left: -0.04em; }
-.hero-lede { font-size: clamp(21px, 2.1vw, 28px); line-height: 1.3; letter-spacing: -0.015em; font-weight: 500; max-width: 25em; margin-top: clamp(20px, 2.4vw, 30px); }
+.hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 450px); gap: clamp(24px, 4vw, 56px); align-items: end; padding-top: clamp(16px, 3.6vw, 52px); }
+.hero-who { font-size: 17px; color: var(--ink-2); font-weight: 550; margin-bottom: 14px; }
+.hero h1 { font-size: clamp(60px, 9.2vw, 132px); letter-spacing: -0.048em; line-height: 0.92; margin-left: -0.04em; }
+.hero-lede { font-size: clamp(19px, 2vw, 27px); line-height: 1.3; letter-spacing: -0.015em; font-weight: 500; max-width: 25em; margin-top: clamp(20px, 2.4vw, 30px); }
 .hero-lede a { text-decoration: underline; text-decoration-color: var(--hair-strong); text-decoration-thickness: 2px; text-underline-offset: 5px; }
 .hero-lede a:hover { text-decoration-color: var(--red); }
 .hero-cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: clamp(22px, 2.6vw, 32px); }
@@ -143,7 +147,8 @@ strong, b { font-weight: 700; }
 .sign[aria-current="true"] .nail { fill: var(--paper); }
 .sign:focus-visible { outline: none; }
 .sign:focus-visible .board { stroke: var(--red); }
-.scene-pf { position: absolute; left: 39.2%; top: 35.2%; width: 60%; }
+/* Pathfinder stands in front of the signs but never catches a press meant for one. */
+.scene-pf { position: absolute; left: 39.2%; top: 35.2%; width: 60%; pointer-events: none; }
 
 /* The shimmer of hand-drawn ink: three redraws of each line, shown one at a time. */
 .boil-g { opacity: 0; animation: 0.9s linear infinite; }
@@ -151,11 +156,15 @@ strong, b { font-weight: 700; }
 .boil-g1 { animation-name: boil-1; }
 .boil-g2 { animation-name: boil-2; }
 
-.facts { display: grid; grid-template-columns: repeat(5, auto); justify-content: space-between; gap: 18px 32px; margin-top: clamp(32px, 4vw, 52px); padding-top: 22px; border-top: 1px solid var(--hair); font-size: 16px; color: var(--muted); }
+.facts { display: grid; grid-template-columns: repeat(5, auto); justify-content: space-between; gap: 18px 32px; margin-top: clamp(28px, 3.4vw, 48px); padding-top: 22px; border-top: 1px solid var(--hair); font-size: 16px; color: var(--muted); }
 .facts b { display: block; color: var(--ink); font-size: 19px; letter-spacing: -0.012em; }
 .facts a { text-decoration: none; }
 .facts a:hover b { text-decoration: underline; text-decoration-color: var(--red); text-decoration-thickness: 2px; text-underline-offset: 4px; }
 
+@media (max-width: 640px) {
+  .hero-cta .hero-cv { display: none; }
+  .hero-cta .btn { padding: 0 16px; }
+}
 @media (max-width: 980px) {
   .hero { grid-template-columns: minmax(0, 1fr); }
   .scene { justify-self: center; max-width: 360px; margin-top: 4px; }
@@ -191,6 +200,8 @@ strong, b { font-weight: 700; }
 
 /* ---------- sections ---------- */
 .section { padding-top: var(--section); }
+/* A jump to a section lands on its heading, not on the empty space above it. */
+.section[id] { scroll-margin-top: calc(16px - var(--section)); }
 .section-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 14px 28px; margin-bottom: clamp(24px, 3vw, 40px); }
 .section-head h2 { font-size: clamp(40px, 5.2vw, 68px); }
 .section-head p { color: var(--muted); max-width: 30em; }

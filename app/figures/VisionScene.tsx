@@ -42,7 +42,7 @@ const LAYERS: Layers[] = [
 ];
 const TAGS = ["1280×720 · ~5 FPS", "YOLOv8n · ≈200 ms"];
 // TODO(aadi): the "dropped (0.41)" box is an illustration of the 0.45 confidence floor, not a real detection; confirm it reads that way.
-const DROP = { x: 560, y: 780, w: 125, h: 150, conf: 0.41 };
+const DROP = { x: 545, y: 1124, w: 130, h: 116, conf: 0.41 };
 // Frame rows where the floor reaches 9 ft and 6 ft (same pinhole model as analyse()).
 const rowAt = (ft: number) => HZ + (CAM * F) / (ft * FT);
 const BANDS = [
@@ -92,6 +92,55 @@ function Glyph({ cls }: { cls: string }) {
 }
 
 const arc = (ft: number) => `M ${PX(-ft)} ${PY(0)} A ${ft * 20} ${ft * 20} 0 0 1 ${PX(ft)} ${PY(0)}`;
+
+function labelPos(r: Row, all: Row[]) {
+  const o = r.o;
+  const px = PX(o.x);
+  const py = PY(o.y);
+  const pad = o.cls === "cup" ? 10 : o.cls === "dog" ? 13 : 20;
+  const tw = Math.max(o.cls.length * 5.2, r.detected ? 26 : 46);
+  const make = (lx: number, y1: number, anchor: "start" | "middle" | "end") => {
+    const bx1 = anchor === "start" ? px + lx : anchor === "end" ? px + lx - tw : px + lx - tw / 2;
+    return { lx, y1, y2: y1 + 11, anchor, bx1, bx2: bx1 + tw, by1: py + y1 - 8, by2: py + y1 + 13 };
+  };
+  const right = make(pad, -3, "start");
+  const left = make(-pad, -3, "end");
+  const below = make(o.cls === "cup" ? -2 : 0, (o.cls === "cup" ? 14 : 25), "middle");
+  const above = make(0, -(o.cls === "cup" ? 19 : 29), "middle");
+  const leftLow = make(-(pad + 6), 5, "end");
+  const rightLow = make(pad + 6, 5, "start");
+  const cands = o.x < 0 ? [right, left, leftLow, below, above, rightLow] : [left, right, rightLow, below, above, leftLow];
+  const hitsFov = (c: typeof right, sign: -1 | 1) => {
+    const ds = [
+      c.bx1 - (100 + sign * 0.4 * (280 - c.by1)),
+      c.bx2 - (100 + sign * 0.4 * (280 - c.by1)),
+      c.bx1 - (100 + sign * 0.4 * (280 - c.by2)),
+      c.bx2 - (100 + sign * 0.4 * (280 - c.by2)),
+    ];
+    return Math.min(...ds) <= 2.5 && Math.max(...ds) >= -2.5;
+  };
+  const overlaps = (a: [number, number, number, number], b: [number, number, number, number]) =>
+    a[0] < b[2] && a[2] > b[0] && a[1] < b[3] && a[3] > b[1];
+  let best = cands[0];
+  let bestScore = Infinity;
+  cands.forEach((c, idx) => {
+    let sc = idx * 0.5;
+    if (c.bx1 < 27 || c.bx2 > 173 || c.by1 < 6 || c.by2 > 268) sc += 100;
+    if (hitsFov(c, -1)) sc += 60;
+    if (hitsFov(c, 1)) sc += 60;
+    const box: [number, number, number, number] = [c.bx1, c.by1, c.bx2, c.by2];
+    if (overlaps(box, [86, 264, 114, 298]) || overlaps(box, [126, 276, 174, 298])) sc += 80;
+    for (const other of all) {
+      if (other.o.id === o.id) continue;
+      const ox = PX(other.o.x);
+      const oy = PY(other.o.y);
+      const rad = other.o.cls === "cup" ? 8 : 16;
+      if (overlaps(box, [ox - rad, oy - rad, ox + rad, oy + rad])) sc += 80;
+    }
+    if (sc < bestScore) { bestScore = sc; best = c; }
+  });
+  return best;
+}
 
 export default function VisionScene({ beat }: FigureProps) {
   const bm = typeof beat === "number";
@@ -208,7 +257,7 @@ export default function VisionScene({ beat }: FigureProps) {
       <div className={s.panels}>
         <div className={s.panel}>
           <div className={s.head}><span>{bm ? "Top view" : "Top view, hallway"}</span>{!bm && <span>Feet</span>}</div>
-          <svg ref={svg} viewBox="0 0 268 300" className={s.plan} role="img" aria-label="Top-down floor plan with the wearer at the bottom, distance zones, and draggable obstacles">
+          <svg ref={svg} viewBox="0 -8 268 308" className={s.plan} role="img" aria-label="Top-down floor plan with the wearer at the bottom, distance zones, and draggable obstacles">
             <defs>
               <clipPath id={ids.plan}><rect x="20" y="0" width="160" height="300" /></clipPath>
               <pattern id={ids.hatch} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
@@ -232,17 +281,17 @@ export default function VisionScene({ beat }: FigureProps) {
               <polyline points={fov(1)} className={s.fov} />
             </g>
             {lay(L0.zones, <>
-              {([["Safe", "> 9 ft", 10.2, ""], ["Caution", "6–9 ft", 7.2, ""], ["Warning", "< 6 ft", 5.2, s.zlHot]] as const).map(([a, b, y, c]) => (
+              {([["Safe", "> 9 ft", 10.6, ""], ["Caution", "6–9 ft", 7.6, ""], ["Warning", "< 6 ft", 5.1, s.zlHot]] as const).map(([a, b, y, c]) => (
                 <text key={a} x="190" y={PY(y)} className={`${s.zl} ${c}`}>
                   <tspan x="190">{a}</tspan>
-                  <tspan x="190" dy="8" className={s.zs}>{b}</tspan>
+                  <tspan x="190" dy="13" className={s.zs}>{b}</tspan>
                 </text>
               ))}
             </>, "zl")}
             {!bm && (
-              <text x="190" y={PY(2.6)} className={s.zl}>
+              <text x="190" y={PY(2.4)} className={s.zl}>
                 <tspan x="190">Edge clip</tspan>
-                <tspan x="190" dy="10" className={s.zs}>{`≈${CLIP_FT.toFixed(1)} ft`}</tspan>
+                <tspan x="190" dy="13" className={s.zs}>{`≈${CLIP_FT.toFixed(1)} ft`}</tspan>
               </text>
             )}
             {[2, 4, 6, 8, 10, 12, 14].map((f) => (
@@ -262,8 +311,7 @@ export default function VisionScene({ beat }: FigureProps) {
               const o = r.o;
               const sub = subId === o.id;
               const fadeOut = bm && L0.risk && subject && !sub;
-              const left = o.x < 0 ? o.x > -2.2 : o.x > 2.2;
-              const lx = (o.cls === "cup" ? 10 : 22) * (left ? -1 : 1);
+              const lp = labelPos(r, rows);
               return (
                 <g
                   key={o.id}
@@ -285,8 +333,8 @@ export default function VisionScene({ beat }: FigureProps) {
                   <circle r="20" className={s.hit} />
                   {(focus === o.id || sub) && <rect x="-21" y="-21" width="42" height="42" className={focus === o.id ? s.focus : s.subBox} />}
                   <Glyph cls={o.cls} />
-                  {lay(L0.boxes, <text x={lx} y="-3" textAnchor={left ? "end" : "start"} className={s.ol}>{o.cls[0].toUpperCase() + o.cls.slice(1)}</text>, "ol")}
-                  {lay(L0.distances, <text x={lx} y="7" textAnchor={left ? "end" : "start"} className={s.zs}>{r.detected ? `${r.trueFt.toFixed(1)} ft` : "out of view"}</text>, "ft")}
+                  {lay(L0.boxes, <text x={lp.lx} y={lp.y1} textAnchor={lp.anchor} className={s.ol}>{o.cls[0].toUpperCase() + o.cls.slice(1)}</text>, "ol")}
+                  {lay(L0.distances, <text x={lp.lx} y={lp.y2} textAnchor={lp.anchor} className={s.zs}>{r.detected ? `${r.trueFt.toFixed(1)} ft` : "out of view"}</text>, "ft")}
                 </g>
               );
             })}
@@ -327,7 +375,10 @@ export default function VisionScene({ beat }: FigureProps) {
               {rows.filter((r) => r.detected).map((r) => {
                 const sub = subId === r.o.id;
                 const c = bm ? (L0.risk ? (sub ? "var(--red)" : TIER_C[r.o.tier]) : "var(--ink)") : sub ? "var(--red)" : TIER_C[r.o.tier];
-                const x = n2(Math.max(2, r.cx - r.w / 2));
+                const boxLeft = n2(Math.max(2, r.cx - r.w / 2));
+                const tagW = (r.o.cls.length * 18 + 98) * k;
+                const tagX = n2(Math.max(2, Math.min(FW - tagW - 4, boxLeft)));
+                const estX = n2(Math.max(6, Math.min(FW - 110 * k, boxLeft + 8)));
                 const t = n2(visTop(r));
                 const tagH = 44 * k;
                 const tagY = t > tagH + 2 ? t - tagH : t;
@@ -337,10 +388,10 @@ export default function VisionScene({ beat }: FigureProps) {
                     {bm && <rect x={n2(r.cx - r.w / 2)} y={t} width={n2(r.w)} height={n2(visBot(r) - visTop(r))} fill="var(--ink)" opacity="0.14" />}
                     {lay(L0.boxes, <>
                       <rect x={n2(r.cx - r.w / 2)} y={t} width={n2(r.w)} height={n2(visBot(r) - visTop(r))} fill="none" style={{ stroke: c, transition: fade }} strokeWidth={sub ? 7 : 5} />
-                      <rect x={x} y={n2(tagY)} width={(r.o.cls.length * 19 + 104) * k} height={tagH} style={{ fill: c, transition: fade }} />
-                      <text x={x + 8} y={n2(tagY + 32 * k)} className={s.tag} style={{ fontSize: 31 * k }}>{r.o.cls} {r.o.conf.toFixed(2)}</text>
+                      <rect x={tagX} y={n2(tagY)} width={tagW} height={tagH} style={{ fill: c, transition: fade }} />
+                      <text x={tagX + 8} y={n2(tagY + 32 * k)} className={s.tag} style={{ fontSize: 29 * k }}>{r.o.cls} {r.o.conf.toFixed(2)}</text>
                     </>, "box")}
-                    {lay(L0.distances, <text x={x + 8} y={n2(tagY + 80 * k)} className={s.est} style={{ fill: c, fontSize: 31 * k, transition: fade }}>
+                    {lay(L0.distances, <text x={estX} y={n2(tagY + 80 * k)} className={s.est} style={{ fill: c, fontSize: 29 * k, transition: fade }}>
                       {r.suppressed ? "dist. –" : `${r.estFt.toFixed(1)} ft`}
                     </text>, "dist")}
                   </g>
@@ -348,10 +399,12 @@ export default function VisionScene({ beat }: FigureProps) {
               })}
               {bm && lay(L0.drop, <>
                 <rect x={DROP.x} y={DROP.y} width={DROP.w} height={DROP.h} className={s.drop} />
-                <text x={DROP.x + DROP.w} y={DROP.y - 14} textAnchor="end" className={s.est} style={{ fill: "var(--muted)", fontSize: 31 * k }}>dropped ({DROP.conf.toFixed(2)})</text>
+                <text x={DROP.x + DROP.w} y={DROP.y - 22} textAnchor="end" className={s.est} style={{ fill: "var(--muted)", fontSize: 27 * k }}>dropped ({DROP.conf.toFixed(2)})</text>
               </>, "drop")}
               {bm && lay(L0.formula && act.detected && !act.suppressed, (() => {
-                const dx = n2(Math.min(FW - 30, act.cx + act.w / 2 + 24));
+                const onRight = act.cx + act.w / 2 + 86 <= FW;
+                const dx = n2(onRight ? act.cx + act.w / 2 + 22 : Math.max(56, act.cx - act.w / 2 - 22));
+                const tx = onRight ? dx + 42 : dx - 14;
                 const y1 = n2(visTop(act));
                 const y2 = n2(visBot(act));
                 return (
@@ -359,7 +412,7 @@ export default function VisionScene({ beat }: FigureProps) {
                     <line x1={dx} x2={dx} y1={y1} y2={y2} />
                     <line x1={dx - 12} x2={dx + 12} y1={y1} y2={y1} />
                     <line x1={dx - 12} x2={dx + 12} y1={y2} y2={y2} />
-                    <text transform={`translate(${dx - 12} ${n2((y1 + y2) / 2)}) rotate(-90)`} textAnchor="middle" style={{ fontSize: 30 * k }}>h = {Math.round(actVis)} px</text>
+                    <text transform={`translate(${tx} ${n2((y1 + y2) / 2)}) rotate(-90)`} textAnchor="middle" style={{ fontSize: 27 * k }}>h = {Math.round(actVis)} px</text>
                   </g>
                 );
               })(), "dim")}

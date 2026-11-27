@@ -1,54 +1,108 @@
 /* Work: the stage and the list under it. See docs/fable3/DESIGN.md */
-.wk-roles { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 16px; color: var(--muted); }
-.wk-roles span { margin-right: 6px; }
-.wk-roles button { min-height: 40px; padding: 0 16px; border-radius: 999px; font-weight: 650; color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--hair-strong); cursor: pointer; transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease; }
+
+.wk-head { margin-bottom: clamp(20px, 2.4vw, 32px); }
+.wk-roles { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 16px; color: var(--muted); }
+.wk-roles span { margin-right: 4px; }
+.wk-roles button { min-height: 44px; padding: 0 18px; border-radius: 999px; font-weight: 650; color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--hair-strong); cursor: pointer; transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease; }
 .wk-roles button:hover { box-shadow: inset 0 0 0 1.5px var(--ink); }
 .wk-roles button[aria-pressed="true"] { background: var(--ink); color: var(--paper); box-shadow: none; }
 
-.wk-stage { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: clamp(24px, 3.4vw, 48px); align-items: start; }
+/* The picture is as tall as the screen allows, so the heading, the list, the picture and the link
+   to the case study all fit on one laptop screen. */
+.wk { --stage-h: clamp(300px, calc(100svh - 330px), 540px); }
+.wk-stage { display: grid; grid-template-columns: minmax(0, 280px) minmax(0, 1fr); gap: clamp(24px, 3.4vw, 48px); align-items: start; }
 
-.wk-tabs { display: grid; }
-.wk-tab { position: relative; display: grid; gap: 4px; text-align: left; padding: 16px 0 17px; border-top: 1.5px solid var(--hair); cursor: pointer; color: var(--muted); transition: color 0.15s ease; }
-.wk-tab b { font-size: 25px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; color: var(--ink-2); }
+.wk-tabs { display: grid; border-bottom: 1px solid var(--hair); }
+.wk-tab { position: relative; display: grid; gap: 2px; text-align: left; padding: 13px 0 14px 18px; border-top: 1px solid var(--hair); cursor: pointer; color: var(--muted); }
+.wk-tab b { font-size: 22px; font-weight: 800; letter-spacing: -0.025em; line-height: 1.1; color: var(--ink-2); transition: color 0.15s ease; }
 .wk-tab:hover b { color: var(--ink); }
-.wk-tab-hook { display: none; font-size: 17px; line-height: 1.4; color: var(--ink); }
 .wk-tab-k { font-size: 15px; line-height: 1.35; color: var(--muted); }
-.wk-tab[aria-selected="true"] { border-top-color: var(--ink); padding-bottom: 20px; }
-.wk-tab[aria-selected="true"] b { color: var(--ink); font-size: 30px; }
-.wk-tab[aria-selected="true"] .wk-tab-hook { display: block; }
-.wk-progress { position: absolute; left: 0; top: -1.5px; height: 3px; width: 100%; background: var(--red); transform-origin: left; transform: scaleX(0); }
-.wk-progress[data-running="true"] { animation: wk-fill linear forwards; }
-@keyframes wk-fill { to { transform: scaleX(1); } }
-.wk-pause { justify-self: start; margin-top: 4px; padding: 10px 0; font-size: 15px; font-weight: 650; color: var(--muted); border-top: 1.5px solid var(--hair); width: 100%; text-align: left; cursor: pointer; }
-.wk-pause:hover { color: var(--ink); }
+.wk-tab::before { content: ""; position: absolute; left: 0; top: 50%; width: 8px; height: 8px; margin-top: -4px; border-radius: 50%; background: transparent; transition: background-color 0.15s ease; }
+.wk-tab[aria-selected="true"] b { color: var(--ink); }
+.wk-tab[aria-selected="true"]::before { background: var(--red); }
 
 .wk-panel-head { display: none; }
-.wk-visual { padding: clamp(10px, 1.6vw, 22px); }
-.wk-visual-in { min-height: 220px; }
-.wk-visual img { display: block; width: 100%; height: auto; border-radius: var(--r); }
-.wk-foot { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 10px 28px; margin-top: 16px; }
-.wk-foot p { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; color: var(--muted); }
-.wk-foot p b { font-size: 30px; font-weight: 800; letter-spacing: -0.03em; color: var(--ink); }
+.wk-media { height: var(--stage-h); display: grid; place-items: center; text-decoration: none; color: inherit; cursor: pointer; }
+.wk-media:hover ~ .wk-foot .arrow-link span { transform: translateX(3px); }
+.wk-media > * { max-width: 100%; max-height: 100%; }
+.wk-foot { display: grid; gap: 8px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--hair); }
+.wk-hook { font-size: 19px; line-height: 1.35; font-weight: 550; letter-spacing: -0.01em; max-width: 40em; }
+.wk-foot-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 28px; }
+.wk-num { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; color: var(--muted); font-size: 15px; }
+.wk-num b { font-size: 24px; font-weight: 800; letter-spacing: -0.025em; color: var(--ink); }
+.wk-foot .arrow-link { padding-block: 10px; }
+.wk-more-btn { display: none; }
+
+/* ---------- the artifacts ---------- */
+/* The app window sits at x 156-1124, y 30-688 of the 1280 x 720 recording. */
+.art-vwrap { position: relative; overflow: hidden; aspect-ratio: 968 / 658; width: min(100%, calc(var(--stage-h) * 968 / 658)); border-radius: var(--r); background: var(--night); }
+.art-video { position: absolute; left: -16.12%; top: -4.56%; width: 132.23%; max-width: none; height: auto; display: block; }
+
+/* A plate: the drawing keeps its top-left corner empty for the label. */
+.plate { position: relative; margin: 0; aspect-ratio: 16 / 10; width: min(100%, calc(var(--stage-h) * 1.6)); }
+.plate img { display: block; width: 100%; height: 100%; }
+.plate-label { position: absolute; left: 3.5%; top: 4.5%; width: 36%; display: grid; gap: 6px; }
+.plate-label b { font-size: clamp(22px, 2.4vw, 34px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; color: var(--ink); text-wrap: balance; }
+.plate-label span { font-size: 14px; line-height: 1.35; color: var(--muted); max-width: 22em; }
+
+.art-card { width: min(100%, 760px); background: var(--card); border: 1px solid var(--hair); border-radius: var(--r-lg); padding: clamp(18px, 2.4vw, 30px); display: grid; gap: 16px; }
+.art-card-h { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; font-size: 15px; color: var(--muted); }
+.art-card-h span:first-child { color: var(--ink); font-weight: 700; }
+.art-card-f { font-size: 15px; color: var(--muted); }
+
+
+.art-code { background: var(--night); border-color: var(--night); color: var(--night-ink); }
+.art-code .art-card-h { color: var(--night-muted); }
+.art-code .art-card-h span:first-child { color: var(--night-ink); font-family: var(--mono); font-weight: 500; }
+.art-pre { margin: 0; overflow-x: auto; font-family: var(--mono); font-size: 13.5px; line-height: 1.6; color: var(--night-ink); }
+.art-pre .c { color: var(--night-muted); }
+.art-pre b { color: var(--night-red); font-weight: 600; }
+.art-out { font-family: var(--mono); font-size: 13.5px; line-height: 1.55; padding-top: 14px; border-top: 1px solid rgba(242, 244, 239, 0.14); color: var(--night-ink); }
+.art-prompt { color: var(--night-muted); }
+.art-blocked { color: var(--night-red); }
 
 /* With scripts and a wide screen, only the chosen project is on the stage. */
 @media (min-width: 1000px) {
   .js .wk-panel[data-active="false"] { display: none; }
 }
-/* Without scripts, or on a narrow screen, there are no tabs: every project is shown in turn. */
+/* Without scripts, or on a narrow screen, there are no tabs: every project is a card. */
 html:not(.js) .wk-tabs, html:not(.js) .wk-roles { display: none; }
 html:not(.js) .wk-stage { grid-template-columns: minmax(0, 1fr); }
-html:not(.js) .wk-panel-head, html:not(.js) .wk-panel + .wk-panel { display: block; }
-html:not(.js) .wk-panel + .wk-panel { margin-top: 56px; }
+html:not(.js) .wk-panel + .wk-panel { margin-top: 64px; }
+html:not(.js) .wk-panel-head { display: grid; gap: 2px; margin-bottom: 14px; }
+html:not(.js) .wk-panel-head h3 { font-size: 32px; }
+html:not(.js) .wk-panel-head a { text-decoration: none; }
+
 @media (max-width: 999px) {
+  .wk { --stage-h: auto; }
   .wk-stage { grid-template-columns: minmax(0, 1fr); }
   .wk-tabs { display: none; }
-  .wk-panel + .wk-panel { margin-top: 56px; }
-  .wk-panel-head { display: grid; gap: 6px; margin-bottom: 16px; }
-  .wk-panel-head h3 { font-size: 34px; }
-  .wk-panel-head p:first-of-type { font-size: 18px; }
+  .wk-panel + .wk-panel { margin-top: 48px; }
+  .js .wk:not([data-all]) .wk-panel[data-later] { display: none; }
+  .js .wk:not([data-all]) .wk-more-btn { display: inline-flex; margin-top: 36px; }
+  .wk-panel-head { display: grid; gap: 2px; margin-bottom: 14px; }
+  .wk-panel-head h3 { font-size: clamp(28px, 7.6vw, 36px); }
+  .wk-panel-head a { text-decoration: none; }
+  .wk-media { height: auto; display: block; }
+    .plate { width: 100%; aspect-ratio: auto; display: flex; flex-direction: column-reverse; gap: 8px; }
+  /* The drawing's empty label corner is cropped away; the label sits above it instead. */
+  .plate picture { display: block; aspect-ratio: 16 / 8.6; overflow: hidden; }
+  .plate img { height: 100%; object-fit: cover; object-position: 60% 100%; }
+  .plate-label { position: static; width: auto; }
+  .plate-label b { font-size: 21px; }
+  .plate-label span { display: none; }
+      .art-vwrap { width: 100%; }
+  .art-card { width: 100%; }
+  .wk-foot { border-top: 0; padding-top: 0; }
+  .wk-hook { font-size: 18px; }
 }
-html:not(.js) .wk-panel-head { display: grid; gap: 6px; margin-bottom: 16px; }
-html:not(.js) .wk-panel-head h3 { font-size: 34px; }
+@media (max-width: 560px) {
+  .wk-roles span { width: 100%; }
+  .wk-roles button { padding: 0 14px; }
+        .art-pre, .art-out { font-size: 12px; }
+  .art-pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+  .art-card { padding: 16px; gap: 12px; }
+}
 
 /* More work: a name and one sentence each. */
 .wk-more-h { margin-top: clamp(56px, 7vw, 88px); font-size: 28px; margin-bottom: 8px; }

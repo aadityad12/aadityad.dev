@@ -8,7 +8,7 @@ const FACTS: { big: string; rest: string; href: string }[] = [
   { big: "Hackathon winner", rest: "UC Berkeley AI Hackathon 2026", href: "/work/accordion/" },
   { big: "Top 6 finalist", rest: "AIE Code Summit 2026", href: "/work/sisyphus/" },
   { big: "3.8 GPA", rest: "Dean's Scholar, teaching assistant", href: "#education" },
-  { big: "Summer 2027", rest: "looking for an internship", href: "#contact" },
+  { big: "Class of 2028", rest: "B.S. Computer Engineering, SJSU", href: "#education" },
 ];
 
 export default function Hero() {
@@ -23,12 +23,12 @@ export default function Hero() {
             Desai
           </h1>
           <p className="hero-lede">
-            I build things like <Link href="/work/visionassist/">a wearable that tells a blind person what&rsquo;s ahead</Link>,{" "}
+            I build things like <Link href="/work/accordion/">tools that keep AI coding agents on track</Link>,{" "}
             <Link href="/work/alta/">a lab assistant that walks students to the fault in their circuit</Link>, and{" "}
-            <Link href="/work/accordion/">tools that keep AI coding agents on track</Link>.
+            <Link href="/work/visionassist/">a wearable that tells a blind person what&rsquo;s ahead</Link>.
           </p>
           <div className="hero-cta">
-            <a className="btn" href={RESUME}>Résumé (PDF)</a>
+            <a className="btn hero-cv" href={RESUME}>Résumé (PDF)</a>
             <a className="btn quiet" href={`mailto:${EMAIL}`}>Email me</a>
             <a className="btn quiet" href={GITHUB}>GitHub</a>
             <a className="btn quiet" href={LINKEDIN}>LinkedIn</a>

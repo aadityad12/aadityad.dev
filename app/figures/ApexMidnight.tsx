@@ -42,8 +42,9 @@ function wave(segs: Seg[]) {
 
 function Track({ segs, upTo, children }: { segs: Seg[]; upTo: number; children?: React.ReactNode }) {
   return (
-    <div className={s.track} style={{ clipPath: `inset(0 ${(100 - pct(upTo)).toFixed(2)}% 0 0)` }}>
-      <svg viewBox={`0 0 ${SPAN} 24`} preserveAspectRatio="none" aria-hidden="true">
+    <div className={s.track}>
+      <svg viewBox={`0 0 ${SPAN} 24`} preserveAspectRatio="none" aria-hidden="true"
+        style={{ clipPath: `inset(0 ${(100 - pct(upTo)).toFixed(2)}% 0 0)` }}>
         {segs.map((g, i) => (
           <rect key={i} x={g.a} y={HI} width={g.b - g.a} height={LO - HI} className={g.wrong ? s.wrongFill : s.fill} />
         ))}
@@ -102,13 +103,13 @@ export default function ApexMidnight() {
   const session: Seg[] = [{ a: START, b: STOP }];
   const strobe: Seg[] = [{ a: STOP - 1.5, b: STOP + 1.5 }];
 
-  const label = (segs: Seg[], add: number) =>
+  const label = (day: "mon" | "tue", add: number) =>
     stopped && add > 0 ? (
-      <span className={s.amt} style={{ left: `${pct((segs[0].a + segs[0].b) / 2)}%` }}>+{add} min</span>
+      <span className={s.amt} style={{ left: day === "mon" ? "25%" : "75%" }}>+{add} min</span>
     ) : null;
   const wrongTag = (segs: Seg[]) => {
     const w = segs.find((g) => g.wrong);
-    return stopped && w ? <span className={s.wrongTag} style={{ left: `${pct((w.a + w.b) / 2)}%` }}>wrong day</span> : null;
+    return stopped && w ? <span className={s.wrongTag} style={{ left: w.a < MID ? "25%" : "75%" }}>wrong day</span> : null;
   };
 
   const summary = !stopped
@@ -137,8 +138,8 @@ export default function ApexMidnight() {
           <span className={s.headSp} />
           <span>Session</span>
           <span>Stop</span>
-          <span>Banked<b>Monday</b></span>
-          <span>Banked<b>Tuesday</b></span>
+          <span>Banked <b>Monday</b></span>
+          <span>Banked <b>Tuesday</b></span>
           <span className={s.footSp} />
         </div>
         <div className={s.plot} aria-hidden="true">
@@ -156,8 +157,8 @@ export default function ApexMidnight() {
           <Track segs={stopped ? strobe : []} upTo={t}>
             {stopped && <span className={s.who} style={{ left: `${pct(STOP)}%` }}>{who}</span>}
           </Track>
-          <Track segs={stopped ? b.mon : []} upTo={SPAN}>{label(b.mon, monAdd)}{wrongTag(b.mon)}</Track>
-          <Track segs={stopped ? b.tue : []} upTo={SPAN}>{label(b.tue, tueAdd)}{wrongTag(b.tue)}</Track>
+          <Track segs={stopped ? b.mon : []} upTo={SPAN}>{label("mon", monAdd)}{wrongTag(b.mon)}</Track>
+          <Track segs={stopped ? b.tue : []} upTo={SPAN}>{label("tue", tueAdd)}{wrongTag(b.tue)}</Track>
           <div className={s.marks}>
             <span style={{ left: `${pct(START)}%` }}>23:10</span>
             <span style={{ left: `${pct(STOP)}%` }}>00:50</span>
@@ -169,7 +170,8 @@ export default function ApexMidnight() {
         </div>
       </div>
 
-      <div className={s.result}>
+      <div className={s.outcome}>
+        <div className={s.result}>
         <div className={s.graph} aria-label="Call graph">
           <span className={s.lbl}>{fix === "before" ? "Two copies of the logic" : "One shared file"}</span>
           <svg viewBox="0 0 280 46" className={s.cg} role="img"
@@ -178,14 +180,14 @@ export default function ApexMidnight() {
             <text x="0" y="40" className={path === "app" ? s.on : s.off}>AppPath</text>
             {fix === "before" ? (
               <>
-                <g className={path === "widget" ? s.on : s.off}><path d="M76 10 H122" /><path d="M122 6 L130 10 L122 14 Z" /><text x="136" y="14">bank(startDay)</text></g>
-                <g className={path === "app" ? s.on : s.off}><path d="M76 36 H122" /><path d="M122 32 L130 36 L122 40 Z" /><text x="136" y="40">bank(stopDay)</text></g>
+                <g className={path === "widget" ? s.on : s.off}><path d="M88 10 H122" /><path d="M122 6 L130 10 L122 14 Z" /><text x="136" y="14">bank(startDay)</text></g>
+                <g className={path === "app" ? s.on : s.off}><path d="M88 36 H122" /><path d="M122 32 L130 36 L122 40 Z" /><text x="136" y="40">bank(stopDay)</text></g>
               </>
             ) : (
               <>
-                <path d="M76 10 H100 V23" className={path === "widget" ? s.on : s.off} />
-                <path d="M76 36 H100 V23" className={path === "app" ? s.on : s.off} />
-                <g className={s.on}><path d="M100 23 H122" /><path d="M122 19 L130 23 L122 27 Z" /><circle cx="100" cy="23" r="2.4" /><text x="136" y="27">StudyTimer.bank()</text></g>
+                <path d="M88 10 H104 V23" className={path === "widget" ? s.on : s.off} />
+                <path d="M88 36 H104 V23" className={path === "app" ? s.on : s.off} />
+                <g className={s.on}><path d="M104 23 H122" /><path d="M122 19 L130 23 L122 27 Z" /><circle cx="104" cy="23" r="2.4" /><text x="136" y="27">StudyTimer.bank()</text></g>
               </>
             )}
           </svg>
@@ -202,14 +204,14 @@ export default function ApexMidnight() {
             <span className={s.goal}>Day open</span>
           </div>
         </div>
+        </div>
+        <p className={s.live} aria-live="polite">{summary}</p>
       </div>
-
-      <p className={s.live} aria-live="polite">{summary}</p>
 
       <div className={s.shots}>
         {SHOTS.map((sh) => (
           <figure key={sh.src} className={s.phone}>
-            <Image src={sh.src} alt={sh.alt} width={600} height={1300} sizes="(max-width: 600px) 30vw, 160px" />
+            <Image src={sh.src} alt={sh.alt} width={600} height={1300} sizes="(max-width: 550px) 30vw, (min-width: 960px) 110px, 140px" />
             <figcaption>{sh.cap}</figcaption>
           </figure>
         ))}

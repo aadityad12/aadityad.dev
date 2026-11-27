@@ -3,12 +3,21 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import SiteHeader from "../../components/SiteHeader";
+import SiteFooter from "../../components/SiteFooter";
 import { Fig, Rich } from "../../components/parts";
 import Reel from "../../components/work/Reel";
+import ProjectScene from "../../components/work/ProjectScene";
+import { Artifact } from "../../components/home/Artifacts";
 import { FIGURES } from "../../figures";
-import { NOTES, PHOTOS } from "../../content";
+import { NOTES, PHOTOS, STAGE } from "../../content";
 
 export const dynamicParams = false;
+
+/** Lets a long value such as a package name wrap after a slash instead of mid-word. */
+function breakAtSlash(v: string) {
+  const parts = v.split("/");
+  return parts.map((p, i) => (i < parts.length - 1 ? <span key={i}>{p}/<wbr /></span> : <span key={i}>{p}</span>));
+}
 
 const BY_ORDER = [...NOTES].sort((a, b) => a.order - b.order);
 
@@ -42,7 +51,12 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
   const next = BY_ORDER[note.order % BY_ORDER.length];
   const prev = BY_ORDER[(note.order - 2 + BY_ORDER.length) % BY_ORDER.length];
   const award = "award" in note ? note.award : undefined;
-  const facts = [note.context, note.role, note.team, note.when].filter(Boolean).join(" · ");
+  // The award already names the event, so the facts line does not repeat it.
+  const facts = [award && award.includes(note.context) ? null : note.context, note.role, note.team, note.when].filter(Boolean).join(" · ");
+  const hasScene = STAGE.some((x) => x.id === note.id);
+  // Real material that has no other place on the page: Accordion's screen recording, OSS Scout's guard code.
+  const media = STAGE.find((x) => x.id === note.id)?.media;
+  const extra = media && (media.kind === "video" || media.kind === "guard") ? media : null;
 
   return (
     <>
@@ -50,17 +64,35 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
       <main id="main">
         <article className="wrap pj">
           <Link className="arrow-link pj-back" href="/#work"><span aria-hidden="true">←</span> All work</Link>
-          <h1>{note.title}</h1>
-          <p className="pj-lede">{note.hook}</p>
-          {award && <p className="pj-award">{award}</p>}
-          <p className="pj-facts">{facts}</p>
-          {note.links.length > 0 && (
-            <div className="pj-links">
-              {note.links.map((l) => (
-                <a key={l.href} className="btn quiet small" href={l.href} target="_blank" rel="noreferrer">{l.label} ↗</a>
-              ))}
+          <header className={hasScene ? "pj-head has-scene" : "pj-head"}>
+            <div className="pj-head-text">
+              <h1>{note.title}</h1>
+              <p className="pj-lede">{note.hook}</p>
+              {award && <p className="pj-award">{award}</p>}
+              <p className="pj-facts">{facts}</p>
+              {note.links.length > 0 && (
+                <div className="pj-links">
+                  {note.links.map((l) => (
+                    <a key={l.href} className="btn quiet small" href={l.href} target="_blank" rel="noreferrer">{l.label} ↗</a>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
+            {hasScene && <ProjectScene id={note.id} />}
+          </header>
+
+          <section className="pj-results" aria-labelledby="pj-results-h">
+            <h2 id="pj-results-h" className="visually-hidden">Results</h2>
+            <ul>
+              {note.specs.slice(0, 4).map((sp) => (
+                <li key={sp.param}>
+                  <span className="pj-spec-v">{breakAtSlash(sp.value)}</span>
+                  <span className="pj-spec-p">{sp.param}</span>
+                  {sp.note && <span className="pj-spec-n">{sp.note}</span>}
+                </li>
+              ))}
+            </ul>
+          </section>
 
           {F && (
             <div className="pj-lead">
@@ -95,33 +127,29 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
               </ul>
             </section>
             <div className="pj-col">
-              <h2>Results</h2>
-              <ul className="pj-specs">
-                {note.specs.map((s) => (
-                  <li key={s.param}>
-                    <span className="pj-spec-v">{s.value}</span>
-                    <span className="pj-spec-p">{s.param}</span>
-                    {s.note && <span className="pj-spec-n">{s.note}</span>}
-                  </li>
-                ))}
-              </ul>
               <div className="pj-stack">
-                <h2>Built with</h2>
+                <h2 id="pj-stack">Built with</h2>
                 <p>{note.stack.join(", ")}</p>
               </div>
             </div>
           </div>
 
-          {photos.length > 0 && (
+          {(photos.length > 0 || extra) && (
             <section className="pj-sec" aria-labelledby="pj-photos">
               <h2 id="pj-photos">From the build</h2>
-              <div className="pj-photos" data-n={Math.min(photos.length, 3)}>
+              {extra && (
+                <figure className="pj-extra">
+                  <Artifact media={extra} />
+                  <figcaption className="fig-cap">{extra.kind === "video" ? "A real session in Accordion's desktop app, folding as it runs" : "From guard/guard.py in the repo, and what the agent sees when it tries to post"}</figcaption>
+                </figure>
+              )}
+              {photos.length > 0 && <div className="pj-photos" data-n={Math.min(photos.length, 3)}>
                 {photos.map((p) => (
                   <Fig key={p.src} flush caption={p.cap}>
                     <Image className={p.w >= p.h ? "land" : undefined} src={p.src} width={p.w} height={p.h} alt={p.alt} sizes="(max-width: 900px) 100vw, 400px" />
                   </Fig>
                 ))}
-              </div>
+              </div>}
             </section>
           )}
 
@@ -140,6 +168,7 @@ export default async function WorkPage({ params }: { params: Promise<{ slug: str
           <p className="pj-all"><Link className="arrow-link" href="/#work"><span aria-hidden="true">←</span> All work</Link></p>
         </article>
       </main>
+      <SiteFooter />
     </>
   );
 }

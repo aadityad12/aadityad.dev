@@ -16,10 +16,12 @@ type ReelProps = {
 const TRIGGER_LINE = 0.4;
 
 export default function Reel({ beats, figure: F, title, caption }: ReelProps) {
-  const [active, setActive] = useState<number | null>(0);
+  // Before the first step reaches the reading line the figure is whole and live, so the page never opens on a half-drawn figure.
+  const [active, setActive] = useState<number | null>(null);
+  // "Try it yourself" frees the figure in place until the visitor goes back to the walkthrough.
+  const [free, setFree] = useState(false);
   const [wide, setWide] = useState(false);
   const list = useRef<HTMLOListElement>(null);
-  const end = useRef<HTMLLIElement>(null);
   const stage = useRef<HTMLDivElement>(null);
 
   // Sticky storytelling only on wide screens; narrow screens get the figure once, free.
@@ -67,17 +69,21 @@ export default function Reel({ beats, figure: F, title, caption }: ReelProps) {
     };
   }, [beats.length, wide]);
 
-  const play = () => {
-    setActive(null);
-    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    end.current?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
+  // Freed, the figure stops following the walkthrough and scrolls like the page, so a tall figure is never cut off.
+  const toggle = () => {
+    const next = !free;
+    setFree(next);
+    if (next) {
+      const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      requestAnimationFrame(() => stage.current?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" }));
+    }
     stage.current?.focus({ preventScroll: true });
   };
 
-  const beat = wide ? active : null;
+  const beat = wide && !free ? active : null;
 
   return (
-    <section className="reel" aria-labelledby="reel-h" data-mode={beat === null ? "free" : "beat"}>
+    <section className="reel" aria-labelledby="reel-h" data-mode={beat === null ? "free" : "beat"} data-freed={free || undefined}>
       <h2 id="reel-h" className="visually-hidden">{title} highlights</h2>
       <div className="reel-figure">
         <div className="reel-stage" ref={stage} tabIndex={-1}>
@@ -85,9 +91,11 @@ export default function Reel({ beats, figure: F, title, caption }: ReelProps) {
             <F beat={beat} />
           </Fig>
         </div>
-        {wide && (
+        {wide && (active !== null || free) && (
           <p className="reel-try">
-            <button type="button" className="btn quiet small" onClick={play}>Try it yourself</button>
+            <button type="button" className="btn quiet small" aria-pressed={free} onClick={toggle}>
+              {free ? "Back to the walkthrough" : "Try it yourself"}
+            </button>
           </p>
         )}
       </div>
@@ -100,7 +108,7 @@ export default function Reel({ beats, figure: F, title, caption }: ReelProps) {
             </div>
           </li>
         ))}
-        <li className="reel-end" aria-hidden="true" ref={end} />
+        <li className="reel-end" aria-hidden="true" />
       </ol>
     </section>
   );

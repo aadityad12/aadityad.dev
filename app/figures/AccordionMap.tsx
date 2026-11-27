@@ -320,7 +320,7 @@ export default function AccordionMap({ beat }: FigureProps = {}) {
             <span className={s.dim}>relevance {hb.rel.toFixed(2)}</span>
           </>
         ) : (
-          <span className={s.dim}>Hover a block to inspect it. Click to fold or unfold. Folding keeps the full block on disk.</span>
+          <span className={s.dim}>Point at a block to inspect it. Tap or click to fold or unfold. Folding keeps the full block on disk.</span>
         )}
       </div>
 

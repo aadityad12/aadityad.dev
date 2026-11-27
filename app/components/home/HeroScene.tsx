@@ -117,7 +117,7 @@ export default function HeroScene() {
       ],
       { duration: 1100, easing: "linear", fill: "forwards" },
     );
-    window.setTimeout(go, 520);
+    window.setTimeout(go, 260);
     anim.onfinish = () => {
       // He comes back once the visitor has moved on, so the hero is whole when they return.
       window.setTimeout(() => {

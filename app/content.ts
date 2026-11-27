@@ -33,6 +33,25 @@ export const PHOTOS: Record<string, Photo[]> = {
   ],
 };
 
+// The front-page stage, in order: one artifact per flagship project, and a short tag for its row.
+// Stills are 1600 x 1000, made from the photos and screenshots above (public/projects/stage/).
+// Real material a project page shows that has no other home there.
+export type StageMedia =
+  | { kind: "video"; src: string; poster: string; alt: string }
+  | { kind: "guard" };
+
+// The plate is a two-ink drawing of the project's idea (public/projects/plates/<id>), with a short label set over its
+// empty top-left corner. The media, where there is one, is shown on the project page under "From the build".
+export type Plate = { big: string; line: string; alt: string };
+export const STAGE: { id: string; tag: string; plate: Plate; media?: StageMedia }[] = [
+  { id: "accordion", tag: "Hackathon winner, UC Berkeley", plate: { big: "Fold it, don't delete it.", line: "5 / 6 benchmark checkpoints, against 2 / 6 for naive compaction", alt: "A ribbon of blocks: the ones not needed are folded into tight pleats, and one red block lifts back out whole" }, media: { kind: "video", src: "/projects/stage/accordion-loop", poster: "/projects/stage/accordion-loop-poster.jpg", alt: "Accordion's desktop app folding a real agent session: coloured blocks for each message, tool call and result, with the token count falling as blocks fold" } },
+  { id: "rung", tag: "Personal project, C++ and ARM64", plate: { big: "One language, five engines.", line: "From a tree-walker up to a hand-written ARM64 JIT, every step measured", alt: "Five rungs of a ladder, each a faster engine, the top red rung almost the full width" } },
+  { id: "alta", tag: "Cal Hacks 13.0, 36 hours", plate: { big: "Put the probe in row 15.", line: "It reads the real voltage, then walks the student to the fault", alt: "A breadboard seen from above, with a probe on one row sending out red signal arcs" } },
+  { id: "visionassist", tag: "Infineon, software lead", plate: { big: "Chair, two steps ahead.", line: "Spoken in steps, about 200 ms a frame, fully offline", alt: "A head wearing a small camera; dashed sight lines run over step marks to a chair held in a red bracket" } },
+  { id: "oss-scout", tag: "Personal project, runs nightly", plate: { big: "Nothing posts without my tap.", line: "It drafts fixes overnight; one write path, behind a guard with 37 tests", alt: "A night machine pushes fix cards at a wall; the only way through is one red button under a fingertip" }, media: { kind: "guard" } },
+  { id: "apextracker", tag: "In daily use since Jan 2026", plate: { big: "Four tools, one app.", line: "Fully offline, in daily use since Jan 2026", alt: "A sticky note, an alarm card, a calendar and a budget sheet converge into one phone showing a habit grid with one red square" } },
+];
+
 export type Headline = { value: string; unit?: string; label: string };
 export type Beat = { title: string; body: string };
 
@@ -67,8 +86,8 @@ export type AppNote = {
 
 // The hero. `lead` is also the page description; the hero component repeats it with a link on each phrase.
 export const HERO = {
-  who: "Computer engineering student · San José State · Class of 2028",
-  lead: "I build things like a wearable that tells a blind person what's ahead, a lab assistant that walks students to the fault in their circuit, and tools that keep AI coding agents on track.",
+  who: "Computer engineering at San José State, looking for a Summer 2027 internship",
+  lead: "I build things like tools that keep AI coding agents on track, a lab assistant that walks students to the fault in their circuit, and a wearable that tells a blind person what's ahead.",
 };
 
 export const NOTES: AppNote[] = [
@@ -81,7 +100,7 @@ export const NOTES: AppNote[] = [
     award: "Sponsor Track winner (The Token Company), UC Berkeley AI Hackathon 2026",
     focus: "I built the conductor, the folding policy that decides what to hide and what to bring back, plus its health and evaluation layer and the conductor activity dashboard.",
     roles: ["ai", "software"],
-    when: "Jun 2026 →",
+    when: "since Jun 2026",
     where: "UC Berkeley AI Hackathon 2026 · Sponsor Track winner",
     hook: "Lets an AI coding agent forget without losing anything.",
     problem:
@@ -96,7 +115,7 @@ export const NOTES: AppNote[] = [
       { param: "SlopCodeBench @ 100K tokens", value: "5 / 6 vs 2 / 6", note: "83.3% vs 33.3% for naive compaction, DeepSeek V4 Pro" },
       { param: "GitHub stars, team repo", value: "240+", note: "a-Fig/accordion" },
       { param: "Site visits, get-accordion.dev", value: "10,000+", note: "passed in Oct 2026" },
-      { param: "npm package", value: "@a-fig/accordion", note: "published" },
+      { param: "npm package", value: "Published", note: "@a-fig/accordion" },
     ],
     stack: ["TypeScript", "Hugging Face Transformers", "SvelteKit", "Tauri", "Node.js", "WebSockets", "Vitest"],
     links: [
@@ -331,7 +350,7 @@ export const NOTES: AppNote[] = [
     domain: "Android",
     context: "Personal project, in daily use",
         roles: ["software", "infra"],
-    when: "Jan 2026 →",
+    when: "since Jan 2026",
     where: "Personal · in daily use since Jan 2026",
     hook: "One offline app that replaced my sticky notes, reminder apps, calendar and budget sheets.",
     problem:
@@ -456,6 +475,18 @@ export const NOTES: AppNote[] = [
 
 export const EXPERIENCE = [
   {
+    when: "Aug 2026 to now",
+    where: "San José, CA",
+    role: "Teaching Assistant, ENGR 10: Introduction to Engineering",
+    org: "San José State University",
+    points: [
+      "Brought back to TA the course one semester after taking it, recommended by Prof. Saied Rafati.",
+      "Run two weekly lab sections of 30 students each, 6 contact hours a week.",
+      "Guide student teams through soldering an IR receiver board, building a VEX robot chassis and arm from scratch, and programming the controller in RobotC or C++ so the robot finds and acts on infrared beacons.",
+      "Debug student circuits and code live at the bench, and support CAD design, fabrication and power and efficiency testing for the wind turbine project.",
+    ],
+  },
+  {
     when: "Apr 2026 to Jun 2026",
     where: "Cupertino, CA",
     role: "Research Intern and Technical Lead, VisionAssist",
@@ -467,18 +498,6 @@ export const EXPERIENCE = [
       "Deployed it as a headless systemd service that boots on power-up, with a phone web app as a second output path, and demoed the finished device to the Infineon sponsors.",
     ],
     link: { label: "VisionAssist", href: "/work/visionassist/" },
-  },
-  {
-    when: "Aug 2026 to now",
-    where: "San José, CA",
-    role: "Teaching Assistant, ENGR 10: Introduction to Engineering",
-    org: "San José State University",
-    points: [
-      "Brought back to TA the course one semester after taking it, recommended by Prof. Saied Rafati.",
-      "Run two weekly lab sections of 30 students each, 6 contact hours a week.",
-      "Guide student teams through soldering an IR receiver board, building a VEX robot chassis and arm from scratch, and programming the controller in RobotC or C++ so the robot finds and acts on infrared beacons.",
-      "Debug student circuits and code live at the bench, and support CAD design, fabrication and power and efficiency testing for the wind turbine project.",
-    ],
   },
   {
     when: "Jan 2025 to Dec 2025",
@@ -578,21 +597,24 @@ export const SKILLS = [
 ];
 
 // Smaller builds listed under the main projects on the front page. One sentence each.
-export const MORE: { title: string; tag: string; text: string; href?: string }[] = [
+export const MORE: { title: string; tag: string; text: string; href?: string; roles?: Role[] }[] = [
   {
     title: "Autonomous beacon robot",
+    roles: ["embedded"],
     tag: "Fastest run in section · SJSU ENGR 10",
     text: "A VEX robot that finds an infrared beacon, switches it off, then drags a second one out of the arena. I wrote all the control code, and it ran the course in 14.41 s.",
     href: "https://youtube.com/shorts/Y7p0N8BDqbQ",
   },
   {
     title: "ClassPath AI",
+    roles: ["ai", "software"],
     tag: "2nd place · DA Hacks 3.5",
     text: "A transfer planner that turns articulation data into a quarter-by-quarter plan for community college students. I built its chatbot counselor.",
     href: "https://devpost.com/software/class-path-ai",
   },
   {
     title: "Wind turbine",
+    roles: ["embedded"],
     tag: "SJSU ENGR 10",
     text: "A 3D-printed wind turbine. I led the rotor blade design, and it spun past 5,800 RPM in a 25 mph wind.",
   },

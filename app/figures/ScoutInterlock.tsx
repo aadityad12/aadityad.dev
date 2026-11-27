@@ -13,30 +13,42 @@ type Layout = {
   feed: P[]; live: P[]; out: P[]; flow: P[]; secret: { stub: P[]; g: P; lbl: P };
 };
 
-const WB = (id: string, ref: string, name: string, sub: string, x: number): Box => ({ id, ref, name, sub, x, y: 58, w: 80, h: 44 });
-const NB = (id: string, ref: string, name: string, sub: string, y: number): Box => ({ id, ref, name, sub, x: 25, y, w: 110, h: 40 });
+const WB = (id: string, ref: string, name: string, sub: string, x: number, w = 82): Box => ({ id, ref, name, sub, x, y: 34, w, h: 42 });
+const NB = (id: string, ref: string, name: string, sub: string, y: number): Box => ({ id, ref, name, sub, x: 16, y, w: 120, h: 40 });
 
 const WIDE: Layout = {
-  key: "wide", vb: "0 0 680 262",
-  boxes: [WB("u1", "U1", "Scan", "9 pm · GHA", 10), WB("u2", "U2", "Routine", "Claude", 116), WB("u3", "U3", "Data repo", "Private", 222), WB("u4", "U4", "Worker", "+ CF Access", 328), { id: "u5", ref: "U5", name: "act.yml", sub: "Only writer", x: 506, y: 58, w: 80, h: 44 }],
-  gh: { x: 612, y: 40, w: 60, h: 190 },
-  night: [[[90, 80], [116, 80]], [[196, 80], [222, 80]], [[302, 80], [328, 80]]],
-  junction: [209, 80], pre: [[209, 80], [209, 200], [364, 200]], post: [[396, 200], [612, 200]],
-  diode: "translate(364 200)", xMark: [380, 200], guardLbl: { x: 380, y: 226, anchor: "middle" },
-  sw: "translate(432 80)", swHit: [420, 30, 72, 76], swLbl: [456, 120], swAnchor: "middle",
-  feed: [[408, 80], [432, 80]], live: [[480, 80], [506, 80]], out: [[586, 80], [612, 80]], flow: [[408, 80], [612, 80]],
-  secret: { stub: [[546, 102], [546, 132]], g: [546, 132], lbl: [546, 162] },
+  key: "wide", vb: "0 0 720 218",
+  boxes: [
+    WB("u1", "U1", "Scan", "9 pm · GHA", 10, 82),
+    WB("u2", "U2", "Routine", "Claude", 116, 82),
+    WB("u3", "U3", "Data repo", "Private", 222, 84),
+    WB("u4", "U4", "Worker", "+ CF Access", 330, 84),
+    { id: "u5", ref: "U5", name: "act.yml", sub: "Only writer", x: 516, y: 34, w: 84, h: 42 },
+  ],
+  gh: { x: 644, y: 22, w: 66, h: 174 },
+  night: [[[92, 55], [116, 55]], [[198, 55], [222, 55]], [[306, 55], [330, 55]]],
+  junction: [210, 55], pre: [[210, 55], [210, 164], [374, 164]], post: [[406, 164], [644, 164]],
+  diode: "translate(374 164)", xMark: [390, 164], guardLbl: { x: 390, y: 186, anchor: "middle" },
+  sw: "translate(442 55)", swHit: [430, 8, 72, 74], swLbl: [466, 94], swAnchor: "middle",
+  feed: [[414, 55], [442, 55]], live: [[490, 55], [516, 55]], out: [[600, 55], [644, 55]], flow: [[414, 55], [644, 55]],
+  secret: { stub: [[558, 76], [558, 98]], g: [558, 98], lbl: [558, 126] },
 };
 const NARROW: Layout = {
-  key: "narrow", vb: "0 0 340 560",
-  boxes: [NB("u1", "U1", "Scan", "9 pm · GH Actions", 20), NB("u2", "U2", "Routine", "Claude · drafts", 92), NB("u3", "U3", "Data repo", "Private", 164), NB("u4", "U4", "Worker", "+ CF Access", 236), { id: "u5", ref: "U5", name: "act.yml", sub: "Only writer", x: 25, y: 380, w: 110, h: 40 }],
-  gh: { x: 20, y: 478, w: 300, h: 56 },
-  night: [[[80, 60], [80, 92]], [[80, 132], [80, 164]], [[80, 204], [80, 236]]],
-  junction: [80, 148], pre: [[80, 148], [280, 148], [280, 262]], post: [[280, 294], [280, 478]],
-  diode: "translate(280 262) rotate(90)", xMark: [280, 278], guardLbl: { x: 266, y: 262, anchor: "end" },
-  sw: "translate(80 304) rotate(90)", swHit: [40, 286, 110, 84], swLbl: [122, 326], swAnchor: "start",
-  feed: [[80, 276], [80, 304]], live: [[80, 352], [80, 380]], out: [[80, 420], [80, 478]], flow: [[80, 276], [80, 478]],
-  secret: { stub: [[135, 400], [170, 400], [170, 414]], g: [170, 414], lbl: [188, 432] },
+  key: "narrow", vb: "0 0 360 540",
+  boxes: [
+    NB("u1", "U1", "Scan", "9 pm · GH Actions", 20),
+    NB("u2", "U2", "Routine", "Claude · drafts", 88),
+    NB("u3", "U3", "Data repo", "Private", 156),
+    NB("u4", "U4", "Worker", "+ CF Access", 224),
+    { id: "u5", ref: "U5", name: "act.yml", sub: "Only writer", x: 16, y: 368, w: 120, h: 40 },
+  ],
+  gh: { x: 16, y: 472, w: 328, h: 52 },
+  night: [[[76, 60], [76, 88]], [[76, 128], [76, 156]], [[76, 196], [76, 224]]],
+  junction: [76, 142], pre: [[76, 142], [322, 142], [322, 206]], post: [[322, 238], [322, 472]],
+  diode: "translate(322 206) rotate(90)", xMark: [322, 222], guardLbl: { x: 306, y: 210, anchor: "end" },
+  sw: "translate(76 292) rotate(90)", swHit: [36, 274, 114, 84], swLbl: [118, 314], swAnchor: "start",
+  feed: [[76, 264], [76, 292]], live: [[76, 340], [76, 368]], out: [[76, 408], [76, 472]], flow: [[76, 264], [76, 472]],
+  secret: { stub: [[136, 388], [164, 388], [164, 402]], g: [164, 402], lbl: [154, 430] },
 };
 
 const pts = (p: P[]) => p.map(([x, y]) => `${x},${y}`).join(" ");
@@ -78,11 +90,11 @@ function Schematic({ L, pressed, attempt, merged }: { L: Layout; pressed: boolea
 
       <rect x={gh.x} y={gh.y} width={gh.w} height={gh.h} className={`${s.box} ${merged ? s.okBox : ""}`} />
       <text x={gh.x + 2} y={gh.y - 5} className={s.ref}>J1</text>
-      <text x={gh.x + gh.w / 2} y={L.key === "wide" ? gh.y + 100 : gh.y + 24} className={s.name}>GitHub</text>
+      <text x={gh.x + gh.w / 2} y={L.key === "wide" ? gh.y + 84 : gh.y + 23} className={s.name}>GitHub</text>
       {merged && L.key === "wide" ? (
-        <text x={gh.x + gh.w / 2} y={gh.y + 118} className={s.okTxt}>PR<tspan x={gh.x + gh.w / 2} dy="14">opened</tspan></text>
+        <text x={gh.x + gh.w / 2} y={gh.y + 102} className={s.okTxt}>PR<tspan x={gh.x + gh.w / 2} dy="14">opened</tspan></text>
       ) : (
-        <text x={gh.x + gh.w / 2} y={L.key === "wide" ? gh.y + 116 : gh.y + 40} className={merged ? s.okTxt : s.sub}>{merged ? "PR opened" : "Public"}</text>
+        <text x={gh.x + gh.w / 2} y={L.key === "wide" ? gh.y + 100 : gh.y + 38} className={merged ? s.okTxt : s.sub}>{merged ? "PR opened" : "Public"}</text>
       )}
 
       <g transform={L.diode} className={attempt === "blocked" ? s.hotSym : ""}>
